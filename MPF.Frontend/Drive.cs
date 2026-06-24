@@ -6,6 +6,7 @@ using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Generic;
 #endif
 using SabreTools.RedumpLib.Data;
+using SabreTools.Text.Compare;
 
 namespace MPF.Frontend
 {
@@ -15,7 +16,7 @@ namespace MPF.Frontend
     /// <remarks>
     /// TODO: Can the Aaru models be used instead of the ones I've created here?
     /// </remarks>
-    public class Drive
+    public partial class Drive
     {
         #region Fields
 
@@ -173,12 +174,8 @@ namespace MPF.Frontend
         public static List<Drive> CreateListOfDrives(bool ignoreFixedDrives)
         {
             var drives = GetDriveList(ignoreFixedDrives);
-            drives.Sort((d1, d2) =>
-            {
-                string d1Name = d1?.Name is null ? "\0" : d1.Name;
-                string d2Name = d2?.Name is null ? "\0" : d2.Name;
-                return d1Name.CompareTo(d2Name);
-            });
+            using var comparer = new NaturalComparer();
+            drives.Sort((d1, d2) => comparer.Compare(d1?.Name, d2?.Name));
             return [.. drives];
         }
 
@@ -289,8 +286,13 @@ namespace MPF.Frontend
         /// </remarks>
         private static List<Drive> GetDriveList(bool ignoreFixedDrives)
         {
+            // On Unix, fixed and removable media are enumerated from sysfs device nodes
+            // below; DriveInfo only exposes mount points (e.g. "/"), which are not dumpable
+            // devices, so they are deliberately left out of the DriveInfo query there.
+            bool isUnix = Environment.OSVersion.Platform == PlatformID.Unix;
+
             var desiredDriveTypes = new List<DriveType>() { DriveType.CDRom };
-            if (!ignoreFixedDrives)
+            if (!ignoreFixedDrives && !isUnix)
             {
                 desiredDriveTypes.Add(DriveType.Fixed);
                 desiredDriveTypes.Add(DriveType.Removable);
@@ -315,9 +317,15 @@ namespace MPF.Frontend
 
             // Apply OS-specific drive adjustments
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
                 MarkWindowsFloppyDrives(drives);
-            else if (Environment.OSVersion.Platform == PlatformID.Unix)
+            }
+            else if (isUnix)
+            {
                 drives = AppendUnixOpticalDrives(drives);
+                if (!ignoreFixedDrives)
+                    drives = AppendUnixFixedDrives(drives);
+            }
 
             return [.. drives];
         }
@@ -354,169 +362,6 @@ namespace MPF.Frontend
                 // No-op
             }
 #endif
-        }
-
-        /// <summary>
-        /// Append Linux optical devices that DriveInfo did not surface.
-        /// DriveInfo.GetDrives() returns mount points and typically does not list unmounted
-        /// optical drives, so they are enumerated directly to let users dump discs without
-        /// mounting them first. Both the block nodes (/dev/sr*) and their generic SCSI
-        /// counterparts (/dev/sg*) are surfaced, block nodes first, because dumping back ends
-        /// differ in which node they expect (e.g. redumper opens the generic node).
-        /// </summary>
-        /// <param name="drives">Drives already discovered via DriveInfo</param>
-        /// <returns>The drive array, extended with any optical devices not already present</returns>
-        private static Drive[] AppendUnixOpticalDrives(Drive[] drives)
-        {
-            var existingNames = new HashSet<string>();
-            foreach (var d in drives)
-            {
-                if (d?.Name is not null)
-                    existingNames.Add(d.Name);
-            }
-
-            // Block nodes first, then their generic SCSI counterparts
-            var devicePaths = new List<string>();
-            devicePaths.AddRange(EnumerateUnixOpticalBlockPaths("/dev"));
-            devicePaths.AddRange(EnumerateUnixOpticalGenericPaths("/dev", "/sys/class/scsi_generic"));
-
-            var extra = new List<Drive>();
-            foreach (var devicePath in devicePaths)
-            {
-                // Skip paths already surfaced by DriveInfo or an earlier enumerator
-                if (!existingNames.Add(devicePath))
-                    continue;
-
-                try
-                {
-                    var d = Create(Frontend.InternalDriveType.Optical, devicePath);
-                    if (d != null)
-                    {
-                        // A Linux optical /dev node is never a mount point, so DriveInfo always
-                        // reports it as not-ready. Mark it active so it matches how Windows
-                        // surfaces optical drives; whether a disc is actually loaded is left to
-                        // the dumping program rather than probing the device here.
-                        d.MarkedActive = true;
-                        extra.Add(d);
-                    }
-                }
-                catch
-                {
-                    // Skip devices that can't be opened
-                }
-            }
-
-            if (extra.Count == 0)
-                return drives;
-
-            var combined = new Drive[drives.Length + extra.Count];
-            Array.Copy(drives, combined, drives.Length);
-            extra.CopyTo(combined, drives.Length);
-            return combined;
-        }
-
-        /// <summary>
-        /// Enumerate Linux optical block devices under a directory by matching
-        /// the kernel convention "sr" followed by one or more digits (sr0, sr1, ...).
-        /// </summary>
-        /// <param name="devRoot">Root directory to scan (typically "/dev")</param>
-        /// <returns>Device paths, or an empty list when the directory is unreadable</returns>
-        internal static List<string> EnumerateUnixOpticalBlockPaths(string devRoot)
-        {
-            var result = new List<string>();
-            if (string.IsNullOrEmpty(devRoot) || !Directory.Exists(devRoot))
-                return result;
-
-            string[] candidates;
-            try
-            {
-                candidates = Directory.GetFiles(devRoot, "sr*");
-            }
-            catch
-            {
-                return result;
-            }
-
-            foreach (var path in candidates)
-            {
-                if (HasDeviceIndexSuffix(Path.GetFileName(path), "sr"))
-                    result.Add(path);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Enumerate Linux optical drives via their generic SCSI nodes (/dev/sg*).
-        /// Unlike the block nodes, "sg" is not optical-specific, so each candidate is
-        /// confirmed against sysfs: an optical drive reports SCSI peripheral device type 5.
-        /// </summary>
-        /// <param name="devRoot">Root directory the nodes live under (typically "/dev")</param>
-        /// <param name="sysfsScsiGenericRoot">sysfs class directory (typically "/sys/class/scsi_generic")</param>
-        /// <returns>Device paths, or an empty list when the sysfs directory is unreadable</returns>
-        internal static List<string> EnumerateUnixOpticalGenericPaths(string devRoot, string sysfsScsiGenericRoot)
-        {
-            var result = new List<string>();
-            if (string.IsNullOrEmpty(devRoot) || string.IsNullOrEmpty(sysfsScsiGenericRoot))
-                return result;
-            if (!Directory.Exists(sysfsScsiGenericRoot))
-                return result;
-
-            string[] entries;
-            try
-            {
-                entries = Directory.GetFileSystemEntries(sysfsScsiGenericRoot, "sg*");
-            }
-            catch
-            {
-                return result;
-            }
-
-            foreach (var entry in entries)
-            {
-                string name = Path.GetFileName(entry);
-                if (!HasDeviceIndexSuffix(name, "sg"))
-                    continue;
-
-                // "sg" is generic SCSI; keep only optical drives (peripheral device type 5)
-                string typePath = Path.Combine(Path.Combine(entry, "device"), "type");
-                try
-                {
-                    if (!File.Exists(typePath))
-                        continue;
-                    if (!int.TryParse(File.ReadAllText(typePath).Trim(), out int scsiType) || scsiType != 5)
-                        continue;
-                }
-                catch
-                {
-                    continue;
-                }
-
-                result.Add(Path.Combine(devRoot, name));
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Check that a device node name is the given prefix followed by one or more digits
-        /// (e.g. "sr0", "sg12"), rejecting names with trailing or embedded non-digit characters.
-        /// </summary>
-        /// <param name="name">Device node name to check</param>
-        /// <param name="prefix">Required leading text (e.g. "sr", "sg")</param>
-        /// <returns>True when the name is the prefix followed only by digits</returns>
-        private static bool HasDeviceIndexSuffix(string name, string prefix)
-        {
-            if (name.Length <= prefix.Length || !name.StartsWith(prefix, StringComparison.Ordinal))
-                return false;
-
-            for (int i = prefix.Length; i < name.Length; i++)
-            {
-                if (!char.IsDigit(name[i]))
-                    return false;
-            }
-
-            return true;
         }
 
         /// <summary>
