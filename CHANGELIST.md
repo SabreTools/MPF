@@ -8,6 +8,7 @@
 - Fix naming issue in Avalonia
 - Do not provide default for Submit As field
 - Enumerate fixed/removable drives on Linux and order the drive list (gmipf)
+- Stop using outer/inner layer terminology
 
 ### 3.8.0 (2026-06-23)
 

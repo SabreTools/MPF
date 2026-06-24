@@ -198,10 +198,6 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void UpdateFromMediaType(SubmissionInfo? submissionInfo)
         {
-            // Sony-printed discs have layers in the opposite order
-            var system = submissionInfo?.DiscIdentity?.System;
-            bool reverseOrder = system.HasReversedRingcodes();
-
             // TODO: Do these need to be explicitly set if they're in the AXAML?
             PCMacHybridGrid!.IsVisible = _showPcMacHybridAlways
                 || submissionInfo?.DiscIdentity?.Media == MediaType.CD;
@@ -250,7 +246,7 @@ namespace MPF.Avalonia.Windows
                         L2InfoPanel!.IsVisible = true;
                         L3InfoPanel!.IsVisible = true;
 
-                        L0HeaderText!.Text = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
+                        L0HeaderText!.Text = "Layer 0";
                         L0MasteringCode!.Label = "Mastering Code";
                         L0MasteringSID!.Label = "Mastering SID";
                         L0Toolstamp!.Label = "Toolstamps";
@@ -269,7 +265,7 @@ namespace MPF.Avalonia.Windows
                         L2MasteringSID!.Label = "Mastering SID";
                         L2Toolstamp!.Label = "Toolstamps";
 
-                        L3HeaderText!.Text = reverseOrder ? "Layer 3 (Inner)" : "Layer 3 (Outer)";
+                        L3HeaderText!.Text = "Layer 3";
                         L3MasteringCode!.Label = "Mastering Code";
                         L3MasteringSID!.Label = "Mastering SID";
                         L3Toolstamp!.Label = "Toolstamps";
@@ -280,7 +276,7 @@ namespace MPF.Avalonia.Windows
                     {
                         L2InfoPanel!.IsVisible = true;
 
-                        L0HeaderText!.Text = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
+                        L0HeaderText!.Text = "Layer 0";
                         L0MasteringCode!.Label = "Mastering Code";
                         L0MasteringSID!.Label = "Mastering SID";
                         L0Toolstamp!.Label = "Toolstamps";
@@ -294,7 +290,7 @@ namespace MPF.Avalonia.Windows
                         L1MouldSIDs!.Label = "Label Side Mould SIDs";
                         L1AdditionalMoulds!.Label = "Label Side Additional Moulds";
 
-                        L2HeaderText!.Text = reverseOrder ? "Layer 2 (Inner)" : "Layer 2 (Outer)";
+                        L2HeaderText!.Text = "Layer 2";
                         L2MasteringCode!.Label = "Mastering Code";
                         L2MasteringSID!.Label = "Mastering SID";
                         L2Toolstamp!.Label = "Toolstamps";
@@ -303,14 +299,14 @@ namespace MPF.Avalonia.Windows
                     // Double-layer discs
                     else if (submissionInfo?.DiscIdentifiers.Layerbreak != default(long))
                     {
-                        L0HeaderText!.Text = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
+                        L0HeaderText!.Text = "Layer 0";
                         L0MasteringCode!.Label = "Mastering Code";
                         L0MasteringSID!.Label = "Mastering SID";
                         L0Toolstamp!.Label = "Toolstamps";
                         L0MouldSIDs!.Label = "Data Side Mould SIDs";
                         L0AdditionalMoulds!.Label = "Data Side Additional Moulds";
 
-                        L1HeaderText!.Text = reverseOrder ? "Layer 1 (Inner)" : "Layer 1 (Outer)";
+                        L1HeaderText!.Text = "Layer 1";
                         L1MasteringCode!.Label = "Mastering Code";
                         L1MasteringSID!.Label = "Mastering SID";
                         L1Toolstamp!.Label = "Toolstamps";
@@ -340,14 +336,14 @@ namespace MPF.Avalonia.Windows
 
                 case MediaType.UMDSL:
                 case MediaType.UMDDL:
-                    L0HeaderText!.Text = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
+                    L0HeaderText!.Text = "Layer 0";
                     L0MasteringCode!.Label = "Mastering Code";
                     L0MasteringSID!.Label = "Mastering SID";
                     L0Toolstamp!.Label = "Toolstamps";
                     L0MouldSIDs!.Label = "Data Side Mould SIDs";
                     L0AdditionalMoulds!.Label = "Data Side Additional Moulds";
 
-                    L1HeaderText!.Text = reverseOrder ? "Layer 1 (Inner)" : "Layer 1 (Outer)";
+                    L1HeaderText!.Text = "Layer 1";
                     L1MasteringCode!.Label = "Mastering Code";
                     L1MasteringSID!.Label = "Mastering SID";
                     L1Toolstamp!.Label = "Toolstamps";
