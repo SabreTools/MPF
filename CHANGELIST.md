@@ -7,6 +7,7 @@
 - Update RedumpLib to 2.0.5
 - Fix naming issue in Avalonia
 - Do not provide default for Submit As field
+- Enumerate fixed/removable drives on Linux and order the drive list (gmipf)
 
 ### 3.8.0 (2026-06-23)
 
