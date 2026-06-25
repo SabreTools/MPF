@@ -9,6 +9,7 @@
 - Do not provide default for Submit As field
 - Enumerate fixed/removable drives on Linux and order the drive list (gmipf)
 - Stop using outer/inner layer terminology
+- Update RedumpLib to 2.0.6
 
 ### 3.8.0 (2026-06-23)
 

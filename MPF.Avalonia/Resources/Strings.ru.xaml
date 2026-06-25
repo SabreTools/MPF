@@ -191,10 +191,11 @@
     <x:String x:Key="ContentsTabString">Содержимое</x:String>
     <!-- Ringcodes Tab -->
     <x:String x:Key="RingcodesTabString">Кольцевые коды</x:String>
-    <x:String x:Key="L0InfoGroupBoxString">Данные / L0</x:String>
-    <x:String x:Key="L1InfoGroupBoxString">Метка / L1</x:String>
-    <x:String x:Key="L2InfoGroupBoxString">L2</x:String>
-    <x:String x:Key="L3InfoGroupBoxString">L3</x:String>
+    <x:String x:Key="Layer0InfoGroupBoxString">L0</x:String>
+    <x:String x:Key="Layer1InfoGroupBoxString">L1</x:String>
+    <x:String x:Key="Layer2InfoGroupBoxString">L2</x:String>
+    <x:String x:Key="Layer3InfoGroupBoxString">L3</x:String>
+    <x:String x:Key="LabelSideInfoGroupBoxString">Метка</x:String>
     <!-- Read-Only Info Tab -->
     <x:String x:Key="ReadOnlyInfoTabString">Только для чтения</x:String>
 

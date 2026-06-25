@@ -179,43 +179,58 @@
           </TabItem.Header>
           <ScrollViewer>
             <StackPanel Spacing="6" Margin="0,0,4,0">
-              <Border x:Name="L0InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+              <Border x:Name="Layer0InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
                 <StackPanel Spacing="4">
-                  <TextBlock x:Name="L0HeaderText" Text="{DynamicResource L0InfoGroupBoxString}" FontWeight="Bold" />
-                  <controls:UserInput x:Name="L0MasteringCode" Label="Data/L0 Mastering Code" Text="{Binding SubmissionInfo.RingCodes.Layer0MasteringCode, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L0MasteringSID" Label="Data/L0 Mastering SID" Text="{Binding SubmissionInfo.RingCodes.Layer0MasteringSID, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L0Toolstamp" Label="Data/L0 Toolstamps" Text="{Binding SubmissionInfo.RingCodes.Layer0Toolstamps, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L0MouldSIDs" Label="Data/L0 Mould SIDs" Text="{Binding SubmissionInfo.RingCodes.Layer0MouldSIDs, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L0AdditionalMoulds" Label="Data/L0 Additional Moulds" Text="{Binding SubmissionInfo.RingCodes.Layer0AdditionalMoulds, Mode=TwoWay}" />
+                  <TextBlock x:Name="Layer0HeaderText" Text="{DynamicResource Layer0InfoGroupBoxString}" FontWeight="Bold" />
+                  <controls:UserInput x:Name="Layer0MasteringCode" Label="Mastering Code" Text="{Binding SubmissionInfo.RingCodes.Layer0MasteringCode, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer0MasteringSID" Label="Mastering SID" Text="{Binding SubmissionInfo.RingCodes.Layer0MasteringSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer0Toolstamp" Label="Toolstamps" Text="{Binding SubmissionInfo.RingCodes.Layer0Toolstamps, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer0MouldSIDs" Label="Mould SIDs" Text="{Binding SubmissionInfo.RingCodes.Layer0MouldSIDs, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer0AdditionalMoulds" Label="Additional Moulds" Text="{Binding SubmissionInfo.RingCodes.Layer0AdditionalMoulds, Mode=TwoWay}" />
                 </StackPanel>
               </Border>
 
-              <Border x:Name="L1InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+              <Border x:Name="Layer1InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
                 <StackPanel Spacing="4">
-                  <TextBlock x:Name="L1HeaderText" Text="{DynamicResource L1InfoGroupBoxString}" FontWeight="Bold" />
-                  <controls:UserInput x:Name="L1MasteringCode" Label="Label/L1 Mastering Code" Text="{Binding SubmissionInfo.RingCodes.Layer1MasteringCode, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L1MasteringSID" Label="Label/L1 Mastering SID" Text="{Binding SubmissionInfo.RingCodes.Layer1MasteringSID, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L1Toolstamp" Label="Label/L1 Toolstamps" Text="{Binding SubmissionInfo.RingCodes.Layer1Toolstamps, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L1MouldSIDs" Label="Label/L1 Mould SIDs" Text="{Binding SubmissionInfo.RingCodes.Layer1MouldSIDs, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L1AdditionalMoulds" Label="Label/L1 Additional Moulds" Text="{Binding SubmissionInfo.RingCodes.Layer1AdditionalMoulds, Mode=TwoWay}" />
+                  <TextBlock x:Name="Layer1HeaderText" Text="{DynamicResource Layer1InfoGroupBoxString}" FontWeight="Bold" />
+                  <controls:UserInput x:Name="Layer1MasteringCode" Label="Mastering Code" Text="{Binding SubmissionInfo.RingCodes.Layer1MasteringCode, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer1MasteringSID" Label="Mastering SID" Text="{Binding SubmissionInfo.RingCodes.Layer1MasteringSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer1Toolstamp" Label="Toolstamps" Text="{Binding SubmissionInfo.RingCodes.Layer1Toolstamps, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer1MouldSIDs" Label="Mould SIDs" Text="{Binding SubmissionInfo.RingCodes.Layer1MouldSIDs, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer1AdditionalMoulds" Label="Additional Moulds" Text="{Binding SubmissionInfo.RingCodes.Layer1AdditionalMoulds, Mode=TwoWay}" />
+                </StackPanel>
+              </Border>
+              
+              <Border x:Name="Layer2InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="4">
+                  <TextBlock x:Name="Layer2HeaderText" Text="{DynamicResource Layer2InfoGroupBoxString}" FontWeight="Bold" />
+                  <controls:UserInput x:Name="Layer2MasteringCode" Label="Mastering Code" Text="{Binding SubmissionInfo.RingCodes.Layer2MasteringCode, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer2MasteringSID" Label="Mastering SID" Text="{Binding SubmissionInfo.RingCodes.Layer2MasteringSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer2Toolstamp" Label="Toolstamps" Text="{Binding SubmissionInfo.RingCodes.Layer2Toolstamps, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer2MouldSIDs" Label="Mould SIDs" Text="{Binding SubmissionInfo.RingCodes.Layer2MouldSIDs, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer2AdditionalMoulds" Label="Additional Moulds" Text="{Binding SubmissionInfo.RingCodes.Layer2AdditionalMoulds, Mode=TwoWay}" />
                 </StackPanel>
               </Border>
 
-              <Border x:Name="L2InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" IsVisible="False">
+              <Border x:Name="Layer3InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
                 <StackPanel Spacing="4">
-                  <TextBlock x:Name="L2HeaderText" Text="{DynamicResource L2InfoGroupBoxString}" FontWeight="Bold" />
-                  <controls:UserInput x:Name="L2MasteringCode" Label="L2 Mastering Code" Text="{Binding SubmissionInfo.RingCodes.Layer2MasteringCode, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L2MasteringSID" Label="L2 Mastering SID" Text="{Binding SubmissionInfo.RingCodes.Layer2MasteringSID, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L2Toolstamp" Label="L2 Toolstamps" Text="{Binding SubmissionInfo.RingCodes.Layer2Toolstamps, Mode=TwoWay}" />
+                  <TextBlock x:Name="Layer3HeaderText" Text="{DynamicResource Layer3InfoGroupBoxString}" FontWeight="Bold" />
+                  <controls:UserInput x:Name="Layer3MasteringCode" Label="Mastering Code" Text="{Binding SubmissionInfo.RingCodes.Layer3MasteringCode, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer3MasteringSID" Label="Mastering SID" Text="{Binding SubmissionInfo.RingCodes.Layer3MasteringSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer3Toolstamp" Label="Toolstamps" Text="{Binding SubmissionInfo.RingCodes.Layer3Toolstamps, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer3MouldSIDs" Label="Mould SIDs" Text="{Binding SubmissionInfo.RingCodes.Layer3MouldSIDs, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="Layer3AdditionalMoulds" Label="Additional Moulds" Text="{Binding SubmissionInfo.RingCodes.Layer3AdditionalMoulds, Mode=TwoWay}" />
                 </StackPanel>
               </Border>
 
-              <Border x:Name="L3InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" IsVisible="False">
+              <Border x:Name="LabelSideInfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
                 <StackPanel Spacing="4">
-                  <TextBlock x:Name="L3HeaderText" Text="{DynamicResource L3InfoGroupBoxString}" FontWeight="Bold" />
-                  <controls:UserInput x:Name="L3MasteringCode" Label="L3 Mastering Code" Text="{Binding SubmissionInfo.RingCodes.Layer3MasteringCode, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L3MasteringSID" Label="L3 Mastering SID" Text="{Binding SubmissionInfo.RingCodes.Layer3MasteringSID, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L3Toolstamp" Label="L3 Toolstamps" Text="{Binding SubmissionInfo.RingCodes.Layer3Toolstamps, Mode=TwoWay}" />
+                  <TextBlock x:Name="LabelSideHeaderText" Text="{DynamicResource LabelSideInfoGroupBoxString}" FontWeight="Bold" />
+                  <controls:UserInput x:Name="LabelSideMasteringCode" Label="Mastering Code" Text="{Binding SubmissionInfo.RingCodes.LabelSideMasteringCode, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="LabelSideMasteringSID" Label="Mastering SID" Text="{Binding SubmissionInfo.RingCodes.LabelSideMasteringSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="LabelSideToolstamp" Label="Toolstamps" Text="{Binding SubmissionInfo.RingCodes.LabelSideToolstamps, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="LabelSideMouldSIDs" Label="Mould SIDs" Text="{Binding SubmissionInfo.RingCodes.LabelSideMouldSIDs, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="LabelSideAdditionalMoulds" Label="Additional Moulds" Text="{Binding SubmissionInfo.RingCodes.LabelSideAdditionalMoulds, Mode=TwoWay}" />
                 </StackPanel>
               </Border>
             </StackPanel>

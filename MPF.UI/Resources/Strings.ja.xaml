@@ -192,10 +192,11 @@
     <system:String x:Key="ContentsTabString">内容</system:String>
     <!-- Ringcodes Tab -->
     <system:String x:Key="RingcodesTabString">リングコード</system:String>
-    <system:String x:Key="L0InfoGroupBoxString">データ／L0 情報</system:String>
-    <system:String x:Key="L1InfoGroupBoxString">ラベル／L1 情報</system:String>
-    <system:String x:Key="L2InfoGroupBoxString">L2 情報</system:String>
-    <system:String x:Key="L3InfoGroupBoxString">L3 情報</system:String>
+    <system:String x:Key="Layer0InfoGroupBoxString">Layer0 情報</system:String>
+    <system:String x:Key="Layer1InfoGroupBoxString">Layer1 情報</system:String>
+    <system:String x:Key="Layer2InfoGroupBoxString">L2 情報</system:String>
+    <system:String x:Key="Layer3InfoGroupBoxString">L3 情報</system:String>
+    <system:String x:Key="LabelSideInfoGroupBoxString">ラベル 情報</system:String>
     <!-- Read-Only Info Tab -->
     <system:String x:Key="ReadOnlyInfoTabString">読み取り専用情報</system:String>
 

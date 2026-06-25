@@ -197,10 +197,11 @@
     <system:String x:Key="ContentsTabString">Вміст</system:String>
     <!-- Ringcodes Tab -->
     <system:String x:Key="RingcodesTabString">Рінгкоди</system:String>
-    <system:String x:Key="L0InfoGroupBoxString">Інформація Дані/L0</system:String>
-    <system:String x:Key="L1InfoGroupBoxString">Інформація Графіка/L1</system:String>
-    <system:String x:Key="L2InfoGroupBoxString">Інформація L2</system:String>
-    <system:String x:Key="L3InfoGroupBoxString">Інформація L3</system:String>
+    <system:String x:Key="Layer0InfoGroupBoxString">Інформація L0</system:String>
+    <system:String x:Key="Layer1InfoGroupBoxString">Інформація L1</system:String>
+    <system:String x:Key="Layer2InfoGroupBoxString">Інформація L2</system:String>
+    <system:String x:Key="Layer3InfoGroupBoxString">Інформація L3</system:String>
+    <system:String x:Key="LabelSideInfoGroupBoxString">Інформація Графіка</system:String>
     <!-- Read-Only Info Tab -->
     <system:String x:Key="ReadOnlyInfoTabString">Інформація тільки для читання</system:String>
 

@@ -195,10 +195,11 @@
     <x:String x:Key="ContentsTabString">C0n73n7z</x:String>
     <!-- Ringcodes Tab -->
     <x:String x:Key="RingcodesTabString">R1n9c0d3z</x:String>
-    <x:String x:Key="L0InfoGroupBoxString">D474/10 1nf0</x:String>
-    <x:String x:Key="L1InfoGroupBoxString">14831/11 1nf0</x:String>
-    <x:String x:Key="L2InfoGroupBoxString">12 1nf0</x:String>
-    <x:String x:Key="L3InfoGroupBoxString">13 1nf0</x:String>
+    <x:String x:Key="Layer0InfoGroupBoxString">10 1nf0</x:String>
+    <x:String x:Key="Layer1InfoGroupBoxString">11 1nf0</x:String>
+    <x:String x:Key="Layer2InfoGroupBoxString">12 1nf0</x:String>
+    <x:String x:Key="Layer3InfoGroupBoxString">13 1nf0</x:String>
+    <x:String x:Key="LabelSideInfoGroupBoxString">14831 1nf0</x:String>
     <!-- Read-Only Info Tab -->
     <x:String x:Key="ReadOnlyInfoTabString">R34d-0n1y 1nf0</x:String>
 

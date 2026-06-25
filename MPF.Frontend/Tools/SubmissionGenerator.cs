@@ -645,8 +645,13 @@ namespace MPF.Frontend.Tools
                     info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+
+                    info.RingCodes.LabelSideMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideMasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideToolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideMouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideAdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     break;
 
                 case PhysicalMediaType.DVD:
@@ -660,7 +665,6 @@ namespace MPF.Frontend.Tools
                         info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
@@ -676,6 +680,7 @@ namespace MPF.Frontend.Tools
                         info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a triple-layer disc
                     else if (info.DiscIdentifiers.Layerbreak3 == default)
@@ -690,10 +695,13 @@ namespace MPF.Frontend.Tools
                         info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
                         info.RingCodes.Layer2MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer2MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer2Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer2MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer2AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a quad-layer disc
                     else
@@ -708,15 +716,26 @@ namespace MPF.Frontend.Tools
                         info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
                         info.RingCodes.Layer2MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer2MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer2Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer2MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer2AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
                         info.RingCodes.Layer3MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer3MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer3Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer3MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer3AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
+
+                    info.RingCodes.LabelSideMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideMasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideToolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideMouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideAdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
                     break;
 
@@ -725,9 +744,14 @@ namespace MPF.Frontend.Tools
                     info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer1AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+
+                    info.RingCodes.LabelSideMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideMasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideToolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideMouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideAdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+
                     info.DumpMetadata.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
@@ -740,9 +764,7 @@ namespace MPF.Frontend.Tools
                         info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.RingCodes.Layer1AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
                     else
@@ -773,9 +795,7 @@ namespace MPF.Frontend.Tools
                         info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.RingCodes.Layer1AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
                     else
@@ -793,6 +813,12 @@ namespace MPF.Frontend.Tools
                         info.RingCodes.Layer1AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
 
+                    info.RingCodes.LabelSideMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideMasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideToolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideMouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideAdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+
                     info.DiscIdentifiers.DiscKey = addPlaceholders ? RequiredValue : string.Empty;
 
                     break;
@@ -803,10 +829,19 @@ namespace MPF.Frontend.Tools
                     info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
                     info.RingCodes.Layer1MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer1AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+
+                    info.RingCodes.LabelSideMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideMasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideToolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideMouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideAdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     break;
             }
 #pragma warning restore IDE0010

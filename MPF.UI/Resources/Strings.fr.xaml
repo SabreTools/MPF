@@ -192,10 +192,11 @@
     <system:String x:Key="ContentsTabString">Contenu</system:String>
     <!-- Ringcodes Tab -->
     <system:String x:Key="RingcodesTabString">Codes Ring</system:String>
-    <system:String x:Key="L0InfoGroupBoxString">Infos Data/L0</system:String>
-    <system:String x:Key="L1InfoGroupBoxString">Infos Label/L1</system:String>
-    <system:String x:Key="L2InfoGroupBoxString">Infos L2</system:String>
-    <system:String x:Key="L3InfoGroupBoxString">Infos L3</system:String>
+    <system:String x:Key="Layer0InfoGroupBoxString">Infos L0</system:String>
+    <system:String x:Key="Layer1InfoGroupBoxString">Infos L1</system:String>
+    <system:String x:Key="Layer2InfoGroupBoxString">Infos L2</system:String>
+    <system:String x:Key="Layer3InfoGroupBoxString">Infos L3</system:String>
+    <system:String x:Key="LabelSideInfoGroupBoxString">Infos Label</system:String>
     <!-- Read-Only Info Tab -->
     <system:String x:Key="ReadOnlyInfoTabString">Infos en lecture seule</system:String>
 

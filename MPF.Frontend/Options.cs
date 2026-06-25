@@ -436,7 +436,7 @@ namespace MPF.Frontend
         /// Try to copy the update URL to the clipboard if one is found
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public bool CopyUpdateUrlToClipboard { get; set; } = true;
+        public bool CopyUpdateUrlToClipboard { get; set; } = false;
 
         /// <summary>
         /// Have the log panel expanded by default on startup

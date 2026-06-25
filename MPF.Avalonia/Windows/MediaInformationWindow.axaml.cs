@@ -93,29 +93,35 @@ namespace MPF.Avalonia.Windows
         /// TODO: See if these can be done by binding
         private void EnableTabsInInputFields()
         {
-            // L0
-            L0MasteringCode!.Tab = true;
-            L0MasteringSID!.Tab = true;
-            L0Toolstamp!.Tab = true;
-            L0MouldSIDs!.Tab = true;
-            L0AdditionalMoulds!.Tab = true;
+            Layer0MasteringCode!.Tab = true;
+            Layer0MasteringSID!.Tab = true;
+            Layer0Toolstamp!.Tab = true;
+            Layer0MouldSIDs!.Tab = true;
+            Layer0AdditionalMoulds!.Tab = true;
 
-            // L1
-            L1MasteringCode!.Tab = true;
-            L1MasteringSID!.Tab = true;
-            L1Toolstamp!.Tab = true;
-            L1MouldSIDs!.Tab = true;
-            L1AdditionalMoulds!.Tab = true;
+            Layer1MasteringCode!.Tab = true;
+            Layer1MasteringSID!.Tab = true;
+            Layer1Toolstamp!.Tab = true;
+            Layer1MouldSIDs!.Tab = true;
+            Layer1AdditionalMoulds!.Tab = true;
 
-            // L2
-            L2MasteringCode!.Tab = true;
-            L2MasteringSID!.Tab = true;
-            L2Toolstamp!.Tab = true;
+            Layer2MasteringCode!.Tab = true;
+            Layer2MasteringSID!.Tab = true;
+            Layer2Toolstamp!.Tab = true;
+            Layer2MouldSIDs!.Tab = true;
+            Layer2AdditionalMoulds!.Tab = true;
 
-            // L3
-            L3MasteringCode!.Tab = true;
-            L3MasteringSID!.Tab = true;
-            L3Toolstamp!.Tab = true;
+            Layer3MasteringCode!.Tab = true;
+            Layer3MasteringSID!.Tab = true;
+            Layer3Toolstamp!.Tab = true;
+            Layer3MouldSIDs!.Tab = true;
+            Layer3AdditionalMoulds!.Tab = true;
+
+            LabelSideMasteringCode!.Tab = true;
+            LabelSideMasteringSID!.Tab = true;
+            LabelSideToolstamp!.Tab = true;
+            LabelSideMouldSIDs!.Tab = true;
+            LabelSideAdditionalMoulds!.Tab = true;
         }
 
         /// <summary>
@@ -201,29 +207,21 @@ namespace MPF.Avalonia.Windows
             // TODO: Do these need to be explicitly set if they're in the AXAML?
             PCMacHybridGrid!.IsVisible = _showPcMacHybridAlways
                 || submissionInfo?.DiscIdentity?.Media == MediaType.CD;
-            L0InfoPanel!.IsVisible = true;
-            L1InfoPanel!.IsVisible = true;
-            L2InfoPanel!.IsVisible = false;
-            L3InfoPanel!.IsVisible = false;
+
+            // Reset the visibility state for all panels
+            Layer0InfoPanel!.IsVisible = false;
+            Layer1InfoPanel!.IsVisible = false;
+            Layer2InfoPanel!.IsVisible = false;
+            Layer3InfoPanel!.IsVisible = false;
+            LabelSideInfoPanel!.IsVisible = false;
 
 #pragma warning disable IDE0010
             switch (submissionInfo?.DiscIdentity?.Media)
             {
                 case MediaType.CD:
                 case MediaType.GDROM:
-                    L0HeaderText!.Text = "Data Side";
-                    L0MasteringCode!.Label = "Mastering Code";
-                    L0MasteringSID!.Label = "Mastering SID";
-                    L0Toolstamp!.Label = "Toolstamps";
-                    L0MouldSIDs!.Label = "Mould SIDs";
-                    L0AdditionalMoulds!.Label = "Additional Moulds";
-
-                    L1HeaderText!.Text = "Label Side";
-                    L1MasteringCode!.Label = "Mastering Code";
-                    L1MasteringSID!.Label = "Mastering SID";
-                    L1Toolstamp!.Label = "Toolstamps";
-                    L1MouldSIDs!.Label = "Mould SIDs";
-                    L1AdditionalMoulds!.Label = "Additional Moulds";
+                    Layer0InfoPanel!.IsVisible = true;
+                    LabelSideInfoPanel!.IsVisible = true;
                     break;
 
                 case MediaType.DVD5:
@@ -243,119 +241,49 @@ namespace MPF.Avalonia.Windows
                     // Quad-layer discs
                     if (submissionInfo?.DiscIdentifiers.Layerbreak3 != default(long))
                     {
-                        L2InfoPanel!.IsVisible = true;
-                        L3InfoPanel!.IsVisible = true;
-
-                        L0HeaderText!.Text = "Layer 0";
-                        L0MasteringCode!.Label = "Mastering Code";
-                        L0MasteringSID!.Label = "Mastering SID";
-                        L0Toolstamp!.Label = "Toolstamps";
-                        L0MouldSIDs!.Label = "Data Side Mould SIDs";
-                        L0AdditionalMoulds!.Label = "Data Side Additional Moulds";
-
-                        L1HeaderText!.Text = "Layer 1";
-                        L1MasteringCode!.Label = "Mastering Code";
-                        L1MasteringSID!.Label = "Mastering SID";
-                        L1Toolstamp!.Label = "Toolstamps";
-                        L1MouldSIDs!.Label = "Label Side Mould SIDs";
-                        L1AdditionalMoulds!.Label = "Label Side Additional Moulds";
-
-                        L2HeaderText!.Text = "Layer 2";
-                        L2MasteringCode!.Label = "Mastering Code";
-                        L2MasteringSID!.Label = "Mastering SID";
-                        L2Toolstamp!.Label = "Toolstamps";
-
-                        L3HeaderText!.Text = "Layer 3";
-                        L3MasteringCode!.Label = "Mastering Code";
-                        L3MasteringSID!.Label = "Mastering SID";
-                        L3Toolstamp!.Label = "Toolstamps";
+                        Layer0InfoPanel!.IsVisible = true;
+                        Layer1InfoPanel!.IsVisible = true;
+                        Layer2InfoPanel!.IsVisible = true;
+                        Layer3InfoPanel!.IsVisible = true;
+                        LabelSideInfoPanel!.IsVisible = true;
                     }
 
                     // Triple-layer discs
                     else if (submissionInfo?.DiscIdentifiers.Layerbreak2 != default(long))
                     {
-                        L2InfoPanel!.IsVisible = true;
-
-                        L0HeaderText!.Text = "Layer 0";
-                        L0MasteringCode!.Label = "Mastering Code";
-                        L0MasteringSID!.Label = "Mastering SID";
-                        L0Toolstamp!.Label = "Toolstamps";
-                        L0MouldSIDs!.Label = "Data Side Mould SIDs";
-                        L0AdditionalMoulds!.Label = "Data Side Additional Moulds";
-
-                        L1HeaderText!.Text = "Layer 1";
-                        L1MasteringCode!.Label = "Mastering Code";
-                        L1MasteringSID!.Label = "Mastering SID";
-                        L1Toolstamp!.Label = "Toolstamps";
-                        L1MouldSIDs!.Label = "Label Side Mould SIDs";
-                        L1AdditionalMoulds!.Label = "Label Side Additional Moulds";
-
-                        L2HeaderText!.Text = "Layer 2";
-                        L2MasteringCode!.Label = "Mastering Code";
-                        L2MasteringSID!.Label = "Mastering SID";
-                        L2Toolstamp!.Label = "Toolstamps";
+                        Layer0InfoPanel!.IsVisible = true;
+                        Layer1InfoPanel!.IsVisible = true;
+                        Layer2InfoPanel!.IsVisible = true;
+                        LabelSideInfoPanel!.IsVisible = true;
                     }
 
                     // Double-layer discs
                     else if (submissionInfo?.DiscIdentifiers.Layerbreak != default(long))
                     {
-                        L0HeaderText!.Text = "Layer 0";
-                        L0MasteringCode!.Label = "Mastering Code";
-                        L0MasteringSID!.Label = "Mastering SID";
-                        L0Toolstamp!.Label = "Toolstamps";
-                        L0MouldSIDs!.Label = "Data Side Mould SIDs";
-                        L0AdditionalMoulds!.Label = "Data Side Additional Moulds";
-
-                        L1HeaderText!.Text = "Layer 1";
-                        L1MasteringCode!.Label = "Mastering Code";
-                        L1MasteringSID!.Label = "Mastering SID";
-                        L1Toolstamp!.Label = "Toolstamps";
-                        L1MouldSIDs!.Label = "Label Side Mould SIDs";
-                        L1AdditionalMoulds!.Label = "Label Side Additional Moulds";
+                        Layer0InfoPanel!.IsVisible = true;
+                        Layer1InfoPanel!.IsVisible = true;
+                        LabelSideInfoPanel!.IsVisible = true;
                     }
 
                     // Single-layer discs
                     else
                     {
-                        L0HeaderText!.Text = "Data Side";
-                        L0MasteringCode!.Label = "Mastering Code";
-                        L0MasteringSID!.Label = "Mastering SID";
-                        L0Toolstamp!.Label = "Toolstamps";
-                        L0MouldSIDs!.Label = "Mould SIDs";
-                        L0AdditionalMoulds!.Label = "Additional Moulds";
-
-                        L1HeaderText!.Text = "Label Side";
-                        L1MasteringCode!.Label = "Mastering Code";
-                        L1MasteringSID!.Label = "Mastering SID";
-                        L1Toolstamp!.Label = "Toolstamps";
-                        L1MouldSIDs!.Label = "Mould SIDs";
-                        L1AdditionalMoulds!.Label = "Additional Moulds";
+                        Layer0InfoPanel!.IsVisible = true;
+                        LabelSideInfoPanel!.IsVisible = true;
                     }
 
                     break;
 
                 case MediaType.UMDSL:
                 case MediaType.UMDDL:
-                    L0HeaderText!.Text = "Layer 0";
-                    L0MasteringCode!.Label = "Mastering Code";
-                    L0MasteringSID!.Label = "Mastering SID";
-                    L0Toolstamp!.Label = "Toolstamps";
-                    L0MouldSIDs!.Label = "Data Side Mould SIDs";
-                    L0AdditionalMoulds!.Label = "Data Side Additional Moulds";
+                    Layer0InfoPanel!.IsVisible = true;
+                    Layer1InfoPanel!.IsVisible = true;
+                    LabelSideInfoPanel!.IsVisible = true;
 
-                    L1HeaderText!.Text = "Layer 1";
-                    L1MasteringCode!.Label = "Mastering Code";
-                    L1MasteringSID!.Label = "Mastering SID";
-                    L1Toolstamp!.Label = "Toolstamps";
-                    L1MouldSIDs!.Label = "Label Side Mould SIDs";
-                    L1AdditionalMoulds!.Label = "Label Side Additional Moulds";
                     break;
 
+                // Defaults are set above
                 default:
-                    L0InfoPanel!.IsVisible = false;
-                    L1InfoPanel!.IsVisible = false;
-                    L2InfoPanel!.IsVisible = false;
-                    L3InfoPanel!.IsVisible = false;
                     break;
             }
 #pragma warning restore IDE0010

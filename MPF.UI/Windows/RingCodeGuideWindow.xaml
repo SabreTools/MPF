@@ -137,7 +137,7 @@
                             <Label.Content>
                                 <TextBlock>
                                     <Run FontWeight="Bold" Foreground="Red" Text="1. Outer Mastering Code:" />
-                                    <Run Text=" IM01501A-L1&lt;tab&gt;03 +&lt;tab&gt;+" />
+                                    <Run Text=" IM01501A-Layer1&lt;tab&gt;03 +&lt;tab&gt;+" />
                                 </TextBlock>
                             </Label.Content>
                         </Label>
@@ -145,7 +145,7 @@
                             <Label.Content>
                                 <TextBlock>
                                     <Run FontWeight="Bold" Foreground="Green" Text="2. Inner Mastering Code:" />
-                                    <Run Text=" IM01501A-L0&lt;tab&gt;01 +&lt;tab&gt;+" />
+                                    <Run Text=" IM01501A-Layer0&lt;tab&gt;01 +&lt;tab&gt;+" />
                                 </TextBlock>
                             </Label.Content>
                         </Label>

@@ -1501,7 +1501,7 @@ namespace MPF.Processors
                     // Xbox discs have a special layerbreaks
                     else if (xgd && line.StartsWith("LayerBreak"))
                     {
-                        // LayerBreak: <size> (L0 Video: <size>, L0 Middle: <size>, L0 Game: <size>)
+                        // LayerBreak: <size> (Layer0 Video: <size>, Layer0 Middle: <size>, Layer0 Game: <size>)
                         string[] split = Array.FindAll(line.Split(' '), s => !string.IsNullOrEmpty(s));
                         return split[1];
                     }

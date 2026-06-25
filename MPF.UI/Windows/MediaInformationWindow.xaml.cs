@@ -29,26 +29,40 @@ namespace MPF.UI.Windows
 
         #region Ringcodes
 
-        private GroupBox? L0Info => ItemHelper.FindChild<GroupBox>(this, "L0Info");
-        private UserInput? L0MasteringCode => ItemHelper.FindChild<UserInput>(this, "L0MasteringCode");
-        private UserInput? L0MasteringSID => ItemHelper.FindChild<UserInput>(this, "L0MasteringSID");
-        private UserInput? L0Toolstamp => ItemHelper.FindChild<UserInput>(this, "L0Toolstamp");
-        private UserInput? L0MouldSIDs => ItemHelper.FindChild<UserInput>(this, "L0MouldSIDs");
-        private UserInput? L0AdditionalMoulds => ItemHelper.FindChild<UserInput>(this, "L0AdditionalMoulds");
-        private GroupBox? L1Info => ItemHelper.FindChild<GroupBox>(this, "L1Info");
-        private UserInput? L1MasteringCode => ItemHelper.FindChild<UserInput>(this, "L1MasteringCode");
-        private UserInput? L1MasteringSID => ItemHelper.FindChild<UserInput>(this, "L1MasteringSID");
-        private UserInput? L1Toolstamp => ItemHelper.FindChild<UserInput>(this, "L1Toolstamp");
-        private UserInput? L1MouldSIDs => ItemHelper.FindChild<UserInput>(this, "L1MouldSIDs");
-        private UserInput? L1AdditionalMoulds => ItemHelper.FindChild<UserInput>(this, "L1AdditionalMoulds");
-        private GroupBox? L2Info => ItemHelper.FindChild<GroupBox>(this, "L2Info");
-        private UserInput? L2MasteringCode => ItemHelper.FindChild<UserInput>(this, "L2MasteringCode");
-        private UserInput? L2MasteringSID => ItemHelper.FindChild<UserInput>(this, "L2MasteringSID");
-        private UserInput? L2Toolstamp => ItemHelper.FindChild<UserInput>(this, "L2Toolstamp");
-        private GroupBox? L3Info => ItemHelper.FindChild<GroupBox>(this, "L3Info");
-        private UserInput? L3MasteringCode => ItemHelper.FindChild<UserInput>(this, "L3MasteringCode");
-        private UserInput? L3MasteringSID => ItemHelper.FindChild<UserInput>(this, "L3MasteringSID");
-        private UserInput? L3Toolstamp => ItemHelper.FindChild<UserInput>(this, "L3Toolstamp");
+        private GroupBox? Layer0Info => ItemHelper.FindChild<GroupBox>(this, "Layer0Info");
+        private UserInput? Layer0MasteringCode => ItemHelper.FindChild<UserInput>(this, "Layer0MasteringCode");
+        private UserInput? Layer0MasteringSID => ItemHelper.FindChild<UserInput>(this, "Layer0MasteringSID");
+        private UserInput? Layer0Toolstamp => ItemHelper.FindChild<UserInput>(this, "Layer0Toolstamp");
+        private UserInput? Layer0MouldSIDs => ItemHelper.FindChild<UserInput>(this, "Layer0MouldSIDs");
+        private UserInput? Layer0AdditionalMoulds => ItemHelper.FindChild<UserInput>(this, "Layer0AdditionalMoulds");
+
+        private GroupBox? Layer1Info => ItemHelper.FindChild<GroupBox>(this, "Layer1Info");
+        private UserInput? Layer1MasteringCode => ItemHelper.FindChild<UserInput>(this, "Layer1MasteringCode");
+        private UserInput? Layer1MasteringSID => ItemHelper.FindChild<UserInput>(this, "Layer1MasteringSID");
+        private UserInput? Layer1Toolstamp => ItemHelper.FindChild<UserInput>(this, "Layer1Toolstamp");
+        private UserInput? Layer1MouldSIDs => ItemHelper.FindChild<UserInput>(this, "Layer1MouldSIDs");
+        private UserInput? Layer1AdditionalMoulds => ItemHelper.FindChild<UserInput>(this, "Layer1AdditionalMoulds");
+
+        private GroupBox? Layer2Info => ItemHelper.FindChild<GroupBox>(this, "Layer2Info");
+        private UserInput? Layer2MasteringCode => ItemHelper.FindChild<UserInput>(this, "Layer2MasteringCode");
+        private UserInput? Layer2MasteringSID => ItemHelper.FindChild<UserInput>(this, "Layer2MasteringSID");
+        private UserInput? Layer2Toolstamp => ItemHelper.FindChild<UserInput>(this, "Layer2Toolstamp");
+        private UserInput? Layer2MouldSIDs => ItemHelper.FindChild<UserInput>(this, "Layer2MouldSIDs");
+        private UserInput? Layer2AdditionalMoulds => ItemHelper.FindChild<UserInput>(this, "Layer2AdditionalMoulds");
+
+        private GroupBox? Layer3Info => ItemHelper.FindChild<GroupBox>(this, "Layer3Info");
+        private UserInput? Layer3MasteringCode => ItemHelper.FindChild<UserInput>(this, "Layer3MasteringCode");
+        private UserInput? Layer3MasteringSID => ItemHelper.FindChild<UserInput>(this, "Layer3MasteringSID");
+        private UserInput? Layer3Toolstamp => ItemHelper.FindChild<UserInput>(this, "Layer3Toolstamp");
+        private UserInput? Layer3MouldSIDs => ItemHelper.FindChild<UserInput>(this, "Layer3MouldSIDs");
+        private UserInput? Layer3AdditionalMoulds => ItemHelper.FindChild<UserInput>(this, "Layer3AdditionalMoulds");
+
+        private GroupBox? LabelSideInfo => ItemHelper.FindChild<GroupBox>(this, "LabelSideInfo");
+        private UserInput? LabelSideMasteringCode => ItemHelper.FindChild<UserInput>(this, "LabelSideMasteringCode");
+        private UserInput? LabelSideMasteringSID => ItemHelper.FindChild<UserInput>(this, "LabelSideMasteringSID");
+        private UserInput? LabelSideToolstamp => ItemHelper.FindChild<UserInput>(this, "LabelSideToolstamp");
+        private UserInput? LabelSideMouldSIDs => ItemHelper.FindChild<UserInput>(this, "LabelSideMouldSIDs");
+        private UserInput? LabelSideAdditionalMoulds => ItemHelper.FindChild<UserInput>(this, "LabelSideAdditionalMoulds");
 
         #endregion
 
@@ -166,29 +180,35 @@ namespace MPF.UI.Windows
         /// TODO: See if these can be done by binding
         private void EnableTabsInInputFields()
         {
-            // L0
-            L0MasteringCode!.Tab = true;
-            L0MasteringSID!.Tab = true;
-            L0Toolstamp!.Tab = true;
-            L0MouldSIDs!.Tab = true;
-            L0AdditionalMoulds!.Tab = true;
+            Layer0MasteringCode!.Tab = true;
+            Layer0MasteringSID!.Tab = true;
+            Layer0Toolstamp!.Tab = true;
+            Layer0MouldSIDs!.Tab = true;
+            Layer0AdditionalMoulds!.Tab = true;
 
-            // L1
-            L1MasteringCode!.Tab = true;
-            L1MasteringSID!.Tab = true;
-            L1Toolstamp!.Tab = true;
-            L1MouldSIDs!.Tab = true;
-            L1AdditionalMoulds!.Tab = true;
+            Layer1MasteringCode!.Tab = true;
+            Layer1MasteringSID!.Tab = true;
+            Layer1Toolstamp!.Tab = true;
+            Layer1MouldSIDs!.Tab = true;
+            Layer1AdditionalMoulds!.Tab = true;
 
-            // L2
-            L2MasteringCode!.Tab = true;
-            L2MasteringSID!.Tab = true;
-            L2Toolstamp!.Tab = true;
+            Layer2MasteringCode!.Tab = true;
+            Layer2MasteringSID!.Tab = true;
+            Layer2Toolstamp!.Tab = true;
+            Layer2MouldSIDs!.Tab = true;
+            Layer2AdditionalMoulds!.Tab = true;
 
-            // L3
-            L3MasteringCode!.Tab = true;
-            L3MasteringSID!.Tab = true;
-            L3Toolstamp!.Tab = true;
+            Layer3MasteringCode!.Tab = true;
+            Layer3MasteringSID!.Tab = true;
+            Layer3Toolstamp!.Tab = true;
+            Layer3MouldSIDs!.Tab = true;
+            Layer3AdditionalMoulds!.Tab = true;
+
+            LabelSideMasteringCode!.Tab = true;
+            LabelSideMasteringSID!.Tab = true;
+            LabelSideToolstamp!.Tab = true;
+            LabelSideMouldSIDs!.Tab = true;
+            LabelSideAdditionalMoulds!.Tab = true;
         }
 
         /// <summary>
@@ -272,24 +292,20 @@ namespace MPF.UI.Windows
         /// TODO: See if these can be done by binding
         private void UpdateFromDiscType(SubmissionInfo? submissionInfo)
         {
+            // Reset the visibility state for all panels
+            Layer0Info!.Visibility = Visibility.Collapsed;
+            Layer1Info!.Visibility = Visibility.Collapsed;
+            Layer2Info!.Visibility = Visibility.Collapsed;
+            Layer3Info!.Visibility = Visibility.Collapsed;
+            LabelSideInfo!.Visibility = Visibility.Collapsed;
+
 #pragma warning disable IDE0010
             switch (submissionInfo?.DiscIdentity?.Media)
             {
                 case MediaType.CD:
                 case MediaType.GDROM:
-                    L0Info!.Header = "Data Side";
-                    L0MasteringCode!.Label = "Mastering Code";
-                    L0MasteringSID!.Label = "Mastering SID";
-                    L0Toolstamp!.Label = "Toolstamps";
-                    L0MouldSIDs!.Label = "Mould SIDs";
-                    L0AdditionalMoulds!.Label = "Additional Moulds";
-
-                    L1Info!.Header = "Label Side";
-                    L1MasteringCode!.Label = "Mastering Code";
-                    L1MasteringSID!.Label = "Mastering SID";
-                    L1Toolstamp!.Label = "Toolstamps";
-                    L1MouldSIDs!.Label = "Mould SIDs";
-                    L1AdditionalMoulds!.Label = "Additional Moulds";
+                    Layer0Info!.Visibility = Visibility.Visible;
+                    LabelSideInfo!.Visibility = Visibility.Visible;
                     break;
 
                 case MediaType.DVD5:
@@ -309,120 +325,48 @@ namespace MPF.UI.Windows
                     // Quad-layer discs
                     if (submissionInfo?.DiscIdentifiers.Layerbreak3 != default(long))
                     {
-                        L2Info!.Visibility = Visibility.Visible;
-                        L3Info!.Visibility = Visibility.Visible;
-
-                        L0Info!.Header = "Layer 0";
-                        L0MasteringCode!.Label = "Mastering Code";
-                        L0MasteringSID!.Label = "Mastering SID";
-                        L0Toolstamp!.Label = "Toolstamps";
-                        L0MouldSIDs!.Label = "Data Side Mould SIDs";
-                        L0AdditionalMoulds!.Label = "Data Side Additional Moulds";
-
-                        L1Info!.Header = "Layer 1";
-                        L1MasteringCode!.Label = "Mastering Code";
-                        L1MasteringSID!.Label = "Mastering SID";
-                        L1Toolstamp!.Label = "Toolstamps";
-                        L1MouldSIDs!.Label = "Label Side Mould SIDs";
-                        L1AdditionalMoulds!.Label = "Label Side Additional Moulds";
-
-                        L2Info!.Header = "Layer 2";
-                        L2MasteringCode!.Label = "Mastering Code";
-                        L2MasteringSID!.Label = "Mastering SID";
-                        L2Toolstamp!.Label = "Toolstamps";
-
-                        L3Info!.Header = "Layer 3";
-                        L3MasteringCode!.Label = "Mastering Code";
-                        L3MasteringSID!.Label = "Mastering SID";
-                        L3Toolstamp!.Label = "Toolstamps";
+                        Layer0Info!.Visibility = Visibility.Visible;
+                        Layer1Info!.Visibility = Visibility.Visible;
+                        Layer2Info!.Visibility = Visibility.Visible;
+                        Layer3Info!.Visibility = Visibility.Visible;
+                        LabelSideInfo!.Visibility = Visibility.Visible;
                     }
 
                     // Triple-layer discs
                     else if (submissionInfo?.DiscIdentifiers.Layerbreak2 != default(long))
                     {
-                        L2Info!.Visibility = Visibility.Visible;
-
-                        L0Info!.Header = "Layer 0";
-                        L0MasteringCode!.Label = "Mastering Code";
-                        L0MasteringSID!.Label = "Mastering SID";
-                        L0Toolstamp!.Label = "Toolstamps";
-                        L0MouldSIDs!.Label = "Data Side Mould SIDs";
-                        L0AdditionalMoulds!.Label = "Data Side Additional Moulds";
-
-                        L1Info!.Header = "Layer 1";
-                        L1MasteringCode!.Label = "Mastering Code";
-                        L1MasteringSID!.Label = "Mastering SID";
-                        L1Toolstamp!.Label = "Toolstamps";
-                        L1MouldSIDs!.Label = "Label Side Mould SIDs";
-                        L1AdditionalMoulds!.Label = "Label Side Additional Moulds";
-
-                        L2Info!.Header = "Layer 2";
-                        L2MasteringCode!.Label = "Mastering Code";
-                        L2MasteringSID!.Label = "Mastering SID";
-                        L2Toolstamp!.Label = "Toolstamps";
+                        Layer0Info!.Visibility = Visibility.Visible;
+                        Layer1Info!.Visibility = Visibility.Visible;
+                        Layer2Info!.Visibility = Visibility.Visible;
+                        LabelSideInfo!.Visibility = Visibility.Visible;
                     }
 
                     // Double-layer discs
                     else if (submissionInfo?.DiscIdentifiers.Layerbreak != default(long))
                     {
-                        L0Info!.Header = "Layer 0";
-                        L0MasteringCode!.Label = "Mastering Code";
-                        L0MasteringSID!.Label = "Mastering SID";
-                        L0Toolstamp!.Label = "Toolstamps";
-                        L0MouldSIDs!.Label = "Data Side Mould SIDs";
-                        L0AdditionalMoulds!.Label = "Data Side Additional Moulds";
-
-                        L1Info!.Header = "Layer 1";
-                        L1MasteringCode!.Label = "Mastering Code";
-                        L1MasteringSID!.Label = "Mastering SID";
-                        L1Toolstamp!.Label = "Toolstamps";
-                        L1MouldSIDs!.Label = "Label Side Mould SIDs";
-                        L1AdditionalMoulds!.Label = "Label Side Additional Moulds";
+                        Layer0Info!.Visibility = Visibility.Visible;
+                        Layer1Info!.Visibility = Visibility.Visible;
+                        LabelSideInfo!.Visibility = Visibility.Visible;
                     }
 
                     // Single-layer discs
                     else
                     {
-                        L0Info!.Header = "Data Side";
-                        L0MasteringCode!.Label = "Mastering Code";
-                        L0MasteringSID!.Label = "Mastering SID";
-                        L0Toolstamp!.Label = "Toolstamps";
-                        L0MouldSIDs!.Label = "Mould SIDs";
-                        L0AdditionalMoulds!.Label = "Additional Moulds";
-
-                        L1Info!.Header = "Label Side";
-                        L1MasteringCode!.Label = "Mastering Code";
-                        L1MasteringSID!.Label = "Mastering SID";
-                        L1Toolstamp!.Label = "Toolstamps";
-                        L1MouldSIDs!.Label = "Mould SIDs";
-                        L1AdditionalMoulds!.Label = "Additional Moulds";
+                        Layer0Info!.Visibility = Visibility.Visible;
+                        LabelSideInfo!.Visibility = Visibility.Visible;
                     }
 
                     break;
 
                 case MediaType.UMDSL:
                 case MediaType.UMDDL:
-                    L0Info!.Header = "Layer 0";
-                    L0MasteringCode!.Label = "Mastering Code";
-                    L0MasteringSID!.Label = "Mastering SID";
-                    L0Toolstamp!.Label = "Toolstamps";
-                    L0MouldSIDs!.Label = "Data Side Mould SIDs";
-                    L0AdditionalMoulds!.Label = "Data Side Additional Moulds";
-
-                    L1Info!.Header = "Layer 1";
-                    L1MasteringCode!.Label = "Mastering Code";
-                    L1MasteringSID!.Label = "Mastering SID";
-                    L1Toolstamp!.Label = "Toolstamps";
-                    L1MouldSIDs!.Label = "Label Side Mould SIDs";
-                    L1AdditionalMoulds!.Label = "Label Side Additional Moulds";
+                    Layer0Info!.Visibility = Visibility.Visible;
+                    Layer1Info!.Visibility = Visibility.Visible;
+                    LabelSideInfo!.Visibility = Visibility.Visible;
                     break;
 
-                // All other media we assume to have no rings
+                // Defaults are set above
                 default:
-                    L0Info!.Visibility = Visibility.Collapsed;
-                    L1Info!.Visibility = Visibility.Collapsed;
-                    L2Info!.Visibility = Visibility.Collapsed;
-                    L3Info!.Visibility = Visibility.Collapsed;
                     break;
             }
 #pragma warning restore IDE0010
