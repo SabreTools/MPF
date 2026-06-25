@@ -14,8 +14,8 @@ disc0:/PSP_GAME/PARAM.SFO
 	TITLE: title
 
 pspUmdTypes: 0x10 (GAME)
-  Layer0 length: 442560 (0x6c0c0)
-  Layer1 length: 276096 (0x43680)
+  L0 length: 442560 (0x6c0c0)
+  L1 length: 276096 (0x43680)
   ---------------------------
       Total: 718656 (0xaf740)
    FileSize: 1471807488 (0x57ba0000)

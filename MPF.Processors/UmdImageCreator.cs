@@ -176,7 +176,7 @@ namespace MPF.Processors
                         version = line.Split(' ')[1];
                     else if (line.StartsWith("pspUmdTypes"))
                         category = ProcessingTool.GetUMDCategory(line.Split(' ')[2]);
-                    else if (line.StartsWith("Layer0 length"))
+                    else if (line.StartsWith("L0 length"))
                         layer = line.Split(' ')[2];
                     else if (line.StartsWith("FileSize:"))
                         size = long.Parse(line.Split(' ')[1]);
@@ -190,7 +190,7 @@ namespace MPF.Processors
                     serial = serial.Substring(0, 4) + "-" + serial.Substring(4);
 #endif
 
-                // If the Layer0 length is the size of the full disc, there's no layerbreak
+                // If the L0 length is the size of the full disc, there's no layerbreak
                 if (long.TryParse(layer, out long umdlayerValue) && umdlayerValue * 2048 == size)
                     layer = null;
 

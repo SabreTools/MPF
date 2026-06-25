@@ -86,10 +86,10 @@
             </MenuItem>
           </Menu>
           <Button x:Name="MinimizeButton" Classes="titlebar-button" Width="34" MinHeight="26" Padding="0" Margin="0" CornerRadius="0" Click="MinimizeButtonClick">
-            <TextBlock FontFamily="Segoe MDLayer2 Assets" FontSize="10" Text="&#xE921;" />
+            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="10" Text="&#xE921;" />
           </Button>
           <Button x:Name="CloseButton" Classes="titlebar-button" Width="38" MinHeight="26" Padding="0" Margin="0" CornerRadius="0" Click="CloseButtonClick">
-            <TextBlock FontFamily="Segoe MDLayer2 Assets" FontSize="10" Text="&#xE8BB;" />
+            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="10" Text="&#xE8BB;" />
           </Button>
         </StackPanel>
       </Grid>
