@@ -1443,7 +1443,7 @@ namespace MPF.Frontend.ViewModels
             return outputPath
                 .Replace("%SYSTEM%", systemLong)
                 .Replace("%SYS%", systemShort.ToUpperInvariant())
-                .Replace("%sys%", systemShort)
+                .Replace("%sys%", systemShort.ToLowerInvariant())
                 .Replace("%MEDIA%", mediaLong)
                 .Replace("%PROGRAM%", program)
                 .Replace("%PROG%", programShort)

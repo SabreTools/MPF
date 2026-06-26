@@ -2,6 +2,7 @@
 
 - Output used configuration path for commandline programs
 - Resolve tilde-prefixed paths for binaries
+- Add feature to list path macros
 
 ### 3.8.1 (2026-06-26)
 

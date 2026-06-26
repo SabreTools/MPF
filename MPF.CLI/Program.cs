@@ -57,6 +57,7 @@ namespace MPF.CLI
                 case VersionFeature version: version.Execute(); return;
                 case ListCodesFeature lc: lc.Execute(); return;
                 case ListConfigFeature lc: lc.Execute(); return;
+                case ListPathMacrosFeature lpm: lpm.Execute(); return;
                 case ListPhysicalMediaTypesFeature lm: lm.Execute(); return;
                 case ListProgramsFeature lp: lp.Execute(); return;
                 case ListSystemsFeature ls: ls.Execute(); return;
@@ -153,6 +154,7 @@ namespace MPF.CLI
             commandSet.Add(new VersionFeature());
             commandSet.Add(new ListCodesFeature());
             commandSet.Add(new ListConfigFeature());
+            commandSet.Add(new ListPathMacrosFeature());
             commandSet.Add(new ListPhysicalMediaTypesFeature());
             commandSet.Add(new ListSystemsFeature());
             commandSet.Add(new ListProgramsFeature());
