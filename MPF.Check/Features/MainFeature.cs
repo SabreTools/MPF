@@ -129,7 +129,13 @@ namespace MPF.Check.Features
                 return true;
 
             // Read the options from config, if possible
-            Options = OptionsLoader.LoadFromConfig();
+            Options = OptionsLoader.LoadFromConfig(out string? configPath);
+
+            // Log the configuration path
+            Console.WriteLine($"Configuration path: {configPath}");
+            Console.WriteLine();
+
+            // Determine which options to set
             if (Options.FirstRun)
             {
                 Options = new Options();

@@ -238,7 +238,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public CheckDumpViewModel()
         {
-            _options = OptionsLoader.LoadFromConfig();
+            _options = OptionsLoader.LoadFromConfig(out _);
             _internalPrograms = [];
             _inputPath = string.Empty;
             _systems = [];

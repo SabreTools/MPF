@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Output used configuration path for commandline programs
+
 ### 3.8.1 (2026-06-26)
 
 - Fix references for media type label

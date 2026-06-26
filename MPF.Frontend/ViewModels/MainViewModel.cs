@@ -557,7 +557,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            _options = OptionsLoader.LoadFromConfig();
+            _options = OptionsLoader.LoadFromConfig(out _);
 
             // Added to clear warnings, all are set externally
             _drives = [];

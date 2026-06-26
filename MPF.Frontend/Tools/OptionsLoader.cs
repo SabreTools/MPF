@@ -189,8 +189,12 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Load the current set of options from the application configuration
         /// </summary>
-        public static Options LoadFromConfig()
+        /// <param name="configPath">Output string indicating the loaded configuration path, if it could load</remarks>
+        public static Options LoadFromConfig(out string? configPath)
         {
+            // Set the default config path
+            configPath = null;
+
             // If no options path can be found
             if (string.IsNullOrEmpty(ConfigurationPath))
                 return new Options();
@@ -198,6 +202,9 @@ namespace MPF.Frontend.Tools
             // If the file does not exist
             if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
                 return new Options();
+
+            // Set the configuration path
+            configPath = ConfigurationPath;
 
             var serializer = JsonSerializer.Create();
             var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
@@ -210,8 +217,12 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Load the current set of options from the application configuration
         /// </summary>
-        public static Options LoadFromConfigNative()
+        /// <param name="configPath">Output string indicating the loaded configuration path, if it could load</remarks>
+        public static Options LoadFromConfigNative(out string? configPath)
         {
+            // Set the default config path
+            configPath = null;
+
             // If no options path can be found
             if (string.IsNullOrEmpty(ConfigurationPath))
                 return new Options();
@@ -219,6 +230,9 @@ namespace MPF.Frontend.Tools
             // If the file does not exist
             if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
                 return new Options();
+
+            // Set the configuration path
+            configPath = ConfigurationPath;
 
             var serializer = JsonSerializer.Create();
             serializer.DefaultValueHandling = DefaultValueHandling.Ignore;

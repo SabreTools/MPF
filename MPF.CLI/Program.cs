@@ -16,7 +16,13 @@ namespace MPF.CLI
         public static void Main(string[] args)
         {
             // Load options from the config file
-            var options = OptionsLoader.LoadFromConfig();
+            var options = OptionsLoader.LoadFromConfig(out string? configPath);
+
+            // Log the configuration path
+            Console.WriteLine($"Configuration path: {configPath}");
+            Console.WriteLine();
+
+            // Indicate if this was the initial run
             if (options.FirstRun)
             {
                 // Reset first run

@@ -1,4 +1,5 @@
 
+using System;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
 using SabreTools.CommandLine.Inputs;
@@ -69,7 +70,11 @@ namespace MPF.CLI.Features
                 return true;
 
             // Read the options from config, if possible
-            Options = OptionsLoader.LoadFromConfig();
+            Options = OptionsLoader.LoadFromConfig(out string? configPath);
+
+            // Log the configuration path
+            Console.WriteLine($"Configuration path: {configPath}");
+            Console.WriteLine();
 
             // The first argument is the system type
             System = args[0].Trim('"').ToPhysicalSystem();

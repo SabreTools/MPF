@@ -34,7 +34,7 @@ namespace MPF.CLI.Features
             }
 
             // Read the options from config, if possible
-            Options = OptionsLoader.LoadFromConfig();
+            Options = OptionsLoader.LoadFromConfig(out string? configPath);
 
             // Create return values
             PhysicalMediaType = SabreTools.RedumpLib.Data.PhysicalMediaType.NONE;
@@ -53,6 +53,8 @@ namespace MPF.CLI.Features
             Console.Clear();
             Console.WriteLine("MPF.CLI Interactive Mode - Main Menu");
             Console.WriteLine("-------------------------");
+            Console.WriteLine($"Loaded configuration from: {configPath}");
+            Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine($"1) Set system (Currently '{System.LongName()}')");
             Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram.LongName()}')");

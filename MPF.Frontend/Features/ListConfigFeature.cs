@@ -26,12 +26,17 @@ namespace MPF.Frontend.Features
         public override bool Execute()
         {
             // Try to load the current config
-            var options = OptionsLoader.LoadFromConfig();
+            var options = OptionsLoader.LoadFromConfig(out string? configPath);
             if (options.FirstRun)
             {
+                Console.WriteLine($"Configuration path: {configPath}");
                 Console.WriteLine("No valid configuration found!");
                 return true;
             }
+
+            // Path
+            Console.WriteLine($"Configuration path: {configPath}");
+            Console.WriteLine();
 
             // Root-level
             Console.WriteLine($"Configuration Version = {options.Version}");

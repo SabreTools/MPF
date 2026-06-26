@@ -475,7 +475,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public CreateIRDViewModel()
         {
-            _options = OptionsLoader.LoadFromConfig();
+            _options = OptionsLoader.LoadFromConfig(out _);
 
             _inputPath = string.Empty;
             _logPath = string.Empty;

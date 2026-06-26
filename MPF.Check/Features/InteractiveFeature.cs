@@ -35,7 +35,7 @@ namespace MPF.Check.Features
             }
 
             // Read the options from config, if possible
-            Options = OptionsLoader.LoadFromConfig();
+            Options = OptionsLoader.LoadFromConfig(out string? configPath);
             if (Options.FirstRun)
             {
                 Options = new Options();
@@ -86,6 +86,8 @@ namespace MPF.Check.Features
             Console.Clear();
             Console.WriteLine("MPF.Check Interactive Mode - Main Menu");
             Console.WriteLine("-------------------------");
+            Console.WriteLine();
+            Console.WriteLine($"Loaded configuration from: {configPath}");
             Console.WriteLine();
             Console.WriteLine($"1) Set system (Currently '{System.LongName()}')");
             Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram.LongName()}')");
