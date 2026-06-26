@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Output used configuration path for commandline programs
+- Resolve tilde-prefixed paths for binaries
 
 ### 3.8.1 (2026-06-26)
 

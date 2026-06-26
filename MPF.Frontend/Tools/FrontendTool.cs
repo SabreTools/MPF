@@ -125,6 +125,17 @@ namespace MPF.Frontend.Tools
             if (string.IsNullOrEmpty(configuredPath))
                 return null;
 
+            // If the configured path starts with a home character
+            if (configuredPath!.StartsWith("~/") || configuredPath.StartsWith("~\\"))
+            {
+                string homeDirectory = PathTool.GetHomeDirectory();
+
+                configuredPath = configuredPath.Substring(2);
+                configuredPath = Path.Combine(homeDirectory, configuredPath);
+
+                return File.Exists(configuredPath) ? configuredPath : null;
+            }
+
             // Explicit location (absolute or relative path) — keep historical behavior.
             if (configuredPath!.Contains("/") || configuredPath.Contains("\\"))
                 return File.Exists(configuredPath) ? configuredPath : null;
