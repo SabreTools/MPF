@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.8.1 (2026-06-26)
 
 - Fix references for media type label
 - Ensure file hashing includes filename
