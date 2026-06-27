@@ -71,6 +71,11 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private ProcessUserInfoDelegate? _processUserInfo;
 
+        /// <summary>
+        /// Optional live tool-output console supplied by the frontend (null if unused)
+        /// </summary>
+        private IToolOutputConsole? _toolConsole;
+
         #endregion
 
         #region Properties
@@ -597,12 +602,14 @@ namespace MPF.Frontend.ViewModels
         public void Init(
             Action<LogLevel, string> loggerAction,
             Func<string, string, int, bool, bool?> displayUserMessage,
-            ProcessUserInfoDelegate processUserInfo)
+            ProcessUserInfoDelegate processUserInfo,
+            IToolOutputConsole? toolConsole = null)
         {
             // Set the callbacks
             _logger = loggerAction;
             _displayUserMessage = displayUserMessage;
             _processUserInfo = processUserInfo;
+            _toolConsole = toolConsole;
 
             // Finish initializing the rest of the values
             InitializeUIValues(removeEventHandlers: false, rebuildPrograms: true, rescanDrives: true);
@@ -2259,8 +2266,19 @@ namespace MPF.Frontend.ViewModels
                 protectionProgress.ProgressChanged += ProgressUpdated;
                 _environment.ReportStatus += ProgressUpdated;
 
+                // Stream live tool output to the separate console window, if the frontend
+                // provides one (Linux GUI). Harmless no-op for frontends that do not.
+                if (_toolConsole is not null)
+                {
+                    _toolConsole.Open();
+                    _environment.ToolOutputReceived = _toolConsole.Append;
+                }
+
                 // Run the program with the parameters
                 ResultEventArgs result = await _environment.Run(CurrentPhysicalMediaType, resultProgress);
+
+                // The tool has exited; let the console close itself per the user's preference
+                _toolConsole?.NotifyToolExited();
 
                 // If we didn't execute a dumping command we cannot get submission output
                 if (!_environment.IsDumpingCommand())

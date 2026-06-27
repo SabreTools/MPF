@@ -88,6 +88,7 @@ namespace MPF.Frontend
 
             GUI.CopyUpdateUrlToClipboard = source.GUI.CopyUpdateUrlToClipboard;
             GUI.OpenLogWindowAtStartup = source.GUI.OpenLogWindowAtStartup;
+            GUI.ToolConsoleAutoClose = source.GUI.ToolConsoleAutoClose;
 
             GUI.DefaultInterfaceLanguage = source.GUI.DefaultInterfaceLanguage;
             GUI.ShowDebugViewMenuItem = source.GUI.ShowDebugViewMenuItem;
@@ -443,6 +444,12 @@ namespace MPF.Frontend
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public bool OpenLogWindowAtStartup { get; set; } = true;
+
+        /// <summary>
+        /// Automatically close the separate tool-output window when the dumping program exits
+        /// </summary>
+        /// <remarks>Version 1 and greater; currently used by the Linux GUI tool-output window</remarks>
+        public bool ToolConsoleAutoClose { get; set; } = true;
 
         #endregion
 
