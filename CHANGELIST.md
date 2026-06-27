@@ -4,6 +4,7 @@
 - Resolve tilde-prefixed paths for binaries
 - Add feature to list path macros
 - Avoid possible unwanted filtering behavior
+- Fix language menu requiring two clicks in the Avalonia GUI (gmipf)
 
 ### 3.8.1 (2026-06-26)
 
