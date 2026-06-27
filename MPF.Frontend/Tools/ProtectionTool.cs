@@ -225,12 +225,12 @@ namespace MPF.Frontend.Tools
                 return "No protections found [OMIT LINE FROM SUBMISSION]";
 
             // Sanitize context-sensitive protections
-            protections = SanitizeContextSensitiveProtections(protections);
+            var sanitized = SanitizeContextSensitiveProtections(protections);
 
             // Get a list of distinct found protections
 #if NET20
             var protectionValues = new List<string>();
-            foreach (var value in protections.Values)
+            foreach (var value in sanitized.Values)
             {
                 if (value.Count == 0)
                     continue;
@@ -242,7 +242,7 @@ namespace MPF.Frontend.Tools
                 }
             }
 #else
-            var protectionValues = protections
+            var protectionValues = sanitized
                 .SelectMany(kvp => kvp.Value)
                 .Distinct()
                 .ToList();
