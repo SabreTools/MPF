@@ -4,6 +4,7 @@
 - Resolve tilde-prefixed paths for binaries
 - Add feature to list path macros
 - Avoid possible unwanted filtering behavior
+- Enable new languages and regions
 
 ### 3.8.1 (2026-06-26)
 
