@@ -5,6 +5,7 @@
 - Add feature to list path macros
 - Avoid possible unwanted filtering behavior
 - Enable new languages and regions
+- Update RedumpLib to 2.0.7
 
 ### 3.8.1 (2026-06-26)
 
