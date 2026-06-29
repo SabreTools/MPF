@@ -7,6 +7,7 @@
 - Enable new languages and regions
 - Update RedumpLib to 2.0.7
 - Enable new languages and regions
+- Fix media type dropdown display issue
 
 ### 3.8.1 (2026-06-26)
 

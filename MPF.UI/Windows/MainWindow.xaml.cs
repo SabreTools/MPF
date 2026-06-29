@@ -529,7 +529,7 @@ namespace MPF.UI.Windows
             }
 
             // If there are no media types defined
-            if (MainViewModel.PhysicalMediaTypes is null)
+            if (MainViewModel.MediaTypes is null)
             {
                 SystemMediaTypeLabel!.Content = (string)Application.Current.FindResource("SystemLabelString");
                 MediaTypeComboBox!.Visibility = Visibility.Hidden;
@@ -537,7 +537,7 @@ namespace MPF.UI.Windows
             }
 
             // Only systems with more than one media type should show the box
-            bool visible = MainViewModel.PhysicalMediaTypes.Count > 1;
+            bool visible = MainViewModel.MediaTypes.Count > 1;
             SystemMediaTypeLabel!.Content = visible
                 ? (string)Application.Current.FindResource("SystemMediaTypeLabelString")
                 : (string)Application.Current.FindResource("SystemLabelString");

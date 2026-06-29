@@ -503,13 +503,13 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Current list of supported media types
         /// </summary>
-        public List<Element<PhysicalMediaType>>? PhysicalMediaTypes
+        public List<Element<PhysicalMediaType>>? MediaTypes
         {
             get => _mediaTypes;
             set
             {
                 _mediaTypes = value;
-                TriggerPropertyChanged(nameof(PhysicalMediaTypes));
+                TriggerPropertyChanged(nameof(MediaTypes));
             }
         }
         private List<Element<PhysicalMediaType>>? _mediaTypes;
@@ -586,7 +586,7 @@ namespace MPF.Frontend.ViewModels
             EnableParametersCheckBoxEnabled = true;
             LogPanelExpanded = _options.GUI.OpenLogWindowAtStartup;
 
-            PhysicalMediaTypes = [];
+            MediaTypes = [];
             Systems = PhysicalSystemComboBoxItem.GenerateElements();
             InternalPrograms = [];
         }
@@ -713,14 +713,14 @@ namespace MPF.Frontend.ViewModels
                 if (CurrentPhysicalMediaType is not null && index == -1)
                     VerboseLogLn($"Disc of type '{CurrentPhysicalMediaType.LongName()}' found, but the current system does not support it!");
 
-                PhysicalMediaTypes = mediaTypeValues.ConvertAll(m => new Element<PhysicalMediaType>(m ?? PhysicalMediaType.NONE));
-                PhysicalMediaTypeComboBoxEnabled = PhysicalMediaTypes.Count > 1;
-                CurrentPhysicalMediaType = index > -1 ? PhysicalMediaTypes[index] : PhysicalMediaTypes[0];
+                MediaTypes = mediaTypeValues.ConvertAll(m => new Element<PhysicalMediaType>(m ?? PhysicalMediaType.NONE));
+                PhysicalMediaTypeComboBoxEnabled = MediaTypes.Count > 1;
+                CurrentPhysicalMediaType = index > -1 ? MediaTypes[index] : MediaTypes[0];
             }
             else
             {
                 PhysicalMediaTypeComboBoxEnabled = false;
-                PhysicalMediaTypes = null;
+                MediaTypes = null;
                 CurrentPhysicalMediaType = null;
             }
 
@@ -1939,13 +1939,13 @@ namespace MPF.Frontend.ViewModels
 
             OutputPath = IOExtensions.NormalizeFilePath(_environment.ContextOutputPath, fullPath: false);
 
-            if (PhysicalMediaTypes is not null)
+            if (MediaTypes is not null)
             {
                 PhysicalMediaType? mediaType = _environment.GetPhysicalMediaType();
                 if (mediaType is not null)
                 {
-                    int mediaTypeIndex = PhysicalMediaTypes.FindIndex(m => m == mediaType);
-                    CurrentPhysicalMediaType = mediaTypeIndex > -1 ? PhysicalMediaTypes[mediaTypeIndex] : PhysicalMediaTypes[0];
+                    int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
+                    CurrentPhysicalMediaType = mediaTypeIndex > -1 ? MediaTypes[mediaTypeIndex] : MediaTypes[0];
                 }
             }
 
@@ -2102,13 +2102,13 @@ namespace MPF.Frontend.ViewModels
         private void SetCurrentMediaType()
         {
             // If we don't have any selected media types, we don't care and return
-            if (PhysicalMediaTypes is null)
+            if (MediaTypes is null)
                 return;
 
             // If we have a detected media type, use that first
             if (_detectedPhysicalMediaType is not null)
             {
-                int detectedIndex = PhysicalMediaTypes.FindIndex(kvp => kvp.Value == _detectedPhysicalMediaType);
+                int detectedIndex = MediaTypes.FindIndex(kvp => kvp.Value == _detectedPhysicalMediaType);
                 if (detectedIndex > -1)
                 {
                     CurrentPhysicalMediaType = _detectedPhysicalMediaType;
@@ -2121,11 +2121,11 @@ namespace MPF.Frontend.ViewModels
                 return;
 
             // Now set the selected item, if possible
-            int index = PhysicalMediaTypes.FindIndex(kvp => kvp.Value == CurrentPhysicalMediaType);
+            int index = MediaTypes.FindIndex(kvp => kvp.Value == CurrentPhysicalMediaType);
             if (CurrentPhysicalMediaType is not null && index == -1)
                 VerboseLogLn($"Disc of type '{CurrentPhysicalMediaType.LongName()}' found, but the current system does not support it!");
 
-            CurrentPhysicalMediaType = index > -1 ? PhysicalMediaTypes[index] : PhysicalMediaTypes[0];
+            CurrentPhysicalMediaType = index > -1 ? MediaTypes[index] : MediaTypes[0];
         }
 
         /// <summary>

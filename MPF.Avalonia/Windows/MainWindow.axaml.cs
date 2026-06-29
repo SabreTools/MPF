@@ -543,7 +543,7 @@ namespace MPF.Avalonia.Windows
             }
 
             // If there are no media types defined
-            if (MainViewModel.PhysicalMediaTypes is null)
+            if (MainViewModel.MediaTypes is null)
             {
                 SystemMediaTypeLabel!.Text = StringResource("SystemLabelString", "System Type");
                 MediaTypeComboBox!.IsVisible = false;
@@ -551,7 +551,7 @@ namespace MPF.Avalonia.Windows
             }
 
             // Only systems with more than one media type should show the box
-            bool visible = MainViewModel.PhysicalMediaTypes.Count > 1;
+            bool visible = MainViewModel.MediaTypes.Count > 1;
             SystemMediaTypeLabel!.Text = visible
                 ? StringResource("SystemMediaTypeLabelString", "System/Media Type")
                 : StringResource("SystemLabelString", "System Type");
