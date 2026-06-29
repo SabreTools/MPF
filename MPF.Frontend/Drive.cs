@@ -345,7 +345,7 @@ namespace MPF.Frontend
                 foreach (CimInstance instance in collection)
                 {
                     CimKeyedCollection<CimProperty> properties = instance.CimInstanceProperties;
-                    uint? mediaType = properties["PhysicalMediaType"]?.Value as uint?;
+                    uint? mediaType = properties["MediaType"]?.Value as uint?;
                     if (mediaType is not null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
                         char devId = (properties["Caption"].Value as string ?? string.Empty)[0];
