@@ -9,6 +9,7 @@
 - Enable new languages and regions
 - Fix media type dropdown display issue
 - Fix detection issue for floppy disks
+- Fix WPF issue with older .NET versions
 
 ### 3.8.1 (2026-06-26)
 
