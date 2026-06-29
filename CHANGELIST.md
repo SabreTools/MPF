@@ -6,6 +6,7 @@
 - Avoid possible unwanted filtering behavior
 - Enable new languages and regions
 - Update RedumpLib to 2.0.7
+- Enable new languages and regions
 
 ### 3.8.1 (2026-06-26)
 
