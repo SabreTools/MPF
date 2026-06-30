@@ -1822,7 +1822,7 @@ namespace MPF.Frontend.ViewModels
                     || File.Exists(Path.Combine(drive.Name, "TBIOS.SYS"))
                     || File.Exists(Path.Combine(drive.Name, "TBIOS.BIN")))
                 {
-                    return PhysicalSystem.FujitsuFMTownsseries;
+                    return PhysicalSystem.FujitsuFMTownsSeries;
                 }
             }
             catch { }

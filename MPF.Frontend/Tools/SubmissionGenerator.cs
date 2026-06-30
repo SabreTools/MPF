@@ -915,7 +915,7 @@ namespace MPF.Frontend.Tools
                     info.RegionsAndLanguages.Regions ??= [Region.Europe];
                     break;
 
-                case PhysicalSystem.FujitsuFMTownsseries:
+                case PhysicalSystem.FujitsuFMTownsSeries:
                     info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
@@ -1020,11 +1020,11 @@ namespace MPF.Frontend.Tools
                     info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
 
-                case PhysicalSystem.NECPC88series:
+                case PhysicalSystem.NECPC88Series:
                     info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
 
-                case PhysicalSystem.NECPC98series:
+                case PhysicalSystem.NECPC98Series:
                     info.DiscIdentifiers.EXEDate = addPlaceholders ? RequiredValue : string.Empty;
                     info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;

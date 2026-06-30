@@ -11,6 +11,7 @@
 - Fix detection issue for floppy disks
 - Fix WPF issue with older .NET versions
 - Fix message when clipboard is disabled
+- Update RedumpLib to 2.0.8
 
 ### 3.8.1 (2026-06-26)
 
