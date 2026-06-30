@@ -10,6 +10,7 @@
 - Fix media type dropdown display issue
 - Fix detection issue for floppy disks
 - Fix WPF issue with older .NET versions
+- Fix message when clipboard is disabled
 
 ### 3.8.1 (2026-06-26)
 

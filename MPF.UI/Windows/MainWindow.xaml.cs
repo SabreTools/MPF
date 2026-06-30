@@ -364,8 +364,10 @@ namespace MPF.UI.Windows
         public void CheckForUpdates(bool showIfSame)
         {
             MainViewModel.CheckForUpdates(out bool different, out string message, out var url);
-            if (different)
+            if (different && MainViewModel.Options.GUI.CopyUpdateUrlToClipboard)
                 message += $"{Environment.NewLine}The update URL has been added copied to your clipboard";
+            else if (different && !MainViewModel.Options.GUI.CopyUpdateUrlToClipboard)
+                message += $"{Environment.NewLine}You are out of date!";
             else
                 message += $"{Environment.NewLine}You have the newest version!";
 
