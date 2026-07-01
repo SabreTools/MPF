@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.8.2 (2026-07-01)
 
 - Output used configuration path for commandline programs
 - Resolve tilde-prefixed paths for binaries
