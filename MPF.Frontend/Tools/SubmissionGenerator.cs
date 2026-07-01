@@ -510,7 +510,7 @@ namespace MPF.Frontend.Tools
         /// </summary>
         /// <param name="labels">Dictionary of volume labels and their filesystems</param>
         /// <returns>Formatted string of volume labels and their filesystems</returns>
-        private static string? FormatVolumeLabels(string? driveLabel, Dictionary<string, List<string>>? labels)
+        internal static string? FormatVolumeLabels(string? driveLabel, Dictionary<string, List<string>>? labels)
         {
             // Treat empty label as null
             if (driveLabel is not null && driveLabel.Length == 0)
@@ -530,6 +530,10 @@ namespace MPF.Frontend.Tools
             {
                 // Ignore common volume labels
                 if (FrontendTool.GetPhysicalSystemFromVolumeLabel(driveLabel) is not null)
+                    return null;
+
+                // Ignore "DVD_ROM" / "CD_ROM" labels
+                if (driveLabel == "DVD_ROM" || driveLabel == "CD_ROM")
                     return null;
 
                 return driveLabel;
@@ -601,6 +605,10 @@ namespace MPF.Frontend.Tools
             {
                 // Ignore common volume labels
                 if (FrontendTool.GetPhysicalSystemFromVolumeLabel(firstLabel) is not null)
+                    return null;
+
+                // Ignore "DVD_ROM" / "CD_ROM" labels
+                if (driveLabel == "DVD_ROM" || driveLabel == "CD_ROM")
                     return null;
 
                 return firstLabel;

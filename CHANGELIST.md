@@ -12,6 +12,7 @@
 - Fix WPF issue with older .NET versions
 - Fix message when clipboard is disabled
 - Update RedumpLib to 2.0.8
+- Attempt to handle generic disc labels again
 
 ### 3.8.1 (2026-06-26)
 
