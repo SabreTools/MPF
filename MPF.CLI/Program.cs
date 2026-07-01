@@ -15,6 +15,18 @@ namespace MPF.CLI
     {
         public static void Main(string[] args)
         {
+            // Create the command set
+            var mainFeature = new MainFeature();
+            var commandSet = CreateCommands(mainFeature);
+
+            // The man page is rendered purely from the command model, so emit it
+            // before the configuration path and other startup output to keep the roff clean
+            if (args is not null && args.Length > 0 && commandSet.GetTopLevel(args[0]) is Manpage manpage)
+            {
+                manpage.ProcessArgs(args, 0, commandSet);
+                return;
+            }
+
             // Load options from the config file
             var options = OptionsLoader.LoadFromConfig(out string? configPath);
 
@@ -33,10 +45,6 @@ namespace MPF.CLI
                 Console.WriteLine("First-run detected! Please verify the generated config.json and run again.");
                 return;
             }
-
-            // Create the command set
-            var mainFeature = new MainFeature();
-            var commandSet = CreateCommands(mainFeature);
 
             // If we have no args, show the help and quit
             if (args is null || args.Length == 0)
@@ -151,6 +159,7 @@ namespace MPF.CLI
 
             // Standalone Options
             commandSet.Add(new Help());
+            commandSet.Add(new Manpage(CreateManpageInfo()));
             commandSet.Add(new VersionFeature());
             commandSet.Add(new ListCodesFeature());
             commandSet.Add(new ListConfigFeature());
@@ -170,6 +179,19 @@ namespace MPF.CLI
             commandSet.Add(mainFeature.CustomInput);
 
             return commandSet;
+        }
+
+        /// <summary>
+        /// Create the man page metadata for the program
+        /// </summary>
+        private static ManpageInfo CreateManpageInfo()
+        {
+            return new ManpageInfo("MPF.CLI")
+            {
+                Version = FrontendTool.GetCurrentVersion(),
+                Title = "User Commands",
+                Description = "CLI frontend for various dumping programs",
+            };
         }
     }
 }
