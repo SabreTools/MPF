@@ -1,3 +1,8 @@
+### WIP (xxxx-xx-xx)
+
+- Add man page output to the command-line programs (gmipf)
+- Add a man page for the graphical frontend (gmipf)
+
 ### 3.8.2 (2026-07-01)
 
 - Output used configuration path for commandline programs
