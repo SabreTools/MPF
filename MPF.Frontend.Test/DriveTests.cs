@@ -107,6 +107,56 @@ namespace MPF.Frontend.Test
 
         #endregion
 
+        #region EnumerateUnixFloppyBlockPaths
+
+        [Fact]
+        public void EnumerateUnixFloppyBlockPaths_NullOrEmpty_ReturnsEmpty()
+        {
+            Assert.Empty(Drive.EnumerateUnixFloppyBlockPaths(null!));
+            Assert.Empty(Drive.EnumerateUnixFloppyBlockPaths(string.Empty));
+        }
+
+        [Fact]
+        public void EnumerateUnixFloppyBlockPaths_MissingDirectory_ReturnsEmpty()
+        {
+            string missing = Path.Combine(Path.GetTempPath(), "mpf-test-missing-" + Guid.NewGuid().ToString("N"));
+            Assert.Empty(Drive.EnumerateUnixFloppyBlockPaths(missing));
+        }
+
+        [Fact]
+        public void EnumerateUnixFloppyBlockPaths_OnlyMatchesFdFollowedByDigits()
+        {
+            string root = Path.Combine(Path.GetTempPath(), "mpf-test-dev-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(root);
+            try
+            {
+                File.WriteAllText(Path.Combine(root, "fd0"), string.Empty);
+                File.WriteAllText(Path.Combine(root, "fd1"), string.Empty);
+                File.WriteAllText(Path.Combine(root, "fd7"), string.Empty);
+                File.WriteAllText(Path.Combine(root, "fd0u1440"), string.Empty); // format-specific node, skipped
+                File.WriteAllText(Path.Combine(root, "fda"), string.Empty);      // name not all-digits, skipped
+                File.WriteAllText(Path.Combine(root, "fd"), string.Empty);       // no trailing digits, skipped
+                File.WriteAllText(Path.Combine(root, "sdb"), string.Empty);      // unrelated device, skipped
+
+                var actual = Drive.EnumerateUnixFloppyBlockPaths(root);
+
+                var actualNames = new List<string>();
+                foreach (var p in actual)
+                {
+                    actualNames.Add(Path.GetFileName(p));
+                }
+                actualNames.Sort(StringComparer.Ordinal);
+
+                Assert.Equal(new[] { "fd0", "fd1", "fd7" }, actualNames);
+            }
+            finally
+            {
+                Directory.Delete(root, recursive: true);
+            }
+        }
+
+        #endregion
+
         #region EnumerateUnixOpticalGenericPaths
 
         [Fact]

@@ -11,15 +11,15 @@ namespace MPF.Frontend
         #region Fields
 
         /// <summary>
-        /// sysfs block-device name prefixes that are not user-facing dump targets: loopback
-        /// images, ramdisks, device-mapper and software RAID virtual devices, floppy and
-        /// network block devices, ZFS volumes, and optical drives (surfaced separately via
-        /// the optical enumerator).
+        /// sysfs block-device name prefixes that the fixed-drive enumerator does not surface:
+        /// loopback images, ramdisks, device-mapper and software RAID virtual devices, network
+        /// block devices, ZFS volumes, and the floppy and optical drives (each surfaced
+        /// separately by its own enumerator rather than as a fixed or removable disk).
         /// </summary>
         private static readonly string[] _excludedUnixBlockPrefixes =
         [
             "dm-",  // device-mapper (LVM/LUKS, etc.) virtual devices
-            "fd",   // floppy disk
+            "fd",   // floppy drive (surfaced separately by the floppy enumerator)
             "loop", // loopback-mounted image
             "md",   // software RAID (mdadm)
             "nbd",  // network block device
@@ -97,6 +97,65 @@ namespace MPF.Frontend
         }
 
         /// <summary>
+        /// Append Linux floppy drives that DriveInfo did not surface.
+        /// Like optical drives, floppy device nodes (/dev/fd0, /dev/fd1, ...) are never mount
+        /// points, so DriveInfo does not list them; they are enumerated directly so users can
+        /// dump disks without mounting them first. This mirrors how Windows surfaces floppy
+        /// drives (tagged via WMI in MarkWindowsFloppyDrives) and, like the Windows path, is
+        /// gated behind the fixed-drive toggle rather than always listed as optical drives are.
+        /// </summary>
+        /// <param name="drives">Drives already discovered via DriveInfo</param>
+        /// <returns>The drive array, extended with any floppy drives not already present</returns>
+        private static Drive[] AppendUnixFloppyDrives(Drive[] drives)
+        {
+            // Defensive: this reads Linux /dev paths, so never run it off-Unix
+            if (Environment.OSVersion.Platform != PlatformID.Unix)
+                return drives;
+
+            var existingNames = new HashSet<string>();
+            foreach (var d in drives)
+            {
+                if (d?.Name is not null)
+                    existingNames.Add(d.Name);
+            }
+
+            var extra = new List<Drive>();
+            foreach (var devicePath in EnumerateUnixFloppyBlockPaths("/dev"))
+            {
+                // Skip paths already surfaced by DriveInfo or an earlier enumerator
+                if (!existingNames.Add(devicePath))
+                    continue;
+
+                try
+                {
+                    var d = Create(Frontend.InternalDriveType.Floppy, devicePath);
+                    if (d != null)
+                    {
+                        // A Linux floppy /dev node is never a mount point, so DriveInfo always
+                        // reports it as not-ready. Mark it active like optical drives; whether a
+                        // disk is actually inserted is left to the dumping program rather than
+                        // probing the device here, since floppy media state is not reliably
+                        // exposed through sysfs.
+                        d.MarkedActive = true;
+                        extra.Add(d);
+                    }
+                }
+                catch
+                {
+                    // Skip devices that can't be opened
+                }
+            }
+
+            if (extra.Count == 0)
+                return drives;
+
+            var combined = new Drive[drives.Length + extra.Count];
+            Array.Copy(drives, combined, drives.Length);
+            extra.CopyTo(combined, drives.Length);
+            return combined;
+        }
+
+        /// <summary>
         /// Enumerate Linux optical block devices under a directory by matching
         /// the kernel convention "sr" followed by one or more digits (sr0, sr1, ...).
         /// </summary>
@@ -121,6 +180,39 @@ namespace MPF.Frontend
             foreach (var path in candidates)
             {
                 if (HasDeviceIndexSuffix(Path.GetFileName(path), "sr"))
+                    result.Add(path);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Enumerate Linux floppy block devices under a directory by matching the kernel
+        /// convention "fd" followed by one or more digits (fd0, fd1, ...). This deliberately
+        /// rejects the "/dev/fd" symlink (no trailing digits) and format-specific nodes such
+        /// as "fd0u1440" (embedded non-digit characters), which are not whole-device targets.
+        /// </summary>
+        /// <param name="devRoot">Root directory to scan (typically "/dev")</param>
+        /// <returns>Device paths, or an empty list when the directory is unreadable</returns>
+        internal static List<string> EnumerateUnixFloppyBlockPaths(string devRoot)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(devRoot) || !Directory.Exists(devRoot))
+                return result;
+
+            string[] candidates;
+            try
+            {
+                candidates = Directory.GetFiles(devRoot, "fd*");
+            }
+            catch
+            {
+                return result;
+            }
+
+            foreach (var path in candidates)
+            {
+                if (HasDeviceIndexSuffix(Path.GetFileName(path), "fd"))
                     result.Add(path);
             }
 

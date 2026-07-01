@@ -324,7 +324,10 @@ namespace MPF.Frontend
             {
                 drives = AppendUnixOpticalDrives(drives);
                 if (!ignoreFixedDrives)
+                {
                     drives = AppendUnixFixedDrives(drives);
+                    drives = AppendUnixFloppyDrives(drives);
+                }
             }
 
             return [.. drives];

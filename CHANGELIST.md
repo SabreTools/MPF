@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Enumerate Linux floppy drives (gmipf)
+
 ### 3.8.2 (2026-07-01)
 
 - Output used configuration path for commandline programs
