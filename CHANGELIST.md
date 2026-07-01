@@ -13,6 +13,7 @@
 - Fix message when clipboard is disabled
 - Update RedumpLib to 2.0.8
 - Attempt to handle generic disc labels again
+- Add temporary hack for multiline Dat field output
 
 ### 3.8.1 (2026-06-26)
 

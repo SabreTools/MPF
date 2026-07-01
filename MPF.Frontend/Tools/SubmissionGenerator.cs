@@ -96,13 +96,11 @@ namespace MPF.Frontend.Tools
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.DumpMetadata.Dat))
-            {
-                bool filledInfo = await FillFromRedump(options, info, resultProgress);
+                _ = await FillFromRedump(options, info, resultProgress);
 
-                // Add a placeholder for the logs link if not a verification
-                if (!filledInfo)
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.LogsLink] = "[Please provide a link to your logs here]";
-            }
+            // TEMPORARY HACK -- Add newline after Dat section until RedumpLib is updated
+            if (!string.IsNullOrEmpty(info.DumpMetadata.Dat))
+                info.DumpMetadata.Dat += "\n";
 
             // Add the volume label to comments, if possible or necessary
             string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor.VolumeLabels);
