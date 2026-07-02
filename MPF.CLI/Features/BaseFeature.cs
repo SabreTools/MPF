@@ -105,7 +105,7 @@ namespace MPF.CLI.Features
         public override bool Execute()
         {
             // Validate a system type is provided
-            if (System == null)
+            if (System is null)
             {
                 Console.Error.WriteLine("A system name needs to be provided");
                 return false;
@@ -147,7 +147,7 @@ namespace MPF.CLI.Features
                 case InternalProgram.Aaru:
                     {
                         string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
-                        if (resolved == null)
+                        if (resolved is null)
                         {
                             Console.Error.WriteLine("A path needs to be supplied in config.json for Aaru, exiting...");
                             return false;
@@ -161,7 +161,7 @@ namespace MPF.CLI.Features
                 case InternalProgram.DiscImageCreator:
                     {
                         string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
-                        if (resolved == null)
+                        if (resolved is null)
                         {
                             Console.Error.WriteLine("A path needs to be supplied in config.json for DIC, exiting...");
                             return false;
@@ -184,7 +184,7 @@ namespace MPF.CLI.Features
                 case InternalProgram.Redumper:
                     {
                         string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
-                        if (resolved == null)
+                        if (resolved is null)
                         {
                             Console.Error.WriteLine("A path needs to be supplied in config.json for Redumper, exiting...");
                             return false;
@@ -244,7 +244,7 @@ namespace MPF.CLI.Features
             int speed = DriveSpeed ?? FrontendTool.GetDefaultSpeedForPhysicalMediaType(PhysicalMediaType, Options);
 
             // Get the retry count and override if needed
-            if (Retries != null && Retries >= 0)
+            if (Retries is not null && Retries >= 0)
             {
                 // Set all possible reread options
                 Options.Dumping.Aaru.RereadCount = Retries.Value;

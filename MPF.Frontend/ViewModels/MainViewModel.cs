@@ -1252,21 +1252,21 @@ namespace MPF.Frontend.ViewModels
             {
                 case InternalProgram.Aaru:
                     string? aaruPath = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
-                    if (aaruPath != null)
+                    if (aaruPath is not null)
                         Options.Dumping.AaruPath = aaruPath;
 
                     break;
 
                 case InternalProgram.DiscImageCreator:
                     string? dicPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
-                    if (dicPath != null)
+                    if (dicPath is not null)
                         Options.Dumping.DiscImageCreatorPath = dicPath;
 
                     break;
 
                 case InternalProgram.Redumper:
                     string? redumperPath = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
-                    if (redumperPath != null)
+                    if (redumperPath is not null)
                         Options.Dumping.RedumperPath = redumperPath;
 
                     break;
@@ -2499,10 +2499,10 @@ namespace MPF.Frontend.ViewModels
 #pragma warning disable IDE0072
                 return program switch
                 {
-                    InternalProgram.Aaru => FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath) != null,
-                    InternalProgram.DiscImageCreator => FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath) != null,
-                    // InternalProgram.Dreamdump => FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath) != null,
-                    InternalProgram.Redumper => FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath) != null,
+                    InternalProgram.Aaru => FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath) is not null,
+                    InternalProgram.DiscImageCreator => FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath) is not null,
+                    // InternalProgram.Dreamdump => FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath) is not null,
+                    InternalProgram.Redumper => FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath) is not null,
                     _ => false,
                 };
 #pragma warning restore IDE0072
