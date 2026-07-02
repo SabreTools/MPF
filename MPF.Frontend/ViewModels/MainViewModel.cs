@@ -536,16 +536,31 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of available internal programs
         /// </summary>
-        public List<Element<InternalProgram>> InternalPrograms
+        public List<Element<InternalProgram>> AvailableInternalPrograms
         {
-            get => _internalPrograms;
+            get => _availableInternalPrograms;
             set
             {
-                _internalPrograms = value;
-                TriggerPropertyChanged(nameof(InternalPrograms));
+                _availableInternalPrograms = value;
+                TriggerPropertyChanged(nameof(AvailableInternalPrograms));
             }
         }
-        private List<Element<InternalProgram>> _internalPrograms;
+        private List<Element<InternalProgram>> _availableInternalPrograms;
+
+        #endregion
+
+        #region Constants
+
+        /// <summary>
+        /// Set of dumping-supported programs
+        /// </summary>
+        private static readonly InternalProgram[] DumpingPrograms =
+        [
+            InternalProgram.Aaru,
+            InternalProgram.DiscImageCreator,
+            // InternalProgram.Dreamdump,
+            InternalProgram.Redumper,
+        ];
 
         #endregion
 
@@ -567,7 +582,7 @@ namespace MPF.Frontend.ViewModels
             // Added to clear warnings, all are set externally
             _drives = [];
             _driveSpeeds = [];
-            _internalPrograms = [];
+            _availableInternalPrograms = [];
             _outputPath = string.Empty;
             _parameters = string.Empty;
             _startStopButtonText = string.Empty;
@@ -593,7 +608,7 @@ namespace MPF.Frontend.ViewModels
 
             MediaTypes = [];
             Systems = PhysicalSystemComboBoxItem.GenerateElements();
-            InternalPrograms = [];
+            AvailableInternalPrograms = [];
         }
 
         /// <summary>
@@ -744,28 +759,23 @@ namespace MPF.Frontend.ViewModels
             bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
             DisableEventHandlers();
 
-            // Create a static list of supported programs, not everything
-#if NET5_0_OR_GREATER
-            var ipArr = Enum.GetValues<InternalProgram>();
-#else
-            var ipArr = (InternalProgram[])Enum.GetValues(typeof(InternalProgram));
-#endif
-            ipArr = Array.FindAll(ipArr, ip => InternalProgramExists(ip));
-            InternalPrograms = [.. Array.ConvertAll(ipArr, ip => new Element<InternalProgram>(ip))];
+            // Create a static list of available, supported programs, not everything
+            var available = Array.FindAll(DumpingPrograms, ip => InternalProgramExists(ip));
+            AvailableInternalPrograms = [.. Array.ConvertAll(available, ip => new Element<InternalProgram>(ip))];
 
             // Get the current internal program
             InternalProgram internalProgram = Options.InternalProgram;
 
             // Select the current default dumping program
-            if (InternalPrograms.Count == 0)
+            if (AvailableInternalPrograms.Count == 0)
             {
                 // If no programs are found, default to InternalProgram.NONE
                 CurrentProgram = InternalProgram.NONE;
             }
             else
             {
-                int currentIndex = InternalPrograms.FindIndex(m => m == internalProgram);
-                CurrentProgram = currentIndex > -1 ? InternalPrograms[currentIndex].Value : InternalPrograms[0].Value;
+                int currentIndex = AvailableInternalPrograms.FindIndex(m => m == internalProgram);
+                CurrentProgram = currentIndex > -1 ? AvailableInternalPrograms[currentIndex].Value : AvailableInternalPrograms[0].Value;
             }
 
             // Reenable event handlers, if necessary

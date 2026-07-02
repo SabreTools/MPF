@@ -49,7 +49,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of available internal programs
         /// </summary>
-        public static List<Element<InternalProgram>> InternalPrograms => PopulateInternalPrograms();
+        public static List<Element<InternalProgram>> AvailableInternalPrograms => PopulateInternalPrograms();
 
         /// <summary>
         /// List of available interface languages
@@ -83,6 +83,21 @@ namespace MPF.Frontend.ViewModels
 
         #endregion
 
+        #region Constants
+
+        /// <summary>
+        /// Ordered set of dumping-supported programs
+        /// </summary>
+        private static readonly List<InternalProgram> DumpingPrograms =
+        [
+            InternalProgram.Redumper,
+            InternalProgram.DiscImageCreator,
+            InternalProgram.Aaru,
+            // InternalProgram.Dreamdump,
+        ];
+
+        #endregion
+
         /// <summary>
         /// Constructor for pure view model
         /// </summary>
@@ -105,16 +120,7 @@ namespace MPF.Frontend.ViewModels
         /// Get a complete list of supported internal programs
         /// </summary>
         private static List<Element<InternalProgram>> PopulateInternalPrograms()
-        {
-            var internalPrograms = new List<InternalProgram>
-            {
-                InternalProgram.Redumper,
-                InternalProgram.DiscImageCreator,
-                InternalProgram.Aaru,
-                // InternalProgram.Dreamdump,
-            };
-            return internalPrograms.ConvertAll(ip => new Element<InternalProgram>(ip));
-        }
+            => DumpingPrograms.ConvertAll(ip => new Element<InternalProgram>(ip));
 
         #endregion
 

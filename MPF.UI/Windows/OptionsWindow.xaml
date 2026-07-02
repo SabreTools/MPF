@@ -182,7 +182,7 @@
 
                         <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource DefaultDumpingProgramLabelString}" />
                         <ComboBox x:Name="InternalProgramComboBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
-                                  ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding Options.InternalProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                  ItemsSource="{Binding AvailableInternalPrograms}" SelectedItem="{Binding Options.InternalProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                   Style="{DynamicResource CustomComboBoxStyle}" />
 
                         <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource DefaultOutputPathLabelString}"
