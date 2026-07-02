@@ -108,72 +108,6 @@ namespace MPF.Frontend.Tools
 
         #endregion
 
-        #region Binary Resolution
-
-        /// <summary>
-        /// Resolve a configured dumping-tool path to an absolute file path.
-        /// </summary>
-        /// <param name="configuredPath">Raw value from the user's options</param>
-        /// <returns>
-        /// The absolute path of the located binary, or null when nothing exists.
-        /// A value containing a path separator is treated as an explicit location and
-        /// returned as-is when it exists. A bare name (no separator) is searched in the
-        /// runtime directory first, then in each PATH entry.
-        /// </returns>
-        /// TODO: Move to SabreTools.IO as the `ResolvePath` extension
-        public static string? ResolveBinaryPath(string? configuredPath)
-        {
-            // Invalid paths always return null
-            if (string.IsNullOrEmpty(configuredPath))
-                return null;
-
-            // If the configured path starts with a home character
-            if (configuredPath!.StartsWith("~/") || configuredPath.StartsWith("~\\"))
-            {
-                string homeDirectory = PathTool.GetHomeDirectory();
-
-                configuredPath = configuredPath.Substring(2);
-                configuredPath = Path.Combine(homeDirectory, configuredPath);
-
-                return File.Exists(configuredPath) ? configuredPath : null;
-            }
-
-            // Explicit location (absolute or relative path)
-            if (configuredPath.Contains("/") || configuredPath.Contains("\\"))
-                return File.Exists(configuredPath) ? configuredPath : null;
-
-            // Check the runtime directory if no directory path is provided
-            string runtimeDir = PathTool.GetRuntimeDirectory();
-            if (!string.IsNullOrEmpty(runtimeDir))
-            {
-                string candidate = Path.Combine(runtimeDir, configuredPath);
-                if (File.Exists(candidate))
-                    return candidate;
-            }
-
-            // Attempt to get the PATH variable for searching
-            string? pathEnv = Environment.GetEnvironmentVariable("PATH");
-            if (string.IsNullOrEmpty(pathEnv))
-                return null;
-
-            // Loop through all entries in PATH
-            var pathParts = pathEnv!.Split(Path.PathSeparator);
-            foreach (string dir in pathParts)
-            {
-                if (string.IsNullOrEmpty(dir))
-                    continue;
-
-                string candidate = Path.Combine(dir, configuredPath);
-                if (File.Exists(candidate))
-                    return candidate;
-            }
-
-            // All options failed
-            return null;
-        }
-
-        #endregion
-
         #region Normalization
 
         /// <summary>
@@ -593,6 +527,64 @@ namespace MPF.Frontend.Tools
                 newTitle = $"{newTitle}, {firstItem}";
 
             return newTitle;
+        }
+
+        /// <summary>
+        /// Resolve a file path that may be absolute, relative,
+        /// within the runtime directory, or contained within a PATH directory.
+        /// </summary>
+        /// <param name="path">Raw value from the user's options</param>
+        /// <returns>The absolute path of the located files, or null on failure</returns>
+        /// TODO: Remove when IO is updated
+        public static string? ResolvePath(this string? path)
+        {
+            // Invalid paths always return null
+            if (string.IsNullOrEmpty(path))
+                return null;
+
+            // If the configured path starts with a home character
+            if (path!.StartsWith("~/") || path.StartsWith("~\\"))
+            {
+                string homeDirectory = PathTool.GetHomeDirectory();
+
+                path = path.Substring(2);
+                path = Path.Combine(homeDirectory, path);
+
+                return File.Exists(path) ? Path.GetFullPath(path) : null;
+            }
+
+            // Explicit location (absolute or relative path)
+            if (path.Contains("/") || path.Contains("\\"))
+                return File.Exists(path) ? Path.GetFullPath(path) : null;
+
+            // Check the runtime directory if no directory path is provided
+            string runtimeDir = PathTool.GetRuntimeDirectory();
+            if (!string.IsNullOrEmpty(runtimeDir))
+            {
+                string candidate = Path.Combine(runtimeDir, path);
+                if (File.Exists(candidate))
+                    return candidate;
+            }
+
+            // Attempt to get the PATH variable for searching
+            string? pathEnv = Environment.GetEnvironmentVariable("PATH");
+            if (string.IsNullOrEmpty(pathEnv))
+                return null;
+
+            // Loop through all entries in PATH
+            var pathParts = pathEnv!.Split(Path.PathSeparator);
+            foreach (string dir in pathParts)
+            {
+                if (string.IsNullOrEmpty(dir))
+                    continue;
+
+                string candidate = Path.Combine(dir, path);
+                if (File.Exists(candidate))
+                    return candidate;
+            }
+
+            // All options failed
+            return null;
         }
 
         #endregion

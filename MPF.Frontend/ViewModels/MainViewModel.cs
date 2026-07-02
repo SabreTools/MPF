@@ -536,16 +536,31 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of available internal programs
         /// </summary>
-        public List<Element<InternalProgram>> InternalPrograms
+        public List<Element<InternalProgram>> AvailableInternalPrograms
         {
-            get => _internalPrograms;
+            get => _availableInternalPrograms;
             set
             {
-                _internalPrograms = value;
-                TriggerPropertyChanged(nameof(InternalPrograms));
+                _availableInternalPrograms = value;
+                TriggerPropertyChanged(nameof(AvailableInternalPrograms));
             }
         }
-        private List<Element<InternalProgram>> _internalPrograms;
+        private List<Element<InternalProgram>> _availableInternalPrograms;
+
+        #endregion
+
+        #region Constants
+
+        /// <summary>
+        /// Set of dumping-supported programs
+        /// </summary>
+        private static readonly InternalProgram[] DumpingPrograms =
+        [
+            InternalProgram.Aaru,
+            InternalProgram.DiscImageCreator,
+            // InternalProgram.Dreamdump,
+            InternalProgram.Redumper,
+        ];
 
         #endregion
 
@@ -567,7 +582,7 @@ namespace MPF.Frontend.ViewModels
             // Added to clear warnings, all are set externally
             _drives = [];
             _driveSpeeds = [];
-            _internalPrograms = [];
+            _availableInternalPrograms = [];
             _outputPath = string.Empty;
             _parameters = string.Empty;
             _startStopButtonText = string.Empty;
@@ -593,7 +608,7 @@ namespace MPF.Frontend.ViewModels
 
             MediaTypes = [];
             Systems = PhysicalSystemComboBoxItem.GenerateElements();
-            InternalPrograms = [];
+            AvailableInternalPrograms = [];
         }
 
         /// <summary>
@@ -744,28 +759,23 @@ namespace MPF.Frontend.ViewModels
             bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
             DisableEventHandlers();
 
-            // Create a static list of supported programs, not everything
-#if NET5_0_OR_GREATER
-            var ipArr = Enum.GetValues<InternalProgram>();
-#else
-            var ipArr = (InternalProgram[])Enum.GetValues(typeof(InternalProgram));
-#endif
-            ipArr = Array.FindAll(ipArr, ip => InternalProgramExists(ip));
-            InternalPrograms = [.. Array.ConvertAll(ipArr, ip => new Element<InternalProgram>(ip))];
+            // Create a static list of available, supported programs, not everything
+            var available = Array.FindAll(DumpingPrograms, ip => InternalProgramExists(ip));
+            AvailableInternalPrograms = [.. Array.ConvertAll(available, ip => new Element<InternalProgram>(ip))];
 
             // Get the current internal program
             InternalProgram internalProgram = Options.InternalProgram;
 
             // Select the current default dumping program
-            if (InternalPrograms.Count == 0)
+            if (AvailableInternalPrograms.Count == 0)
             {
                 // If no programs are found, default to InternalProgram.NONE
                 CurrentProgram = InternalProgram.NONE;
             }
             else
             {
-                int currentIndex = InternalPrograms.FindIndex(m => m == internalProgram);
-                CurrentProgram = currentIndex > -1 ? InternalPrograms[currentIndex].Value : InternalPrograms[0].Value;
+                int currentIndex = AvailableInternalPrograms.FindIndex(m => m == internalProgram);
+                CurrentProgram = currentIndex > -1 ? AvailableInternalPrograms[currentIndex].Value : AvailableInternalPrograms[0].Value;
             }
 
             // Reenable event handlers, if necessary
@@ -1260,31 +1270,35 @@ namespace MPF.Frontend.ViewModels
             {
                 // Dumping supported programs
                 case InternalProgram.Aaru:
-                    string? aaruPath = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
+                    string? aaruPath = Options.Dumping.AaruPath.ResolvePath();
                     if (aaruPath is not null)
                         Options.Dumping.AaruPath = aaruPath;
 
+                    VerboseLogLn($"Using Aaru from {Options.Dumping.AaruPath}");
                     break;
 
                 case InternalProgram.DiscImageCreator:
-                    string? dicPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
+                    string? dicPath = Options.Dumping.DiscImageCreatorPath.ResolvePath();
                     if (dicPath is not null)
                         Options.Dumping.DiscImageCreatorPath = dicPath;
 
+                    VerboseLogLn($"Using DiscImageCreator from {Options.Dumping.DiscImageCreatorPath}");
                     break;
 
                 // case InternalProgram.Dreamdump:
-                //     string? dreamdumpPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath);
+                //     string? dreamdumpPath = Options.Dumping.DreamdumpPath.ResolvePath();
                 //     if (dreamdumpPath is not null)
                 //         Options.Dumping.DreamdumpPath = dreamdumpPath;
 
+                //     VerboseLogLn($"Using Dreamdump from {Options.Dumping.DreamdumpPath}");
                 //     break;
 
                 case InternalProgram.Redumper:
-                    string? redumperPath = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
+                    string? redumperPath = Options.Dumping.RedumperPath.ResolvePath();
                     if (redumperPath is not null)
                         Options.Dumping.RedumperPath = redumperPath;
 
+                    VerboseLogLn($"Using Redumper from {Options.Dumping.RedumperPath}");
                     break;
 
                 // Non-dumping programs
@@ -1292,13 +1306,13 @@ namespace MPF.Frontend.ViewModels
                 case InternalProgram.PS3CFW:
                 case InternalProgram.UmdImageCreator:
                 case InternalProgram.XboxBackupCreator:
-                    // No-op
+                    VerboseLogLn($"Unsupported dumping program: {CurrentProgram.LongName()}");
                     break;
 
                 // Should not happen
                 case InternalProgram.NONE:
                 default:
-                    // No-op
+                    VerboseLogLn("Invalid dumping program selection");
                     break;
             }
 
@@ -2525,24 +2539,47 @@ namespace MPF.Frontend.ViewModels
         {
             try
             {
-                return program switch
+                switch (program)
                 {
                     // Dumping supported programs
-                    InternalProgram.Aaru => FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath) is not null,
-                    InternalProgram.DiscImageCreator => FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath) is not null,
-                    // InternalProgram.Dreamdump => FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath) is not null,
-                    InternalProgram.Redumper => FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath) is not null,
+                    case InternalProgram.Aaru:
+                        string? aaruPath = Options.Dumping.AaruPath.ResolvePath();
+                        bool validAaruPath = aaruPath is not null;
+                        VerboseLogLn(validAaruPath ? $"Found Aaru at {aaruPath}" : $"Could not find Aaru from {Options.Dumping.AaruPath}");
+                        return validAaruPath;
+
+                    case InternalProgram.DiscImageCreator:
+                        string? dicPath = Options.Dumping.DiscImageCreatorPath.ResolvePath();
+                        bool validDicPath = dicPath is not null;
+                        VerboseLogLn(validDicPath ? $"Found DiscImageCreator at {dicPath}" : $"Could not find DiscImageCreator from {Options.Dumping.DiscImageCreatorPath}");
+                        return validDicPath;
+
+                    // case InternalProgram.Dreamdump:
+                    //     string? dreamdumpPath = Options.Dumping.DreamdumpPath.ResolvePath();
+                    //     bool validDreamdumpPath = dreamdumpPath is not null;
+                    //     VerboseLogLn(validDreamdumpPath ? $"Found Dreamdump at {dreamdumpPath}" : $"Could not find Dreamdump from {Options.Dumping.DreamdumpPath}");
+                    //     return validDreamdumpPath;
+
+                    case InternalProgram.Redumper:
+                        string? redumperPath = Options.Dumping.RedumperPath.ResolvePath();
+                        bool validRedumperPath = redumperPath is not null;
+                        VerboseLogLn(validRedumperPath ? $"Found Redumper at {redumperPath}" : $"Could not find Redumper from {Options.Dumping.RedumperPath}");
+                        return validRedumperPath;
 
                     // Non-dumping programs
-                    InternalProgram.CleanRip => false,
-                    InternalProgram.PS3CFW => false,
-                    InternalProgram.UmdImageCreator => false,
-                    InternalProgram.XboxBackupCreator => false,
+                    case InternalProgram.CleanRip:
+                    case InternalProgram.PS3CFW:
+                    case InternalProgram.UmdImageCreator:
+                    case InternalProgram.XboxBackupCreator:
+                        VerboseLogLn($"Unsupported dumping program: {CurrentProgram.LongName()}");
+                        return false;
 
                     // Should not happen
-                    InternalProgram.NONE => false,
-                    _ => false,
-                };
+                    case InternalProgram.NONE:
+                    default:
+                        VerboseLogLn("Invalid dumping program selection");
+                        return false;
+                }
             }
             catch
             {

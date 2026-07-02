@@ -5,8 +5,12 @@
 - Cleanup around Avalonia code
 - Fix language menu requiring two clicks in the Avalonia GUI (gmipf)
 - Add some explicit comments and code for clarity
+- Be more verbose about program path resolution
+- Use updated version of ResolvePath from IO
+- Make program support sets more obvious
 - Detect and list USB floppy drives on Linux (gmipf)
 - Fix media type dropdown not updating dumping parameters (gmipf)
+- Fix media type sticking when switching drives (gmipf)
 
 ### 3.8.2 (2026-07-01)
 

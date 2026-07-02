@@ -220,16 +220,35 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of available internal programs
         /// </summary>
-        public List<Element<InternalProgram>> InternalPrograms
+        public List<Element<InternalProgram>> AvailableInternalPrograms
         {
-            get => _internalPrograms;
+            get => _availableInternalPrograms;
             set
             {
-                _internalPrograms = value;
-                TriggerPropertyChanged(nameof(InternalPrograms));
+                _availableInternalPrograms = value;
+                TriggerPropertyChanged(nameof(AvailableInternalPrograms));
             }
         }
-        private List<Element<InternalProgram>> _internalPrograms;
+        private List<Element<InternalProgram>> _availableInternalPrograms;
+
+        #endregion
+
+        #region Constants
+
+        /// <summary>
+        /// Set of check-supported programs
+        /// </summary>
+        private static readonly List<InternalProgram> CheckablePrograms =
+        [
+            InternalProgram.Redumper,
+            InternalProgram.Aaru,
+            InternalProgram.DiscImageCreator,
+            // InternalProgram.Dreamdump,
+            InternalProgram.CleanRip,
+            InternalProgram.PS3CFW,
+            InternalProgram.UmdImageCreator,
+            InternalProgram.XboxBackupCreator
+        ];
 
         #endregion
 
@@ -239,7 +258,7 @@ namespace MPF.Frontend.ViewModels
         public CheckDumpViewModel()
         {
             _options = OptionsLoader.LoadFromConfig(out _);
-            _internalPrograms = [];
+            _availableInternalPrograms = [];
             _inputPath = string.Empty;
             _systems = [];
             _status = string.Empty;
@@ -252,7 +271,7 @@ namespace MPF.Frontend.ViewModels
             CancelButtonEnabled = true;
 
             Systems = PhysicalSystemComboBoxItem.GenerateElements();
-            InternalPrograms = [];
+            AvailableInternalPrograms = [];
 
             PopulateInternalPrograms();
             EnableEventHandlers();
@@ -351,22 +370,11 @@ namespace MPF.Frontend.ViewModels
             InternalProgram internalProgram = Options.InternalProgram;
 
             // Create a static list of supported Check programs, not everything
-            var internalPrograms = new List<InternalProgram>
-            {
-                InternalProgram.Redumper,
-                InternalProgram.Aaru,
-                InternalProgram.DiscImageCreator,
-                // InternalProgram.Dreamdump,
-                InternalProgram.CleanRip,
-                InternalProgram.PS3CFW,
-                InternalProgram.UmdImageCreator,
-                InternalProgram.XboxBackupCreator
-            };
-            InternalPrograms = internalPrograms.ConvertAll(ip => new Element<InternalProgram>(ip));
+            AvailableInternalPrograms = CheckablePrograms.ConvertAll(ip => new Element<InternalProgram>(ip));
 
             // Select the current default dumping program
-            int currentIndex = InternalPrograms.FindIndex(m => m == internalProgram);
-            CurrentProgram = currentIndex > -1 ? InternalPrograms[currentIndex].Value : InternalPrograms[0].Value;
+            int currentIndex = AvailableInternalPrograms.FindIndex(m => m == internalProgram);
+            CurrentProgram = currentIndex > -1 ? AvailableInternalPrograms[currentIndex].Value : AvailableInternalPrograms[0].Value;
 
             // Reenable event handlers, if necessary
             if (cachedCanExecuteSelectionChanged) EnableEventHandlers();

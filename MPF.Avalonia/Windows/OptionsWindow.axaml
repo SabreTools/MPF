@@ -121,7 +121,7 @@
                                 <ComboBox x:Name="InternalProgramComboBox"
                                           Grid.Row="3"
                                           Grid.Column="1"
-                                          ItemsSource="{Binding InternalPrograms}"
+                                          ItemsSource="{Binding AvailableInternalPrograms}"
                                           SelectedItem="{Binding Options.InternalProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           VerticalAlignment="Center" />
 

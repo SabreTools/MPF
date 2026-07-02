@@ -158,7 +158,7 @@
                                   Grid.Column="1"
                                   Width="230"
                                   HorizontalAlignment="Left"
-                                  ItemsSource="{Binding InternalPrograms}"
+                                  ItemsSource="{Binding AvailableInternalPrograms}"
                                   SelectedItem="{Binding CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                   IsEnabled="{Binding DumpingProgramComboBoxEnabled}" />
 

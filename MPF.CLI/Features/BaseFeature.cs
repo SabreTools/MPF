@@ -146,7 +146,7 @@ namespace MPF.CLI.Features
             {
                 case InternalProgram.Aaru:
                 {
-                    string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
+                    string? resolved = Options.Dumping.AaruPath.ResolvePath();
                     if (resolved is null)
                     {
                         Console.Error.WriteLine("A path needs to be supplied in config.json for Aaru, exiting...");
@@ -160,7 +160,7 @@ namespace MPF.CLI.Features
 
                 case InternalProgram.DiscImageCreator:
                 {
-                    string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
+                    string? resolved = Options.Dumping.DiscImageCreatorPath.ResolvePath();
                     if (resolved is null)
                     {
                         Console.Error.WriteLine("A path needs to be supplied in config.json for DIC, exiting...");
@@ -174,7 +174,7 @@ namespace MPF.CLI.Features
 
                 // case InternalProgram.Dreamdump:
                 // {
-                //     string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath);
+                //     string? resolved = Options.Dumping.DreamdumpPath.ResolvePath();
                 //     if (resolved is null)
                 //     {
                 //         Console.Error.WriteLine("A path needs to be supplied in config.json for Dreamdump, exiting...");
@@ -188,7 +188,7 @@ namespace MPF.CLI.Features
 
                 case InternalProgram.Redumper:
                 {
-                    string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
+                    string? resolved = Options.Dumping.RedumperPath.ResolvePath();
                     if (resolved is null)
                     {
                         Console.Error.WriteLine("A path needs to be supplied in config.json for Redumper, exiting...");
