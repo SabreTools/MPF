@@ -116,10 +116,18 @@ namespace MPF.Avalonia.Windows
             if (MainViewModel.Options.GUI.ShowDebugViewMenuItem)
                 DebugViewMenuItem!.IsVisible = true;
 
+            // On Linux the dumping tool has no console window of its own, so stream its
+            // live output into a separate MPF window. Windows/macOS keep the tool's own
+            // console (leave this null), preserving the original behavior.
+            IToolOutputConsole? toolConsole = OperatingSystem.IsLinux()
+                ? new ToolOutputConsole(this, MainViewModel.Options)
+                : null;
+
             MainViewModel.Init(
                 LogOutput!.EnqueueLog,
                 DisplayUserMessage,
-                ShowMediaInformationWindow);
+                ShowMediaInformationWindow,
+                toolConsole);
 
             // Pass translation strings to MainViewModel
             var translationStrings = new Dictionary<string, string>
