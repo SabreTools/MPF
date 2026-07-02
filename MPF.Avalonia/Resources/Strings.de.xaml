@@ -10,6 +10,8 @@
     <x:String x:Key="CancelButtonString">Abbrechen</x:String>
     <x:String x:Key="MinimizeMenuItemString">Minimieren</x:String>
     <x:String x:Key="CloseMenuItemString">Schließen</x:String>
+    <x:String x:Key="CopyMenuItemString">Kopieren</x:String>
+    <x:String x:Key="SelectAllMenuItemString">Alles auswählen</x:String>
     <x:String x:Key="SettingsGroupBoxString">Einstellungen</x:String>
     <x:String x:Key="StatusGroupBoxString">Status</x:String>
     <x:String x:Key="WarningLabelString">WARNUNG:</x:String>
@@ -48,6 +50,10 @@
     <x:String x:Key="LogOutputExpanderString">Protokollausgabe</x:String>
     <x:String x:Key="ClearButtonString">Löschen</x:String>
     <x:String x:Key="SaveButtonString">Speichern</x:String>
+
+    <!-- Tool Output Window -->
+    <x:String x:Key="ToolOutputTitleString">Programmausgabe</x:String>
+    <x:String x:Key="ToolOutputCloseOnExitCheckBoxString">Dieses Fenster schließen, wenn das Programm beendet ist</x:String>
 
     <!-- Options Window -->
     <x:String x:Key="OptionsTitleString">Optionen</x:String>

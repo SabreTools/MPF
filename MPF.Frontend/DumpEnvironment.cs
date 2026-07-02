@@ -97,6 +97,17 @@ namespace MPF.Frontend
         /// </summary>
         public EventHandler<StringEventArgs>? ReportStatus;
 
+        /// <summary>
+        /// Optional sink for the dumping tool's raw output
+        /// </summary>
+        /// <remarks>
+        /// When set, the tool runs with its standard output and error redirected and
+        /// streamed here. Used by a GUI frontend to show live tool output in a separate
+        /// window on platforms without an external console. Leave null for the legacy
+        /// behavior, where the tool owns its own console window.
+        /// </remarks>
+        public Action<string>? ToolOutputReceived { get; set; }
+
         #endregion
 
         /// <summary>
@@ -488,6 +499,10 @@ namespace MPF.Frontend
             var directoryName = Path.GetDirectoryName(OutputPath);
             if (!string.IsNullOrEmpty(directoryName))
                 Directory.CreateDirectory(directoryName);
+
+            // Stream the tool's raw output to the attached sink, if any (GUI console).
+            // Null leaves the execution context on its legacy, non-redirected path.
+            _executionContext.OutputReceived = ToolOutputReceived;
 
 #if NET40
             await Task.Factory.StartNew(() => { _executionContext.ExecuteInternalProgram(); return true; });

@@ -71,6 +71,11 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private ProcessUserInfoDelegate? _processUserInfo;
 
+        /// <summary>
+        /// Optional live tool-output console supplied by the frontend (null if unused)
+        /// </summary>
+        private IToolOutputConsole? _toolConsole;
+
         #endregion
 
         #region Properties
@@ -597,12 +602,14 @@ namespace MPF.Frontend.ViewModels
         public void Init(
             Action<LogLevel, string> loggerAction,
             Func<string, string, int, bool, bool?> displayUserMessage,
-            ProcessUserInfoDelegate processUserInfo)
+            ProcessUserInfoDelegate processUserInfo,
+            IToolOutputConsole? toolConsole = null)
         {
             // Set the callbacks
             _logger = loggerAction;
             _displayUserMessage = displayUserMessage;
             _processUserInfo = processUserInfo;
+            _toolConsole = toolConsole;
 
             // Finish initializing the rest of the values
             InitializeUIValues(removeEventHandlers: false, rebuildPrograms: true, rescanDrives: true);
@@ -1237,34 +1244,57 @@ namespace MPF.Frontend.ViewModels
         /// Create a DumpEnvironment with all current settings
         /// </summary>
         /// <returns>Filled DumpEnvironment Parent</returns>
+        /// TODO: Determine if the null-returning cases would actually change program operation
+        /// If I'm following the complete logic correctly, resolving the binary path to null is
+        /// always correct as an unresolved path should never be able to be run anyway.
         private DumpEnvironment DetermineEnvironment()
         {
             // Resolve the program paths temporarily
-#pragma warning disable IDE0010 // Add missing cases
             switch (CurrentProgram)
             {
+                // Dumping supported programs
                 case InternalProgram.Aaru:
                     string? aaruPath = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
-                    if (aaruPath != null)
+                    if (aaruPath is not null)
                         Options.Dumping.AaruPath = aaruPath;
 
                     break;
 
                 case InternalProgram.DiscImageCreator:
                     string? dicPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
-                    if (dicPath != null)
+                    if (dicPath is not null)
                         Options.Dumping.DiscImageCreatorPath = dicPath;
 
                     break;
 
+                // case InternalProgram.Dreamdump:
+                //     string? dreamdumpPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath);
+                //     if (dreamdumpPath is not null)
+                //         Options.Dumping.DreamdumpPath = dreamdumpPath;
+
+                //     break;
+
                 case InternalProgram.Redumper:
                     string? redumperPath = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
-                    if (redumperPath != null)
+                    if (redumperPath is not null)
                         Options.Dumping.RedumperPath = redumperPath;
 
                     break;
+
+                // Non-dumping programs
+                case InternalProgram.CleanRip:
+                case InternalProgram.PS3CFW:
+                case InternalProgram.UmdImageCreator:
+                case InternalProgram.XboxBackupCreator:
+                    // No-op
+                    break;
+
+                // Should not happen
+                case InternalProgram.NONE:
+                default:
+                    // No-op
+                    break;
             }
-#pragma warning restore IDE0010 // Add missing cases
 
             var env = new DumpEnvironment(
                 Options,
@@ -2259,8 +2289,19 @@ namespace MPF.Frontend.ViewModels
                 protectionProgress.ProgressChanged += ProgressUpdated;
                 _environment.ReportStatus += ProgressUpdated;
 
+                // Stream live tool output to the separate console window, if the frontend
+                // provides one (Linux GUI). Harmless no-op for frontends that do not.
+                if (_toolConsole is not null)
+                {
+                    _toolConsole.Open();
+                    _environment.ToolOutputReceived = _toolConsole.Append;
+                }
+
                 // Run the program with the parameters
                 ResultEventArgs result = await _environment.Run(CurrentPhysicalMediaType, resultProgress);
+
+                // The tool has exited; let the console close itself per the user's preference
+                _toolConsole?.NotifyToolExited();
 
                 // If we didn't execute a dumping command we cannot get submission output
                 if (!_environment.IsDumpingCommand())
@@ -2478,16 +2519,24 @@ namespace MPF.Frontend.ViewModels
         {
             try
             {
-#pragma warning disable IDE0072
                 return program switch
                 {
-                    InternalProgram.Aaru => FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath) != null,
-                    InternalProgram.DiscImageCreator => FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath) != null,
-                    // InternalProgram.Dreamdump => FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath) != null,
-                    InternalProgram.Redumper => FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath) != null,
+                    // Dumping supported programs
+                    InternalProgram.Aaru => FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath) is not null,
+                    InternalProgram.DiscImageCreator => FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath) is not null,
+                    // InternalProgram.Dreamdump => FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath) is not null,
+                    InternalProgram.Redumper => FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath) is not null,
+
+                    // Non-dumping programs
+                    InternalProgram.CleanRip => false,
+                    InternalProgram.PS3CFW => false,
+                    InternalProgram.UmdImageCreator => false,
+                    InternalProgram.XboxBackupCreator => false,
+
+                    // Should not happen
+                    InternalProgram.NONE => false,
                     _ => false,
                 };
-#pragma warning restore IDE0072
             }
             catch
             {

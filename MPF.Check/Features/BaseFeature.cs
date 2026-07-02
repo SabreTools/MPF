@@ -73,7 +73,7 @@ namespace MPF.Check.Features
         public override bool Execute()
         {
             // Validate a system type is provided
-            if (System == null)
+            if (System is null)
             {
                 Console.Error.WriteLine("A system name needs to be provided");
                 return false;

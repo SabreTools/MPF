@@ -105,7 +105,7 @@ namespace MPF.CLI.Features
         public override bool Execute()
         {
             // Validate a system type is provided
-            if (System == null)
+            if (System is null)
             {
                 Console.Error.WriteLine("A system name needs to be provided");
                 return false;
@@ -145,55 +145,60 @@ namespace MPF.CLI.Features
             switch (Options.InternalProgram)
             {
                 case InternalProgram.Aaru:
+                {
+                    string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
+                    if (resolved is null)
                     {
-                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
-                        if (resolved == null)
-                        {
-                            Console.Error.WriteLine("A path needs to be supplied in config.json for Aaru, exiting...");
-                            return false;
-                        }
-
-                        Options.Dumping.AaruPath = resolved;
+                        Console.Error.WriteLine("A path needs to be supplied in config.json for Aaru, exiting...");
+                        return false;
                     }
 
-                    break;
+                    Options.Dumping.AaruPath = resolved;
+                }
+
+                break;
 
                 case InternalProgram.DiscImageCreator:
+                {
+                    string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
+                    if (resolved is null)
                     {
-                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
-                        if (resolved == null)
-                        {
-                            Console.Error.WriteLine("A path needs to be supplied in config.json for DIC, exiting...");
-                            return false;
-                        }
-
-                        Options.Dumping.DiscImageCreatorPath = resolved;
+                        Console.Error.WriteLine("A path needs to be supplied in config.json for DIC, exiting...");
+                        return false;
                     }
 
-                    break;
+                    Options.Dumping.DiscImageCreatorPath = resolved;
+                }
+
+                break;
 
                 // case InternalProgram.Dreamdump:
-                //     if (!File.Exists(Options.Dumping.DreamdumpPath))
+                // {
+                //     string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath);
+                //     if (resolved is null)
                 //     {
                 //         Console.Error.WriteLine("A path needs to be supplied in config.json for Dreamdump, exiting...");
                 //         return false;
                 //     }
 
-                //     break;
+                //     Options.Dumping.AaruPath = resolved;
+                // }
+
+                // break;
 
                 case InternalProgram.Redumper:
+                {
+                    string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
+                    if (resolved is null)
                     {
-                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
-                        if (resolved == null)
-                        {
-                            Console.Error.WriteLine("A path needs to be supplied in config.json for Redumper, exiting...");
-                            return false;
-                        }
-
-                        Options.Dumping.RedumperPath = resolved;
+                        Console.Error.WriteLine("A path needs to be supplied in config.json for Redumper, exiting...");
+                        return false;
                     }
 
-                    break;
+                    Options.Dumping.RedumperPath = resolved;
+                }
+
+                break;
 
                 default:
                     Console.Error.WriteLine($"{Options.InternalProgram} is not a supported dumping program, exiting...");
@@ -244,7 +249,7 @@ namespace MPF.CLI.Features
             int speed = DriveSpeed ?? FrontendTool.GetDefaultSpeedForPhysicalMediaType(PhysicalMediaType, Options);
 
             // Get the retry count and override if needed
-            if (Retries != null && Retries >= 0)
+            if (Retries is not null && Retries >= 0)
             {
                 // Set all possible reread options
                 Options.Dumping.Aaru.RereadCount = Retries.Value;

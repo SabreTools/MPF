@@ -86,7 +86,7 @@ namespace MPF.Frontend
                 try
                 {
                     var d = Create(Frontend.InternalDriveType.Optical, devicePath);
-                    if (d != null)
+                    if (d is not null)
                     {
                         // A Linux optical /dev node is never a mount point, so DriveInfo always
                         // reports it as not-ready. Mark it active so it matches how Windows
@@ -389,7 +389,7 @@ namespace MPF.Frontend
                 try
                 {
                     var d = Create(device.DriveType, device.DevicePath);
-                    if (d != null)
+                    if (d is not null)
                     {
                         // A raw /dev block node is never a mount point, so DriveInfo reports
                         // it as not-ready with no size. Mirror how Windows surfaces these: a

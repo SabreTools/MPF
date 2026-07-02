@@ -120,8 +120,10 @@ namespace MPF.Frontend.Tools
         /// returned as-is when it exists. A bare name (no separator) is searched in the
         /// runtime directory first, then in each PATH entry.
         /// </returns>
+        /// TODO: Move to SabreTools.IO as the `ResolvePath` extension
         public static string? ResolveBinaryPath(string? configuredPath)
         {
+            // Invalid paths always return null
             if (string.IsNullOrEmpty(configuredPath))
                 return null;
 
@@ -136,11 +138,11 @@ namespace MPF.Frontend.Tools
                 return File.Exists(configuredPath) ? configuredPath : null;
             }
 
-            // Explicit location (absolute or relative path) — keep historical behavior.
-            if (configuredPath!.Contains("/") || configuredPath.Contains("\\"))
+            // Explicit location (absolute or relative path)
+            if (configuredPath.Contains("/") || configuredPath.Contains("\\"))
                 return File.Exists(configuredPath) ? configuredPath : null;
 
-            // Bare name — search runtime directory first, then $PATH.
+            // Check the runtime directory if no directory path is provided
             string runtimeDir = PathTool.GetRuntimeDirectory();
             if (!string.IsNullOrEmpty(runtimeDir))
             {
@@ -149,11 +151,14 @@ namespace MPF.Frontend.Tools
                     return candidate;
             }
 
+            // Attempt to get the PATH variable for searching
             string? pathEnv = Environment.GetEnvironmentVariable("PATH");
             if (string.IsNullOrEmpty(pathEnv))
                 return null;
 
-            foreach (string dir in pathEnv!.Split(Path.PathSeparator))
+            // Loop through all entries in PATH
+            var pathParts = pathEnv!.Split(Path.PathSeparator);
+            foreach (string dir in pathParts)
             {
                 if (string.IsNullOrEmpty(dir))
                     continue;
@@ -163,6 +168,7 @@ namespace MPF.Frontend.Tools
                     return candidate;
             }
 
+            // All options failed
             return null;
         }
 

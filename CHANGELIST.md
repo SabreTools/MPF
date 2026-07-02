@@ -1,6 +1,12 @@
 ### WIP (xxxx-xx-xx)
 
-- Enumerate Linux floppy drives (gmipf)
+- Add live tool output console for the Linux GUI (gmipf)
+- Normalize null checks in recent code
+- Cleanup around Avalonia code
+- Fix language menu requiring two clicks in the Avalonia GUI (gmipf)
+- Add some explicit comments and code for clarity
+- Detect and list USB floppy drives on Linux (gmipf)
+- Fix media type dropdown not updating dumping parameters (gmipf)
 
 ### 3.8.2 (2026-07-01)
 
