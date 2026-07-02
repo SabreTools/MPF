@@ -1254,7 +1254,7 @@ namespace MPF.Frontend.ViewModels
             {
                 // Dumping supported programs
                 case InternalProgram.Aaru:
-                    string? aaruPath = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
+                    string? aaruPath = Options.Dumping.AaruPath.ResolvePath();
                     if (aaruPath is not null)
                         Options.Dumping.AaruPath = aaruPath;
 
@@ -1262,7 +1262,7 @@ namespace MPF.Frontend.ViewModels
                     break;
 
                 case InternalProgram.DiscImageCreator:
-                    string? dicPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
+                    string? dicPath = Options.Dumping.DiscImageCreatorPath.ResolvePath();
                     if (dicPath is not null)
                         Options.Dumping.DiscImageCreatorPath = dicPath;
 
@@ -1270,7 +1270,7 @@ namespace MPF.Frontend.ViewModels
                     break;
 
                 // case InternalProgram.Dreamdump:
-                //     string? dreamdumpPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath);
+                //     string? dreamdumpPath = Options.Dumping.DreamdumpPath.ResolvePath();
                 //     if (dreamdumpPath is not null)
                 //         Options.Dumping.DreamdumpPath = dreamdumpPath;
 
@@ -1278,7 +1278,7 @@ namespace MPF.Frontend.ViewModels
                 //     break;
 
                 case InternalProgram.Redumper:
-                    string? redumperPath = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
+                    string? redumperPath = Options.Dumping.RedumperPath.ResolvePath();
                     if (redumperPath is not null)
                         Options.Dumping.RedumperPath = redumperPath;
 
@@ -2527,27 +2527,27 @@ namespace MPF.Frontend.ViewModels
                 {
                     // Dumping supported programs
                     case InternalProgram.Aaru:
-                        string? aaruPath = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
+                        string? aaruPath = Options.Dumping.AaruPath.ResolvePath();
                         bool validAaruPath = aaruPath is not null;
-                        VerboseLogLn(validAaruPath ? $"Found Aaru at {aaruPath}" : "Could not find Aaru");
+                        VerboseLogLn(validAaruPath ? $"Found Aaru at {aaruPath}" : $"Could not find Aaru from {Options.Dumping.AaruPath}");
                         return validAaruPath;
 
                     case InternalProgram.DiscImageCreator:
-                        string? dicPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
+                        string? dicPath = Options.Dumping.DiscImageCreatorPath.ResolvePath();
                         bool validDicPath = dicPath is not null;
-                        VerboseLogLn(validDicPath ? $"Found DiscImageCreator at {dicPath}" : "Could not find DiscImageCreator");
+                        VerboseLogLn(validDicPath ? $"Found DiscImageCreator at {dicPath}" : $"Could not find DiscImageCreator from {Options.Dumping.DiscImageCreatorPath}");
                         return validDicPath;
 
                     // case InternalProgram.Dreamdump:
-                    //     string? dreamdumpPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath);
+                    //     string? dreamdumpPath = Options.Dumping.DreamdumpPath.ResolvePath();
                     //     bool validDreamdumpPath = dreamdumpPath is not null;
-                    //     VerboseLogLn(validDreamdumpPath ? $"Found Dreamdump at {dreamdumpPath}" : "Could not find Dreamdump");
+                    //     VerboseLogLn(validDreamdumpPath ? $"Found Dreamdump at {dreamdumpPath}" : $"Could not find Dreamdump from {Options.Dumping.DreamdumpPath}");
                     //     return validDreamdumpPath;
 
                     case InternalProgram.Redumper:
-                        string? redumperPath = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
+                        string? redumperPath = Options.Dumping.RedumperPath.ResolvePath();
                         bool validRedumperPath = redumperPath is not null;
-                        VerboseLogLn(validRedumperPath ? $"Found Redumper at {redumperPath}" : "Could not find Redumper");
+                        VerboseLogLn(validRedumperPath ? $"Found Redumper at {redumperPath}" : $"Could not find Redumper from {Options.Dumping.RedumperPath}");
                         return validRedumperPath;
 
                     // Non-dumping programs
