@@ -1,31 +1,56 @@
 ﻿<UserControl x:Class="MPF.UI.UserControls.LogOutput"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
     <Grid>
         <StackPanel Orientation="Vertical">
-            <Border Height="180" Background="White" BorderBrush="Gainsboro" BorderThickness="1" Margin="10">
-                <ScrollViewer Name="OutputViewer" Template="{DynamicResource CustomScrollViewerControlStyle}">
-                    <RichTextBox Name="Output" FontFamily="Consolas" Background="#FF202020" IsReadOnly="true" />
+            <Border Height="180"
+                    Background="White"
+                    BorderBrush="Gainsboro"
+                    BorderThickness="1"
+                    Margin="10">
+                <ScrollViewer Name="OutputViewer"
+                              Template="{DynamicResource CustomScrollViewerControlStyle}">
+                    <RichTextBox Name="Output"
+                                 FontFamily="Consolas"
+                                 Background="#FF202020"
+                                 IsReadOnly="true"/>
                 </ScrollViewer>
             </Border>
 
-            <GroupBox Grid.Row="2" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <GroupBox Grid.Row="2"
+                      Margin="5,5,5,5"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
                 <GroupBox.Template>
                     <ControlTemplate TargetType="GroupBox">
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
-                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5">
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              Margin="{TemplateBinding Padding}"/>
                         </Border>
                     </ControlTemplate>
                 </GroupBox.Template>
-                <UniformGrid Columns="4" Margin="5,5,5,5" Height="27">
-                    <Label/> <!-- Empty label for padding -->
-                    <Button Name="ClearButton" Height="25" Width="80" Content="{DynamicResource ClearButtonString}" Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="SaveButton" Height="25" Width="80" Content="{DynamicResource SaveButtonString}" Style="{DynamicResource CustomButtonStyle}" />
-                    <Label/> <!-- Empty label for padding -->
+                <UniformGrid Columns="4"
+                             Margin="5,5,5,5"
+                             Height="27">
+                    <Button Name="ClearButton"
+                            Grid.Column="1"
+                            Height="25"
+                            Width="80"
+                            Content="{DynamicResource ClearButtonString}"
+                            Style="{DynamicResource CustomButtonStyle}"/>
+                    <Button Name="SaveButton"
+                            Grid.Column="2"
+                            Height="25"
+                            Width="80"
+                            Content="{DynamicResource SaveButtonString}"
+                            Style="{DynamicResource CustomButtonStyle}"/>
                 </UniformGrid>
             </GroupBox>
         </StackPanel>

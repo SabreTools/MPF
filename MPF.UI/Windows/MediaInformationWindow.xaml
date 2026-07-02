@@ -8,16 +8,25 @@
                         xmlns:redump="clr-namespace:SabreTools.RedumpLib.Data;assembly=SabreTools.RedumpLib"
                         xmlns:coreWindows="clr-namespace:MPF.UI.Windows"
                         mc:Ignorable="d"
-                        Title="{DynamicResource MediaInformationTitleString}" Width="600" WindowStyle="None"
-                        WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
-                        AllowsTransparency="True" Background="Transparent">
+                        Title="{DynamicResource MediaInformationTitleString}"
+                        Width="600"
+                        WindowStyle="None"
+                        WindowStartupLocation="CenterOwner"
+                        ResizeMode="CanMinimize"
+                        SizeToContent="Height"
+                        AllowsTransparency="True"
+                        Background="Transparent">
 
     <Window.Resources>
-        <core:ElementConverter x:Key="ElementConverter" />
+        <core:ElementConverter x:Key="ElementConverter"/>
     </Window.Resources>
 
-    <Border CornerRadius="8" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="2">
-        <StackPanel Orientation="Vertical" MaxHeight="650">
+    <Border CornerRadius="8"
+            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+            BorderBrush="Gray"
+            BorderThickness="2">
+        <StackPanel Orientation="Vertical"
+                    MaxHeight="650">
             <Grid Margin="0,2,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="25"/>
@@ -29,21 +38,35 @@
                     <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
-                <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
+                <Image Grid.Column="0"
+                       Source="/Images/Icon.ico"
+                       Height="20"
+                       Width="20"
+                       Margin="1"
+                       MouseDown="TitleMouseDown"/>
+                <Label Grid.Column="1"
+                       Grid.ColumnSpan="4"
+                       HorizontalAlignment="Stretch"
+                       HorizontalContentAlignment="Center"
+                       MouseDown="TitleMouseDown">
                     <Label.Content>
-                        <Run FontWeight="Bold" Text="{DynamicResource MediaInformationTitleString}" />
+                        <Run FontWeight="Bold"
+                             Text="{DynamicResource MediaInformationTitleString}"/>
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                      Style="{DynamicResource CustomContextMenuStyle}">
-                            <MenuItem Header="{DynamicResource MinimizeMenuItemString}" Click="MinimizeButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource MinimizeMenuItemString}"
+                                      Click="MinimizeButtonClick"
+                                      Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}"/>
-                            <MenuItem Header="{DynamicResource CloseMenuItemString}" Click="CloseButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource CloseMenuItemString}"
+                                      Click="CloseButtonClick"
+                                      Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
@@ -57,11 +80,25 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="MinimizeButton" Grid.Column="0" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
-                        <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
+                    <Button x:Name="MinimizeButton"
+                            Grid.Column="0"
+                            BorderThickness="0"
+                            Background="Transparent"
+                            Style="{DynamicResource CustomButtonStyle}"
+                            Click="MinimizeButtonClick">
+                        <Path Data="M 0,0 L 10,0"
+                              Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                              StrokeThickness="1"/>
                     </Button>
-                    <Button x:Name="CloseButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
-                        <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
+                    <Button x:Name="CloseButton"
+                            Grid.Column="1"
+                            BorderThickness="0"
+                            Background="Transparent"
+                            Style="{DynamicResource CustomButtonStyle}"
+                            Click="CloseButtonClick">
+                        <Path Data="M 0,0 L 12,12 M 0,12 L 12,0"
+                              Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                              StrokeThickness="1"/>
                     </Button>
                 </Grid>
             </Grid>
@@ -69,52 +106,88 @@
             <TabControl Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                         Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                         Style="{DynamicResource CustomTabControlStyle}">
-                <TabItem x:Name="CommonInfo" Header="{DynamicResource CommonInfoTabString}" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
+                <TabItem x:Name="CommonInfo"
+                         Header="{DynamicResource CommonInfoTabString}"
+                         Style="{DynamicResource CustomTabItemStyle}">
+                    <ScrollViewer CanContentScroll="False"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  MaxHeight="500">
                         <StackPanel Orientation="Vertical">
-                            <GroupBox Header="{DynamicResource CommonMediaInfoGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <GroupBox Header="{DynamicResource CommonMediaInfoGroupBoxString}"
+                                      Margin="5"
+                                      Padding="5"
+                                      BorderThickness="1"
+                                      BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput Label="{DynamicResource TitleInputString}"
-                                                    Text="{Binding SubmissionInfo.DiscIdentity.Title, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="AlternativeTitleTextBox" Label="{DynamicResource AlternativeTitleInputString}"
-                                                    Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)AlternativeTitle], Mode=TwoWay}"/>
-                                    <controls:UserInput Label="{DynamicResource ForeignTitleNonLatinInputString}" 
-                                                    Text="{Binding SubmissionInfo.DiscIdentity.ForeignTitle, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="{DynamicResource AlternativeForeignTitleInputString}"
-                                                    Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)AlternativeForeignTitle], Mode=TwoWay}"/>
+                                                        Text="{Binding SubmissionInfo.DiscIdentity.Title, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="AlternativeTitleTextBox"
+                                                        Label="{DynamicResource AlternativeTitleInputString}"
+                                                        Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)AlternativeTitle], Mode=TwoWay}"/>
+                                    <controls:UserInput Label="{DynamicResource ForeignTitleNonLatinInputString}"
+                                                        Text="{Binding SubmissionInfo.DiscIdentity.ForeignTitle, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="AlternativeForeignTitleTextBox"
+                                                        Label="{DynamicResource AlternativeForeignTitleInputString}"
+                                                        Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)AlternativeForeignTitle], Mode=TwoWay}"/>
                                     <controls:UserInput Label="{DynamicResource DiscNumberLetterInputString}"
-                                                    Text="{Binding SubmissionInfo.DiscIdentity.DiscNumber, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscTitleTextBox" Label="{DynamicResource DiscTitleInputString}"
-                                                    Text="{Binding SubmissionInfo.DiscIdentity.DiscTitle, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscTitleNonLatinTextBox" Label="{DynamicResource DiscTitleNonLatinInputString}"
-                                                    Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)DiscTitleNonLatin], Mode=TwoWay}"/>
+                                                        Text="{Binding SubmissionInfo.DiscIdentity.DiscNumber, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="DiscTitleTextBox"
+                                                        Label="{DynamicResource DiscTitleInputString}"
+                                                        Text="{Binding SubmissionInfo.DiscIdentity.DiscTitle, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="DiscTitleNonLatinTextBox"
+                                                        Label="{DynamicResource DiscTitleNonLatinInputString}"
+                                                        Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)DiscTitleNonLatin], Mode=TwoWay}"/>
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.75*" />
+                                            <ColumnDefinition Width="0.75*"/>
+                                            <ColumnDefinition Width="1.75*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource CategoryLabelString}" />
-                                        <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
-                                                  ItemsSource="{Binding Categories}" SelectedItem="{Binding SubmissionInfo.DiscIdentity.Category, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                                  Style="{DynamicResource CustomComboBoxStyle}" />
+                                        <Label x:Name="CategoryLabel"
+                                               Grid.Row="0"
+                                               Grid.Column="0"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Right"
+                                               Content="{DynamicResource CategoryLabelString}"/>
+                                        <ComboBox x:Name="CategoryComboBox"
+                                                  Grid.Row="0"
+                                                  Grid.Column="1"
+                                                  Height="22"
+                                                  HorizontalAlignment="Stretch"
+                                                  ItemsSource="{Binding Categories}"
+                                                  SelectedItem="{Binding SubmissionInfo.DiscIdentity.Category, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                                  Style="{DynamicResource CustomComboBoxStyle}"/>
                                     </Grid>
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.75*" />
+                                            <ColumnDefinition Width="0.75*"/>
+                                            <ColumnDefinition Width="1.75*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Label x:Name="RegionsLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource RegionsLabelString}" />
-                                        <ComboBox x:Name="RegionsDropDown" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch"
+                                        <Label x:Name="RegionsLabel"
+                                               Grid.Row="0"
+                                               Grid.Column="0"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Right"
+                                               Content="{DynamicResource RegionsLabelString}"/>
+                                        <ComboBox x:Name="RegionsDropDown"
+                                                  Grid.Row="0"
+                                                  Grid.Column="1"
+                                                  Height="24"
+                                                  HorizontalAlignment="Stretch"
                                                   ItemsSource="{Binding Regions}"
-                                          SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
+                                                  SelectedIndex="0"
+                                                  Style="{DynamicResource CustomComboBoxStyle}">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate>
-                                                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
+                                                    <CheckBox Content="{Binding Name}"
+                                                              IsChecked="{Binding IsChecked}"/>
                                                 </DataTemplate>
                                             </ComboBox.ItemTemplate>
                                         </ComboBox>
@@ -122,157 +195,258 @@
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.75*" />
+                                            <ColumnDefinition Width="0.75*"/>
+                                            <ColumnDefinition Width="1.75*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource LanguagesLabelString}" />
-                                        <ComboBox x:Name="LanguagesDropDown" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch"
+                                        <Label x:Name="LanguagesLabel"
+                                               Grid.Row="0"
+                                               Grid.Column="0"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Right"
+                                               Content="{DynamicResource LanguagesLabelString}"/>
+                                        <ComboBox x:Name="LanguagesDropDown"
+                                                  Grid.Row="0"
+                                                  Grid.Column="1"
+                                                  Height="24"
+                                                  HorizontalAlignment="Stretch"
                                                   ItemsSource="{Binding Languages}"
-                                          SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
+                                                  SelectedIndex="0"
+                                                  Style="{DynamicResource CustomComboBoxStyle}">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate>
-                                                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
+                                                    <CheckBox Content="{Binding Name}"
+                                                              IsChecked="{Binding IsChecked}"/>
                                                 </DataTemplate>
                                             </ComboBox.ItemTemplate>
                                         </ComboBox>
                                     </Grid>
 
-                                    <controls:UserInput Label="{DynamicResource SerialInputString}" Text="{Binding SubmissionInfo.DiscIdentifiers.DiscSerials, Mode=TwoWay}"/>
-                                    <controls:UserInput Label="{DynamicResource BarcodeInputString}" Text="{Binding SubmissionInfo.DiscIdentifiers.Barcodes, Mode=TwoWay}"/>
+                                    <controls:UserInput Label="{DynamicResource SerialInputString}"
+                                                        Text="{Binding SubmissionInfo.DiscIdentifiers.DiscSerials, Mode=TwoWay}"/>
+                                    <controls:UserInput Label="{DynamicResource BarcodeInputString}"
+                                                        Text="{Binding SubmissionInfo.DiscIdentifiers.Barcodes, Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox Header="{DynamicResource VersionsAndEditionGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <GroupBox Header="{DynamicResource VersionsAndEditionGroupBoxString}"
+                                      Margin="5"
+                                      Padding="5"
+                                      BorderThickness="1"
+                                      BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput Label="{DynamicResource VersionInputString}" Text="{Binding SubmissionInfo.DiscIdentifiers.Version, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="EditionTextBox" Label="{DynamicResource EditionInputString}" Text="{Binding SubmissionInfo.DiscIdentifiers.Editions, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="EditionNonLatinTextBox" Label="{DynamicResource EditionNonLatinInputString}"
-                                                    Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)EditionNonLatin], Mode=TwoWay}"/>
+                                    <controls:UserInput Label="{DynamicResource VersionInputString}"
+                                                        Text="{Binding SubmissionInfo.DiscIdentifiers.Version, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="EditionTextBox"
+                                                        Label="{DynamicResource EditionInputString}"
+                                                        Text="{Binding SubmissionInfo.DiscIdentifiers.Editions, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="EditionNonLatinTextBox"
+                                                        Label="{DynamicResource EditionNonLatinInputString}"
+                                                        Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)EditionNonLatin], Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem Header="{DynamicResource AdditionalInfoTabString}" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
+                <TabItem Header="{DynamicResource AdditionalInfoTabString}"
+                         Style="{DynamicResource CustomTabItemStyle}">
+                    <ScrollViewer CanContentScroll="False"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  MaxHeight="500">
                         <StackPanel Orientation="Vertical">
-                            <GroupBox Header="{DynamicResource ExtrasGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <GroupBox Header="{DynamicResource ExtrasGroupBoxString}"
+                                      Margin="5"
+                                      Padding="5"
+                                      BorderThickness="1"
+                                      BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <Grid x:Name="PCMacHybridGrid" Visibility="Collapsed">
+                                    <Grid x:Name="PCMacHybridGrid"
+                                          Visibility="Collapsed">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.75*" />
+                                            <ColumnDefinition Width="0.75*"/>
+                                            <ColumnDefinition Width="1.75*"/>
                                         </Grid.ColumnDefinitions>
 
                                         <Label/>
-                                        <CheckBox Grid.Column="1" x:Name="PCMacHybridCheckBox" Content="PC/Mac Hybrid" Margin="0,4"
+                                        <CheckBox Grid.Column="1"
+                                                  x:Name="PCMacHybridCheckBox"
+                                                  Content="PC/Mac Hybrid"
+                                                  Margin="0,4"
                                                   IsChecked="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)PCMacHybrid], Mode=TwoWay}"/>
                                     </Grid>
-                                    <controls:UserInput x:Name="CommentsTextBox" Label="{DynamicResource CommentsInputString}"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.Comments, Mode=TwoWay}" TextHeight="50"
-                                                        Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
-                                    <controls:UserInput x:Name="CompatibleOSTextBox" Label="{DynamicResource CompatibleOSInputString}" Visibility="Collapsed"
-                                                    Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)CompatibleOS], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscKeyTextBox" Label="Disc Key" Visibility="Collapsed"
-                                                    Text="{Binding Path=SubmissionInfo.DiscIdentifiers.DiscKey, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscIDTextBox" Label="Disc ID" Visibility="Collapsed"
-                                                    Text="{Binding Path=SubmissionInfo.DiscIdentifiers.DiscID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="ProtectionTextBox" Label="{DynamicResource ProtectionInputString}" ToolTip="CAUTION: Only edit if you know what you are doing!"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.Protection, Mode=TwoWay}" TextHeight="75" TextWrapping="Wrap"
-                                                        VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                                    <controls:UserInput x:Name="CommentsTextBox"
+                                                        Label="{DynamicResource CommentsInputString}"
+                                                        Text="{Binding SubmissionInfo.DumpMetadata.Comments, Mode=TwoWay}"
+                                                        TextHeight="50"
+                                                        Enter="True"
+                                                        TextWrapping="Wrap"
+                                                        VerticalContentAlignmentValue="Top"/>
+                                    <controls:UserInput x:Name="CompatibleOSTextBox"
+                                                        Label="{DynamicResource CompatibleOSInputString}"
+                                                        Visibility="Collapsed"
+                                                        Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)CompatibleOS], Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="DiscKeyTextBox"
+                                                        Label="Disc Key"
+                                                        Visibility="Collapsed"
+                                                        Text="{Binding Path=SubmissionInfo.DiscIdentifiers.DiscKey, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="DiscIDTextBox"
+                                                        Label="Disc ID"
+                                                        Visibility="Collapsed"
+                                                        Text="{Binding Path=SubmissionInfo.DiscIdentifiers.DiscID, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="ProtectionTextBox"
+                                                        Label="{DynamicResource ProtectionInputString}"
+                                                        ToolTip="CAUTION: Only edit if you know what you are doing!"
+                                                        Text="{Binding SubmissionInfo.DumpMetadata.Protection, Mode=TwoWay}"
+                                                        TextHeight="75"
+                                                        TextWrapping="Wrap"
+                                                        VerticalContentAlignmentValue="Top"
+                                                        HorizontalScrollBarVisibility="Auto"
+                                                        VerticalScrollBarVisibility="Auto"/>
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox Header="{DynamicResource PhysicalIdentifiersGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <GroupBox Header="{DynamicResource PhysicalIdentifiersGroupBoxString}"
+                                      Margin="5"
+                                      Padding="5"
+                                      BorderThickness="1"
+                                      BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No."
+                                    <controls:UserInput x:Name="BBFCRegistrationNumberTextBox"
+                                                        Label="BBFC Reg. No."
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)BBFCRegistrationNumber], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscHologramIDTextBox" Label="Disc Hologram ID"
+                                    <controls:UserInput x:Name="DiscHologramIDTextBox"
+                                                        Label="Disc Hologram ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)DiscHologramID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DNASDiscIDTextBox" Label="DNAS Disc ID"
+                                    <controls:UserInput x:Name="DNASDiscIDTextBox"
+                                                        Label="DNAS Disc ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)DNASDiscID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="CommentDiscIDTextBox" Label="Disc ID"
+                                    <controls:UserInput x:Name="CommentDiscIDTextBox"
+                                                        Label="Disc ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)DiscID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="CoverIDTextBox" Label="Cover ID"
+                                    <controls:UserInput x:Name="CoverIDTextBox"
+                                                        Label="Cover ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)CoverID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="ISBNTextBox" Label="ISBN"
+                                    <controls:UserInput x:Name="ISBNTextBox"
+                                                        Label="ISBN"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)ISBN], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="ISSNTextBox" Label="ISSN"
+                                    <controls:UserInput x:Name="ISSNTextBox"
+                                                        Label="ISSN"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)ISSN], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="PPNTextBox" Label="PPN"
+                                    <controls:UserInput x:Name="PPNTextBox"
+                                                        Label="PPN"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)PPN], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="VFCCodeTextBox" Label="VFC code"
+                                    <controls:UserInput x:Name="VFCCodeTextBox"
+                                                        Label="VFC code"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)VFCCode], Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox Header="{DynamicResource PublisherIdentifiersGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <GroupBox Header="{DynamicResource PublisherIdentifiersGroupBoxString}"
+                                      Margin="5"
+                                      Padding="5"
+                                      BorderThickness="1"
+                                      BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="TwoKGamesIDTextBox" Label="2K Games ID"
+                                    <controls:UserInput x:Name="TwoKGamesIDTextBox"
+                                                        Label="2K Games ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)TwoKGamesID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID"
+                                    <controls:UserInput x:Name="AcclaimIDTextBox"
+                                                        Label="Acclaim ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)AcclaimID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="AccoladeIDTextBox" Label="Accolade ID"
+                                    <controls:UserInput x:Name="AccoladeIDTextBox"
+                                                        Label="Accolade ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)AccoladeID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="ActivisionIDTextBox" Label="Activision ID"
+                                    <controls:UserInput x:Name="ActivisionIDTextBox"
+                                                        Label="Activision ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)ActivisionID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="BandaiIDTextBox" Label="Bandai ID"
+                                    <controls:UserInput x:Name="BandaiIDTextBox"
+                                                        Label="Bandai ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)BandaiID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="BethesdaIDTextBox" Label="Bethesda ID"
+                                    <controls:UserInput x:Name="BethesdaIDTextBox"
+                                                        Label="Bethesda ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)BethesdaID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="CDProjektIDTextBox" Label="CD Projekt ID"
+                                    <controls:UserInput x:Name="CDProjektIDTextBox"
+                                                        Label="CD Projekt ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)CDProjektID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DisneyInteractiveIDTextBox" Label="Disney Interactive ID"
+                                    <controls:UserInput x:Name="DisneyInteractiveIDTextBox"
+                                                        Label="Disney Interactive ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)DisneyInteractiveID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="EidosIDTextBox" Label="Eidos ID"
+                                    <controls:UserInput x:Name="EidosIDTextBox"
+                                                        Label="Eidos ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)EidosID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="ElectronicArtsIDTextBox" Label="Electronic Arts ID"
+                                    <controls:UserInput x:Name="ElectronicArtsIDTextBox"
+                                                        Label="Electronic Arts ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)ElectronicArtsID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="FoxInteractiveIDTextBox" Label="Fox Interactive ID"
+                                    <controls:UserInput x:Name="FoxInteractiveIDTextBox"
+                                                        Label="Fox Interactive ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)FoxInteractiveID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="GTInteractiveIDTextBox" Label="GT Interactive ID"
+                                    <controls:UserInput x:Name="GTInteractiveIDTextBox"
+                                                        Label="GT Interactive ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)GTInteractiveID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="InterplayIDTextBox" Label="Interplay ID"
+                                    <controls:UserInput x:Name="InterplayIDTextBox"
+                                                        Label="Interplay ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)InterplayID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="JASRACIDTextBox" Label="JASRAC ID"
+                                    <controls:UserInput x:Name="JASRACIDTextBox"
+                                                        Label="JASRAC ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)JASRACID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="KingRecordsIDTextBox" Label="King Records ID"
+                                    <controls:UserInput x:Name="KingRecordsIDTextBox"
+                                                        Label="King Records ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)KingRecordsID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="KoeiIDTextBox" Label="Koei ID"
+                                    <controls:UserInput x:Name="KoeiIDTextBox"
+                                                        Label="Koei ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)KoeiID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="KonamiIDTextBox" Label="Konami ID"
+                                    <controls:UserInput x:Name="KonamiIDTextBox"
+                                                        Label="Konami ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)KonamiID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="LucasArtsIDTextBox" Label="LucasArts ID"
+                                    <controls:UserInput x:Name="LucasArtsIDTextBox"
+                                                        Label="LucasArts ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)LucasArtsID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="MicrosoftIDTextBox" Label="Microsoft ID"
+                                    <controls:UserInput x:Name="MicrosoftIDTextBox"
+                                                        Label="Microsoft ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)MicrosoftID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="NaganoIDTextBox" Label="Nagano ID"
+                                    <controls:UserInput x:Name="NaganoIDTextBox"
+                                                        Label="Nagano ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)NaganoID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="NamcoIDTextBox" Label="Namco ID"
+                                    <controls:UserInput x:Name="NamcoIDTextBox"
+                                                        Label="Namco ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)NamcoID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="NipponIchiSoftwareIDTextBox" Label="Nippon Ichi Software ID"
+                                    <controls:UserInput x:Name="NipponIchiSoftwareIDTextBox"
+                                                        Label="Nippon Ichi Software ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)NipponIchiSoftwareID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="OriginIDTextBox" Label="Origin ID"
+                                    <controls:UserInput x:Name="OriginIDTextBox"
+                                                        Label="Origin ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)OriginID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="PonyCanyonIDTextBox" Label="Pony Canyon ID"
+                                    <controls:UserInput x:Name="PonyCanyonIDTextBox"
+                                                        Label="Pony Canyon ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)PonyCanyonID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="SegaIDTextBox" Label="Sega ID"
+                                    <controls:UserInput x:Name="SegaIDTextBox"
+                                                        Label="Sega ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)SegaID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="SelenIDTextBox" Label="Selen ID"
+                                    <controls:UserInput x:Name="SelenIDTextBox"
+                                                        Label="Selen ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)SelenID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="SierraIDTextBox" Label="Sierra ID"
+                                    <controls:UserInput x:Name="SierraIDTextBox"
+                                                        Label="Sierra ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)SierraID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="TaitoIDTextBox" Label="Taito ID"
+                                    <controls:UserInput x:Name="TaitoIDTextBox"
+                                                        Label="Taito ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)TaitoID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="UbisoftIDTextBox" Label="Ubisoft ID"
+                                    <controls:UserInput x:Name="UbisoftIDTextBox"
+                                                        Label="Ubisoft ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)UbisoftID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="ValveIDTextBox" Label="Valve ID"
+                                    <controls:UserInput x:Name="ValveIDTextBox"
+                                                        Label="Valve ID"
                                                         Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)ValveID], Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
@@ -280,233 +454,455 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem Header="{DynamicResource ContentsTabString}" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
-                        <GroupBox Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <TabItem Header="{DynamicResource ContentsTabString}"
+                         Style="{DynamicResource CustomTabItemStyle}">
+                    <ScrollViewer CanContentScroll="False"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  MaxHeight="500">
+                        <GroupBox Margin="5"
+                                  Padding="5"
+                                  BorderThickness="1"
+                                  BorderBrush="LightGray"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch">
                             <GroupBox.Template>
                                 <ControlTemplate TargetType="GroupBox">
-                                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
-                                        <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="5">
+                                        <ContentPresenter Content="{TemplateBinding Content}"
+                                                          Margin="{TemplateBinding Padding}"/>
                                     </Border>
                                 </ControlTemplate>
                             </GroupBox.Template>
 
                             <StackPanel Orientation="Vertical">
-                                <controls:UserInput x:Name="GeneralContent" Label="General"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.Contents, Mode=TwoWay}" TextHeight="50"
-                                                    Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            
+                                <controls:UserInput x:Name="GeneralContent"
+                                                    Label="General"
+                                                    Text="{Binding SubmissionInfo.DumpMetadata.Contents, Mode=TwoWay}"
+                                                    TextHeight="50"
+                                                    Enter="True"
+                                                    TextWrapping="Wrap"
+                                                    VerticalContentAlignmentValue="Top"/>
+
                                 <!-- Applications -->
-                                <controls:UserInput x:Name="ApplicationsTextBox" Label="Applications" TextHeight="50"
-                                                    Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"
+                                <controls:UserInput x:Name="ApplicationsTextBox"
+                                                    Label="Applications"
+                                                    TextHeight="50"
+                                                    Enter="True"
+                                                    TextWrapping="Wrap"
+                                                    VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.ContentsSpecialFields[(redump:SiteCode)Applications], Mode=TwoWay}"/>
-                            
+
                                 <!-- Games -->
-                                <controls:UserInput x:Name="GamesTextBox" Label="Games" TextHeight="50"
-                                                    Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"
+                                <controls:UserInput x:Name="GamesTextBox"
+                                                    Label="Games"
+                                                    TextHeight="50"
+                                                    Enter="True"
+                                                    TextWrapping="Wrap"
+                                                    VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.ContentsSpecialFields[(redump:SiteCode)Games], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="NetYarozeGamesTextBox" Label="Net Yaroze Games" Visibility="Collapsed" TextHeight="50"
-                                                    Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"
+                                <controls:UserInput x:Name="NetYarozeGamesTextBox"
+                                                    Label="Net Yaroze Games"
+                                                    Visibility="Collapsed"
+                                                    TextHeight="50"
+                                                    Enter="True"
+                                                    TextWrapping="Wrap"
+                                                    VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.ContentsSpecialFields[(redump:SiteCode)NetYarozeGames], Mode=TwoWay}"/>
-                                
+
                                 <!-- Demos -->
-                                <controls:UserInput x:Name="PlayableDemosTextBox" Label="Playable Demos" TextHeight="50"
-                                                    Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"
+                                <controls:UserInput x:Name="PlayableDemosTextBox"
+                                                    Label="Playable Demos"
+                                                    TextHeight="50"
+                                                    Enter="True"
+                                                    TextWrapping="Wrap"
+                                                    VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.ContentsSpecialFields[(redump:SiteCode)PlayableDemos], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="RollingDemosTextBox" Label="Rolling Demos" TextHeight="50"
-                                                    Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"
+                                <controls:UserInput x:Name="RollingDemosTextBox"
+                                                    Label="Rolling Demos"
+                                                    TextHeight="50"
+                                                    Enter="True"
+                                                    TextWrapping="Wrap"
+                                                    VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.ContentsSpecialFields[(redump:SiteCode)RollingDemos], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="TechDemosTextBox" Label="Tech Demos" TextHeight="50"
-                                                    Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"
+                                <controls:UserInput x:Name="TechDemosTextBox"
+                                                    Label="Tech Demos"
+                                                    TextHeight="50"
+                                                    Enter="True"
+                                                    TextWrapping="Wrap"
+                                                    VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.ContentsSpecialFields[(redump:SiteCode)TechDemos], Mode=TwoWay}"/>
 
                                 <!-- Video -->
-                                <controls:UserInput x:Name="GameFootageTextBox" Label="Game Footage" TextHeight="50"
-                                                    Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"
+                                <controls:UserInput x:Name="GameFootageTextBox"
+                                                    Label="Game Footage"
+                                                    TextHeight="50"
+                                                    Enter="True"
+                                                    TextWrapping="Wrap"
+                                                    VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.ContentsSpecialFields[(redump:SiteCode)GameFootage], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="VideosTextBox" Label="Videos" TextHeight="50"
-                                                    Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"
+                                <controls:UserInput x:Name="VideosTextBox"
+                                                    Label="Videos"
+                                                    TextHeight="50"
+                                                    Enter="True"
+                                                    TextWrapping="Wrap"
+                                                    VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.ContentsSpecialFields[(redump:SiteCode)Videos], Mode=TwoWay}"/>
 
                                 <!-- Miscellaneous -->
-                                <controls:UserInput x:Name="PatchesTextBox" Label="Patches" TextHeight="50"
-                                                    Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"
+                                <controls:UserInput x:Name="PatchesTextBox"
+                                                    Label="Patches"
+                                                    TextHeight="50"
+                                                    Enter="True"
+                                                    TextWrapping="Wrap"
+                                                    VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.ContentsSpecialFields[(redump:SiteCode)Patches], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="SavegamesTextBox" Label="Savegames" TextHeight="50"
-                                                    Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"
+                                <controls:UserInput x:Name="SavegamesTextBox"
+                                                    Label="Savegames"
+                                                    TextHeight="50"
+                                                    Enter="True"
+                                                    TextWrapping="Wrap"
+                                                    VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.ContentsSpecialFields[(redump:SiteCode)Savegames], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="ExtrasTextBox" Label="Extras" TextHeight="50"
-                                                    Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"
+                                <controls:UserInput x:Name="ExtrasTextBox"
+                                                    Label="Extras"
+                                                    TextHeight="50"
+                                                    Enter="True"
+                                                    TextWrapping="Wrap"
+                                                    VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.ContentsSpecialFields[(redump:SiteCode)Extras], Mode=TwoWay}"/>
                             </StackPanel>
                         </GroupBox>
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem Header="{DynamicResource RingcodesTabString}" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
+                <TabItem Header="{DynamicResource RingcodesTabString}"
+                         Style="{DynamicResource CustomTabItemStyle}">
+                    <ScrollViewer CanContentScroll="False"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  MaxHeight="500">
                         <StackPanel Orientation="Vertical">
-                            <GroupBox x:Name="Layer0Info" Header="{DynamicResource Layer0InfoGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <GroupBox x:Name="Layer0Info"
+                                      Header="{DynamicResource Layer0InfoGroupBoxString}"
+                                      Margin="5"
+                                      Padding="5"
+                                      BorderThickness="1"
+                                      BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="Layer0MasteringCode" Label="Mastering Code"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer0MasteringCode, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer0MasteringSID" Label="Mastering SID"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer0MasteringSID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer0Toolstamp" Label="Toolstamps"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer0Toolstamps, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer0MouldSIDs" Label="Mould SIDs"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer0MouldSIDs, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer0AdditionalMoulds" Label="Additional Moulds"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer0AdditionalMoulds, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer0MasteringCode"
+                                                        Label="Mastering Code"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer0MasteringCode, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer0MasteringSID"
+                                                        Label="Mastering SID"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer0MasteringSID, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer0Toolstamp"
+                                                        Label="Toolstamps"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer0Toolstamps, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer0MouldSIDs"
+                                                        Label="Mould SIDs"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer0MouldSIDs, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer0AdditionalMoulds"
+                                                        Label="Additional Moulds"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer0AdditionalMoulds, Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox x:Name="Layer1Info" Header="{DynamicResource Layer1InfoGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <GroupBox x:Name="Layer1Info"
+                                      Header="{DynamicResource Layer1InfoGroupBoxString}"
+                                      Margin="5"
+                                      Padding="5"
+                                      BorderThickness="1"
+                                      BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="Layer1MasteringCode" Label="Mastering Code"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer1MasteringCode, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer1MasteringSID" Label="Mastering SID"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer1MasteringSID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer1Toolstamp" Label="Toolstamps"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer1Toolstamps, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer1MouldSIDs" Label="Mould SIDs"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer1MouldSIDs, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer1AdditionalMoulds" Label="Additional Moulds"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer1AdditionalMoulds, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer1MasteringCode"
+                                                        Label="Mastering Code"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer1MasteringCode, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer1MasteringSID"
+                                                        Label="Mastering SID"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer1MasteringSID, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer1Toolstamp"
+                                                        Label="Toolstamps"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer1Toolstamps, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer1MouldSIDs"
+                                                        Label="Mould SIDs"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer1MouldSIDs, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer1AdditionalMoulds"
+                                                        Label="Additional Moulds"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer1AdditionalMoulds, Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox x:Name="Layer2Info" Header="{DynamicResource Layer2InfoGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <GroupBox x:Name="Layer2Info"
+                                      Header="{DynamicResource Layer2InfoGroupBoxString}"
+                                      Margin="5"
+                                      Padding="5"
+                                      BorderThickness="1"
+                                      BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="Layer2MasteringCode" Label="Mastering Code"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer2MasteringCode, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer2MasteringSID" Label="Mastering SID"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer2MasteringSID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer2Toolstamp" Label="Toolstamps"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer2Toolstamps, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer2MouldSIDs" Label="Mould SIDs"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer2MouldSIDs, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer2AdditionalMoulds" Label="Additional Moulds"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer2AdditionalMoulds, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer2MasteringCode"
+                                                        Label="Mastering Code"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer2MasteringCode, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer2MasteringSID"
+                                                        Label="Mastering SID"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer2MasteringSID, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer2Toolstamp"
+                                                        Label="Toolstamps"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer2Toolstamps, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer2MouldSIDs"
+                                                        Label="Mould SIDs"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer2MouldSIDs, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer2AdditionalMoulds"
+                                                        Label="Additional Moulds"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer2AdditionalMoulds, Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox x:Name="Layer3Info" Header="{DynamicResource Layer3InfoGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <GroupBox x:Name="Layer3Info"
+                                      Header="{DynamicResource Layer3InfoGroupBoxString}"
+                                      Margin="5"
+                                      Padding="5"
+                                      BorderThickness="1"
+                                      BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="Layer3MasteringCode" Label="Mastering Code"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer3MasteringCode, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer3MasteringSID" Label="Mastering SID"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer3MasteringSID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer3Toolstamp" Label="Toolstamps"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer3Toolstamps, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer3MouldSIDs" Label="Mould SIDs"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer3MouldSIDs, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="Layer3AdditionalMoulds" Label="Additional Moulds"
-                                            Text="{Binding SubmissionInfo.RingCodes.Layer3AdditionalMoulds, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer3MasteringCode"
+                                                        Label="Mastering Code"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer3MasteringCode, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer3MasteringSID"
+                                                        Label="Mastering SID"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer3MasteringSID, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer3Toolstamp"
+                                                        Label="Toolstamps"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer3Toolstamps, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer3MouldSIDs"
+                                                        Label="Mould SIDs"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer3MouldSIDs, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="Layer3AdditionalMoulds"
+                                                        Label="Additional Moulds"
+                                                        Text="{Binding SubmissionInfo.RingCodes.Layer3AdditionalMoulds, Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox x:Name="LabelSideInfo" Header="{DynamicResource LabelSideInfoGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <GroupBox x:Name="LabelSideInfo"
+                                      Header="{DynamicResource LabelSideInfoGroupBoxString}"
+                                      Margin="5"
+                                      Padding="5"
+                                      BorderThickness="1"
+                                      BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="LabelSideMasteringCode" Label="Mastering Code"
-                                            Text="{Binding SubmissionInfo.RingCodes.LabelSideMasteringCode, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="LabelSideMasteringSID" Label="Mastering SID"
-                                            Text="{Binding SubmissionInfo.RingCodes.LabelSideMasteringSID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="LabelSideToolstamp" Label="Toolstamps"
-                                            Text="{Binding SubmissionInfo.RingCodes.LabelSideToolstamps, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="LabelSideMouldSIDs" Label="Mould SIDs"
-                                            Text="{Binding SubmissionInfo.RingCodes.LabelSideMouldSIDs, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="LabelSideAdditionalMoulds" Label="Additional Moulds"
-                                            Text="{Binding SubmissionInfo.RingCodes.LabelSideAdditionalMoulds, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="LabelSideMasteringCode"
+                                                        Label="Mastering Code"
+                                                        Text="{Binding SubmissionInfo.RingCodes.LabelSideMasteringCode, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="LabelSideMasteringSID"
+                                                        Label="Mastering SID"
+                                                        Text="{Binding SubmissionInfo.RingCodes.LabelSideMasteringSID, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="LabelSideToolstamp"
+                                                        Label="Toolstamps"
+                                                        Text="{Binding SubmissionInfo.RingCodes.LabelSideToolstamps, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="LabelSideMouldSIDs"
+                                                        Label="Mould SIDs"
+                                                        Text="{Binding SubmissionInfo.RingCodes.LabelSideMouldSIDs, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="LabelSideAdditionalMoulds"
+                                                        Label="Additional Moulds"
+                                                        Text="{Binding SubmissionInfo.RingCodes.LabelSideAdditionalMoulds, Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem Header="{DynamicResource ReadOnlyInfoTabString}" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
-                        <GroupBox Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <TabItem Header="{DynamicResource ReadOnlyInfoTabString}"
+                         Style="{DynamicResource CustomTabItemStyle}">
+                    <ScrollViewer CanContentScroll="False"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  MaxHeight="500">
+                        <GroupBox Margin="5"
+                                  Padding="5"
+                                  BorderThickness="1"
+                                  BorderBrush="LightGray"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch">
                             <GroupBox.Template>
                                 <ControlTemplate TargetType="GroupBox">
-                                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
-                                        <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="5">
+                                        <ContentPresenter Content="{TemplateBinding Content}"
+                                                          Margin="{TemplateBinding Padding}"/>
                                     </Border>
                                 </ControlTemplate>
                             </GroupBox.Template>
 
                             <StackPanel Orientation="Vertical">
-                                <controls:UserInput x:Name="FullyMatchedIDs" Label="Fully Matched IDs" IsReadOnly="True"/>
-                                <controls:UserInput x:Name="PartiallyMatchedIDs" Label="Partially Matched ID(s)" IsReadOnly="True"/>
-                                <controls:UserInput x:Name="HashData" Label="Hash Data" IsReadOnly="True"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.Dat, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
-                                                    VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
-                                <controls:UserInput x:Name="HashDataLayerbreak1" Label="Layerbreak 1" IsReadOnly="True"
+                                <controls:UserInput x:Name="FullyMatchedIDs"
+                                                    Label="Fully Matched IDs"
+                                                    IsReadOnly="True"/>
+                                <controls:UserInput x:Name="PartiallyMatchedIDs"
+                                                    Label="Partially Matched ID(s)"
+                                                    IsReadOnly="True"/>
+                                <controls:UserInput x:Name="HashData"
+                                                    Label="Hash Data"
+                                                    IsReadOnly="True"
+                                                    Text="{Binding SubmissionInfo.DumpMetadata.Dat, Mode=TwoWay}"
+                                                    TextHeight="75"
+                                                    TextWrapping="NoWrap"
+                                                    VerticalContentAlignmentValue="Top"
+                                                    HorizontalScrollBarVisibility="Auto"
+                                                    VerticalScrollBarVisibility="Auto"/>
+                                <controls:UserInput x:Name="HashDataLayerbreak1"
+                                                    Label="Layerbreak 1"
+                                                    IsReadOnly="True"
                                                     Text="{Binding SubmissionInfo.DiscIdentifiers.Layerbreak, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="HashDataLayerbreak2" Label="Layerbreak 2" IsReadOnly="True"
+                                <controls:UserInput x:Name="HashDataLayerbreak2"
+                                                    Label="Layerbreak 2"
+                                                    IsReadOnly="True"
                                                     Text="{Binding SubmissionInfo.DiscIdentifiers.Layerbreak2, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="HashDataLayerbreak3" Label="Layerbreak 3" IsReadOnly="True"
+                                <controls:UserInput x:Name="HashDataLayerbreak3"
+                                                    Label="Layerbreak 3"
+                                                    IsReadOnly="True"
                                                     Text="{Binding SubmissionInfo.DiscIdentifiers.Layerbreak3, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="DiscOffset" Label="Disc Offset" IsReadOnly="True"
+                                <controls:UserInput x:Name="DiscOffset"
+                                                    Label="Disc Offset"
+                                                    IsReadOnly="True"
                                                     Text="{Binding SubmissionInfo.RingCodes.WriteOffset, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="DMIHash" Label="DMI Hash" IsReadOnly="True"
+                                <controls:UserInput x:Name="DMIHash"
+                                                    Label="DMI Hash"
+                                                    IsReadOnly="True"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)DMIHash], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="EDC" Label="EDC" IsReadOnly="True"
+                                <controls:UserInput x:Name="EDC"
+                                                    Label="EDC"
+                                                    IsReadOnly="True"
                                                     Text="{Binding SubmissionInfo.DiscIdentifiers.EDC, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="ErrorsCount" Label="Error(s) Count" IsReadOnly="True"
+                                <controls:UserInput x:Name="ErrorsCount"
+                                                    Label="Error(s) Count"
+                                                    IsReadOnly="True"
                                                     Text="{Binding SubmissionInfo.DiscIdentifiers.ErrorCount, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="EXEDateBuildDate" Label="EXE/Build Date" IsReadOnly="True"
+                                <controls:UserInput x:Name="EXEDateBuildDate"
+                                                    Label="EXE/Build Date"
+                                                    IsReadOnly="True"
                                                     Text="{Binding SubmissionInfo.DiscIdentifiers.EXEDate, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="Filename" Label="Filename" IsReadOnly="True"
-                                                    TextHeight="75" TextWrapping="NoWrap"
-                                                    VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                <controls:UserInput x:Name="Filename"
+                                                    Label="Filename"
+                                                    IsReadOnly="True"
+                                                    TextHeight="75"
+                                                    TextWrapping="NoWrap"
+                                                    VerticalContentAlignmentValue="Top"
+                                                    HorizontalScrollBarVisibility="Auto"
+                                                    VerticalScrollBarVisibility="Auto"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)Filename], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="Header" Label="Header" IsReadOnly="True"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.Header, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
-                                                    VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
-                                <controls:UserInput x:Name="InternalName" Label="Internal Names" IsReadOnly="True"
+                                <controls:UserInput x:Name="Header"
+                                                    Label="Header"
+                                                    IsReadOnly="True"
+                                                    Text="{Binding SubmissionInfo.DumpMetadata.Header, Mode=TwoWay}"
+                                                    TextHeight="75"
+                                                    TextWrapping="NoWrap"
+                                                    VerticalContentAlignmentValue="Top"
+                                                    HorizontalScrollBarVisibility="Auto"
+                                                    VerticalScrollBarVisibility="Auto"/>
+                                <controls:UserInput x:Name="InternalName"
+                                                    Label="Internal Names"
+                                                    IsReadOnly="True"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)InternalName], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="InternalSerialName" Label="Internal Serial" IsReadOnly="True"
+                                <controls:UserInput x:Name="InternalSerialName"
+                                                    Label="Internal Serial"
+                                                    IsReadOnly="True"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)InternalSerialName], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="Multisession" Label="Multisession" IsReadOnly="True" TextHeight="75" TextWrapping="NoWrap"
-                                                    VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                <controls:UserInput x:Name="Multisession"
+                                                    Label="Multisession"
+                                                    IsReadOnly="True"
+                                                    TextHeight="75"
+                                                    TextWrapping="NoWrap"
+                                                    VerticalContentAlignmentValue="Top"
+                                                    HorizontalScrollBarVisibility="Auto"
+                                                    VerticalScrollBarVisibility="Auto"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)Multisession], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="PFIHash" Label="PFI Hash" IsReadOnly="True"
+                                <controls:UserInput x:Name="PFIHash"
+                                                    Label="PFI Hash"
+                                                    IsReadOnly="True"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)PFIHash], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="PIC" Label="PIC" IsReadOnly="True"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.PIC, Mode=TwoWay}" TextHeight="125" TextWrapping="NoWrap"
-                                                    VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
-                                <controls:UserInput x:Name="PVD" Label="PVD" IsReadOnly="True"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.PVD, Mode=TwoWay}" TextHeight="125" TextWrapping="NoWrap"
-                                                    VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
-                                <controls:UserInput x:Name="RingPerfectAudioOffset" Label="Ring Perfect Audio Offset" IsReadOnly="True"
+                                <controls:UserInput x:Name="PIC"
+                                                    Label="PIC"
+                                                    IsReadOnly="True"
+                                                    Text="{Binding SubmissionInfo.DumpMetadata.PIC, Mode=TwoWay}"
+                                                    TextHeight="125"
+                                                    TextWrapping="NoWrap"
+                                                    VerticalContentAlignmentValue="Top"
+                                                    HorizontalScrollBarVisibility="Auto"
+                                                    VerticalScrollBarVisibility="Auto"/>
+                                <controls:UserInput x:Name="PVD"
+                                                    Label="PVD"
+                                                    IsReadOnly="True"
+                                                    Text="{Binding SubmissionInfo.DumpMetadata.PVD, Mode=TwoWay}"
+                                                    TextHeight="125"
+                                                    TextWrapping="NoWrap"
+                                                    VerticalContentAlignmentValue="Top"
+                                                    HorizontalScrollBarVisibility="Auto"
+                                                    VerticalScrollBarVisibility="Auto"/>
+                                <controls:UserInput x:Name="RingPerfectAudioOffset"
+                                                    Label="Ring Perfect Audio Offset"
+                                                    IsReadOnly="True"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)RingPerfectAudioOffset], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="SampleStart" Label="Sample Start" IsReadOnly="True"
+                                <controls:UserInput x:Name="SampleStart"
+                                                    Label="Sample Start"
+                                                    IsReadOnly="True"
                                                     Text="{Binding Path=SubmissionInfo.RingCodes.SampleStart, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="SecuROMData" Label="SecuROM Data" IsReadOnly="True"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.SBI, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
-                                                    VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
-                                <controls:UserInput x:Name="SSHash" Label="Security Sector Hash" IsReadOnly="True"
+                                <controls:UserInput x:Name="SecuROMData"
+                                                    Label="SecuROM Data"
+                                                    IsReadOnly="True"
+                                                    Text="{Binding SubmissionInfo.DumpMetadata.SBI, Mode=TwoWay}"
+                                                    TextHeight="75"
+                                                    TextWrapping="NoWrap"
+                                                    VerticalContentAlignmentValue="Top"
+                                                    HorizontalScrollBarVisibility="Auto"
+                                                    VerticalScrollBarVisibility="Auto"/>
+                                <controls:UserInput x:Name="SSHash"
+                                                    Label="Security Sector Hash"
+                                                    IsReadOnly="True"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)SSHash], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="SecuritySectorRanges" Label="Security Sector Ranges" IsReadOnly="True"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.SectorRanges, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
-                                                    VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
-                                <controls:UserInput x:Name="SSVersion" Label="Security Sector Version" IsReadOnly="True"
+                                <controls:UserInput x:Name="SecuritySectorRanges"
+                                                    Label="Security Sector Ranges"
+                                                    IsReadOnly="True"
+                                                    Text="{Binding SubmissionInfo.DumpMetadata.SectorRanges, Mode=TwoWay}"
+                                                    TextHeight="75"
+                                                    TextWrapping="NoWrap"
+                                                    VerticalContentAlignmentValue="Top"
+                                                    HorizontalScrollBarVisibility="Auto"
+                                                    VerticalScrollBarVisibility="Auto"/>
+                                <controls:UserInput x:Name="SSVersion"
+                                                    Label="Security Sector Version"
+                                                    IsReadOnly="True"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)SSVersion], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="UniversalHash" Label="Universal Hash (SHA-1)" IsReadOnly="True"
+                                <controls:UserInput x:Name="UniversalHash"
+                                                    Label="Universal Hash (SHA-1)"
+                                                    IsReadOnly="True"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)UniversalHash], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="VolumeLabel" Label="Volume Label" IsReadOnly="True"
+                                <controls:UserInput x:Name="VolumeLabel"
+                                                    Label="Volume Label"
+                                                    IsReadOnly="True"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)VolumeLabel], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="XeMID" Label="XeMID" IsReadOnly="True"
+                                <controls:UserInput x:Name="XeMID"
+                                                    Label="XeMID"
+                                                    IsReadOnly="True"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)XeMID], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="XMID" Label="XMID" IsReadOnly="True"
+                                <controls:UserInput x:Name="XMID"
+                                                    Label="XMID"
+                                                    IsReadOnly="True"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)XMID], Mode=TwoWay}"/>
                             </StackPanel>
                         </GroupBox>
@@ -515,21 +911,38 @@
             </TabControl>
 
             <!-- Accept / Cancel -->
-            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <GroupBox Margin="5,5,5,5"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
                 <GroupBox.Template>
                     <ControlTemplate TargetType="GroupBox">
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
-                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5">
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              Margin="{TemplateBinding Padding}"/>
                         </Border>
                     </ControlTemplate>
                 </GroupBox.Template>
-                <UniformGrid Columns="3" Margin="5,5,5,5" Height="28">
-                    <Button Name="AcceptButton" Height="25" Width="80" Content="{DynamicResource AcceptButtonString}"
-                            Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="CancelButton" Height="25" Width="80" Content="{DynamicResource CancelButtonString}"
-                            Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="RingCodeGuideButton" Grid.Column="2" Height="25" Width="120" Content="{DynamicResource RingCodeGuideButtonString}"
-                            Style="{DynamicResource CustomButtonStyle}" />
+                <UniformGrid Columns="3"
+                             Margin="5,5,5,5"
+                             Height="28">
+                    <Button Name="AcceptButton"
+                            Height="25"
+                            Width="80"
+                            Content="{DynamicResource AcceptButtonString}"
+                            Style="{DynamicResource CustomButtonStyle}"/>
+                    <Button Name="CancelButton"
+                            Height="25"
+                            Width="80"
+                            Content="{DynamicResource CancelButtonString}"
+                            Style="{DynamicResource CustomButtonStyle}"/>
+                    <Button Name="RingCodeGuideButton"
+                            Grid.Column="2"
+                            Height="25"
+                            Width="120"
+                            Content="{DynamicResource RingCodeGuideButtonString}"
+                            Style="{DynamicResource CustomButtonStyle}"/>
                 </UniformGrid>
             </GroupBox>
         </StackPanel>
