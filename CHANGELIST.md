@@ -3,6 +3,7 @@
 - Add live tool output console for the Linux GUI (gmipf)
 - Normalize null checks in recent code
 - Cleanup around Avalonia code
+- Fix language menu requiring two clicks in the Avalonia GUI (gmipf)
 
 ### 3.8.2 (2026-07-01)
 

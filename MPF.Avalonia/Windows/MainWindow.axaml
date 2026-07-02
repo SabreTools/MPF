@@ -71,18 +71,23 @@
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Stretch">
                     <Menu x:Name="LanguagesMenuBar" Height="26" VerticalAlignment="Center" Background="Transparent" FontSize="12">
                         <MenuItem x:Name="LanguagesMenuItem" Header="ENG">
-                            <MenuItem x:Name="EnglishMenuItem" Header="English" />
-                            <MenuItem x:Name="GermanMenuItem" Header="Deutsch" />
-                            <MenuItem x:Name="SpanishMenuItem" Header="Español" />
-                            <MenuItem x:Name="FrenchMenuItem" Header="Français" />
-                            <MenuItem x:Name="ItalianMenuItem" Header="Italiano" />
-                            <MenuItem x:Name="JapaneseMenuItem" Header="日本語" />
-                            <MenuItem x:Name="KoreanMenuItem" Header="한국어" />
-                            <MenuItem x:Name="PolishMenuItem" Header="Polski" />
-                            <MenuItem x:Name="PortugueseMenuItem" Header="Português" />
-                            <MenuItem x:Name="RussianMenuItem" Header="Русский" />
-                            <MenuItem x:Name="SwedishMenuItem" Header="Svenska" />
-                            <MenuItem x:Name="UkrainianMenuItem" Header="Українська" />
+                            <!-- ToggleType="CheckBox" mirrors the WPF GUI's IsCheckable="True" on these
+                                 items. Without it an Avalonia MenuItem never toggles IsChecked on click,
+                                 so the shared LanguageMenuItemClick handler (which reads IsChecked to tell
+                                 a first selection from re-clicking the active language) needed two clicks
+                                 and never showed the active-language check mark. -->
+                            <MenuItem x:Name="EnglishMenuItem" Header="English" ToggleType="CheckBox" />
+                            <MenuItem x:Name="GermanMenuItem" Header="Deutsch" ToggleType="CheckBox" />
+                            <MenuItem x:Name="SpanishMenuItem" Header="Español" ToggleType="CheckBox" />
+                            <MenuItem x:Name="FrenchMenuItem" Header="Français" ToggleType="CheckBox" />
+                            <MenuItem x:Name="ItalianMenuItem" Header="Italiano" ToggleType="CheckBox" />
+                            <MenuItem x:Name="JapaneseMenuItem" Header="日本語" ToggleType="CheckBox" />
+                            <MenuItem x:Name="KoreanMenuItem" Header="한국어" ToggleType="CheckBox" />
+                            <MenuItem x:Name="PolishMenuItem" Header="Polski" ToggleType="CheckBox" />
+                            <MenuItem x:Name="PortugueseMenuItem" Header="Português" ToggleType="CheckBox" />
+                            <MenuItem x:Name="RussianMenuItem" Header="Русский" ToggleType="CheckBox" />
+                            <MenuItem x:Name="SwedishMenuItem" Header="Svenska" ToggleType="CheckBox" />
+                            <MenuItem x:Name="UkrainianMenuItem" Header="Українська" ToggleType="CheckBox" />
                         </MenuItem>
                     </Menu>
                     <Button x:Name="MinimizeButton" Classes="titlebar-button" Width="34" MinHeight="26" Padding="0" Margin="0" CornerRadius="0" Click="MinimizeButtonClick">
