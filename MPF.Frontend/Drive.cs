@@ -322,12 +322,14 @@ namespace MPF.Frontend
             }
             else if (isUnix)
             {
+                // Optical and floppy drives are removable dump targets, so surface them
+                // regardless of the fixed-drive toggle; only fixed and non-floppy removable
+                // disks are hidden unless the user opts to show them. Floppy runs before the
+                // fixed enumerator so a USB floppy is tagged Floppy and then skipped there.
                 drives = AppendUnixOpticalDrives(drives);
+                drives = AppendUnixFloppyDrives(drives);
                 if (!ignoreFixedDrives)
-                {
                     drives = AppendUnixFixedDrives(drives);
-                    drives = AppendUnixFloppyDrives(drives);
-                }
             }
 
             return [.. drives];

@@ -29,6 +29,21 @@ namespace MPF.Frontend
             "zram", // compressed ramdisk
         ];
 
+        /// <summary>
+        /// Floppy media sizes in bytes for the standard 5.25" and 3.5" PC formats
+        /// (360 KB, 720 KB, 1.2 MB, 1.44 MB, 2.88 MB). A removable SCSI disk reporting one of
+        /// these exact capacities is a USB floppy with media inserted; no other removable
+        /// storage uses these sizes, so this doubles as the floppy identity check.
+        /// </summary>
+        private static readonly HashSet<long> _unixFloppyMediaSizes = new HashSet<long>
+        {
+            368640,   // 360 KB (5.25" DD)
+            737280,   // 720 KB (3.5" DD)
+            1228800,  // 1.2 MB (5.25" HD)
+            1474560,  // 1.44 MB (3.5" HD)
+            2949120,  // 2.88 MB (3.5" ED)
+        };
+
         #endregion
 
         #region Linux Helpers
@@ -97,12 +112,13 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Append Linux floppy drives that DriveInfo did not surface.
-        /// Like optical drives, floppy device nodes (/dev/fd0, /dev/fd1, ...) are never mount
-        /// points, so DriveInfo does not list them; they are enumerated directly so users can
-        /// dump disks without mounting them first. This mirrors how Windows surfaces floppy
-        /// drives (tagged via WMI in MarkWindowsFloppyDrives) and, like the Windows path, is
-        /// gated behind the fixed-drive toggle rather than always listed as optical drives are.
+        /// Append Linux floppy drives that DriveInfo did not surface. Two kinds are covered:
+        /// legacy on-board floppy nodes (/dev/fd0, /dev/fd1, ...) and USB floppy drives, which
+        /// the kernel exposes as ordinary SCSI disks (/dev/sd*). Neither is ever a mount point,
+        /// so DriveInfo does not list them; they are enumerated directly so users can dump disks
+        /// without mounting them first. Like optical drives, floppy drives are surfaced
+        /// regardless of the fixed-drive toggle, mirroring how Windows tags floppy media
+        /// (Win32_LogicalDisk.MediaType) in MarkWindowsFloppyDrives.
         /// </summary>
         /// <param name="drives">Drives already discovered via DriveInfo</param>
         /// <returns>The drive array, extended with any floppy drives not already present</returns>
@@ -119,8 +135,13 @@ namespace MPF.Frontend
                     existingNames.Add(d.Name);
             }
 
+            // Legacy /dev/fd* nodes plus USB floppy drives exposed as SCSI disks (/dev/sd*)
+            var devicePaths = new List<string>();
+            devicePaths.AddRange(EnumerateUnixFloppyBlockPaths("/dev"));
+            devicePaths.AddRange(EnumerateUnixUsbFloppyBlockPaths("/sys/block", "/dev"));
+
             var extra = new List<Drive>();
-            foreach (var devicePath in EnumerateUnixFloppyBlockPaths("/dev"))
+            foreach (var devicePath in devicePaths)
             {
                 // Skip paths already surfaced by DriveInfo or an earlier enumerator
                 if (!existingNames.Add(devicePath))
@@ -214,6 +235,49 @@ namespace MPF.Frontend
             {
                 if (HasDeviceIndexSuffix(Path.GetFileName(path), "fd"))
                     result.Add(path);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Enumerate USB floppy drives, which the kernel exposes as ordinary SCSI disks
+        /// (/dev/sd*) rather than /dev/fd* nodes. A disk is treated as a floppy when it reports
+        /// itself removable and its media is one of the standard floppy sizes. This mirrors how
+        /// Windows identifies a floppy from the inserted medium (Win32_LogicalDisk.MediaType)
+        /// and, like that path, only recognizes the drive while floppy media is present.
+        /// </summary>
+        /// <param name="sysBlockRoot">sysfs block directory (typically "/sys/block")</param>
+        /// <param name="devRoot">Root directory device nodes live under (typically "/dev")</param>
+        /// <returns>Device paths, or an empty list when the directory is unreadable</returns>
+        internal static List<string> EnumerateUnixUsbFloppyBlockPaths(string sysBlockRoot, string devRoot)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(sysBlockRoot) || string.IsNullOrEmpty(devRoot))
+                return result;
+            if (!Directory.Exists(sysBlockRoot))
+                return result;
+
+            string[] entries;
+            try
+            {
+                entries = Directory.GetFileSystemEntries(sysBlockRoot, "sd*");
+            }
+            catch
+            {
+                return result;
+            }
+
+            foreach (var entry in entries)
+            {
+                // A floppy reports itself removable and its media is a standard floppy size;
+                // both come from world-readable sysfs, so no elevated privileges are needed.
+                if (!ReadUnixRemovableFlag(entry))
+                    continue;
+                if (!_unixFloppyMediaSizes.Contains(ReadUnixBlockDeviceSize(entry)))
+                    continue;
+
+                result.Add(Path.Combine(devRoot, Path.GetFileName(entry)));
             }
 
             return result;
