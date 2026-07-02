@@ -1244,12 +1244,15 @@ namespace MPF.Frontend.ViewModels
         /// Create a DumpEnvironment with all current settings
         /// </summary>
         /// <returns>Filled DumpEnvironment Parent</returns>
+        /// TODO: Determine if the null-returning cases would actually change program operation
+        /// If I'm following the complete logic correctly, resolving the binary path to null is
+        /// always correct as an unresolved path should never be able to be run anyway.
         private DumpEnvironment DetermineEnvironment()
         {
             // Resolve the program paths temporarily
-#pragma warning disable IDE0010 // Add missing cases
             switch (CurrentProgram)
             {
+                // Dumping supported programs
                 case InternalProgram.Aaru:
                     string? aaruPath = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
                     if (aaruPath is not null)
@@ -1277,8 +1280,21 @@ namespace MPF.Frontend.ViewModels
                         Options.Dumping.RedumperPath = redumperPath;
 
                     break;
+
+                // Non-dumping programs
+                case InternalProgram.CleanRip:
+                case InternalProgram.PS3CFW:
+                case InternalProgram.UmdImageCreator:
+                case InternalProgram.XboxBackupCreator:
+                    // No-op
+                    break;
+
+                // Should not happen
+                case InternalProgram.NONE:
+                default:
+                    // No-op
+                    break;
             }
-#pragma warning restore IDE0010 // Add missing cases
 
             var env = new DumpEnvironment(
                 Options,
