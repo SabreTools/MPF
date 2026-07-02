@@ -1258,6 +1258,7 @@ namespace MPF.Frontend.ViewModels
                     if (aaruPath is not null)
                         Options.Dumping.AaruPath = aaruPath;
 
+                    VerboseLogLn($"Using Aaru from {Options.Dumping.AaruPath}");
                     break;
 
                 case InternalProgram.DiscImageCreator:
@@ -1265,6 +1266,7 @@ namespace MPF.Frontend.ViewModels
                     if (dicPath is not null)
                         Options.Dumping.DiscImageCreatorPath = dicPath;
 
+                    VerboseLogLn($"Using DiscImageCreator from {Options.Dumping.DiscImageCreatorPath}");
                     break;
 
                 // case InternalProgram.Dreamdump:
@@ -1272,6 +1274,7 @@ namespace MPF.Frontend.ViewModels
                 //     if (dreamdumpPath is not null)
                 //         Options.Dumping.DreamdumpPath = dreamdumpPath;
 
+                //     VerboseLogLn($"Using Dreamdump from {Options.Dumping.DreamdumpPath}");
                 //     break;
 
                 case InternalProgram.Redumper:
@@ -1279,6 +1282,7 @@ namespace MPF.Frontend.ViewModels
                     if (redumperPath is not null)
                         Options.Dumping.RedumperPath = redumperPath;
 
+                    VerboseLogLn($"Using Redumper from {Options.Dumping.RedumperPath}");
                     break;
 
                 // Non-dumping programs
@@ -1286,13 +1290,13 @@ namespace MPF.Frontend.ViewModels
                 case InternalProgram.PS3CFW:
                 case InternalProgram.UmdImageCreator:
                 case InternalProgram.XboxBackupCreator:
-                    // No-op
+                    VerboseLogLn($"Unsupported dumping program: {CurrentProgram.LongName()}");
                     break;
 
                 // Should not happen
                 case InternalProgram.NONE:
                 default:
-                    // No-op
+                    VerboseLogLn("Invalid dumping program selection");
                     break;
             }
 
@@ -2519,24 +2523,47 @@ namespace MPF.Frontend.ViewModels
         {
             try
             {
-                return program switch
+                switch (program)
                 {
                     // Dumping supported programs
-                    InternalProgram.Aaru => FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath) is not null,
-                    InternalProgram.DiscImageCreator => FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath) is not null,
-                    // InternalProgram.Dreamdump => FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath) is not null,
-                    InternalProgram.Redumper => FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath) is not null,
+                    case InternalProgram.Aaru:
+                        string? aaruPath = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
+                        bool validAaruPath = aaruPath is not null;
+                        VerboseLogLn(validAaruPath ? $"Found Aaru at {aaruPath}" : "Could not find Aaru");
+                        return validAaruPath;
+
+                    case InternalProgram.DiscImageCreator:
+                        string? dicPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
+                        bool validDicPath = dicPath is not null;
+                        VerboseLogLn(validDicPath ? $"Found DiscImageCreator at {dicPath}" : "Could not find DiscImageCreator");
+                        return validDicPath;
+
+                    // case InternalProgram.Dreamdump:
+                    //     string? dreamdumpPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath);
+                    //     bool validDreamdumpPath = dreamdumpPath is not null;
+                    //     VerboseLogLn(validDreamdumpPath ? $"Found Dreamdump at {dreamdumpPath}" : "Could not find Dreamdump");
+                    //     return validDreamdumpPath;
+
+                    case InternalProgram.Redumper:
+                        string? redumperPath = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
+                        bool validRedumperPath = redumperPath is not null;
+                        VerboseLogLn(validRedumperPath ? $"Found Redumper at {redumperPath}" : "Could not find Redumper");
+                        return validRedumperPath;
 
                     // Non-dumping programs
-                    InternalProgram.CleanRip => false,
-                    InternalProgram.PS3CFW => false,
-                    InternalProgram.UmdImageCreator => false,
-                    InternalProgram.XboxBackupCreator => false,
+                    case InternalProgram.CleanRip:
+                    case InternalProgram.PS3CFW:
+                    case InternalProgram.UmdImageCreator:
+                    case InternalProgram.XboxBackupCreator:
+                        VerboseLogLn($"Unsupported dumping program: {CurrentProgram.LongName()}");
+                        return false;
 
                     // Should not happen
-                    InternalProgram.NONE => false,
-                    _ => false,
-                };
+                    case InternalProgram.NONE:
+                    default:
+                        VerboseLogLn("Invalid dumping program selection");
+                        return false;
+                }
             }
             catch
             {
