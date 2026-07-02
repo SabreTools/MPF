@@ -107,6 +107,107 @@ namespace MPF.Frontend.Test
 
         #endregion
 
+        #region EnumerateUnixFloppyBlockPaths
+
+        [Fact]
+        public void EnumerateUnixFloppyBlockPaths_NullOrEmpty_ReturnsEmpty()
+        {
+            Assert.Empty(Drive.EnumerateUnixFloppyBlockPaths(null!));
+            Assert.Empty(Drive.EnumerateUnixFloppyBlockPaths(string.Empty));
+        }
+
+        [Fact]
+        public void EnumerateUnixFloppyBlockPaths_MissingDirectory_ReturnsEmpty()
+        {
+            string missing = Path.Combine(Path.GetTempPath(), "mpf-test-missing-" + Guid.NewGuid().ToString("N"));
+            Assert.Empty(Drive.EnumerateUnixFloppyBlockPaths(missing));
+        }
+
+        [Fact]
+        public void EnumerateUnixFloppyBlockPaths_OnlyMatchesFdFollowedByDigits()
+        {
+            string root = Path.Combine(Path.GetTempPath(), "mpf-test-dev-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(root);
+            try
+            {
+                File.WriteAllText(Path.Combine(root, "fd0"), string.Empty);
+                File.WriteAllText(Path.Combine(root, "fd1"), string.Empty);
+                File.WriteAllText(Path.Combine(root, "fd7"), string.Empty);
+                File.WriteAllText(Path.Combine(root, "fd0u1440"), string.Empty); // format-specific node, skipped
+                File.WriteAllText(Path.Combine(root, "fda"), string.Empty);      // name not all-digits, skipped
+                File.WriteAllText(Path.Combine(root, "fd"), string.Empty);       // no trailing digits, skipped
+                File.WriteAllText(Path.Combine(root, "sdb"), string.Empty);      // unrelated device, skipped
+
+                var actual = Drive.EnumerateUnixFloppyBlockPaths(root);
+
+                var actualNames = new List<string>();
+                foreach (var p in actual)
+                {
+                    actualNames.Add(Path.GetFileName(p));
+                }
+                actualNames.Sort(StringComparer.Ordinal);
+
+                Assert.Equal(new[] { "fd0", "fd1", "fd7" }, actualNames);
+            }
+            finally
+            {
+                Directory.Delete(root, recursive: true);
+            }
+        }
+
+        #endregion
+
+        #region EnumerateUnixUsbFloppyBlockPaths
+
+        [Fact]
+        public void EnumerateUnixUsbFloppyBlockPaths_NullOrEmpty_ReturnsEmpty()
+        {
+            Assert.Empty(Drive.EnumerateUnixUsbFloppyBlockPaths(null!, "/dev"));
+            Assert.Empty(Drive.EnumerateUnixUsbFloppyBlockPaths(string.Empty, "/dev"));
+            Assert.Empty(Drive.EnumerateUnixUsbFloppyBlockPaths("/sys/block", null!));
+            Assert.Empty(Drive.EnumerateUnixUsbFloppyBlockPaths("/sys/block", string.Empty));
+        }
+
+        [Fact]
+        public void EnumerateUnixUsbFloppyBlockPaths_MissingDirectory_ReturnsEmpty()
+        {
+            string missing = Path.Combine(Path.GetTempPath(), "mpf-test-missing-" + Guid.NewGuid().ToString("N"));
+            Assert.Empty(Drive.EnumerateUnixUsbFloppyBlockPaths(missing, "/dev"));
+        }
+
+        [Fact]
+        public void EnumerateUnixUsbFloppyBlockPaths_OnlyMatchesRemovableFloppySizedDisks()
+        {
+            string sysfs = Path.Combine(Path.GetTempPath(), "mpf-test-sysblock-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(sysfs);
+            try
+            {
+                WriteSysBlockDevice(sysfs, "sdh", removable: "1", sizeSectors: "2880");     // USB floppy, 1.44 MB, matched
+                WriteSysBlockDevice(sysfs, "sdi", removable: "1\n", sizeSectors: "1440\n"); // USB floppy, 720 KB (trailing newline), matched
+                WriteSysBlockDevice(sysfs, "sda", removable: "0", sizeSectors: "2880");     // fixed disk of floppy size, not removable, skipped
+                WriteSysBlockDevice(sysfs, "sdb", removable: "1", sizeSectors: "30310400"); // USB flash drive, not a floppy size, skipped
+                WriteSysBlockDevice(sysfs, "sdc", removable: "1", sizeSectors: "0");        // empty floppy drive (no media), skipped
+                WriteSysBlockDevice(sysfs, "nvme0n1", removable: "1", sizeSectors: "2880"); // not an sd* device, not scanned
+
+                var actual = Drive.EnumerateUnixUsbFloppyBlockPaths(sysfs, "/dev");
+
+                var actualNames = new List<string>();
+                foreach (var p in actual)
+                {
+                    actualNames.Add(Path.GetFileName(p));
+                }
+                actualNames.Sort(StringComparer.Ordinal);
+
+                Assert.Equal(new[] { "sdh", "sdi" }, actualNames);
+            }
+            finally
+            {
+                Directory.Delete(sysfs, recursive: true);
+            }
+        }
+
+        #endregion
+
         #region EnumerateUnixOpticalGenericPaths
 
         [Fact]

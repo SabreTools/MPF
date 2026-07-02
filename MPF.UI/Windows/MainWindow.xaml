@@ -209,7 +209,7 @@
                         </ComboBox.ItemContainerStyle>
                     </ComboBox>
                     <ComboBox x:Name="MediaTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="Right"
-                              ItemsSource="{Binding MediaTypes}" SelectedItem="{Binding Path=CurrentMediaType, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding MediaTypes}" SelectedItem="{Binding Path=CurrentPhysicalMediaType, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding MediaTypeComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}"
                               Visibility="Hidden" />
 

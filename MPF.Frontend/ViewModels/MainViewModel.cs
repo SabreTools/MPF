@@ -1217,6 +1217,12 @@ namespace MPF.Frontend.ViewModels
             if (CurrentDrive is null)
                 return;
 
+            // Forget the type detected for any previously selected drive; only a fresh
+            // successful detection below sets a new one. Without this reset a type like
+            // FloppyDisk would stick when switching to a drive whose media cannot be read
+            // (e.g. an empty optical drive), overriding the correct system default.
+            _detectedPhysicalMediaType = null;
+
             // Get reasonable default values based on the current system
             var mediaTypes = CurrentSystem.MediaTypes();
             PhysicalMediaType? defaultPhysicalMediaType = mediaTypes.Count > 0 ? mediaTypes[0] : PhysicalMediaType.CDROM;
