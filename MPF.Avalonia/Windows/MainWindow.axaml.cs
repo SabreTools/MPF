@@ -116,10 +116,18 @@ namespace MPF.Avalonia.Windows
             if (MainViewModel.Options.GUI.ShowDebugViewMenuItem)
                 DebugViewMenuItem!.IsVisible = true;
 
+            // On Linux the dumping tool has no console window of its own, so stream its
+            // live output into a separate MPF window. Windows/macOS keep the tool's own
+            // console (leave this null), preserving the original behavior.
+            IToolOutputConsole? toolConsole = OperatingSystem.IsLinux()
+                ? new ToolOutputConsole(this, MainViewModel.Options)
+                : null;
+
             MainViewModel.Init(
                 LogOutput!.EnqueueLog,
                 DisplayUserMessage,
-                ShowMediaInformationWindow);
+                ShowMediaInformationWindow,
+                toolConsole);
 
             // Pass translation strings to MainViewModel
             var translationStrings = new Dictionary<string, string>
@@ -333,8 +341,10 @@ namespace MPF.Avalonia.Windows
         public void CheckForUpdates(bool showIfSame)
         {
             MainViewModel.CheckForUpdates(out bool different, out string message, out var url);
-            if (different)
+            if (different && MainViewModel.Options.GUI.CopyUpdateUrlToClipboard)
                 message += $"{Environment.NewLine}The update URL has been added copied to your clipboard";
+            else if (different && !MainViewModel.Options.GUI.CopyUpdateUrlToClipboard)
+                message += $"{Environment.NewLine}You are out of date!";
             else
                 message += $"{Environment.NewLine}You have the newest version!";
 
@@ -543,7 +553,7 @@ namespace MPF.Avalonia.Windows
             }
 
             // If there are no media types defined
-            if (MainViewModel.PhysicalMediaTypes is null)
+            if (MainViewModel.MediaTypes is null)
             {
                 SystemMediaTypeLabel!.Text = StringResource("SystemLabelString", "System Type");
                 MediaTypeComboBox!.IsVisible = false;
@@ -551,7 +561,7 @@ namespace MPF.Avalonia.Windows
             }
 
             // Only systems with more than one media type should show the box
-            bool visible = MainViewModel.PhysicalMediaTypes.Count > 1;
+            bool visible = MainViewModel.MediaTypes.Count > 1;
             SystemMediaTypeLabel!.Text = visible
                 ? StringResource("SystemMediaTypeLabelString", "System/Media Type")
                 : StringResource("SystemLabelString", "System Type");

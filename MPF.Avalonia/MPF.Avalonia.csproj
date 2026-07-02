@@ -13,7 +13,7 @@
         <Nullable>enable</Nullable>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <VersionPrefix>3.8.1</VersionPrefix>
+        <VersionPrefix>3.8.2</VersionPrefix>
 
         <!-- Package Properties -->
         <AssemblyName>MPF</AssemblyName>

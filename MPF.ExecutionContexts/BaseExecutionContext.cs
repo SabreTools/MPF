@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.ExecutionContexts
@@ -44,6 +46,18 @@ namespace MPF.ExecutionContexts
         /// Process to track external program
         /// </summary>
         private Process? process;
+
+        /// <summary>
+        /// Optional sink for the tool's raw standard output and error
+        /// </summary>
+        /// <remarks>
+        /// When set, the program is launched with its output redirected and streamed
+        /// here in raw chunks (carriage returns preserved), instead of letting the tool
+        /// draw its own console window. Used by a GUI frontend to display live tool
+        /// output on platforms without an external console. Leave null for the legacy
+        /// behavior, where the tool owns its console window (UseShellExecute).
+        /// </remarks>
+        public Action<string>? OutputReceived { get; set; }
 
         #endregion
 
@@ -195,15 +209,20 @@ namespace MPF.ExecutionContexts
         /// </summary>
         public void ExecuteInternalProgram()
         {
+            // When no output sink is attached, keep the original behavior exactly: the
+            // tool runs in its own console window (UseShellExecute) with no redirection.
+            // When a sink is attached, redirect output and stream it to the caller.
+            bool redirect = OutputReceived is not null;
+
             // Create the start info
             var startInfo = new ProcessStartInfo()
             {
                 FileName = ExecutablePath!,
                 Arguments = GenerateParameters() ?? "",
-                CreateNoWindow = false,
-                UseShellExecute = true,
-                RedirectStandardOutput = false,
-                RedirectStandardError = false,
+                CreateNoWindow = redirect,
+                UseShellExecute = !redirect,
+                RedirectStandardOutput = redirect,
+                RedirectStandardError = redirect,
             };
 
             // Create the new process
@@ -211,7 +230,25 @@ namespace MPF.ExecutionContexts
 
             // Start the process
             process.Start();
-            process.WaitForExit();
+
+            if (redirect)
+            {
+                // Pump stdout and stderr on dedicated threads using RAW reads (never
+                // ReadLine): dump tools redraw progress with a bare '\r', and ReadLine
+                // would treat every '\r' as a new line -- the exact spam/lag that made
+                // redirected output unusable before. The consumer interprets '\r'.
+                Thread outThread = StartStreamPump(process.StandardOutput);
+                Thread errThread = StartStreamPump(process.StandardError);
+
+                process.WaitForExit();
+                outThread.Join();
+                errThread.Join();
+            }
+            else
+            {
+                process.WaitForExit();
+            }
+
             process.Close();
         }
 
@@ -229,6 +266,42 @@ namespace MPF.ExecutionContexts
             }
             catch
             { }
+        }
+
+        /// <summary>
+        /// Start a background thread that copies a redirected stream to <see cref="OutputReceived"/>
+        /// in raw chunks
+        /// </summary>
+        /// <remarks>
+        /// Blocking reads on a dedicated thread keep this compatible across every target
+        /// framework (no async or channels needed here). Multiple pumps may run at once;
+        /// the sink is expected to be safe to call from several threads.
+        /// </remarks>
+        private Thread StartStreamPump(StreamReader reader)
+        {
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    var buffer = new char[4096];
+                    int read;
+                    while ((read = reader.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        OutputReceived?.Invoke(new string(buffer, 0, read));
+                    }
+                }
+                catch
+                {
+                    // The stream is closed when the process exits or is killed; nothing to do.
+                }
+            })
+            {
+                IsBackground = true,
+                Name = "MPF tool output pump",
+            };
+
+            thread.Start();
+            return thread;
         }
 
         #endregion

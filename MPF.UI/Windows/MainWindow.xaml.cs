@@ -61,7 +61,7 @@ namespace MPF.UI.Windows
         private ComboBox? DriveSpeedComboBox => ItemHelper.FindChild<ComboBox>(this, "DriveSpeedComboBox");
         private ComboBox? DumpingProgramComboBox => ItemHelper.FindChild<ComboBox>(this, "DumpingProgramComboBox");
         private CheckBox? EnableParametersCheckBox => ItemHelper.FindChild<CheckBox>(this, "EnableParametersCheckBox");
-        private ComboBox? PhysicalMediaTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "PhysicalMediaTypeComboBox");
+        private ComboBox? MediaTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "MediaTypeComboBox");
         private Button? OutputPathBrowseButton => ItemHelper.FindChild<Button>(this, "OutputPathBrowseButton");
         private TextBox? OutputPathTextBox => ItemHelper.FindChild<TextBox>(this, "OutputPathTextBox");
         private Label? SystemMediaTypeLabel => ItemHelper.FindChild<Label>(this, "SystemMediaTypeLabel");
@@ -364,8 +364,10 @@ namespace MPF.UI.Windows
         public void CheckForUpdates(bool showIfSame)
         {
             MainViewModel.CheckForUpdates(out bool different, out string message, out var url);
-            if (different)
+            if (different && MainViewModel.Options.GUI.CopyUpdateUrlToClipboard)
                 message += $"{Environment.NewLine}The update URL has been added copied to your clipboard";
+            else if (different && !MainViewModel.Options.GUI.CopyUpdateUrlToClipboard)
+                message += $"{Environment.NewLine}You are out of date!";
             else
                 message += $"{Environment.NewLine}You have the newest version!";
 
@@ -529,7 +531,7 @@ namespace MPF.UI.Windows
             }
 
             // If there are no media types defined
-            if (MainViewModel.PhysicalMediaTypes is null)
+            if (MainViewModel.MediaTypes is null)
             {
                 SystemMediaTypeLabel!.Content = (string)Application.Current.FindResource("SystemLabelString");
                 MediaTypeComboBox!.Visibility = Visibility.Hidden;
@@ -537,7 +539,7 @@ namespace MPF.UI.Windows
             }
 
             // Only systems with more than one media type should show the box
-            bool visible = MainViewModel.PhysicalMediaTypes.Count > 1;
+            bool visible = MainViewModel.MediaTypes.Count > 1;
             SystemMediaTypeLabel!.Content = visible
                 ? (string)Application.Current.FindResource("SystemMediaTypeLabelString")
                 : (string)Application.Current.FindResource("SystemLabelString");

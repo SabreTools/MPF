@@ -71,6 +71,11 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private ProcessUserInfoDelegate? _processUserInfo;
 
+        /// <summary>
+        /// Optional live tool-output console supplied by the frontend (null if unused)
+        /// </summary>
+        private IToolOutputConsole? _toolConsole;
+
         #endregion
 
         #region Properties
@@ -503,13 +508,13 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Current list of supported media types
         /// </summary>
-        public List<Element<PhysicalMediaType>>? PhysicalMediaTypes
+        public List<Element<PhysicalMediaType>>? MediaTypes
         {
             get => _mediaTypes;
             set
             {
                 _mediaTypes = value;
-                TriggerPropertyChanged(nameof(PhysicalMediaTypes));
+                TriggerPropertyChanged(nameof(MediaTypes));
             }
         }
         private List<Element<PhysicalMediaType>>? _mediaTypes;
@@ -586,7 +591,7 @@ namespace MPF.Frontend.ViewModels
             EnableParametersCheckBoxEnabled = true;
             LogPanelExpanded = _options.GUI.OpenLogWindowAtStartup;
 
-            PhysicalMediaTypes = [];
+            MediaTypes = [];
             Systems = PhysicalSystemComboBoxItem.GenerateElements();
             InternalPrograms = [];
         }
@@ -597,12 +602,14 @@ namespace MPF.Frontend.ViewModels
         public void Init(
             Action<LogLevel, string> loggerAction,
             Func<string, string, int, bool, bool?> displayUserMessage,
-            ProcessUserInfoDelegate processUserInfo)
+            ProcessUserInfoDelegate processUserInfo,
+            IToolOutputConsole? toolConsole = null)
         {
             // Set the callbacks
             _logger = loggerAction;
             _displayUserMessage = displayUserMessage;
             _processUserInfo = processUserInfo;
+            _toolConsole = toolConsole;
 
             // Finish initializing the rest of the values
             InitializeUIValues(removeEventHandlers: false, rebuildPrograms: true, rescanDrives: true);
@@ -713,14 +720,14 @@ namespace MPF.Frontend.ViewModels
                 if (CurrentPhysicalMediaType is not null && index == -1)
                     VerboseLogLn($"Disc of type '{CurrentPhysicalMediaType.LongName()}' found, but the current system does not support it!");
 
-                PhysicalMediaTypes = mediaTypeValues.ConvertAll(m => new Element<PhysicalMediaType>(m ?? PhysicalMediaType.NONE));
-                PhysicalMediaTypeComboBoxEnabled = PhysicalMediaTypes.Count > 1;
-                CurrentPhysicalMediaType = index > -1 ? PhysicalMediaTypes[index] : PhysicalMediaTypes[0];
+                MediaTypes = mediaTypeValues.ConvertAll(m => new Element<PhysicalMediaType>(m ?? PhysicalMediaType.NONE));
+                PhysicalMediaTypeComboBoxEnabled = MediaTypes.Count > 1;
+                CurrentPhysicalMediaType = index > -1 ? MediaTypes[index] : MediaTypes[0];
             }
             else
             {
                 PhysicalMediaTypeComboBoxEnabled = false;
-                PhysicalMediaTypes = null;
+                MediaTypes = null;
                 CurrentPhysicalMediaType = null;
             }
 
@@ -1245,21 +1252,28 @@ namespace MPF.Frontend.ViewModels
             {
                 case InternalProgram.Aaru:
                     string? aaruPath = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
-                    if (aaruPath != null)
+                    if (aaruPath is not null)
                         Options.Dumping.AaruPath = aaruPath;
 
                     break;
 
                 case InternalProgram.DiscImageCreator:
                     string? dicPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
-                    if (dicPath != null)
+                    if (dicPath is not null)
                         Options.Dumping.DiscImageCreatorPath = dicPath;
 
                     break;
 
+                // case InternalProgram.Dreamdump:
+                //     string? dreamdumpPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath);
+                //     if (dreamdumpPath is not null)
+                //         Options.Dumping.DreamdumpPath = dreamdumpPath;
+
+                //     break;
+
                 case InternalProgram.Redumper:
                     string? redumperPath = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
-                    if (redumperPath != null)
+                    if (redumperPath is not null)
                         Options.Dumping.RedumperPath = redumperPath;
 
                     break;
@@ -1822,7 +1836,7 @@ namespace MPF.Frontend.ViewModels
                     || File.Exists(Path.Combine(drive.Name, "TBIOS.SYS"))
                     || File.Exists(Path.Combine(drive.Name, "TBIOS.BIN")))
                 {
-                    return PhysicalSystem.FujitsuFMTownsseries;
+                    return PhysicalSystem.FujitsuFMTownsSeries;
                 }
             }
             catch { }
@@ -1939,13 +1953,13 @@ namespace MPF.Frontend.ViewModels
 
             OutputPath = IOExtensions.NormalizeFilePath(_environment.ContextOutputPath, fullPath: false);
 
-            if (PhysicalMediaTypes is not null)
+            if (MediaTypes is not null)
             {
                 PhysicalMediaType? mediaType = _environment.GetPhysicalMediaType();
                 if (mediaType is not null)
                 {
-                    int mediaTypeIndex = PhysicalMediaTypes.FindIndex(m => m == mediaType);
-                    CurrentPhysicalMediaType = mediaTypeIndex > -1 ? PhysicalMediaTypes[mediaTypeIndex] : PhysicalMediaTypes[0];
+                    int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
+                    CurrentPhysicalMediaType = mediaTypeIndex > -1 ? MediaTypes[mediaTypeIndex] : MediaTypes[0];
                 }
             }
 
@@ -2102,13 +2116,13 @@ namespace MPF.Frontend.ViewModels
         private void SetCurrentMediaType()
         {
             // If we don't have any selected media types, we don't care and return
-            if (PhysicalMediaTypes is null)
+            if (MediaTypes is null)
                 return;
 
             // If we have a detected media type, use that first
             if (_detectedPhysicalMediaType is not null)
             {
-                int detectedIndex = PhysicalMediaTypes.FindIndex(kvp => kvp.Value == _detectedPhysicalMediaType);
+                int detectedIndex = MediaTypes.FindIndex(kvp => kvp.Value == _detectedPhysicalMediaType);
                 if (detectedIndex > -1)
                 {
                     CurrentPhysicalMediaType = _detectedPhysicalMediaType;
@@ -2121,11 +2135,11 @@ namespace MPF.Frontend.ViewModels
                 return;
 
             // Now set the selected item, if possible
-            int index = PhysicalMediaTypes.FindIndex(kvp => kvp.Value == CurrentPhysicalMediaType);
+            int index = MediaTypes.FindIndex(kvp => kvp.Value == CurrentPhysicalMediaType);
             if (CurrentPhysicalMediaType is not null && index == -1)
                 VerboseLogLn($"Disc of type '{CurrentPhysicalMediaType.LongName()}' found, but the current system does not support it!");
 
-            CurrentPhysicalMediaType = index > -1 ? PhysicalMediaTypes[index] : PhysicalMediaTypes[0];
+            CurrentPhysicalMediaType = index > -1 ? MediaTypes[index] : MediaTypes[0];
         }
 
         /// <summary>
@@ -2259,8 +2273,19 @@ namespace MPF.Frontend.ViewModels
                 protectionProgress.ProgressChanged += ProgressUpdated;
                 _environment.ReportStatus += ProgressUpdated;
 
+                // Stream live tool output to the separate console window, if the frontend
+                // provides one (Linux GUI). Harmless no-op for frontends that do not.
+                if (_toolConsole is not null)
+                {
+                    _toolConsole.Open();
+                    _environment.ToolOutputReceived = _toolConsole.Append;
+                }
+
                 // Run the program with the parameters
                 ResultEventArgs result = await _environment.Run(CurrentPhysicalMediaType, resultProgress);
+
+                // The tool has exited; let the console close itself per the user's preference
+                _toolConsole?.NotifyToolExited();
 
                 // If we didn't execute a dumping command we cannot get submission output
                 if (!_environment.IsDumpingCommand())
@@ -2478,16 +2503,24 @@ namespace MPF.Frontend.ViewModels
         {
             try
             {
-#pragma warning disable IDE0072
                 return program switch
                 {
-                    InternalProgram.Aaru => FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath) != null,
-                    InternalProgram.DiscImageCreator => FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath) != null,
-                    // InternalProgram.Dreamdump => FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath) != null,
-                    InternalProgram.Redumper => FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath) != null,
+                    // Dumping supported programs
+                    InternalProgram.Aaru => FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath) is not null,
+                    InternalProgram.DiscImageCreator => FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath) is not null,
+                    // InternalProgram.Dreamdump => FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath) is not null,
+                    InternalProgram.Redumper => FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath) is not null,
+
+                    // Non-dumping programs
+                    InternalProgram.CleanRip => false,
+                    InternalProgram.PS3CFW => false,
+                    InternalProgram.UmdImageCreator => false,
+                    InternalProgram.XboxBackupCreator => false,
+
+                    // Should not happen
+                    InternalProgram.NONE => false,
                     _ => false,
                 };
-#pragma warning restore IDE0072
             }
             catch
             {

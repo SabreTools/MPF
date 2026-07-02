@@ -96,13 +96,11 @@ namespace MPF.Frontend.Tools
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.DumpMetadata.Dat))
-            {
-                bool filledInfo = await FillFromRedump(options, info, resultProgress);
+                _ = await FillFromRedump(options, info, resultProgress);
 
-                // Add a placeholder for the logs link if not a verification
-                if (!filledInfo)
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.LogsLink] = "[Please provide a link to your logs here]";
-            }
+            // TEMPORARY HACK -- Add newline after Dat section until RedumpLib is updated
+            if (!string.IsNullOrEmpty(info.DumpMetadata.Dat))
+                info.DumpMetadata.Dat += "\n";
 
             // Add the volume label to comments, if possible or necessary
             string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor.VolumeLabels);
@@ -510,7 +508,7 @@ namespace MPF.Frontend.Tools
         /// </summary>
         /// <param name="labels">Dictionary of volume labels and their filesystems</param>
         /// <returns>Formatted string of volume labels and their filesystems</returns>
-        private static string? FormatVolumeLabels(string? driveLabel, Dictionary<string, List<string>>? labels)
+        internal static string? FormatVolumeLabels(string? driveLabel, Dictionary<string, List<string>>? labels)
         {
             // Treat empty label as null
             if (driveLabel is not null && driveLabel.Length == 0)
@@ -530,6 +528,10 @@ namespace MPF.Frontend.Tools
             {
                 // Ignore common volume labels
                 if (FrontendTool.GetPhysicalSystemFromVolumeLabel(driveLabel) is not null)
+                    return null;
+
+                // Ignore "DVD_ROM" / "CD_ROM" labels
+                if (driveLabel == "DVD_ROM" || driveLabel == "CD_ROM")
                     return null;
 
                 return driveLabel;
@@ -601,6 +603,10 @@ namespace MPF.Frontend.Tools
             {
                 // Ignore common volume labels
                 if (FrontendTool.GetPhysicalSystemFromVolumeLabel(firstLabel) is not null)
+                    return null;
+
+                // Ignore "DVD_ROM" / "CD_ROM" labels
+                if (driveLabel == "DVD_ROM" || driveLabel == "CD_ROM")
                     return null;
 
                 return firstLabel;
@@ -915,7 +921,7 @@ namespace MPF.Frontend.Tools
                     info.RegionsAndLanguages.Regions ??= [Region.Europe];
                     break;
 
-                case PhysicalSystem.FujitsuFMTownsseries:
+                case PhysicalSystem.FujitsuFMTownsSeries:
                     info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
@@ -1020,11 +1026,11 @@ namespace MPF.Frontend.Tools
                     info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
 
-                case PhysicalSystem.NECPC88series:
+                case PhysicalSystem.NECPC88Series:
                     info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
 
-                case PhysicalSystem.NECPC98series:
+                case PhysicalSystem.NECPC98Series:
                     info.DiscIdentifiers.EXEDate = addPlaceholders ? RequiredValue : string.Empty;
                     info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;

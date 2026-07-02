@@ -153,7 +153,8 @@ namespace MPF.Frontend.Tools
             if (string.IsNullOrEmpty(pathEnv))
                 return null;
 
-            foreach (string dir in pathEnv!.Split(Path.PathSeparator))
+            var pathParts = pathEnv!.Split(Path.PathSeparator);
+            foreach (string dir in pathParts)
             {
                 if (string.IsNullOrEmpty(dir))
                     continue;
