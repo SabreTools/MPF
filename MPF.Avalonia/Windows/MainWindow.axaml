@@ -117,7 +117,7 @@
             <ComboBox x:Name="MediaTypeComboBox"
                       Grid.Column="1"
                       ItemsSource="{Binding MediaTypes}"
-                      SelectedItem="{Binding CurrentMediaType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                      SelectedItem="{Binding CurrentPhysicalMediaType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                       IsEnabled="{Binding MediaTypeComboBoxEnabled}" />
           </Grid>
 
