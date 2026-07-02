@@ -15,7 +15,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Show the console. Called on the UI thread just before the tool starts.
         /// </summary>
-        void Open();
+        public void Open();
 
         /// <summary>
         /// Receive a raw chunk of the tool's standard output or error.
@@ -25,7 +25,7 @@ namespace MPF.Frontend
         /// Thread-safe: called from background reader threads, so implementations must
         /// not touch UI state directly here.
         /// </remarks>
-        void Append(string chunk);
+        public void Append(string chunk);
 
         /// <summary>
         /// Signal that the tool process has exited. Called on the UI thread.
@@ -34,6 +34,6 @@ namespace MPF.Frontend
         /// The implementation closes the console or leaves it open per the user's
         /// preference.
         /// </remarks>
-        void NotifyToolExited();
+        public void NotifyToolExited();
     }
 }

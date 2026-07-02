@@ -1,7 +1,7 @@
 using System;
-using global::Avalonia;
-using global::Avalonia.Controls;
-using global::Avalonia.Platform;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Platform;
 using MPF.Avalonia.Windows;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
@@ -24,8 +24,19 @@ namespace MPF.Avalonia.Services
         /// </summary>
         private const double PlacementGap = 8;
 
+        /// <summary>
+        ///
+        /// </summary>
         private readonly Window _owner;
+
+        /// <summary>
+        ///
+        /// </summary>
         private readonly Options _options;
+
+        /// <summary>
+        ///
+        /// </summary>
         private ToolOutputWindow? _window;
 
         public ToolOutputConsole(Window owner, Options options)
@@ -96,7 +107,7 @@ namespace MPF.Avalonia.Services
                 int winH = (int)Math.Round(window.Height * scale);
                 int gap = (int)Math.Round(PlacementGap * scale);
 
-                int rightRoom = (area.X + area.Width) - (ownerPos.X + ownerW);
+                int rightRoom = area.X + area.Width - (ownerPos.X + ownerW);
                 int leftRoom = ownerPos.X - area.X;
 
                 int x;
@@ -105,13 +116,13 @@ namespace MPF.Avalonia.Services
                 else if (leftRoom >= winW + gap)
                     x = ownerPos.X - gap - winW;                // beside, to the left
                 else
-                    x = ownerPos.X + (ownerW - winW) / 2;       // overlay, centered on the owner
+                    x = ownerPos.X + ((ownerW - winW) / 2);     // overlay, centered on the owner
 
                 int y = ownerPos.Y;                             // align tops
 
                 // Clamp the whole window inside the work area so it never lands off-screen.
-                int maxX = (area.X + area.Width) - winW;
-                int maxY = (area.Y + area.Height) - winH;
+                int maxX = area.X + area.Width - winW;
+                int maxY = area.Y + area.Height - winH;
                 x = Math.Max(area.X, Math.Min(x, maxX));
                 y = Math.Max(area.Y, Math.Min(y, maxY));
 

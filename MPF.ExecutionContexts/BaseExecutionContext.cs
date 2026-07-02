@@ -253,6 +253,22 @@ namespace MPF.ExecutionContexts
         }
 
         /// <summary>
+        /// Cancel an in-progress dumping process
+        /// </summary>
+        public void KillInternalProgram()
+        {
+            try
+            {
+                while (process is not null && !process.HasExited)
+                {
+                    process.Kill();
+                }
+            }
+            catch
+            { }
+        }
+
+        /// <summary>
         /// Start a background thread that copies a redirected stream to <see cref="OutputReceived"/>
         /// in raw chunks
         /// </summary>
@@ -283,24 +299,9 @@ namespace MPF.ExecutionContexts
                 IsBackground = true,
                 Name = "MPF tool output pump",
             };
+
             thread.Start();
             return thread;
-        }
-
-        /// <summary>
-        /// Cancel an in-progress dumping process
-        /// </summary>
-        public void KillInternalProgram()
-        {
-            try
-            {
-                while (process is not null && !process.HasExited)
-                {
-                    process.Kill();
-                }
-            }
-            catch
-            { }
         }
 
         #endregion

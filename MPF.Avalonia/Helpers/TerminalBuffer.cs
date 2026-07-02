@@ -41,7 +41,7 @@ namespace MPF.Avalonia.Helpers
         /// <summary>
         /// Lines committed so far (each was terminated by <c>\n</c>).
         /// </summary>
-        public List<string> CommittedLines { get; } = new();
+        public List<string> CommittedLines { get; } = [];
 
         /// <summary>
         /// The live line being assembled after the last <c>\n</c>.
@@ -80,7 +80,8 @@ namespace MPF.Avalonia.Helpers
 
                 switch (c)
                 {
-                    case '\x1b': // ESC -- start of an ANSI sequence
+                    // ESC: start of an ANSI sequence
+                    case '\x1b':
                         _inEscape = true;
                         _escape.Clear();
                         break;
@@ -89,8 +90,9 @@ namespace MPF.Avalonia.Helpers
                         CommitLine();
                         break;
 
+                    // Carriage Return: back to column 0, keep the chars
                     case '\r':
-                        _cursor = 0; // carriage return: back to column 0, keep the chars
+                        _cursor = 0;
                         break;
 
                     case '\t':
@@ -128,6 +130,9 @@ namespace MPF.Avalonia.Helpers
                 CommitLine();
         }
 
+        /// <summary>
+        /// Write a single character to the current output
+        /// </summary>
         private void WriteChar(char c)
         {
             if (_cursor < _current.Length)
@@ -138,11 +143,15 @@ namespace MPF.Avalonia.Helpers
             _cursor++;
         }
 
+        /// <summary>
+        /// Commit a complete line to the output
+        /// </summary>
         private void CommitLine()
         {
             string line = _current.ToString();
             CommittedLines.Add(line);
             LineCommitted?.Invoke(line);
+
             _current.Clear();
             _cursor = 0;
         }
@@ -173,7 +182,7 @@ namespace MPF.Avalonia.Helpers
             // Inside CSI: parameters/intermediates until a final byte 0x40-0x7E.
             if (c >= '@' && c <= '~')
             {
-                bool changed = ApplyCsi(_escape.ToString(1, _escape.Length - 1), c);
+                bool changed = ApplyCSISequence(_escape.ToString(1, _escape.Length - 1), c);
                 _inEscape = false;
                 _escape.Clear();
                 return changed;
@@ -186,52 +195,72 @@ namespace MPF.Avalonia.Helpers
         /// <summary>
         /// Apply a CSI sequence given its parameter string and final byte.
         /// </summary>
-        private bool ApplyCsi(string parameters, char final)
+        private bool ApplyCSISequence(string parameters, char final)
         {
             switch (final)
             {
-                case 'K': // EL -- erase in line
-                    EraseInLine(ParseInt(parameters, 0));
+                // EL -- erase in line
+                case 'K':
+                    EraseInLine(ParseIntWithFallback(parameters, 0));
                     return true;
 
-                case 'G': // CHA -- cursor to absolute column (1-based)
-                    _cursor = Math.Max(0, ParseInt(parameters, 1) - 1);
+                // CHA -- cursor to absolute column (1-based)
+                case 'G':
+                    _cursor = Math.Max(0, ParseIntWithFallback(parameters, 1) - 1);
                     return false;
 
-                case 'D': // CUB -- cursor back N
-                    _cursor = Math.Max(0, _cursor - Math.Max(1, ParseInt(parameters, 1)));
+                // CUB -- cursor back N
+                case 'D':
+                    _cursor = Math.Max(0, _cursor - Math.Max(1, ParseIntWithFallback(parameters, 1)));
                     return false;
 
+                // SGR colors ('m'), cursor up/down, etc. -- recognized and ignored.
                 default:
-                    // SGR colors ('m'), cursor up/down, etc. -- recognized and ignored.
                     return false;
             }
         }
 
+        /// <summary>
+        /// Erase characters inside the current line
+        /// </summary>
+        /// <param name="mode">Mode determining how to erase characters</param>
+        /// TODO: Determine if mode could be an enum to bound this better
         private void EraseInLine(int mode)
         {
             switch (mode)
             {
-                case 0: // cursor to end of line
+                // Cursor to end of line
+                case 0:
                     if (_cursor < _current.Length)
                         _current.Length = _cursor;
 
                     break;
-                case 1: // start of line to cursor (blank them, keep length)
+
+                // Start of line to cursor (blank them, keep length)
+                case 1:
                     for (int i = 0; i < _cursor && i < _current.Length; i++)
                     {
                         _current[i] = ' ';
                     }
 
                     break;
-                case 2: // entire line
+
+                // Entire line
+                case 2:
                     _current.Clear();
                     _cursor = 0;
+                    break;
+
+                // Ignore all other mode values
+                default:
                     break;
             }
         }
 
-        private static int ParseInt(string s, int fallback)
+        /// <summary>
+        /// Try to parse an integer value, including a fallback if it fails
+        /// </summary>
+        private static int ParseIntWithFallback(string s, int fallback)
             => int.TryParse(s, out int v) ? v : fallback;
     }
 }

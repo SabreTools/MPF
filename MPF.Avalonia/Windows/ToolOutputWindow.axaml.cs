@@ -5,14 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using global::Avalonia.Controls;
-using global::Avalonia.Controls.Primitives;
-using global::Avalonia.Input;
-using global::Avalonia.Input.Platform;
-using global::Avalonia.Interactivity;
-using global::Avalonia.Layout;
-using global::Avalonia.Threading;
-using global::Avalonia.VisualTree;
+using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
+using Avalonia.Input.Platform;
+using Avalonia.Layout;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
 using MPF.Avalonia.Helpers;
 
 namespace MPF.Avalonia.Windows
@@ -40,10 +39,29 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private const int FlushIntervalMs = 16;
 
-        private readonly ObservableCollection<string> _lines = new();
+        /// <summary>
+        ///
+        /// </summary>
+        private readonly ObservableCollection<string> _lines = [];
+
+        /// <summary>
+        ///
+        /// </summary>
         private readonly TerminalBuffer _buffer = new();
+
+        /// <summary>
+        ///
+        /// </summary>
         private readonly OutputPump _pump = new(capacity: 8192);
+
+        /// <summary>
+        ///
+        /// </summary>
         private readonly CancellationTokenSource _cts = new();
+
+        /// <summary>
+        ///
+        /// </summary>
         private readonly Task _pumpTask;
 
         /// <summary>
@@ -166,12 +184,14 @@ namespace MPF.Avalonia.Windows
             {
                 if (idx >= 0 && idx < _lines.Count)
                     sb.Append(_lines[idx]);
+
                 sb.Append('\n');
             }
+
             if (sb.Length > 0 && sb[^1] == '\n')
                 sb.Length -= 1; // drop the trailing newline
 
-            IClipboard? clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
+            IClipboard? clipboard = GetTopLevel(this)?.Clipboard;
             if (clipboard is not null)
                 await clipboard.SetTextAsync(sb.ToString());
         }
@@ -267,10 +287,18 @@ namespace MPF.Avalonia.Windows
         private void OnUserScroll(object? sender, ScrollEventArgs e)
             => SyncFollowToPosition();
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnWheel(object? sender, PointerWheelEventArgs e)
             // The wheel scroll is applied after this event fires; check once it has.
             => Dispatcher.UIThread.Post(SyncFollowToPosition, DispatcherPriority.Background);
 
+        /// <summary>
+        ///
+        /// </summary>
         private void SyncFollowToPosition()
         {
             if (_scroller is null)
@@ -280,6 +308,10 @@ namespace MPF.Avalonia.Windows
             _autoScroll = distanceFromBottom <= 4;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnClosed(EventArgs e)
         {
             // Best-effort shutdown; if the tool is still running its output is simply

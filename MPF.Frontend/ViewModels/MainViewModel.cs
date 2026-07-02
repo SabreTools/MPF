@@ -1264,6 +1264,13 @@ namespace MPF.Frontend.ViewModels
 
                     break;
 
+                // case InternalProgram.Dreamdump:
+                //     string? dreamdumpPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath);
+                //     if (dreamdumpPath is not null)
+                //         Options.Dumping.DreamdumpPath = dreamdumpPath;
+
+                //     break;
+
                 case InternalProgram.Redumper:
                     string? redumperPath = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
                     if (redumperPath is not null)
@@ -2496,16 +2503,24 @@ namespace MPF.Frontend.ViewModels
         {
             try
             {
-#pragma warning disable IDE0072
                 return program switch
                 {
+                    // Dumping supported programs
                     InternalProgram.Aaru => FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath) is not null,
                     InternalProgram.DiscImageCreator => FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath) is not null,
                     // InternalProgram.Dreamdump => FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath) is not null,
                     InternalProgram.Redumper => FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath) is not null,
+
+                    // Non-dumping programs
+                    InternalProgram.CleanRip => false,
+                    InternalProgram.PS3CFW => false,
+                    InternalProgram.UmdImageCreator => false,
+                    InternalProgram.XboxBackupCreator => false,
+
+                    // Should not happen
+                    InternalProgram.NONE => false,
                     _ => false,
                 };
-#pragma warning restore IDE0072
             }
             catch
             {
