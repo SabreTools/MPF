@@ -808,23 +808,6 @@
                             </UniformGrid>
                         </GroupBox>
 
-                        <!-- <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource RedumpGroupBoxString}">
-                            <UniformGrid Columns="5">
-                                <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource UsernameLabelString}" />
-                                <TextBox x:Name="RedumpOrgUsernameTextBox" Height="22" HorizontalAlignment="Stretch"
-                                    Text="{Binding Options.Processing.Login.RedumpOrgUsername}"
-                                    IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" />
-
-                                <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource PasswordLabelString}" />
-                                <PasswordBox x:Name="RedumpOrgPasswordBox" Height="22" HorizontalAlignment="Stretch" PasswordChar="*"
-                                             IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}"/>
-
-                                <Button x:Name="RedumpLoginTestButton" Height="22" Width="80" Content="{DynamicResource TestLoginButtonString}"
-                                        Style="{DynamicResource CustomButtonStyle}"
-                                        IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" />
-                            </UniformGrid>
-                        </GroupBox> -->
-
                         <Label>
                             <Label.Content>
                                 <TextBlock TextWrapping="Wrap">

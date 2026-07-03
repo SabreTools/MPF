@@ -127,7 +127,7 @@
     <x:String x:Key="LoginInfoTabString">로그인 정보</x:String>
     <x:String x:Key="RetrievalGroupBoxString">검색</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">일치 정보 가져오기</x:String>
-    <x:String x:Key="RedumpGroupBoxString">redump.org</x:String>
+    <x:String x:Key="RedumpGroupBoxString">redump.info</x:String>
     <x:String x:Key="UsernameLabelString">사용자 이름</x:String>
     <x:String x:Key="PasswordLabelString">비밀번호</x:String>
     <x:String x:Key="TestLoginButtonString">로그인 테스트</x:String>

@@ -12,6 +12,7 @@
 - Fix media type dropdown not updating dumping parameters (gmipf)
 - Fix media type sticking when switching drives (gmipf)
 - Clean up XAML files with auto-formatting
+- Strip out majority of commented credentials code
 
 ### 3.8.2 (2026-07-01)
 

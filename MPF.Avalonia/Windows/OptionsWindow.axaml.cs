@@ -91,24 +91,6 @@ namespace MPF.Avalonia.Windows
         private async Task<string?> BrowseForFolderAsync(string title)
             => await DialogService.OpenFolderAsync(this, title);
 
-        /// <summary>
-        /// Test redump.org credentials for validity
-        /// </summary>
-        // private async Task<bool?> ValidateRedumpOrgCredentials()
-        // {
-        //     bool? success = await RedumpClient.ValidateCredentials(RedumpUsernameTextBox!.Text, RedumpPasswordBox!.Text);
-        //     string message = OptionsViewModel.GetRedumpOrgLoginResult(success);
-
-        //     if (success == true)
-        //         _ = MessageBoxWindow.ShowAsync(this, "Success", message, 1, success == true);
-        //     else if (success == false)
-        //         _ = MessageBoxWindow.ShowAsync(this, StringResource("ErrorMessageString", "Error"), message, 1, success == true);
-        //     else
-        //         _ = MessageBoxWindow.ShowAsync(this, "Error", message, 1, success == true);
-
-        //     return success;
-        // }
-
         #endregion
 
         #region Event Handlers
@@ -182,12 +164,6 @@ namespace MPF.Avalonia.Windows
             OptionsViewModel.SavedSettings = false;
             Close(false);
         }
-
-        /// <summary>
-        /// Test Redump credentials for validity
-        /// </summary>
-        // private async void OnRedumpTestClick(object? sender, RoutedEventArgs e)
-        //     => await ValidateRedumpOrgCredentials();
 
         #endregion
     }

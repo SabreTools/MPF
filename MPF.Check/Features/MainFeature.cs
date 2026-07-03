@@ -60,9 +60,6 @@ namespace MPF.Check.Features
         private const string _noRetrieveName = "no-retrieve";
         internal readonly FlagInput NoRetrieveInput = new(_noRetrieveName, "--no-retrieve", "Disable retrieving match information from online sources");
 
-        // private const string _passwordName = "password";
-        // internal readonly StringInput PasswordInput = new(_passwordName, ["-P", "--password"], "redump.org password (incompatible with --no-retrieve)");
-
         private const string _pathName = "path";
         internal readonly StringInput PathInput = new(_pathName, ["-p", "--path"], "Physical drive path for additional checks");
 
@@ -80,9 +77,6 @@ namespace MPF.Check.Features
 
         private const string _useName = "use";
         internal readonly StringInput UseInput = new(_useName, ["-u", "--use"], "Override configured dumping program name");
-
-        // private const string _usernameName = "username";
-        // internal readonly StringInput UsernameInput = new(_usernameName, ["-U", "--username"], "redump.org username (incompatible with --no-retrieve)");
 
         private const string _zipName = "zip";
         internal readonly FlagInput ZipInput = new(_zipName, ["-z", "--zip"], "Enable log file compression");
@@ -151,8 +145,6 @@ namespace MPF.Check.Features
 
                 // Web Login Information
                 Options.Processing.Login.PullAllInformation = false;
-                // Options.Processing.Login.RedumpOrgUsername = null;
-                // Options.Processing.Login.RedumpOrgPassword = null;
                 Options.Processing.Login.RetrieveMatchInformation = true;
                 Options.Processing.Login.AttemptCount = 3;
                 Options.Processing.Login.TimeoutSeconds = 30;
@@ -204,14 +196,6 @@ namespace MPF.Check.Features
                 else if (NoRetrieveInput.ProcessInput(args, ref index))
                     Options.Processing.Login.RetrieveMatchInformation = !Options.Processing.Login.RetrieveMatchInformation;
 
-                // // redump.org username
-                // else if (UsernameInput.ProcessInput(args, ref index))
-                //     Options.Processing.Login.RedumpOrgUsername = UsernameInput.Value;
-
-                // // redump.org password
-                // else if (PasswordInput.ProcessInput(args, ref index))
-                //     Options.Processing.Login.RedumpOrgPassword = PasswordInput.Value;
-
                 // Attempt count
                 else if (AttemptCountInput.ProcessInput(args, ref index) && AttemptCountInput.Value > 0)
                     Options.Processing.Login.AttemptCount = AttemptCountInput.Value ?? 3;
@@ -220,7 +204,7 @@ namespace MPF.Check.Features
                 else if (TimeoutSecondsInput.ProcessInput(args, ref index) && TimeoutSecondsInput.Value > 0)
                     Options.Processing.Login.TimeoutSeconds = TimeoutSecondsInput.Value ?? 30;
 
-                // Pull all information (requires redump.org login)
+                // Pull all information
                 else if (PullAllInput.ProcessInput(args, ref index))
                     Options.Processing.Login.PullAllInformation = !Options.Processing.Login.PullAllInformation;
 

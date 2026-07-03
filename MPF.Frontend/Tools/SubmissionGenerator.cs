@@ -182,11 +182,10 @@ namespace MPF.Frontend.Tools
             if (!options.Processing.Login.RetrieveMatchInformation)
                 return false;
 
-            // Set the current dumper based on username
-            info.SubmissionControls.SubmitAs = options.Processing.Login.RedumpOrgUsername;
+            // Reset the partially matched IDs
             info.PartiallyMatchedIDs = [];
 
-            // Login to redump.org, if possible
+            // Login to redump.info, if possible
             int attemptCount = options.Processing.Login.AttemptCount;
             int timeoutSeconds = options.Processing.Login.TimeoutSeconds;
             var wc = new Client
@@ -194,25 +193,6 @@ namespace MPF.Frontend.Tools
                 AttemptCount = attemptCount > 0 ? attemptCount : 3,
                 Timeout = TimeSpan.FromSeconds(timeoutSeconds > 0 ? timeoutSeconds : 30),
             };
-
-            // if (!string.IsNullOrEmpty(options.Processing.Login.RedumpOrgUsername) && !string.IsNullOrEmpty(options.Processing.Login.RedumpOrgPassword))
-            // {
-            //     resultProgress?.Report(ResultEventArgs.Neutral("Attempting to log in to redump.org, this might take a while..."));
-            //     bool? loggedIn = await wc.Login(options.Processing.Login.RedumpOrgUsername!, options.Processing.Login.RedumpOrgPassword!);
-            //     if (loggedIn is null)
-            //     {
-            //         resultProgress?.Report(ResultEventArgs.Failure("There was an unknown error connecting to redump.org, skipping..."));
-            //         return false;
-            //     }
-            //     else if (loggedIn == false)
-            //     {
-            //         resultProgress?.Report(ResultEventArgs.Failure("Provided redump.org credentials were invalid, not using..."));
-            //     }
-            //     else
-            //     {
-            //         resultProgress?.Report(ResultEventArgs.Neutral("Successfully logged into redump.org!"));
-            //     }
-            // }
 
             // Setup the checks
             bool allFound = true;

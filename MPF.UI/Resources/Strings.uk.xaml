@@ -133,7 +133,7 @@
     <system:String x:Key="LoginInfoTabString">Інформація для входу</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Завантаження</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Завантажити онлайн інформацію</system:String>
-    <system:String x:Key="RedumpGroupBoxString">redump.org</system:String>
+    <system:String x:Key="RedumpGroupBoxString">redump.info</system:String>
     <system:String x:Key="UsernameLabelString">Ім'я</system:String>
     <system:String x:Key="PasswordLabelString">Пароль</system:String>
     <system:String x:Key="TestLoginButtonString">Протестувати вхід</system:String>

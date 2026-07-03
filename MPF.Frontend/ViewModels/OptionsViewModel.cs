@@ -127,19 +127,6 @@ namespace MPF.Frontend.ViewModels
         #region UI Commands
 
         /// <summary>
-        /// Get the human-readable result for a redump.org login result
-        /// </summary>
-        // public static string GetRedumpOrgLoginResult(bool? success)
-        // {
-        //     return success switch
-        //     {
-        //         true => "redump.org username and password accepted!",
-        //         false => "redump.org username and password denied!",
-        //         null => "An error occurred validating your redump.org credentials!",
-        //     };
-        // }
-
-        /// <summary>
         /// Reset Redumper non-redump options (Read Method, Sector Order, Drive Type)
         /// </summary>
         public void NonRedumpModeUnChecked()

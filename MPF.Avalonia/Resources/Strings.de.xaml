@@ -133,7 +133,7 @@
     <x:String x:Key="LoginInfoTabString">Login-Informationen</x:String>
     <x:String x:Key="RetrievalGroupBoxString">Abruf</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">Übereinstimmung informationen abrufen</x:String>
-    <x:String x:Key="RedumpGroupBoxString">redump.org</x:String>
+    <x:String x:Key="RedumpGroupBoxString">redump.info</x:String>
     <x:String x:Key="UsernameLabelString">Benutzername</x:String>
     <x:String x:Key="PasswordLabelString">Passwort</x:String>
     <x:String x:Key="TestLoginButtonString">Login testen</x:String>
