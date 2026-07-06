@@ -14,6 +14,7 @@
 - Clean up XAML files with auto-formatting
 - Strip out majority of commented credentials code
 - Update RedumpLib to 2.1.0
+- Update Serialization to 3.0.1 and BOS to 3.7.1
 
 ### 3.8.2 (2026-07-01)
 
