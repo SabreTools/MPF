@@ -456,20 +456,53 @@ namespace MPF.Processors.Test
         #region GetXGDRegion
 
         [Theory]
-        [InlineData(null, null)]
-        [InlineData(' ', null)]
-        [InlineData('W', Region.World)]
-        [InlineData('A', Region.UnitedStatesOfAmerica)]
-        [InlineData('J', Region.JapanAsia)]
-        [InlineData('E', Region.Europe)]
-        [InlineData('K', Region.USAJapan)]
-        [InlineData('L', Region.USAEurope)]
-        [InlineData('H', Region.JapanEurope)]
-        [InlineData('X', null)]
-        public void GetXGDRegionTest(char? region, Region? expected)
+        [InlineData(null, 0, null, null)]
+        [InlineData(' ', 0, null, null)]
+        [InlineData('W', 1, Region.World, null)]
+        [InlineData('A', 1, Region.UnitedStatesOfAmerica, null)]
+        [InlineData('J', 2, Region.Japan, Region.Asia)]
+        [InlineData('E', 1, Region.Europe, null)]
+        [InlineData('K', 2, Region.UnitedStatesOfAmerica, Region.Japan)]
+        [InlineData('L', 2, Region.UnitedStatesOfAmerica, Region.Europe)]
+        [InlineData('H', 2, Region.Japan, Region.Europe)]
+        [InlineData('X', 0, null, null)]
+        public void GetXGDRegionTest(char? region, int expectedCount, Region? firstExpected, Region? secondExpected)
         {
-            Region? actual = ProcessingTool.GetXGDRegion(region);
-            Assert.Equal(expected, actual);
+            Region?[]? actual = ProcessingTool.GetXGDRegions(region);
+
+            if (expectedCount == 0)
+            {
+                Assert.Null(firstExpected);
+                Assert.Null(secondExpected);
+
+                Assert.Null(actual);
+            }
+            else if (expectedCount == 1)
+            {
+                Assert.NotNull(firstExpected);
+                Assert.Null(secondExpected);
+
+                Assert.NotNull(actual);
+                var firstActual = Assert.Single(actual);
+                Assert.Equal(firstExpected, firstActual);
+            }
+            else if (expectedCount == 2)
+            {
+                Assert.NotNull(firstExpected);
+                Assert.NotNull(secondExpected);
+
+                Assert.NotNull(actual);
+                Assert.Equal(2, actual.Length);
+                var firstActual = actual[0];
+                Assert.Equal(firstExpected, firstActual);
+                var secondActual = actual[1];
+                Assert.Equal(secondExpected, secondActual);
+            }
+            else
+            {
+                // This should never happen
+                throw new NotImplementedException();
+            }
         }
 
         #endregion
