@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.8.3 (2026-07-06)
 
 - Add live tool output console for the Linux GUI (gmipf)
 - Normalize null checks in recent code
