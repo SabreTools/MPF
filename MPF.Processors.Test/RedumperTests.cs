@@ -103,7 +103,7 @@ namespace MPF.Processors.Test
             var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Equal(19, actual.Count);
+            Assert.Equal(20, actual.Count);
         }
 
         [Fact]
@@ -161,7 +161,7 @@ namespace MPF.Processors.Test
             string outputFilename = string.Empty;
             var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
             var actual = processor.FoundAllFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Equal(5, actual.Count);
+            Assert.Equal(4, actual.Count);
         }
 
         [Fact]

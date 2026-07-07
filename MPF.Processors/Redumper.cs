@@ -127,6 +127,8 @@ namespace MPF.Processors
                 _ = CompressZstandard($"{basePath}.skeleton");
             if (File.Exists($"{basePath}.state"))
                 _ = CompressZstandard($"{basePath}.state");
+            if (File.Exists($"{basePath}.subcode"))
+                _ = CompressZstandard($"{basePath}.subcode");
 
             // Pre-compress all skeletons for multi-track CDs
             if (File.Exists($"{basePath}.cue"))
@@ -571,8 +573,10 @@ namespace MPF.Processors
                         new($"{outputFilename}.state.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "state_zst"),
-                        new($"{outputFilename}.subcode", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
+                        new($"{outputFilename}.subcode", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "subcode"),
+                        new($"{outputFilename}.subcode.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "subcode"),
                         new($"{outputFilename}.toc", OutputFileFlags.Required
