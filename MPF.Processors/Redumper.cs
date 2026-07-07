@@ -573,8 +573,10 @@ namespace MPF.Processors
                         new($"{outputFilename}.state.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "state_zst"),
-                        new([$"{outputFilename}.subcode", $"{outputFilename}.subcode.zst"], OutputFileFlags.Required
-                            | OutputFileFlags.Binary
+                        new($"{outputFilename}.subcode", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "subcode"),
+                        new($"{outputFilename}.subcode.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "subcode"),
                         new($"{outputFilename}.toc", OutputFileFlags.Required
