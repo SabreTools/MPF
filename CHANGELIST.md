@@ -1,3 +1,6 @@
+### WIP (xxxx-xx-xx)
+- Pre-compress subcode files with Zstd
+
 ### 3.8.3 (2026-07-06)
 
 - Add live tool output console for the Linux GUI (gmipf)
