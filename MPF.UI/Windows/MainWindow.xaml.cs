@@ -811,7 +811,7 @@ namespace MPF.UI.Windows
         public void DriveSpeedComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
-                MainViewModel.EnsureMediaInformation();
+                MainViewModel.EnsureMediaInformation(resolveProgramPaths: false);
         }
 
         /// <summary>
@@ -856,7 +856,7 @@ namespace MPF.UI.Windows
         public void OutputPathBrowseButtonClick(object sender, RoutedEventArgs e)
         {
             BrowseFile();
-            MainViewModel.EnsureMediaInformation();
+            MainViewModel.EnsureMediaInformation(resolveProgramPaths: false);
         }
 
         /// <summary>
@@ -865,7 +865,7 @@ namespace MPF.UI.Windows
         public void OutputPathTextBoxTextChanged(object sender, TextChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
-                MainViewModel.EnsureMediaInformation();
+                MainViewModel.EnsureMediaInformation(resolveProgramPaths: false);
         }
 
         /// <summary>

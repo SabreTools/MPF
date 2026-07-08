@@ -792,11 +792,13 @@ namespace MPF.Frontend.ViewModels
         public void ChangeDumpingProgram()
         {
             VerboseLogLn($"Changed dumping program to: {((InternalProgram?)CurrentProgram).LongName()}");
-            EnsureMediaInformation();
+            EnsureMediaInformation(resolveProgramPaths: true);
+
             // New output name depends on new environment
             GetOutputNames(false);
+
             // New environment depends on new output name
-            EnsureMediaInformation();
+            EnsureMediaInformation(resolveProgramPaths: false);
         }
 
         /// <summary>
@@ -809,7 +811,7 @@ namespace MPF.Frontend.ViewModels
                 SetSupportedDriveSpeed();
 
             GetOutputNames(false);
-            EnsureMediaInformation();
+            EnsureMediaInformation(resolveProgramPaths: false);
         }
 
         /// <summary>
@@ -820,7 +822,7 @@ namespace MPF.Frontend.ViewModels
             VerboseLogLn($"Changed system to: {CurrentSystem.LongName()}");
             PopulatePhysicalMediaType();
             GetOutputNames(false);
-            EnsureMediaInformation();
+            EnsureMediaInformation(resolveProgramPaths: false);
         }
 
         /// <summary>
@@ -1056,9 +1058,9 @@ namespace MPF.Frontend.ViewModels
 
             // Set the initial environment and UI values
             SetSupportedDriveSpeed();
-            _environment = DetermineEnvironment();
+            _environment = DetermineEnvironment(resolveProgramPaths: true);
             GetOutputNames(true);
-            EnsureMediaInformation();
+            EnsureMediaInformation(resolveProgramPaths: false);
 
             // Enable event handlers
             EnableEventHandlers();
@@ -1093,9 +1095,9 @@ namespace MPF.Frontend.ViewModels
             CurrentDrive?.RefreshDrive();
 
             // Set the initial environment and UI values
-            _environment = DetermineEnvironment();
+            _environment = DetermineEnvironment(resolveProgramPaths: false);
             GetOutputNames(true);
-            EnsureMediaInformation();
+            EnsureMediaInformation(resolveProgramPaths: false);
 
             // Enable event handlers
             EnableEventHandlers();
@@ -1259,61 +1261,65 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Create a DumpEnvironment with all current settings
         /// </summary>
+        /// <param name="resolveProgramPaths">Determine if program paths should be resolved</remarks>
         /// <returns>Filled DumpEnvironment Parent</returns>
         /// TODO: Determine if the null-returning cases would actually change program operation
         /// If I'm following the complete logic correctly, resolving the binary path to null is
         /// always correct as an unresolved path should never be able to be run anyway.
-        private DumpEnvironment DetermineEnvironment()
+        private DumpEnvironment DetermineEnvironment(bool resolveProgramPaths)
         {
-            // Resolve the program paths temporarily
-            switch (CurrentProgram)
+            // Resolve the program paths temporarily, if requested
+            if (resolveProgramPaths)
             {
-                // Dumping supported programs
-                case InternalProgram.Aaru:
-                    string? aaruPath = Options.Dumping.AaruPath.ResolvePath();
-                    if (aaruPath is not null)
-                        Options.Dumping.AaruPath = aaruPath;
+                switch (CurrentProgram)
+                {
+                    // Dumping supported programs
+                    case InternalProgram.Aaru:
+                        string? aaruPath = Options.Dumping.AaruPath.ResolvePath();
+                        if (aaruPath is not null)
+                            Options.Dumping.AaruPath = aaruPath;
 
-                    VerboseLogLn($"Using Aaru from {Options.Dumping.AaruPath}");
-                    break;
+                        VerboseLogLn($"Using Aaru from {Options.Dumping.AaruPath}");
+                        break;
 
-                case InternalProgram.DiscImageCreator:
-                    string? dicPath = Options.Dumping.DiscImageCreatorPath.ResolvePath();
-                    if (dicPath is not null)
-                        Options.Dumping.DiscImageCreatorPath = dicPath;
+                    case InternalProgram.DiscImageCreator:
+                        string? dicPath = Options.Dumping.DiscImageCreatorPath.ResolvePath();
+                        if (dicPath is not null)
+                            Options.Dumping.DiscImageCreatorPath = dicPath;
 
-                    VerboseLogLn($"Using DiscImageCreator from {Options.Dumping.DiscImageCreatorPath}");
-                    break;
+                        VerboseLogLn($"Using DiscImageCreator from {Options.Dumping.DiscImageCreatorPath}");
+                        break;
 
-                // case InternalProgram.Dreamdump:
-                //     string? dreamdumpPath = Options.Dumping.DreamdumpPath.ResolvePath();
-                //     if (dreamdumpPath is not null)
-                //         Options.Dumping.DreamdumpPath = dreamdumpPath;
+                    // case InternalProgram.Dreamdump:
+                    //     string? dreamdumpPath = Options.Dumping.DreamdumpPath.ResolvePath();
+                    //     if (dreamdumpPath is not null)
+                    //         Options.Dumping.DreamdumpPath = dreamdumpPath;
 
-                //     VerboseLogLn($"Using Dreamdump from {Options.Dumping.DreamdumpPath}");
-                //     break;
+                    //     VerboseLogLn($"Using Dreamdump from {Options.Dumping.DreamdumpPath}");
+                    //     break;
 
-                case InternalProgram.Redumper:
-                    string? redumperPath = Options.Dumping.RedumperPath.ResolvePath();
-                    if (redumperPath is not null)
-                        Options.Dumping.RedumperPath = redumperPath;
+                    case InternalProgram.Redumper:
+                        string? redumperPath = Options.Dumping.RedumperPath.ResolvePath();
+                        if (redumperPath is not null)
+                            Options.Dumping.RedumperPath = redumperPath;
 
-                    VerboseLogLn($"Using Redumper from {Options.Dumping.RedumperPath}");
-                    break;
+                        VerboseLogLn($"Using Redumper from {Options.Dumping.RedumperPath}");
+                        break;
 
-                // Non-dumping programs
-                case InternalProgram.CleanRip:
-                case InternalProgram.PS3CFW:
-                case InternalProgram.UmdImageCreator:
-                case InternalProgram.XboxBackupCreator:
-                    VerboseLogLn($"Unsupported dumping program: {CurrentProgram.LongName()}");
-                    break;
+                    // Non-dumping programs
+                    case InternalProgram.CleanRip:
+                    case InternalProgram.PS3CFW:
+                    case InternalProgram.UmdImageCreator:
+                    case InternalProgram.XboxBackupCreator:
+                        VerboseLogLn($"Unsupported dumping program: {CurrentProgram.LongName()}");
+                        break;
 
-                // Should not happen
-                case InternalProgram.NONE:
-                default:
-                    VerboseLogLn("Invalid dumping program selection");
-                    break;
+                    // Should not happen
+                    case InternalProgram.NONE:
+                    default:
+                        VerboseLogLn("Invalid dumping program selection");
+                        break;
+                }
             }
 
             var env = new DumpEnvironment(
@@ -1427,14 +1433,15 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Ensure information is consistent with the currently selected media type
         /// </summary>
-        public void EnsureMediaInformation()
+        /// <param name="resolveProgramPaths">Determine if program paths should be resolved</remarks>
+        public void EnsureMediaInformation(bool resolveProgramPaths)
         {
             // If the drive list is empty, ignore updates
             if (Drives.Count == 0)
                 return;
 
             // Get the current environment information
-            _environment = DetermineEnvironment();
+            _environment = DetermineEnvironment(resolveProgramPaths);
 
             // Get the status to write out
             ResultEventArgs result = _environment.GetSupportStatus(CurrentPhysicalMediaType);
@@ -2009,7 +2016,7 @@ namespace MPF.Frontend.ViewModels
         public async Task<string?> ScanAndShowProtection()
         {
             // Determine current environment, just in case
-            _environment ??= DetermineEnvironment();
+            _environment ??= DetermineEnvironment(resolveProgramPaths: false);
 
             // If we don't have a valid drive
             if (CurrentDrive?.Name is null)
@@ -2276,7 +2283,7 @@ namespace MPF.Frontend.ViewModels
             AskBeforeQuit = true;
 
             // One last check to determine environment, just in case
-            _environment = DetermineEnvironment();
+            _environment = DetermineEnvironment(resolveProgramPaths: true);
 
             // Force an internal drive refresh in case the user entered things manually
             _environment.RefreshDrive();
