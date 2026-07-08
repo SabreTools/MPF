@@ -2,6 +2,7 @@
 
 - Pre-compress subcode files with Zstd
 - Make environment determination more performant
+- Add ability to resize main window width
 
 ### 3.8.3 (2026-07-06)
 

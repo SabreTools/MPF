@@ -9,7 +9,7 @@
                   MinWidth="612"
                   Width="612"
                   SizeToContent="Height"
-                  CanResize="False"
+                  CanResize="True"
                   SystemDecorations="None"
                   Title="{DynamicResource AppTitleString}">
     <local:WindowBase.Resources>

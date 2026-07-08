@@ -9,10 +9,11 @@
                         xmlns:viewModels="clr-namespace:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
                         mc:Ignorable="d"
                         Title="{DynamicResource AppTitleString}"
+                        MinWidth="600"
                         Width="600"
                         WindowStyle="None"
                         WindowStartupLocation="CenterScreen"
-                        ResizeMode="CanMinimize"
+                        ResizeMode="CanResize"
                         SizeToContent="Height"
                         AllowsTransparency="True"
                         Background="Transparent">
