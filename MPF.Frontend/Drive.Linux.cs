@@ -35,6 +35,7 @@ namespace MPF.Frontend
         /// these exact capacities is a USB floppy with media inserted; no other removable
         /// storage uses these sizes, so this doubles as the floppy identity check.
         /// </summary>
+        /// TODO: Remove when IO is updated
         private static readonly HashSet<long> _unixFloppyMediaSizes = new HashSet<long>
         {
             368640,   // 360 KB (5.25" DD)
@@ -182,6 +183,7 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="devRoot">Root directory to scan (typically "/dev")</param>
         /// <returns>Device paths, or an empty list when the directory is unreadable</returns>
+        /// TODO: Remove when IO is updated
         internal static List<string> EnumerateUnixOpticalBlockPaths(string devRoot)
         {
             var result = new List<string>();
@@ -215,6 +217,7 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="devRoot">Root directory to scan (typically "/dev")</param>
         /// <returns>Device paths, or an empty list when the directory is unreadable</returns>
+        /// TODO: Remove when IO is updated
         internal static List<string> EnumerateUnixFloppyBlockPaths(string devRoot)
         {
             var result = new List<string>();
@@ -250,6 +253,7 @@ namespace MPF.Frontend
         /// <param name="sysBlockRoot">sysfs block directory (typically "/sys/block")</param>
         /// <param name="devRoot">Root directory device nodes live under (typically "/dev")</param>
         /// <returns>Device paths, or an empty list when the directory is unreadable</returns>
+        /// TODO: Remove when IO is updated
         internal static List<string> EnumerateUnixUsbFloppyBlockPaths(string sysBlockRoot, string devRoot)
         {
             var result = new List<string>();
@@ -291,6 +295,7 @@ namespace MPF.Frontend
         /// <param name="devRoot">Root directory the nodes live under (typically "/dev")</param>
         /// <param name="sysfsScsiGenericRoot">sysfs class directory (typically "/sys/class/scsi_generic")</param>
         /// <returns>Device paths, or an empty list when the sysfs directory is unreadable</returns>
+        /// TODO: Remove when IO is updated
         internal static List<string> EnumerateUnixOpticalGenericPaths(string devRoot, string sysfsScsiGenericRoot)
         {
             var result = new List<string>();
@@ -342,6 +347,7 @@ namespace MPF.Frontend
         /// <param name="name">Device node name to check</param>
         /// <param name="prefix">Required leading text (e.g. "sr", "sg")</param>
         /// <returns>True when the name is the prefix followed only by digits</returns>
+        /// TODO: Remove when IO is updated
         private static bool HasDeviceIndexSuffix(string name, string prefix)
         {
             if (name.Length <= prefix.Length || !name.StartsWith(prefix, StringComparison.Ordinal))
@@ -486,6 +492,7 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="sysBlockEntry">Path to the device directory under the sysfs block root</param>
         /// <returns>True when the device reports itself as removable; false otherwise</returns>
+        /// TODO: Remove when IO is updated
         private static bool ReadUnixRemovableFlag(string sysBlockEntry)
         {
             string removablePath = Path.Combine(sysBlockEntry, "removable");
@@ -507,6 +514,7 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="sysBlockEntry">Path to the device directory under the sysfs block root</param>
         /// <returns>The device size in bytes, or 0 when it cannot be determined</returns>
+        /// TODO: Remove when IO is updated
         private static long ReadUnixBlockDeviceSize(string sysBlockEntry)
         {
             string sizePath = Path.Combine(sysBlockEntry, "size");

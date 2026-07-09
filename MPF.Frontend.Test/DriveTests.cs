@@ -95,6 +95,7 @@ namespace MPF.Frontend.Test
                 {
                     actualNames.Add(Path.GetFileName(p));
                 }
+
                 actualNames.Sort(StringComparer.Ordinal);
 
                 Assert.Equal(new[] { "sr0", "sr1", "sr15" }, actualNames);
@@ -145,6 +146,7 @@ namespace MPF.Frontend.Test
                 {
                     actualNames.Add(Path.GetFileName(p));
                 }
+
                 actualNames.Sort(StringComparer.Ordinal);
 
                 Assert.Equal(new[] { "fd0", "fd1", "fd7" }, actualNames);
@@ -196,6 +198,7 @@ namespace MPF.Frontend.Test
                 {
                     actualNames.Add(Path.GetFileName(p));
                 }
+
                 actualNames.Sort(StringComparer.Ordinal);
 
                 Assert.Equal(new[] { "sdh", "sdi" }, actualNames);
@@ -250,6 +253,7 @@ namespace MPF.Frontend.Test
                 {
                     actualNames.Add(Path.GetFileName(p));
                 }
+
                 actualNames.Sort(StringComparer.Ordinal);
 
                 Assert.Equal(new[] { "sg0", "sg10", "sg2" }, actualNames);
@@ -319,6 +323,7 @@ namespace MPF.Frontend.Test
                 {
                     actualNames.Add(Path.GetFileName(device.DevicePath));
                 }
+
                 actualNames.Sort(StringComparer.Ordinal);
 
                 Assert.Equal(new[] { "nvme0n1", "sda", "sdb" }, actualNames);

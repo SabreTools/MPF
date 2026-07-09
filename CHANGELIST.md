@@ -4,6 +4,7 @@
 - Make environment determination more performant
 - Add ability to resize main window width
 - Update options loader to use PathTool more
+- Prepare to move more helpers to IO
 
 ### 3.8.3 (2026-07-06)
 
