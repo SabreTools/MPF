@@ -1,10 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 #if NET20 || NET35 || NET40 || NET452
 using System.Reflection;
 #endif
 using Newtonsoft.Json;
+using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 using AaruConstants = MPF.ExecutionContexts.Aaru.SettingConstants;
 using DiscImageCreatorConstants = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
@@ -291,7 +291,7 @@ namespace MPF.Frontend.Tools
                 return Path.Combine(homeDir, ConfigurationFileName);
 
             // Portable configuration
-            string runtimeDir = GetRuntimeConfigurationPath();
+            string runtimeDir = PathTool.GetRuntimeDirectory();
             if (File.Exists(Path.Combine(runtimeDir, ConfigurationFileName)))
                 return Path.Combine(runtimeDir, ConfigurationFileName);
 
@@ -318,31 +318,17 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
-        /// Get the runtime configuration path
-        /// </summary>
-        private static string GetRuntimeConfigurationPath()
-        {
-#if NET20 || NET35 || NET40 || NET452
-            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-#else
-            return AppContext.BaseDirectory;
-#endif
-        }
-
-        /// <summary>
         /// Get the user configuration path
         /// </summary>
         /// <remarks>Typically this is located in the profile or home directory</remarks>
         private static string GetUserConfigurationPath()
         {
+            string homeDir = PathTool.GetHomeDirectory();
 #if NET20 || NET35
-            string homeDir = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
-            homeDir = Path.Combine(Path.Combine(homeDir, ".config"), "mpf");
+            return Path.Combine(Path.Combine(homeDir, ".config"), "mpf");
 #else
-            string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            homeDir = Path.Combine(homeDir, ".config", "mpf");
+            return Path.Combine(homeDir, ".config", "mpf");
 #endif
-            return homeDir;
         }
 
         #endregion
