@@ -321,7 +321,7 @@ namespace MPF.Frontend.Test
                 var actualNames = new List<string>();
                 foreach (var device in actual)
                 {
-                    actualNames.Add(Path.GetFileName(device.Name!));
+                    actualNames.Add(Path.GetFileName(device.DevicePath!));
                 }
 
                 actualNames.Sort(StringComparer.Ordinal);
@@ -349,7 +349,7 @@ namespace MPF.Frontend.Test
                 var byPath = new Dictionary<string, Drive>();
                 foreach (var device in actual)
                 {
-                    byPath[device.Name!] = device;
+                    byPath[device.DevicePath!] = device;
                 }
 
                 Drive sda = byPath[Path.Combine("/dev", "sda")];
@@ -379,7 +379,7 @@ namespace MPF.Frontend.Test
                 var actual = Drive.EnumerateUnixFixedDevices(sysfs, "/dev");
 
                 Assert.Single(actual);
-                Assert.Equal(Path.Combine("/dev", "sda"), actual[0].Name);
+                Assert.Equal(Path.Combine("/dev", "sda"), actual[0].DevicePath);
                 Assert.Equal(InternalDriveType.HardDisk, actual[0].InternalDriveType);
                 Assert.Equal(0L, actual[0].TotalSize);
             }

@@ -134,7 +134,7 @@ namespace MPF.Frontend.Tools
                     if (options.Processing.ProtectionScanning.ScanForProtection)
                     {
                         // Explicitly note missing/invalid device paths
-                        if (drive?.Name is null)
+                        if (drive?.DevicePath is null)
                             resultProgress?.Report(ResultEventArgs.Success("No mounted device path found, protection outputs may be incomplete!"));
 
                         protections = await ProtectionTool.RunCombinedProtectionScans(basePath, drive, options, protectionProgress);

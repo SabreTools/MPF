@@ -34,10 +34,10 @@ namespace MPF.Frontend
         /// Device path/name
         /// </summary>
         /// <remarks>Examples include "D:\" on Windows and "/dev/sda" on Unix</remarks>
-        public string? Name { get; private set; } = null;
+        public string? DevicePath { get; private set; } = null;
 
         /// <summary>
-        /// Represents if Windows has marked the drive as active
+        /// Represents if the drive has been marked active
         /// </summary>
         public bool MarkedActive { get; private set; } = false;
 
@@ -49,7 +49,6 @@ namespace MPF.Frontend
         /// <summary>
         /// Media label as read by Windows
         /// </summary>
-        /// <remarks>The try/catch is needed because Windows will throw an exception if the drive is not marked as active</remarks>
         public string? VolumeLabel { get; private set; } = null;
 
         #endregion
@@ -60,7 +59,7 @@ namespace MPF.Frontend
         /// Read-only access to the drive letter
         /// </summary>
         /// <remarks>Should only be used in UI applications</remarks>
-        public char? Letter => Name?[0] ?? '\0';
+        public char? Letter => DevicePath?[0] ?? '\0';
 
         /// <summary>
         /// UI-friendly display name for the drive, cached after the first access
@@ -72,21 +71,21 @@ namespace MPF.Frontend
                 if (field is not null)
                     return field;
 
-                if (string.IsNullOrEmpty(Name))
+                if (string.IsNullOrEmpty(DevicePath))
                     return field = string.Empty;
 
                 // Deal with non-Windows drive names
                 if (Environment.OSVersion.Platform == PlatformID.Unix)
                 {
-                    string volumePath = Name!.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                    string volumePath = DevicePath!.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
                     string volumeName = Path.GetFileName(volumePath);
                     if (!string.IsNullOrEmpty(volumeName))
                         return field = volumeName;
                 }
 
                 // Trim any trailing separators, falling back to the raw name if nothing remains
-                string displayName = Name!.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                return field = string.IsNullOrEmpty(displayName) ? Name! : displayName;
+                string displayName = DevicePath!.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                return field = string.IsNullOrEmpty(displayName) ? DevicePath! : displayName;
             }
         }
 
@@ -144,7 +143,7 @@ namespace MPF.Frontend
                 return;
 
             // Populate the data fields
-            Name = driveInfo.Name;
+            DevicePath = driveInfo.Name;
             MarkedActive = driveInfo.IsReady;
             if (MarkedActive)
             {
@@ -176,7 +175,7 @@ namespace MPF.Frontend
         {
             var drives = GetDriveList(ignoreFixedDrives);
             using var comparer = new NaturalComparer();
-            drives.Sort((d1, d2) => comparer.Compare(d1?.Name, d2?.Name));
+            drives.Sort((d1, d2) => comparer.Compare(d1?.DevicePath, d2?.DevicePath));
             return [.. drives];
         }
 
@@ -265,7 +264,7 @@ namespace MPF.Frontend
         /// </summary>
         public void RefreshDrive()
         {
-            var driveInfo = Array.Find(DriveInfo.GetDrives(), d => d?.Name == Name);
+            var driveInfo = Array.Find(DriveInfo.GetDrives(), d => d?.Name == DevicePath);
             PopulateFromDriveInfo(driveInfo);
         }
 
@@ -361,7 +360,7 @@ namespace MPF.Frontend
                         char devId = (properties["Caption"].Value as string ?? string.Empty)[0];
                         Array.ForEach(drives, d =>
                         {
-                            if (d?.Name is not null && d.Name[0] == devId)
+                            if (d?.DevicePath is not null && d.DevicePath[0] == devId)
                                 d.InternalDriveType = Frontend.InternalDriveType.Floppy;
                         });
                     }

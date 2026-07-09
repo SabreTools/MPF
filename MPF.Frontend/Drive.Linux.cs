@@ -68,8 +68,8 @@ namespace MPF.Frontend
             var existingNames = new HashSet<string>();
             foreach (var d in drives)
             {
-                if (d?.Name is not null)
-                    existingNames.Add(d.Name);
+                if (d?.DevicePath is not null)
+                    existingNames.Add(d.DevicePath);
             }
 
             // Block nodes first, then their generic SCSI counterparts
@@ -132,8 +132,8 @@ namespace MPF.Frontend
             var existingNames = new HashSet<string>();
             foreach (var d in drives)
             {
-                if (d?.Name is not null)
-                    existingNames.Add(d.Name);
+                if (d?.DevicePath is not null)
+                    existingNames.Add(d.DevicePath);
             }
 
             // Legacy /dev/fd* nodes plus USB floppy drives exposed as SCSI disks (/dev/sd*)
@@ -381,20 +381,20 @@ namespace MPF.Frontend
             var existingNames = new HashSet<string>();
             foreach (var d in drives)
             {
-                if (d?.Name is not null)
-                    existingNames.Add(d.Name);
+                if (d?.DevicePath is not null)
+                    existingNames.Add(d.DevicePath);
             }
 
             var extra = new List<Drive>();
             foreach (var device in EnumerateUnixFixedDevices("/sys/block", "/dev"))
             {
                 // Skip paths already surfaced by DriveInfo or an earlier enumerator
-                if (!existingNames.Add(device.Name!))
+                if (!existingNames.Add(device.DevicePath!))
                     continue;
 
                 try
                 {
-                    var d = Create(device.InternalDriveType, device.Name!);
+                    var d = Create(device.InternalDriveType, device.DevicePath!);
                     if (d is not null)
                     {
                         // A raw /dev block node is never a mount point, so DriveInfo reports
@@ -466,7 +466,7 @@ namespace MPF.Frontend
                 result.Add(new Drive()
                 {
                     InternalDriveType = driveType,
-                    Name = Path.Combine(devRoot, name),
+                    DevicePath = Path.Combine(devRoot, name),
                     TotalSize = totalSize,
                 });
             }

@@ -6,6 +6,7 @@
 - Update options loader to use PathTool more
 - Prepare to move more helpers to IO
 - Remove need for UnixBlockDevice
+- Rename drive name to device path
 
 ### 3.8.3 (2026-07-06)
 

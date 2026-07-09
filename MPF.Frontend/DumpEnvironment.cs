@@ -75,8 +75,8 @@ namespace MPF.Frontend
         /// <inheritdoc cref="Drive.MarkedActive/>
         public bool DriveMarkedActive => _drive?.MarkedActive ?? false;
 
-        /// <inheritdoc cref="Drive.Name/>
-        public string? DriveName => _drive?.Name;
+        /// <inheritdoc cref="Drive.DevicePath/>
+        public string? DriveName => _drive?.DevicePath;
 
         /// <inheritdoc cref="BaseExecutionContext.Speed"/>
         public int? Speed
@@ -298,14 +298,14 @@ namespace MPF.Frontend
                 {
                     InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(_system,
                         mediaType,
-                        _drive.Name,
+                        _drive.DevicePath,
                         OutputPath,
                         driveSpeed,
                         _options.Dumping.Aaru),
 
                     InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(_system,
                         mediaType,
-                        _drive.Name,
+                        _drive.DevicePath,
                         OutputPath,
                         driveSpeed,
                         _options.Dumping.DIC),
@@ -319,7 +319,7 @@ namespace MPF.Frontend
 
                     InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(_system,
                         mediaType,
-                        _drive.Name,
+                        _drive.DevicePath,
                         OutputPath,
                         driveSpeed,
                         _options.Dumping.Redumper),
@@ -742,7 +742,7 @@ namespace MPF.Frontend
             OutputPath = IOExtensions.NormalizeFilePath(OutputPath, fullPath: false);
 
             // Validate that the output path isn't on the dumping drive
-            if (_drive?.Name is not null && OutputPath.StartsWith(_drive.Name))
+            if (_drive?.DevicePath is not null && OutputPath.StartsWith(_drive.DevicePath))
                 return ResultEventArgs.Failure("Error! Cannot output to same drive that is being dumped!");
 
             // Validate that the required program exists
@@ -751,7 +751,7 @@ namespace MPF.Frontend
 
             // Validate that the dumping drive doesn't contain the executable
             string fullExecutablePath = Path.GetFullPath(_executionContext.ExecutablePath!);
-            if (_drive?.Name is not null && fullExecutablePath.StartsWith(_drive.Name))
+            if (_drive?.DevicePath is not null && fullExecutablePath.StartsWith(_drive.DevicePath))
                 return ResultEventArgs.Failure("Error! Cannot dump same drive that executable resides on!");
 
             // Validate that the current configuration is supported
