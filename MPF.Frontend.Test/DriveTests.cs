@@ -321,7 +321,7 @@ namespace MPF.Frontend.Test
                 var actualNames = new List<string>();
                 foreach (var device in actual)
                 {
-                    actualNames.Add(Path.GetFileName(device.DevicePath));
+                    actualNames.Add(Path.GetFileName(device.Name!));
                 }
 
                 actualNames.Sort(StringComparer.Ordinal);
@@ -346,18 +346,18 @@ namespace MPF.Frontend.Test
 
                 var actual = Drive.EnumerateUnixFixedDevices(sysfs, "/dev");
 
-                var byPath = new Dictionary<string, UnixBlockDevice>();
+                var byPath = new Dictionary<string, Drive>();
                 foreach (var device in actual)
                 {
-                    byPath[device.DevicePath] = device;
+                    byPath[device.Name!] = device;
                 }
 
-                UnixBlockDevice sda = byPath[Path.Combine("/dev", "sda")];
-                Assert.Equal(InternalDriveType.HardDisk, sda.DriveType);
+                Drive sda = byPath[Path.Combine("/dev", "sda")];
+                Assert.Equal(InternalDriveType.HardDisk, sda.InternalDriveType);
                 Assert.Equal(2048L * 512L, sda.TotalSize);
 
-                UnixBlockDevice sdb = byPath[Path.Combine("/dev", "sdb")];
-                Assert.Equal(InternalDriveType.Removable, sdb.DriveType);
+                Drive sdb = byPath[Path.Combine("/dev", "sdb")];
+                Assert.Equal(InternalDriveType.Removable, sdb.InternalDriveType);
                 Assert.Equal(100L * 512L, sdb.TotalSize);
             }
             finally
@@ -379,8 +379,8 @@ namespace MPF.Frontend.Test
                 var actual = Drive.EnumerateUnixFixedDevices(sysfs, "/dev");
 
                 Assert.Single(actual);
-                Assert.Equal(Path.Combine("/dev", "sda"), actual[0].DevicePath);
-                Assert.Equal(InternalDriveType.HardDisk, actual[0].DriveType);
+                Assert.Equal(Path.Combine("/dev", "sda"), actual[0].Name);
+                Assert.Equal(InternalDriveType.HardDisk, actual[0].InternalDriveType);
                 Assert.Equal(0L, actual[0].TotalSize);
             }
             finally

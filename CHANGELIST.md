@@ -5,6 +5,7 @@
 - Add ability to resize main window width
 - Update options loader to use PathTool more
 - Prepare to move more helpers to IO
+- Remove need for UnixBlockDevice
 
 ### 3.8.3 (2026-07-06)
 

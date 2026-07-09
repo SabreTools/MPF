@@ -31,8 +31,9 @@ namespace MPF.Frontend
         public string? DriveFormat { get; private set; } = null;
 
         /// <summary>
-        /// Windows drive path
+        /// Device path/name
         /// </summary>
+        /// <remarks>Examples include "D:\" on Windows and "/dev/sda" on Unix</remarks>
         public string? Name { get; private set; } = null;
 
         /// <summary>

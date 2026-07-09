@@ -36,14 +36,14 @@ namespace MPF.Frontend
         /// storage uses these sizes, so this doubles as the floppy identity check.
         /// </summary>
         /// TODO: Remove when IO is updated
-        private static readonly HashSet<long> _unixFloppyMediaSizes = new HashSet<long>
-        {
+        private static readonly HashSet<long> _unixFloppyMediaSizes =
+        [
             368640,   // 360 KB (5.25" DD)
             737280,   // 720 KB (3.5" DD)
             1228800,  // 1.2 MB (5.25" HD)
             1474560,  // 1.44 MB (3.5" HD)
             2949120,  // 2.88 MB (3.5" ED)
-        };
+        ];
 
         #endregion
 
@@ -389,12 +389,12 @@ namespace MPF.Frontend
             foreach (var device in EnumerateUnixFixedDevices("/sys/block", "/dev"))
             {
                 // Skip paths already surfaced by DriveInfo or an earlier enumerator
-                if (!existingNames.Add(device.DevicePath))
+                if (!existingNames.Add(device.Name!))
                     continue;
 
                 try
                 {
-                    var d = Create(device.DriveType, device.DevicePath);
+                    var d = Create(device.InternalDriveType, device.Name!);
                     if (d is not null)
                     {
                         // A raw /dev block node is never a mount point, so DriveInfo reports
@@ -402,7 +402,7 @@ namespace MPF.Frontend
                         // fixed disk is always ready, while a removable drive is only ready
                         // when media is present (sysfs reports a non-zero size).
                         d.TotalSize = device.TotalSize;
-                        d.MarkedActive = device.DriveType == Frontend.InternalDriveType.HardDisk
+                        d.MarkedActive = device.InternalDriveType == Frontend.InternalDriveType.HardDisk
                             || device.TotalSize > 0;
                         extra.Add(d);
                     }
@@ -433,9 +433,9 @@ namespace MPF.Frontend
         /// <param name="sysBlockRoot">sysfs block directory (typically "/sys/block")</param>
         /// <param name="devRoot">Root directory device nodes live under (typically "/dev")</param>
         /// <returns>Discovered devices, or an empty list when the directory is unreadable</returns>
-        internal static List<UnixBlockDevice> EnumerateUnixFixedDevices(string sysBlockRoot, string devRoot)
+        internal static List<Drive> EnumerateUnixFixedDevices(string sysBlockRoot, string devRoot)
         {
-            var result = new List<UnixBlockDevice>();
+            var result = new List<Drive>();
             if (string.IsNullOrEmpty(sysBlockRoot) || string.IsNullOrEmpty(devRoot))
                 return result;
             if (!Directory.Exists(sysBlockRoot))
@@ -461,7 +461,14 @@ namespace MPF.Frontend
                     ? Frontend.InternalDriveType.Removable
                     : Frontend.InternalDriveType.HardDisk;
 
-                result.Add(new UnixBlockDevice(Path.Combine(devRoot, name), driveType, ReadUnixBlockDeviceSize(entry)));
+                long totalSize = ReadUnixBlockDeviceSize(entry);
+
+                result.Add(new Drive()
+                {
+                    InternalDriveType = driveType,
+                    Name = Path.Combine(devRoot, name),
+                    TotalSize = totalSize,
+                });
             }
 
             return result;
