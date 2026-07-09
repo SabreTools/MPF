@@ -7,6 +7,7 @@
 - Prepare to move more helpers to IO
 - Remove need for UnixBlockDevice
 - Rename drive name to device path
+- Remove unused auto-property from dump environment
 
 ### 3.8.3 (2026-07-06)
 

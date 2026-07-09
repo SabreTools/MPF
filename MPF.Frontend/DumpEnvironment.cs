@@ -75,9 +75,6 @@ namespace MPF.Frontend
         /// <inheritdoc cref="Drive.MarkedActive/>
         public bool DriveMarkedActive => _drive?.MarkedActive ?? false;
 
-        /// <inheritdoc cref="Drive.DevicePath/>
-        public string? DriveName => _drive?.DevicePath;
-
         /// <inheritdoc cref="BaseExecutionContext.Speed"/>
         public int? Speed
         {
