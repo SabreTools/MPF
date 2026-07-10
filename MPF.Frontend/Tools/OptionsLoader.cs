@@ -43,6 +43,7 @@ namespace MPF.Frontend.Tools
         /// </summary>
         /// <param name="type">String value to convert</param>
         /// <returns>PhysicalMediaType represented by the string, if possible</returns>
+        /// TODO: Remove when RedumpLib is updated
         public static PhysicalMediaType ToPhysicalMediaType(string? type)
         {
             return (type?.ToLowerInvariant()) switch
