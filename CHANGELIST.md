@@ -10,6 +10,7 @@
 - Remove unused auto-property from dump environment
 - Use field keyword for configuration loading
 - Mark method as moved to RedumpLib
+- Update packages, relax requirements
 
 ### 3.8.3 (2026-07-06)
 
