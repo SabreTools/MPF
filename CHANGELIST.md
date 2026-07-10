@@ -11,6 +11,7 @@
 - Use field keyword for configuration loading
 - Mark method as moved to RedumpLib
 - Update packages, relax requirements
+- Update RedumpLib to 2.2.0
 
 ### 3.8.3 (2026-07-06)
 

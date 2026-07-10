@@ -143,7 +143,7 @@ namespace MPF.CLI.Features
             Console.WriteLine("Input the media type and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
-            PhysicalMediaType = OptionsLoader.ToPhysicalMediaType(result);
+            PhysicalMediaType = result.ToPhysicalMediaType();
             goto root;
 
         devicePath:

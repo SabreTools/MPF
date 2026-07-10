@@ -276,7 +276,7 @@ namespace MPF.UI.Windows
                 SecuritySectorRanges!.Visibility = Visibility.Collapsed;
             if (ShouldCollapseComment(submissionInfo, SiteCode.SSVersion))
                 SSVersion!.Visibility = Visibility.Collapsed;
-            if (ShouldCollapseComment(submissionInfo, SiteCode.UniversalHash))
+            if (string.IsNullOrEmpty(submissionInfo.DiscIdentifiers?.UniversalHash))
                 UniversalHash!.Visibility = Visibility.Collapsed;
             if (ShouldCollapseComment(submissionInfo, SiteCode.VolumeLabel))
                 VolumeLabel!.Visibility = Visibility.Collapsed;
