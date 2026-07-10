@@ -28,14 +28,13 @@ namespace MPF.Frontend.Tools
         {
             get
             {
-                if (_configPath is not null)
-                    return _configPath;
+                if (field is not null)
+                    return field;
 
-                _configPath = GetConfigurationPath();
-                return _configPath;
+                field = GetConfigurationPath();
+                return field;
             }
         }
-        private static string? _configPath = null;
 
         #region Arguments
 
