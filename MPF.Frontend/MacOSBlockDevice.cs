@@ -11,6 +11,12 @@ namespace MPF.Frontend
         public string DevicePath { get; }
 
         /// <summary>
+        /// BSD name of the device (e.g. "disk0"), the identifier macOS dumping programs
+        /// take for a drive
+        /// </summary>
+        public string BsdName { get; }
+
+        /// <summary>
         /// Drive type derived from the diskutil "Removable Media" flag, media size, and
         /// optical characteristics
         /// </summary>
@@ -21,9 +27,10 @@ namespace MPF.Frontend
         /// </summary>
         public long TotalSize { get; }
 
-        public MacOSBlockDevice(string devicePath, InternalDriveType driveType, long totalSize)
+        public MacOSBlockDevice(string devicePath, string bsdName, InternalDriveType driveType, long totalSize)
         {
             DevicePath = devicePath;
+            BsdName = bsdName;
             DriveType = driveType;
             TotalSize = totalSize;
         }

@@ -633,6 +633,7 @@ namespace MPF.Frontend.Test
             Assert.NotNull(actual);
             Assert.Equal(InternalDriveType.Optical, actual!.DriveType);
             Assert.Equal("/dev/disk4", actual.DevicePath);
+            Assert.Equal("disk4", actual.BsdName);
             Assert.Equal(310635696L, actual.TotalSize);
         }
 
@@ -666,6 +667,32 @@ namespace MPF.Frontend.Test
 
             Assert.NotNull(actual);
             Assert.Equal("/dev/disk4", actual!.DevicePath);
+            Assert.Equal("disk4", actual.BsdName);
+        }
+
+        /// <remarks>
+        /// A dumping program on macOS takes a drive as its BSD name, not as a device node path:
+        /// redumper matches the name against the BSD name IOKit publishes for the drive and
+        /// fails with "failed to find matching SCSI authoring device" when given "/dev/disk4".
+        /// The name reaches the program verbatim, so a prefixed name breaks every dump.
+        /// </remarks>
+        [Fact]
+        public void ParseMacOSDiskutilInfo_BsdName_IsNotDeviceNodePrefixed()
+        {
+            string info =
+                """
+                   Device Identifier:         disk4
+                   Device Node:               /dev/disk4
+                   Whole:                     Yes
+                   Removable Media:           Removable
+                   Optical Media Type:        CD-ROM
+                """;
+
+            var actual = Drive.ParseMacOSDiskutilInfo(info, "/dev/disk4");
+
+            Assert.NotNull(actual);
+            Assert.DoesNotContain("/dev/", actual!.BsdName);
+            Assert.Equal("disk4", actual.BsdName);
         }
 
         #endregion

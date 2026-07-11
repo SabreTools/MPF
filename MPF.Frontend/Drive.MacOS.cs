@@ -69,8 +69,8 @@ namespace MPF.Frontend
                 if (device.DriveType != Frontend.InternalDriveType.Optical && ignoreFixedDrives)
                     continue;
 
-                // Skip paths already surfaced by DriveInfo or an earlier device
-                if (!existingNames.Add(device.DevicePath))
+                // Skip names already surfaced by DriveInfo or an earlier device
+                if (!existingNames.Add(device.BsdName))
                     continue;
 
                 try
@@ -96,19 +96,23 @@ namespace MPF.Frontend
 
         /// <summary>
         /// Build a Drive from a macOS device, mirroring how the Linux enumerator marks activity.
+        /// The drive is named by its BSD name rather than its device node: that is the form a
+        /// macOS dumping program expects, the same way the name is a drive letter on Windows and
+        /// a device node on Linux. Redumper resolves it against the BSD name IOKit publishes for
+        /// the drive and rejects a "/dev/"-prefixed path.
         /// </summary>
         /// <param name="device">Device discovered via diskutil</param>
         /// <returns>The populated Drive, or null when it cannot be created</returns>
         private static Drive? CreateMacOSDrive(MacOSBlockDevice device)
         {
-            var d = Create(device.DriveType, device.DevicePath);
+            var d = Create(device.DriveType, device.BsdName);
             if (d is null)
                 return null;
 
-            // A raw /dev node is never a mount point, so DriveInfo reports it as not-ready with
-            // no size. Mirror how Windows and the Linux enumerator surface these: optical,
-            // floppy, and fixed drives are always ready, while a removable drive is only ready
-            // when media is present (a non-zero size).
+            // A BSD name is never a mount point, so DriveInfo reports it as not-ready with no
+            // size. Mirror how Windows and the Linux enumerator surface these: optical, floppy,
+            // and fixed drives are always ready, while a removable drive is only ready when
+            // media is present (a non-zero size).
             d.TotalSize = device.TotalSize;
             d.MarkedActive = device.DriveType != Frontend.InternalDriveType.Removable || device.TotalSize > 0;
             return d;
@@ -207,6 +211,12 @@ namespace MPF.Frontend
                 ? deviceNode
                 : devicePath;
 
+            // The BSD name is what a macOS dumping program takes for a drive, so it becomes the
+            // drive name. diskutil reports it directly; the node's file name is the same string.
+            string bsdName = fields.TryGetValue("Device Identifier", out var identifier) && !string.IsNullOrEmpty(identifier)
+                ? identifier
+                : Path.GetFileName(node);
+
             long size = fields.TryGetValue("Disk Size", out var diskSize)
                 ? ParseDiskutilByteSize(diskSize)
                 : 0;
@@ -234,7 +244,7 @@ namespace MPF.Frontend
             else
                 driveType = Frontend.InternalDriveType.HardDisk;
 
-            return new MacOSBlockDevice(node, driveType, size);
+            return new MacOSBlockDevice(node, bsdName, driveType, size);
         }
 
         /// <summary>
