@@ -286,12 +286,21 @@ namespace MPF.Frontend
         /// </remarks>
         private static List<Drive> GetDriveList(bool ignoreFixedDrives)
         {
-            // On Unix, fixed and removable media are enumerated from sysfs device nodes
-            // below; DriveInfo only exposes mount points (e.g. "/"), which are not dumpable
-            // devices, so they are deliberately left out of the DriveInfo query there.
+            // On Unix, fixed and removable media are enumerated from platform-specific device
+            // nodes below (sysfs on Linux, diskutil on macOS); DriveInfo only exposes mount
+            // points (e.g. "/"), which are not dumpable devices, so they are deliberately left
+            // out of the DriveInfo query there.
             bool isUnix = Environment.OSVersion.Platform == PlatformID.Unix;
 
-            var desiredDriveTypes = new List<DriveType>() { DriveType.CDRom };
+            // macOS mounts every readable disc on insertion, so DriveInfo reports the mounted
+            // volume (e.g. "/Volumes/LABEL") as a CD-ROM drive. That is a mount point rather
+            // than a dumpable device, and diskutil already surfaces the drive holding the disc
+            // as a device node, so optical media is left out of the DriveInfo query there too.
+            bool isMacOS = IsMacOS();
+
+            var desiredDriveTypes = new List<DriveType>();
+            if (!isMacOS)
+                desiredDriveTypes.Add(DriveType.CDRom);
             if (!ignoreFixedDrives && !isUnix)
             {
                 desiredDriveTypes.Add(DriveType.Fixed);
@@ -319,6 +328,13 @@ namespace MPF.Frontend
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
                 MarkWindowsFloppyDrives(drives);
+            }
+            else if (isMacOS)
+            {
+                // macOS exposes every storage device through the diskutil command-line tool
+                // rather than the per-category sysfs trees Linux uses, so a single sweep
+                // surfaces optical, floppy, and fixed/removable devices. See Drive.MacOS.cs.
+                drives = AppendMacOSDrives(drives, ignoreFixedDrives);
             }
             else if (isUnix)
             {
