@@ -107,6 +107,11 @@ namespace MPF.Frontend.Tools
             if (string.IsNullOrEmpty(ConfigurationPath))
                 return;
 
+            // Ensure the output directory has been created
+            string? parentDirectory = Path.GetDirectoryName(ConfigurationPath);
+            if (parentDirectory is not null)
+                Directory.CreateDirectory(parentDirectory);
+
             var serializer = JsonSerializer.Create();
             var stream = File.Open(ConfigurationPath, FileMode.Create, FileAccess.Write, FileShare.None);
             using var sw = new StreamWriter(stream) { AutoFlush = true };
@@ -123,6 +128,11 @@ namespace MPF.Frontend.Tools
             // If no options path can be found
             if (string.IsNullOrEmpty(ConfigurationPath))
                 return;
+
+            // Ensure the output directory has been created
+            string? parentDirectory = Path.GetDirectoryName(ConfigurationPath);
+            if (parentDirectory is not null)
+                Directory.CreateDirectory(parentDirectory);
 
             var serializer = JsonSerializer.Create();
             var stream = File.Open(ConfigurationPath, FileMode.Create, FileAccess.Write, FileShare.None);

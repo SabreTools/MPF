@@ -789,6 +789,11 @@ namespace MPF.Frontend
                 else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                     path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt");
 
+                // Ensure the output directory has been created
+                string? parentDirectory = Path.GetDirectoryName(path);
+                if (parentDirectory is not null)
+                    Directory.CreateDirectory(parentDirectory);
+
                 using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.UTF8);
                 sw.Write(lines);
             }
@@ -889,6 +894,11 @@ namespace MPF.Frontend
                     path = Path.Combine(outputDirectory, "!protectionInfo.txt");
                 else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                     path = Path.Combine(outputDirectory, $"!protectionInfo{filenameSuffix}.txt");
+
+                // Ensure the output directory has been created
+                string? parentDirectory = Path.GetDirectoryName(path);
+                if (parentDirectory is not null)
+                    Directory.CreateDirectory(parentDirectory);
 
                 using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.UTF8);
 
