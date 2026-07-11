@@ -13,6 +13,7 @@
 - Update packages, relax requirements
 - Update RedumpLib to 2.2.0
 - Ensure directories immediately before writing
+- Remove redump.org credential placeholders, update options version
 
 ### 3.8.3 (2026-07-06)
 

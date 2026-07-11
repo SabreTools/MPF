@@ -281,8 +281,6 @@ namespace MPF.Frontend.Tools
             options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = GetBooleanSetting(source, "IncludeDebugProtectionInformation", false);
 
             options.Processing.Login.PullAllInformation = GetBooleanSetting(source, "PullAllInformation", false);
-            options.Processing.Login.RedumpOrgUsername = null; // TODO: Remove entirely
-            options.Processing.Login.RedumpOrgPassword = null; // TODO: Remove entirely
             options.Processing.Login.RetrieveMatchInformation = GetBooleanSetting(source, "RetrieveMatchInformation", true);
             options.Processing.Login.AttemptCount = GetInt32Setting(source, "AttemptCount", 3);
             options.Processing.Login.TimeoutSeconds = GetInt32Setting(source, "TimeoutSeconds", 30);
@@ -393,8 +391,6 @@ namespace MPF.Frontend.Tools
                 { "ToolConsoleAutoClose", options.GUI.ToolConsoleAutoClose.ToString() },
 
                 { "RetrieveMatchInformation", options.Processing.Login.RetrieveMatchInformation.ToString() },
-                { "RedumpOrgUsername", null }, // TODO: Remove entirely
-                { "RedumpOrgPassword", null }, // TODO: Remove entirely
                 { "AttemptCount", options.Processing.Login.AttemptCount.ToString() },
                 { "TimeoutSeconds", options.Processing.Login.TimeoutSeconds.ToString() },
             };
