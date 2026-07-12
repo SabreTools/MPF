@@ -14,7 +14,6 @@ namespace MPF.Processors
     /// <summary>
     /// Represents processing Dreamdump outputs
     /// </summary>
-    /// TODO: Add processor tests
     public sealed class Dreamdump : BaseProcessor
     {
         /// <inheritdoc/>
@@ -94,7 +93,8 @@ namespace MPF.Processors
                     DatfileExists),
                 new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Deleteable),
                 new($"{outputFilename}.subq", OutputFileFlags.Binary
-                    | OutputFileFlags.Zippable),
+                    | OutputFileFlags.Zippable,
+                    "subq"),
 
                 // 44990-55279
                 new($"{outputFilename}-44990-55279.hash", OutputFileFlags.Zippable),
@@ -603,11 +603,6 @@ namespace MPF.Processors
                         string revisionLevel = match.Groups[3].Value;
                         revisionLevel += match.Groups[4].Value == "<empty>" ? "" : $" ({match.Groups[4].Value})";
                         firmwarePieces.Add(revisionLevel);
-                    }
-
-                    if (string.IsNullOrEmpty(line))
-                    {
-                        // An empty line indicates the end of the section
                         break;
                     }
                 } while (true);
