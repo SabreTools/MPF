@@ -1997,6 +1997,12 @@ namespace MPF.Frontend.ViewModels
 
             OutputPath = IOExtensions.NormalizeFilePath(_environment.ContextOutputPath, fullPath: false);
 
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            // If relative paths are enabled, use those
+            if (_options.Dumping.UseRelativePaths)
+                OutputPath = Path.GetRelativePath(Environment.CurrentDirectory, OutputPath);
+#endif
+
             if (MediaTypes is not null)
             {
                 PhysicalMediaType? mediaType = _environment.GetPhysicalMediaType();

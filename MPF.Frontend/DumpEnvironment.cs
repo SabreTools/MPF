@@ -127,6 +127,12 @@ namespace MPF.Frontend
             // Output paths
             OutputPath = IOExtensions.NormalizeFilePath(outputPath, fullPath: false);
 
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            // If relative paths are enabled, use those
+            if (_options.Dumping.UseRelativePaths)
+                OutputPath = Path.GetRelativePath(Environment.CurrentDirectory, OutputPath);
+#endif
+
             // UI information
             _drive = drive;
             _system = system ?? options.Dumping.DefaultSystem;
@@ -738,6 +744,12 @@ namespace MPF.Frontend
 
             // Fix the output paths, just in case
             OutputPath = IOExtensions.NormalizeFilePath(OutputPath, fullPath: false);
+
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            // If relative paths are enabled, use those
+            if (_options.Dumping.UseRelativePaths)
+                OutputPath = Path.GetRelativePath(Environment.CurrentDirectory, OutputPath);
+#endif
 
             // Validate that the output path isn't on the dumping drive
             if (_drive?.DevicePath is not null && OutputPath.StartsWith(_drive.DevicePath))

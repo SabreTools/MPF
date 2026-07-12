@@ -225,6 +225,12 @@ namespace MPF.CLI.Features
             if (FilePath is not null)
                 FilePath = IOExtensions.NormalizeFilePath(FilePath, fullPath: true);
 
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            // If relative paths are enabled, use those
+            if (Options.Dumping.UseRelativePaths && FilePath is not null)
+                FilePath = Path.GetRelativePath(Environment.CurrentDirectory, FilePath);
+#endif
+
             // Get the speed from the options
             int speed = DriveSpeed ?? FrontendTool.GetDefaultSpeedForPhysicalMediaType(PhysicalMediaType, Options);
 

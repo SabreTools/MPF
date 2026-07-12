@@ -113,6 +113,8 @@ namespace MPF.Frontend
             Dumping.DumpSpeeds.HDDVD = source.Dumping.DumpSpeeds.HDDVD;
             Dumping.DumpSpeeds.Bluray = source.Dumping.DumpSpeeds.Bluray;
 
+            Dumping.UseRelativePaths = source.Dumping.UseRelativePaths;
+
             Dumping.Aaru.EnableDebug = source.Dumping.Aaru.EnableDebug;
             Dumping.Aaru.EnableVerbose = source.Dumping.Aaru.EnableVerbose;
             Dumping.Aaru.ForceDumping = source.Dumping.Aaru.ForceDumping;
@@ -362,6 +364,16 @@ namespace MPF.Frontend
         /// Default preferred dumping speeds per media type
         /// </summary>
         public DumpSpeeds DumpSpeeds { get; set; } = new DumpSpeeds();
+
+        #endregion
+
+        #region Pre-Processing
+
+        /// <summary>
+        /// Pre-process input paths to be relative
+        /// </summary>
+        /// <remarks>Version 2 and greater</remarks>
+        public bool UseRelativePaths { get; set; } = false;
 
         #endregion
 

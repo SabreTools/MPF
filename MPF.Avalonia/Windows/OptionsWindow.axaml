@@ -287,7 +287,9 @@
                                     <Grid ColumnDefinitions="*,*"
                                           ColumnSpacing="16"
                                           RowSpacing="4"
-                                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                                        <CheckBox Content="{DynamicResource UseRelativePathsCheckBoxString}"
+                                                  IsChecked="{Binding Options.Dumping.UseRelativePaths}" />
                                         <CheckBox Content="{DynamicResource ShowDiscInfoCheckBoxString}"
                                                   IsChecked="{Binding Options.Processing.MediaInformation.PromptForDiscInformation}" />
                                         <CheckBox Grid.Column="1"

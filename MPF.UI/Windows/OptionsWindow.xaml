@@ -362,7 +362,13 @@
                                   VerticalAlignment="Stretch"
                                   Header="{DynamicResource DumpingGroupBoxString}">
                             <UniformGrid Columns="2"
-                                         Rows="7">
+                                         Rows="8">
+                                <CheckBox VerticalAlignment="Center"
+                                          Content="{DynamicResource UseRelativePathsCheckBoxString}"
+                                          IsChecked="{Binding Options.Dumping.UseRelativePaths}"
+                                          ToolTip="Use relative paths when calling the dumping programs"
+                                          Margin="0,4"/>
+
                                 <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource ShowDiscInfoCheckBoxString}"
                                           IsChecked="{Binding Options.Processing.MediaInformation.PromptForDiscInformation}"
@@ -424,6 +430,8 @@
                                           IsChecked="{Binding Options.Processing.CompressLogFiles}"
                                           ToolTip="Compress output log files to reduce space"
                                           Margin="0,4"/>
+                                <Label/>
+                                <!-- Empty label for padding -->
 
                                 <Label VerticalAlignment="Center"
                                        Content="{DynamicResource LogCompressionLabelString}"

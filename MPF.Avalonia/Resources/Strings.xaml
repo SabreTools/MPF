@@ -86,6 +86,7 @@
     <!-- Dumping Tab -->
     <x:String x:Key="DumpingTabString">Dumping</x:String>
     <x:String x:Key="DumpingGroupBoxString">Dumping</x:String>
+    <x:String x:Key="UseRelativePathsCheckBoxString">Use Relative Paths</x:String>
     <x:String x:Key="ShowDiscInfoCheckBoxString">Show Disc Info</x:String>
     <x:String x:Key="PullAllInformationCheckBoxString">Pull All Information</x:String>
     <x:String x:Key="EnableTabInputCheckBoxString">Enable Tab Input</x:String>

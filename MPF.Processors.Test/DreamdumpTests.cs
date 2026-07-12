@@ -397,7 +397,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetParameters_Valid_Filled()
         {
-            string? expected = "cd --verbose";
+            string? expected = "disc --verbose";
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Dreamdump", "GDROM", "test.log");
             string? actual = Dreamdump.GetParameters(log);
             Assert.Equal(expected, actual);
