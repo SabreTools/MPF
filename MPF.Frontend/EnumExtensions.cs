@@ -155,6 +155,7 @@ namespace MPF.Frontend
                 #region Verification support only
 
                 InternalProgram.CleanRip => "CleanRip",
+                InternalProgram.Generic => "Generic",
                 InternalProgram.PS3CFW => "PS3 CFW",
                 InternalProgram.UmdImageCreator => "UmdImageCreator",
                 InternalProgram.XboxBackupCreator => "XboxBackupCreator",
@@ -337,6 +338,7 @@ namespace MPF.Frontend
                 #region Verification support only
 
                 InternalProgram.CleanRip => "cleanrip",
+                InternalProgram.Generic => "generic",
                 InternalProgram.PS3CFW => "ps3cfw",
                 InternalProgram.UmdImageCreator => "uic",
                 InternalProgram.XboxBackupCreator => "xbc",
@@ -435,6 +437,7 @@ namespace MPF.Frontend
                 // Verification support only
                 "cleanrip"
                     or "cr" => InternalProgram.CleanRip,
+                "generic" => InternalProgram.Generic,
                 "ps3cfw"
                     or "ps3"
                     or "getkey"

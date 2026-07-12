@@ -261,6 +261,7 @@ namespace MPF.Frontend
                 InternalProgram.CleanRip => new CleanRip(_system),
                 InternalProgram.DiscImageCreator => new DiscImageCreator(_system),
                 InternalProgram.Dreamdump => new Dreamdump(_system),
+                InternalProgram.Generic => new Generic(_system),
                 InternalProgram.PS3CFW => new PS3CFW(_system),
                 InternalProgram.Redumper => new Redumper(_system),
                 InternalProgram.UmdImageCreator => new UmdImageCreator(_system),

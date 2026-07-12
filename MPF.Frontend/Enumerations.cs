@@ -54,6 +54,7 @@ namespace MPF.Frontend
 
         // Verification support only
         CleanRip,
+        Generic,
         PS3CFW,
         UmdImageCreator,
         XboxBackupCreator,

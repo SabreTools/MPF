@@ -11,6 +11,7 @@ namespace MPF.Processors
     /// <summary>
     /// Represents processing generic outputs
     /// </summary>
+    /// TODO: Add tests for this, somehow
     public sealed class Generic : BaseProcessor
     {
         /// <inheritdoc/>

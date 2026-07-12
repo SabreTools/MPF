@@ -441,6 +441,7 @@ namespace MPF.Frontend.Tools
                 CleanRip => InternalProgram.CleanRip,
                 DiscImageCreator => InternalProgram.DiscImageCreator,
                 Dreamdump => InternalProgram.Dreamdump,
+                Generic => InternalProgram.Generic,
                 PS3CFW => InternalProgram.PS3CFW,
                 Redumper => InternalProgram.Redumper,
                 UmdImageCreator => InternalProgram.UmdImageCreator,

@@ -18,6 +18,7 @@
 - Add full set of Dreamdump output files
 - Enable Dreamdump across all programs
 - Add Dreamdump processor tests, fix issues found
+- Enable generic outputs processor
 
 ### 3.8.3 (2026-07-06)
 

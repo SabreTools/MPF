@@ -245,6 +245,7 @@ namespace MPF.Frontend.ViewModels
             InternalProgram.DiscImageCreator,
             InternalProgram.Dreamdump,
             InternalProgram.CleanRip,
+            InternalProgram.Generic,
             InternalProgram.PS3CFW,
             InternalProgram.UmdImageCreator,
             InternalProgram.XboxBackupCreator

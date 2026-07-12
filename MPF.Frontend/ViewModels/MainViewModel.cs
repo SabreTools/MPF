@@ -1308,6 +1308,7 @@ namespace MPF.Frontend.ViewModels
 
                     // Non-dumping programs
                     case InternalProgram.CleanRip:
+                    case InternalProgram.Generic:
                     case InternalProgram.PS3CFW:
                     case InternalProgram.UmdImageCreator:
                     case InternalProgram.XboxBackupCreator:
@@ -2576,6 +2577,7 @@ namespace MPF.Frontend.ViewModels
 
                     // Non-dumping programs
                     case InternalProgram.CleanRip:
+                    case InternalProgram.Generic:
                     case InternalProgram.PS3CFW:
                     case InternalProgram.UmdImageCreator:
                     case InternalProgram.XboxBackupCreator:
