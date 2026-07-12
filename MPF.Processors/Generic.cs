@@ -37,16 +37,8 @@ namespace MPF.Processors
             if (datafile is not null)
                 info.DumpMetadata.Dat = ProcessingTool.GenerateDatfile(datafile);
 
-            // Extract info based generically on PhysicalMediaType
-#pragma warning disable IDE0010
-            switch (mediaType)
-            {
-                case PhysicalMediaType.CDROM:
-                case PhysicalMediaType.GDROM:
-                    info.DumpMetadata.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
-                    break;
-            }
-#pragma warning restore IDE0010
+            // Try to read the cuesheet, if it exists
+            info.DumpMetadata.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
         }
 
         /// <inheritdoc/>
