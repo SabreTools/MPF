@@ -592,6 +592,52 @@
                                     CornerRadius="4"
                                     Padding="8,5">
                                 <StackPanel Spacing="4">
+                                    <TextBlock Text="{DynamicResource DreamdumpGroupBoxString}"
+                                               FontWeight="Bold" />
+                                    <Grid ColumnDefinitions="*,*"
+                                          ColumnSpacing="16"
+                                          RowSpacing="4"
+                                          RowDefinitions="Auto,Auto,Auto">
+                                        <TextBlock Grid.Row="0"
+                                                   Grid.Column="0"
+                                                   Text="{DynamicResource DreamdumpRereadTriesLabelString}"
+                                                   HorizontalAlignment="Right"
+                                                   VerticalAlignment="Center" />
+                                        <TextBox Grid.Row="0"
+                                                 Grid.Column="1"
+                                                 Width="220"
+                                                 HorizontalAlignment="Left"
+                                                 Text="{Binding Options.Dumping.Dreamdump.RereadCount, Mode=TwoWay}" />
+
+                                        <CheckBox x:Name="DreamdumpNonRedumpModeCheckBox"
+                                                  Grid.Row="1"
+                                                  Grid.Column="0"
+                                                  Content="{DynamicResource NonRedumpOptionsCheckBoxString}"
+                                                  IsChecked="{Binding Options.Dumping.Dreamdump.NonRedumpMode}" />
+
+                                        <TextBlock Grid.Row="2"
+                                                   Grid.Column="0"
+                                                   Text="{DynamicResource DefaultSectorOrderLabelString}"
+                                                   HorizontalAlignment="Right"
+                                                   VerticalAlignment="Center" />
+                                        <ComboBox x:Name="DefaultDreamdumpSectorOrderComboBox"
+                                                  Grid.Row="2"
+                                                  Grid.Column="1"
+                                                  Width="220"
+                                                  HorizontalAlignment="Left"
+                                                  ItemsSource="{Binding DreamdumpSectorOrders}"
+                                                  SelectedItem="{Binding Options.Dumping.Dreamdump.SectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                                  IsEnabled="{Binding #DreamdumpNonRedumpModeCheckBox.IsChecked}" />
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Background="{DynamicResource PanelBackgroundBrush}"
+                                    BorderBrush="{DynamicResource PanelBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Padding="8,5">
+                                <StackPanel Spacing="4">
                                     <TextBlock Text="{DynamicResource RedumperGroupBoxString}"
                                                FontWeight="Bold" />
                                     <Grid ColumnDefinitions="*,*"
@@ -621,7 +667,7 @@
                                                  Width="220"
                                                  HorizontalAlignment="Left"
                                                  Text="{Binding Options.Dumping.Redumper.LeadinRetryCount, Mode=TwoWay}" />
-                                        <CheckBox x:Name="NonRedumpModeCheckBox"
+                                        <CheckBox x:Name="RedumperNonRedumpModeCheckBox"
                                                   Grid.Row="3"
                                                   Content="{DynamicResource NonRedumpOptionsCheckBoxString}"
                                                   IsChecked="{Binding Options.Dumping.Redumper.NonRedumpMode}" />
@@ -636,7 +682,7 @@
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding RedumperReadMethods}"
                                                   SelectedItem="{Binding Options.Dumping.Redumper.ReadMethod, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                                  IsEnabled="{Binding #NonRedumpModeCheckBox.IsChecked}" />
+                                                  IsEnabled="{Binding #RedumperNonRedumpModeCheckBox.IsChecked}" />
                                         <TextBlock Grid.Row="5"
                                                    Text="{DynamicResource DefaultSectorOrderLabelString}"
                                                    HorizontalAlignment="Right"
@@ -648,7 +694,7 @@
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding RedumperSectorOrders}"
                                                   SelectedItem="{Binding Options.Dumping.Redumper.SectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                                  IsEnabled="{Binding #NonRedumpModeCheckBox.IsChecked}" />
+                                                  IsEnabled="{Binding #RedumperNonRedumpModeCheckBox.IsChecked}" />
                                         <TextBlock Grid.Row="6"
                                                    Text="{DynamicResource DefaultDriveTypeLabelString}"
                                                    HorizontalAlignment="Right"
@@ -660,7 +706,7 @@
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding RedumperDriveTypes}"
                                                   SelectedItem="{Binding Options.Dumping.Redumper.DriveType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                                  IsEnabled="{Binding #NonRedumpModeCheckBox.IsChecked}" />
+                                                  IsEnabled="{Binding #RedumperNonRedumpModeCheckBox.IsChecked}" />
                                         <TextBlock Grid.Row="7"
                                                    Text="{DynamicResource DefaultDrivePregapStartLabelString}"
                                                    HorizontalAlignment="Right"
@@ -670,7 +716,7 @@
                                                  Width="220"
                                                  HorizontalAlignment="Left"
                                                  Text="{Binding Options.Dumping.Redumper.DrivePregapStart, Mode=TwoWay}"
-                                                 IsEnabled="{Binding #NonRedumpModeCheckBox.IsChecked}" />
+                                                 IsEnabled="{Binding #RedumperNonRedumpModeCheckBox.IsChecked}" />
                                     </Grid>
                                 </StackPanel>
                             </Border>

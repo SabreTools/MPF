@@ -29,6 +29,7 @@
 - Make OptionsLoader slightly more uniform
 - Ensure dictionary path returns properly
 - Add Dreamdump path to options window
+- Add all Dreamdump settings to UI
 
 ### 3.8.3 (2026-07-06)
 

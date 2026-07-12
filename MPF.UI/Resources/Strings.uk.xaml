@@ -120,6 +120,7 @@
     <system:String x:Key="MultiSectorReadValueLabelString">Кількість секторів в одному пакеті:</system:String>
     <system:String x:Key="DICCDRereadTriesLabelString">Кількість спроб читання для CD:</system:String>
     <system:String x:Key="DICDVDRereadTriesLabelString">Спроб читання для DVD/HD-DVD/BD:</system:String>
+    <system:String x:Key="DreamdumpGroupBoxString">Dreamdump</system:String>
     <system:String x:Key="RedumperGroupBoxString">Redumper</system:String>
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Увімкнути детальний вивід інформації</system:String>
     <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Увімкнути секторне покращення</system:String>

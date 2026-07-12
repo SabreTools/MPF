@@ -114,6 +114,7 @@
     <x:String x:Key="MultiSectorReadValueLabelString">Количество секторов:</x:String>
     <x:String x:Key="DICCDRereadTriesLabelString">Повторы чтения CD:</x:String>
     <x:String x:Key="DICDVDRereadTriesLabelString">Повторы чтения DVD/HD-DVD/BD:</x:String>
+    <x:String x:Key="DreamdumpGroupBoxString">Dreamdump</x:String>
     <x:String x:Key="RedumperGroupBoxString">Redumper</x:String>
     <x:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Подробный вывод</x:String>
     <x:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Уточнённого режима секторов</x:String>

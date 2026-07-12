@@ -230,13 +230,25 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Alert user of non-redump mode implications
         /// </summary>
-        private void NonRedumpModeClicked(object sender, EventArgs e)
+        private void DreamdumpNonRedumpModeClicked(object sender, EventArgs e)
+        {
+            if (OptionsViewModel.Options.Dumping.Dreamdump.NonRedumpMode)
+                CustomMessageBox.Show(this, "All logs generated with these options will not be acceptable for Redump submission",
+                    (string)System.Windows.Application.Current.FindResource("WarningMessageString"), MessageBoxButton.OK, MessageBoxImage.Warning);
+            else
+                OptionsViewModel.DreamdumpNonRedumpModeUnChecked();
+        }
+
+        /// <summary>
+        /// Alert user of non-redump mode implications
+        /// </summary>
+        private void RedumperNonRedumpModeClicked(object sender, EventArgs e)
         {
             if (OptionsViewModel.Options.Dumping.Redumper.NonRedumpMode)
                 CustomMessageBox.Show(this, "All logs generated with these options will not be acceptable for Redump submission",
                     (string)System.Windows.Application.Current.FindResource("WarningMessageString"), MessageBoxButton.OK, MessageBoxImage.Warning);
             else
-                OptionsViewModel.NonRedumpModeUnChecked();
+                OptionsViewModel.RedumperNonRedumpModeUnChecked();
         }
 
         /// <summary>

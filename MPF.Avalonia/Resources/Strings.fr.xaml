@@ -114,6 +114,7 @@
     <x:String x:Key="MultiSectorReadValueLabelString">Valeur lecture multi-secteurs :</x:String>
     <x:String x:Key="DICCDRereadTriesLabelString">Nombre de relectures CD :</x:String>
     <x:String x:Key="DICDVDRereadTriesLabelString">Nombre de relectures DVD/HD-DVD/BD :</x:String>
+    <x:String x:Key="DreamdumpGroupBoxString">Dreamdump</x:String>
     <x:String x:Key="RedumperGroupBoxString">Redumper</x:String>
     <x:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Activer la sortie détaillée</x:String>
     <x:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Activer flag raffinement secteur</x:String>

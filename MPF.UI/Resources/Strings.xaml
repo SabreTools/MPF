@@ -120,6 +120,7 @@
     <system:String x:Key="MultiSectorReadValueLabelString">Multi-Sector Read Value:</system:String>
     <system:String x:Key="DICCDRereadTriesLabelString">CD Reread Tries:</system:String>
     <system:String x:Key="DICDVDRereadTriesLabelString">DVD/HD-DVD/BD Reread Tries:</system:String>
+    <system:String x:Key="DreamdumpGroupBoxString">Dreamdump</system:String>
     <system:String x:Key="RedumperGroupBoxString">Redumper</system:String>
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Enable Verbose Output</system:String>
     <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Enable Refine Sector Mode Flag</system:String>

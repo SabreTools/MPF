@@ -114,6 +114,7 @@
     <x:String x:Key="MultiSectorReadValueLabelString">マルチセクターリード値:</x:String>
     <x:String x:Key="DICCDRereadTriesLabelString">CD 再読み込み回数:</x:String>
     <x:String x:Key="DICDVDRereadTriesLabelString">DVD/HD-DVD/BD 再読み込み回数:</x:String>
+    <x:String x:Key="DreamdumpGroupBoxString">Dreamdump</x:String>
     <x:String x:Key="RedumperGroupBoxString">Redumper</x:String>
     <x:String x:Key="RedumperEnableVerboseOutputCheckBoxString">詳細出力を有効にする</x:String>
     <x:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Refine Sector モードフラグを有効にする</x:String>

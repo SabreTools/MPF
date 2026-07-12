@@ -119,6 +119,7 @@
     <x:String x:Key="MultiSectorReadValueLabelString">Mu171-z3c70r R34d V41u3:</x:String>
     <x:String x:Key="DICCDRereadTriesLabelString">CD R3r34d 7r13z:</x:String>
     <x:String x:Key="DICDVDRereadTriesLabelString">DVD/HD-DVD/8D R3r34d 7r13z:</x:String>
+    <x:String x:Key="DreamdumpGroupBoxString">Dr34mdump</x:String>
     <x:String x:Key="RedumperGroupBoxString">R3dump3r</x:String>
     <x:String x:Key="RedumperEnableVerboseOutputCheckBoxString">3n4813 V3r80z3 0u7pu7</x:String>
     <x:String x:Key="EnableRefineSectorModeFlagCheckBoxString">3n4813 R3f1n3 z3c70r M0d3 F149</x:String>

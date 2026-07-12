@@ -714,6 +714,45 @@
                         <GroupBox Margin="5,5,5,5"
                                   HorizontalAlignment="Stretch"
                                   VerticalAlignment="Stretch"
+                                  Header="{DynamicResource DreamdumpGroupBoxString}">
+                            <UniformGrid Columns="2"
+                                         Rows="3">
+                                <Label Content="{DynamicResource DreamdumpRereadTriesLabelString}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"/>
+                                <TextBox VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center"
+                                         Width="200"
+                                         HorizontalAlignment="Left"
+                                         Text="{Binding Options.Dumping.Dreamdump.RereadCount}"
+                                         ToolTip="Specifies how many rereads are attempted on read error"/>
+
+                                <CheckBox VerticalAlignment="Center"
+                                          Content="{DynamicResource NonRedumpOptionsCheckBoxString}"
+                                          Click="DreamdumpNonRedumpModeClicked"
+                                          IsChecked="{Binding Options.Dumping.Dreamdump.NonRedumpMode}"
+                                          ToolTip="Enable non-redump options"
+                                          Margin="0,4"/>
+                                <Label/>
+                                <!-- Empty label for padding -->
+
+                                <Label Content="{DynamicResource DefaultSectorOrderLabelString}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"/>
+                                <ComboBox x:Name="DefaultDreamdumpSectorOrderComboBox"
+                                          Height="22"
+                                          Width="200"
+                                          HorizontalAlignment="Left"
+                                          ItemsSource="{Binding DreamdumpSectorOrders}"
+                                          SelectedItem="{Binding Options.Dumping.Dreamdump.SectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          Style="{DynamicResource CustomComboBoxStyle}"
+                                          IsEnabled="{Binding Options.Dumping.Dreamdump.NonRedumpMode}"/>
+                            </UniformGrid>
+                        </GroupBox>
+
+                        <GroupBox Margin="5,5,5,5"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
                                   Header="{DynamicResource RedumperGroupBoxString}">
                             <UniformGrid Columns="2"
                                          Rows="8">
@@ -752,7 +791,7 @@
 
                                 <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource NonRedumpOptionsCheckBoxString}"
-                                          Click="NonRedumpModeClicked"
+                                          Click="RedumperNonRedumpModeClicked"
                                           IsChecked="{Binding Options.Dumping.Redumper.NonRedumpMode}"
                                           ToolTip="Enable non-redump options"
                                           Margin="0,4"/>

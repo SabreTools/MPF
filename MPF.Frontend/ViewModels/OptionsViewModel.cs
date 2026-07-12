@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using MPF.Frontend.ComboBoxItems;
+using DreamdumpSectorOrder = MPF.ExecutionContexts.Dreamdump.SectorOrder;
 using LogCompression = MPF.Processors.LogCompression;
 using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
@@ -50,6 +51,11 @@ namespace MPF.Frontend.ViewModels
         /// List of available internal programs
         /// </summary>
         public static List<Element<InternalProgram>> AvailableInternalPrograms => PopulateInternalPrograms();
+
+        /// <summary>
+        /// Current list of supported Dreamdump sector orders
+        /// </summary>
+        public static List<Element<DreamdumpSectorOrder>> DreamdumpSectorOrders => Element<DreamdumpSectorOrder>.GenerateElements();
 
         /// <summary>
         /// List of available interface languages
@@ -127,9 +133,18 @@ namespace MPF.Frontend.ViewModels
         #region UI Commands
 
         /// <summary>
-        /// Reset Redumper non-redump options (Read Method, Sector Order, Drive Type)
+        /// Reset Dreamdump non-redump options (Read Method, Sector Order, Drive Type)
         /// </summary>
-        public void NonRedumpModeUnChecked()
+        public void DreamdumpNonRedumpModeUnChecked()
+        {
+            Options.Dumping.Dreamdump.SectorOrder = DreamdumpSectorOrder.NONE;
+            TriggerPropertyChanged(nameof(Options));
+        }
+
+        /// <summary>
+        /// Reset and Redumper non-redump options (Read Method, Sector Order, Drive Type)
+        /// </summary>
+        public void RedumperNonRedumpModeUnChecked()
         {
             Options.Dumping.Redumper.ReadMethod = RedumperReadMethod.NONE;
             Options.Dumping.Redumper.SectorOrder = RedumperSectorOrder.NONE;
