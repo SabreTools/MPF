@@ -35,6 +35,7 @@
 - Force add Dreamdump log file
 - Do not let a failed file dialog terminate MPF (gmipf)
 - Disable native loading for config due to how deserializer works
+- Fix writing relative paths setting
 
 ### 3.8.3 (2026-07-06)
 

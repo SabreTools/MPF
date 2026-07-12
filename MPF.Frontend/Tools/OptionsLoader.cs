@@ -423,6 +423,8 @@ namespace MPF.Frontend.Tools
                 { "PreferredDumpSpeedHDDVD", options.Dumping.DumpSpeeds.HDDVD.ToString() },
                 { "PreferredDumpSpeedBD", options.Dumping.DumpSpeeds.Bluray.ToString() },
 
+                { "UseRelativePaths", options.Dumping.UseRelativePaths.ToString() },
+
                 { AaruConstants.EnableDebug, options.Dumping.Aaru.EnableDebug.ToString() },
                 { AaruConstants.EnableVerbose, options.Dumping.Aaru.EnableVerbose.ToString() },
                 { AaruConstants.ForceDumping, options.Dumping.Aaru.ForceDumping.ToString() },
