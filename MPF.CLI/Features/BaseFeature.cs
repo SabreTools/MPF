@@ -152,19 +152,19 @@ namespace MPF.CLI.Features
 
                 break;
 
-                // case InternalProgram.Dreamdump:
-                // {
-                //     string? resolved = Options.Dumping.DreamdumpPath.ResolvePath();
-                //     if (resolved is null)
-                //     {
-                //         Console.Error.WriteLine("A path needs to be supplied in config.json for Dreamdump, exiting...");
-                //         return false;
-                //     }
+                case InternalProgram.Dreamdump:
+                {
+                    string? resolved = Options.Dumping.DreamdumpPath.ResolvePath();
+                    if (resolved is null)
+                    {
+                        Console.Error.WriteLine("A path needs to be supplied in config.json for Dreamdump, exiting...");
+                        return false;
+                    }
 
-                //     Options.Dumping.AaruPath = resolved;
-                // }
+                    Options.Dumping.AaruPath = resolved;
+                }
 
-                // break;
+                break;
 
                 case InternalProgram.Redumper:
                 {

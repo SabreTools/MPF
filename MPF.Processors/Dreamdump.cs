@@ -14,6 +14,7 @@ namespace MPF.Processors
     /// <summary>
     /// Represents processing Dreamdump outputs
     /// </summary>
+    /// TODO: Add processor tests
     public sealed class Dreamdump : BaseProcessor
     {
         /// <inheritdoc/>

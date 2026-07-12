@@ -147,7 +147,7 @@ namespace MPF.Frontend
 
                 InternalProgram.Aaru => "Aaru",
                 InternalProgram.DiscImageCreator => "DiscImageCreator",
-                // InternalProgram.Dreamdump => "Dreamdump",
+                InternalProgram.Dreamdump => "Dreamdump",
                 InternalProgram.Redumper => "Redumper",
 
                 #endregion
@@ -329,7 +329,7 @@ namespace MPF.Frontend
 
                 InternalProgram.Aaru => "aaru",
                 InternalProgram.DiscImageCreator => "dic",
-                // InternalProgram.Dreamdump => "dreamdump",
+                InternalProgram.Dreamdump => "dreamdump",
                 InternalProgram.Redumper => "redumper",
 
                 #endregion
@@ -428,7 +428,7 @@ namespace MPF.Frontend
                     or "dic"
                     or "dicreator"
                     or "discimagecreator" => InternalProgram.DiscImageCreator,
-                // "dreamdump" => InternalProgram.Dreamdump,
+                "dreamdump" => InternalProgram.Dreamdump,
                 "rd"
                     or "redumper" => InternalProgram.Redumper,
 

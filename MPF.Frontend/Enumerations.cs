@@ -49,7 +49,7 @@ namespace MPF.Frontend
         // Dumping support
         Aaru,
         DiscImageCreator,
-        // Dreamdump,
+        Dreamdump,
         Redumper,
 
         // Verification support only

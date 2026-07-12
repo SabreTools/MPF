@@ -93,7 +93,7 @@ namespace MPF.Frontend.ViewModels
             InternalProgram.Redumper,
             InternalProgram.DiscImageCreator,
             InternalProgram.Aaru,
-            // InternalProgram.Dreamdump,
+            InternalProgram.Dreamdump,
         ];
 
         #endregion

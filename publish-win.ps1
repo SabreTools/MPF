@@ -70,7 +70,7 @@ $VALID_CROSS_PLATFORM_RUNTIMES = @('win-arm64', 'linux-x64', 'linux-arm64', 'osx
 # Download programs step
 function Download-Programs {
     # Define download constants
-    $DL_PREFIXES = ("Aaru", "Creator", "Redumper")
+    $DL_PREFIXES = ("Aaru", "Creator", "Dreamdump", "Redumper")
     $DL_MAP = @{
         # Aaru
         "Aaru_linux-arm64"     = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_arm64.tar.xz"
@@ -90,6 +90,15 @@ function Download-Programs {
         "Creator_win-arm64"    = ""
         "Creator_win-x86"      = "https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
         "Creator_win-x64"      = "https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
+
+        # DiscImageDreamdump
+        "Dreamdump_linux-arm64"  = ""
+        "Dreamdump_linux-x64"    = "https://github.com/MoriGM/dreamdump/releases/download/0.3.0/dreamdump-build_312_linux_64.zip"
+        "Dreamdump_osx-arm64"    = ""
+        "Dreamdump_osx-x64"      = ""
+        "Dreamdump_win-arm64"    = ""
+        "Dreamdump_win-x86"      = ""
+        "Dreamdump_win-x64"      = "https://github.com/MoriGM/dreamdump/releases/download/0.3.0/dreamdump-build_312_win_64.zip"
 
         # Redumper
         "Redumper_linux-arm64" = "https://github.com/superg/redumper/releases/download/b726/redumper-b726-linux-arm64.zip"

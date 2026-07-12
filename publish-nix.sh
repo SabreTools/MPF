@@ -80,7 +80,7 @@ VALID_CROSS_PLATFORM_RUNTIMES=("win-arm64" "linux-x64" "linux-arm64" "osx-x64" "
 # Download programs step
 function download_programs() {
     # Define download constants
-    DL_PREFIXES=("Aaru" "Creator" "Redumper")
+    DL_PREFIXES=("Aaru" "Creator" "Dreamdump" "Redumper")
     declare -A DL_MAP
 
     # Aaru
@@ -101,6 +101,15 @@ function download_programs() {
     DL_MAP["Creator_win-arm64"]=""
     DL_MAP["Creator_win-x64"]="https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
     DL_MAP["Creator_win-x86"]="https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
+
+    # Dreamdump
+    DL_MAP["Dreamdump_linux-arm64"]=""
+    DL_MAP["Dreamdump_linux-x64"]="https://github.com/MoriGM/dreamdump/releases/download/0.3.0/dreamdump-build_312_linux_64.zip"
+    DL_MAP["Dreamdump_osx-arm64"]=""
+    DL_MAP["Dreamdump_osx-x64"]=""
+    DL_MAP["Dreamdump_win-arm64"]=""
+    DL_MAP["Dreamdump_win-x64"]="https://github.com/MoriGM/dreamdump/releases/download/0.3.0/dreamdump-build_312_win_64.zip"
+    DL_MAP["Dreamdump_win-x86"]=""
 
     # Redumper
     DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-linux-arm64.zip"

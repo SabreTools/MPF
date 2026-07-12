@@ -558,7 +558,7 @@ namespace MPF.Frontend.ViewModels
         [
             InternalProgram.Aaru,
             InternalProgram.DiscImageCreator,
-            // InternalProgram.Dreamdump,
+            InternalProgram.Dreamdump,
             InternalProgram.Redumper,
         ];
 
@@ -1290,13 +1290,13 @@ namespace MPF.Frontend.ViewModels
                         VerboseLogLn($"Using DiscImageCreator from {Options.Dumping.DiscImageCreatorPath}");
                         break;
 
-                    // case InternalProgram.Dreamdump:
-                    //     string? dreamdumpPath = Options.Dumping.DreamdumpPath.ResolvePath();
-                    //     if (dreamdumpPath is not null)
-                    //         Options.Dumping.DreamdumpPath = dreamdumpPath;
+                    case InternalProgram.Dreamdump:
+                        string? dreamdumpPath = Options.Dumping.DreamdumpPath.ResolvePath();
+                        if (dreamdumpPath is not null)
+                            Options.Dumping.DreamdumpPath = dreamdumpPath;
 
-                    //     VerboseLogLn($"Using Dreamdump from {Options.Dumping.DreamdumpPath}");
-                    //     break;
+                        VerboseLogLn($"Using Dreamdump from {Options.Dumping.DreamdumpPath}");
+                        break;
 
                     case InternalProgram.Redumper:
                         string? redumperPath = Options.Dumping.RedumperPath.ResolvePath();
@@ -2256,7 +2256,8 @@ namespace MPF.Frontend.ViewModels
                 InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.SDCard => true,
 
                 // Dreamdump
-                // InternalProgram.Dreamdump when CurrentPhysicalMediaType == PhysicalMediaType.GDROM => true,
+                InternalProgram.Dreamdump when CurrentPhysicalMediaType == PhysicalMediaType.CDROM => true,
+                InternalProgram.Dreamdump when CurrentPhysicalMediaType == PhysicalMediaType.GDROM => true,
 
                 // Redumper
                 InternalProgram.Redumper when CurrentPhysicalMediaType == PhysicalMediaType.BluRay => true,
@@ -2561,11 +2562,11 @@ namespace MPF.Frontend.ViewModels
                         VerboseLogLn(validDicPath ? $"Found DiscImageCreator at {dicPath}" : $"Could not find DiscImageCreator from {Options.Dumping.DiscImageCreatorPath}");
                         return validDicPath;
 
-                    // case InternalProgram.Dreamdump:
-                    //     string? dreamdumpPath = Options.Dumping.DreamdumpPath.ResolvePath();
-                    //     bool validDreamdumpPath = dreamdumpPath is not null;
-                    //     VerboseLogLn(validDreamdumpPath ? $"Found Dreamdump at {dreamdumpPath}" : $"Could not find Dreamdump from {Options.Dumping.DreamdumpPath}");
-                    //     return validDreamdumpPath;
+                    case InternalProgram.Dreamdump:
+                        string? dreamdumpPath = Options.Dumping.DreamdumpPath.ResolvePath();
+                        bool validDreamdumpPath = dreamdumpPath is not null;
+                        VerboseLogLn(validDreamdumpPath ? $"Found Dreamdump at {dreamdumpPath}" : $"Could not find Dreamdump from {Options.Dumping.DreamdumpPath}");
+                        return validDreamdumpPath;
 
                     case InternalProgram.Redumper:
                         string? redumperPath = Options.Dumping.RedumperPath.ResolvePath();

@@ -243,7 +243,7 @@ namespace MPF.Frontend.ViewModels
             InternalProgram.Redumper,
             InternalProgram.Aaru,
             InternalProgram.DiscImageCreator,
-            // InternalProgram.Dreamdump,
+            InternalProgram.Dreamdump,
             InternalProgram.CleanRip,
             InternalProgram.PS3CFW,
             InternalProgram.UmdImageCreator,
