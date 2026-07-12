@@ -352,7 +352,7 @@
                               HorizontalAlignment="Right"
                               ItemsSource="{Binding MediaTypes}"
                               SelectedItem="{Binding Path=CurrentPhysicalMediaType, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              IsEnabled="{Binding MediaTypeComboBoxEnabled}"
+                              IsEnabled="{Binding PhysicalMediaTypeComboBoxEnabled}"
                               Style="{DynamicResource CustomComboBoxStyle}"
                               Visibility="Hidden"/>
 
