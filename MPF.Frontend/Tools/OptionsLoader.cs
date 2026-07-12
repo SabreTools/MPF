@@ -1,8 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-#if NET20 || NET35 || NET40 || NET452
-using System.Reflection;
-#endif
 using Newtonsoft.Json;
 using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
@@ -148,7 +145,7 @@ namespace MPF.Frontend.Tools
         private static string GetConfigurationPath()
         {
             // User configuration
-            string homeDir = GetUserConfigurationPath();
+            string homeDir = GetCentralConfigurationPath();
             if (File.Exists(Path.Combine(homeDir, ConfigurationFileName)))
                 return Path.Combine(homeDir, ConfigurationFileName);
 
@@ -180,17 +177,42 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
-        /// Get the user configuration path
+        /// Get the central configuration path
         /// </summary>
         /// <remarks>Typically this is located in the profile or home directory</remarks>
-        private static string GetUserConfigurationPath()
+        private static string GetCentralConfigurationPath()
         {
             string homeDir = PathTool.GetHomeDirectory();
+
+            // MacOS
+            if (System.Environment.OSVersion.Platform == System.PlatformID.MacOSX)
+            {
 #if NET20 || NET35
-            return Path.Combine(Path.Combine(homeDir, ".config"), "mpf");
+                return Path.Combine(Path.Combine(Path.Combine(homeDir, "Library"), "Application Support"), "mpf");
 #else
-            return Path.Combine(homeDir, ".config", "mpf");
+                return Path.Combine(homeDir, "Library", "Application Support", "mpf");
 #endif
+            }
+
+            // Linux
+            else if (System.Environment.OSVersion.Platform == System.PlatformID.Unix)
+            {
+#if NET20 || NET35
+                return Path.Combine(Path.Combine(homeDir, ".config"), "mpf");
+#else
+                return Path.Combine(homeDir, ".config", "mpf");
+#endif
+            }
+
+            // Windows and other platforms
+            else
+            {
+#if NET20 || NET35
+                return Path.Combine(Path.Combine(homeDir, ".config"), "mpf");
+#else
+                return Path.Combine(homeDir, ".config", "mpf");
+#endif
+            }
         }
 
         #endregion
