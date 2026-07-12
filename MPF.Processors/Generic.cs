@@ -85,6 +85,10 @@ namespace MPF.Processors
                 fileModifiedDate = ProcessingTool.GetFileModifiedDate($"{basePath}.mdf");
             else if (File.Exists($"{basePath}.ima"))
                 fileModifiedDate = ProcessingTool.GetFileModifiedDate($"{basePath}.ima");
+            else if (File.Exists($"{basePath}.wud"))
+                fileModifiedDate = ProcessingTool.GetFileModifiedDate($"{basePath}.wud");
+            else if (File.Exists($"{basePath}.wux"))
+                fileModifiedDate = ProcessingTool.GetFileModifiedDate($"{basePath}.wux");
             else
                 return null;
 
@@ -121,9 +125,15 @@ namespace MPF.Processors
                 if (rom is not null)
                     return GetDatafile(basePath, rom);
             }
-            else if (File.Exists($"{basePath}.mdf"))
+            else if (File.Exists($"{basePath}.wud"))
             {
-                var rom = GetRom($"{basePath}.mdf");
+                var rom = GetRom($"{basePath}.wud");
+                if (rom is not null)
+                    return GetDatafile(basePath, rom);
+            }
+            else if (File.Exists($"{basePath}.wux"))
+            {
+                var rom = GetRom($"{basePath}.wux");
                 if (rom is not null)
                     return GetDatafile(basePath, rom);
             }

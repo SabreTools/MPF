@@ -19,6 +19,7 @@
 - Enable Dreamdump across all programs
 - Add Dreamdump processor tests, fix issues found
 - Enable generic outputs processor
+- Add WUD and WUX to generic processor
 
 ### 3.8.3 (2026-07-06)
 
