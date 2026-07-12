@@ -210,11 +210,14 @@ namespace MPF.Frontend.Tools
                 using var sr = new StreamReader(stream);
                 var reader = new JsonTextReader(sr);
 
-                // Attempt to deserialize the configuration
+                // Attempt to deserialize and convert the configuration
                 var settings = serializer.Deserialize<Dictionary<string, string?>>(reader);
+                var deserialized = ConvertFromDictionary(settings);
+                if (deserialized is null)
+                    configPath = null;
 
                 // Return the deserialized options, if possible
-                return ConvertFromDictionary(settings);
+                return deserialized ?? new Options();
             }
             catch
             {
