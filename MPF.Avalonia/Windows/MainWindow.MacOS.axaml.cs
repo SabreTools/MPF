@@ -1,15 +1,12 @@
 using System;
-using System.IO;
-using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using MPF.Frontend;
 
 namespace MPF.Avalonia.Windows
 {
     /// <summary>
-    /// macOS-specific functionality for the main window: the native application menu,
-    /// output path normalization, and Redumper parameter handling
+    /// macOS-specific functionality for the main window: the native application menu and
+    /// output path normalization
     /// </summary>
     public partial class MainWindow
     {
@@ -201,32 +198,5 @@ namespace MPF.Avalonia.Windows
                 .Replace($"\\{generatedVolumesPrefix}", "\\", StringComparison.Ordinal);
         }
 
-        /// <summary>
-        /// Strip the macOS drive argument from Redumper parameters, which are not used on macOS
-        /// </summary>
-        private void PrepareMacRedumperParameters()
-        {
-            if (!OperatingSystem.IsMacOS() || MainViewModel.CurrentProgram != InternalProgram.Redumper)
-                return;
-
-            string? driveName = MainViewModel.CurrentDrive?.Name?.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-            if (string.IsNullOrWhiteSpace(driveName) || !driveName.StartsWith("/Volumes/", StringComparison.Ordinal))
-                return;
-
-            string parameters = MainViewModel.Parameters;
-            if (string.IsNullOrWhiteSpace(parameters))
-                return;
-
-            // Mounted volume names live under /Volumes/ and can contain spaces or regex
-            // metacharacters, so escape the name to match it literally in the patterns below
-            string escapedDrive = Regex.Escape(driveName);
-
-            // Remove the mounted drive's "--drive=<name>" and "--drive <name>" arguments
-            // (quoted or unquoted, with an optional trailing slash) from the parameter string,
-            // since Redumper on macOS does not take the drive argument the way it does on Windows
-            parameters = Regex.Replace(parameters, $@"(^|\s)--drive=(?:""{escapedDrive}/?""|{escapedDrive}/?)(?=\s|$)", "$1");
-            parameters = Regex.Replace(parameters, $@"(^|\s)--drive\s+(?:""{escapedDrive}/?""|{escapedDrive}/?)(?=\s|$)", "$1");
-            MainViewModel.Parameters = parameters.Trim();
-        }
     }
 }

@@ -952,7 +952,6 @@ namespace MPF.Avalonia.Windows
         public void StartStopButtonClick(object? sender, RoutedEventArgs e)
         {
             EnsureOutputPathIsFilePath();
-            PrepareMacRedumperParameters();
             MainViewModel.ToggleStartStop();
         }
 
