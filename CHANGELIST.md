@@ -15,6 +15,7 @@
 - Ensure directories immediately before writing
 - Remove redump.org credential placeholders, update options version
 - Add initial version of Dreamdump processor
+- Add full set of Dreamdump output files
 
 ### 3.8.3 (2026-07-06)
 

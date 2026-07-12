@@ -69,7 +69,6 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        /// TODO: Figure out how to handle individual section hash, scram, and subq files
         internal override List<OutputFile> GetOutputFiles(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
@@ -94,8 +93,207 @@ namespace MPF.Processors
                     DatfileExists),
                 new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Deleteable),
                 new($"{outputFilename}.subq", OutputFileFlags.Binary
-                    | OutputFileFlags.Zippable,
-                    "subq"),
+                    | OutputFileFlags.Zippable),
+
+                // 44990-55279
+                new($"{outputFilename}-44990-55279.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-44990-55279.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-44990-55279.subq", OutputFileFlags.Zippable),
+
+                // 55279-65568
+                new($"{outputFilename}-55279-65568.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-55279-65568.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-55279-65568.subq", OutputFileFlags.Zippable),
+
+                // 65568-75857
+                new($"{outputFilename}-65568-75857.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-65568-75857.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-65568-75857.subq", OutputFileFlags.Zippable),
+
+                // 75857-86146
+                new($"{outputFilename}-75857-86146.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-75857-86146.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-75857-86146.subq", OutputFileFlags.Zippable),
+
+                // 86146-96435
+                new($"{outputFilename}-86146-96435.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-86146-96435.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-86146-96435.subq", OutputFileFlags.Zippable),
+
+                // 96435-106724
+                new($"{outputFilename}-96435-106724.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-96435-106724.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-96435-106724.subq", OutputFileFlags.Zippable),
+
+                // 106724-117013
+                new($"{outputFilename}-106724-117013.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-106724-117013.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-106724-117013.subq", OutputFileFlags.Zippable),
+
+                // 117013-127302
+                new($"{outputFilename}-117013-127302.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-117013-127302.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-117013-127302.subq", OutputFileFlags.Zippable),
+
+                // 127302-137591
+                new($"{outputFilename}-127302-137591.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-127302-137591.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-127302-137591.subq", OutputFileFlags.Zippable),
+
+                // 137591-147880
+                new($"{outputFilename}-137591-147880.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-137591-147880.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-137591-147880.subq", OutputFileFlags.Zippable),
+
+                // 147880-158169
+                new($"{outputFilename}-147880-158169.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-147880-158169.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-147880-158169.subq", OutputFileFlags.Zippable),
+
+                // 158169-168458
+                new($"{outputFilename}-158169-168458.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-158169-168458.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-158169-168458.subq", OutputFileFlags.Zippable),
+
+                // 168458-178747
+                new($"{outputFilename}-168458-178747.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-168458-178747.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-168458-178747.subq", OutputFileFlags.Zippable),
+
+                // 178747-189036
+                new($"{outputFilename}-178747-189036.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-178747-189036.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-178747-189036.subq", OutputFileFlags.Zippable),
+
+                // 189036-199325
+                new($"{outputFilename}-189036-199325.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-189036-199325.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-189036-199325.subq", OutputFileFlags.Zippable),
+
+                // 199325-209614
+                new($"{outputFilename}-199325-209614.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-199325-209614.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-199325-209614.subq", OutputFileFlags.Zippable),
+
+                // 209614-219903
+                new($"{outputFilename}-209614-219903.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-209614-219903.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-209614-219903.subq", OutputFileFlags.Zippable),
+
+                // 219903-230192
+                new($"{outputFilename}-219903-230192.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-219903-230192.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-219903-230192.subq", OutputFileFlags.Zippable),
+
+                // 230192-240481
+                new($"{outputFilename}-230192-240481.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-230192-240481.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-230192-240481.subq", OutputFileFlags.Zippable),
+
+                // 240481-250770
+                new($"{outputFilename}-240481-250770.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-240481-250770.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-240481-250770.subq", OutputFileFlags.Zippable),
+
+                // 250770-261059
+                new($"{outputFilename}-250770-261059.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-250770-261059.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-250770-261059.subq", OutputFileFlags.Zippable),
+
+                // 261059-271348
+                new($"{outputFilename}-261059-271348.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-261059-271348.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-261059-271348.subq", OutputFileFlags.Zippable),
+
+                // 271348-281637
+                new($"{outputFilename}-271348-281637.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-271348-281637.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-271348-281637.subq", OutputFileFlags.Zippable),
+
+                // 281637-291926
+                new($"{outputFilename}-281637-291926.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-281637-291926.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-281637-291926.subq", OutputFileFlags.Zippable),
+
+                // 291926-302215
+                new($"{outputFilename}-291926-302215.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-291926-302215.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-291926-302215.subq", OutputFileFlags.Zippable),
+
+                // 302215-312504
+                new($"{outputFilename}-302215-312504.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-302215-312504.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-302215-312504.subq", OutputFileFlags.Zippable),
+
+                // 312504-322793
+                new($"{outputFilename}-312504-322793.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-312504-322793.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-312504-322793.subq", OutputFileFlags.Zippable),
+
+                // 322793-333082
+                new($"{outputFilename}-322793-333082.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-322793-333082.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-322793-333082.subq", OutputFileFlags.Zippable),
+
+                // 333082-343371
+                new($"{outputFilename}-333082-343371.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-333082-343371.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-333082-343371.subq", OutputFileFlags.Zippable),
+
+                // 343371-353660
+                new($"{outputFilename}-343371-353660.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-343371-353660.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-343371-353660.subq", OutputFileFlags.Zippable),
+
+                // 353660-363949
+                new($"{outputFilename}-353660-363949.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-353660-363949.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-353660-363949.subq", OutputFileFlags.Zippable),
+
+                // 363949-374238
+                new($"{outputFilename}-363949-374238.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-363949-374238.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-363949-374238.subq", OutputFileFlags.Zippable),
+
+                // 374238-384527
+                new($"{outputFilename}-374238-384527.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-374238-384527.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-374238-384527.subq", OutputFileFlags.Zippable),
+
+                // 384527-394816
+                new($"{outputFilename}-384527-394816.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-384527-394816.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-384527-394816.subq", OutputFileFlags.Zippable),
+
+                // 394816-405105
+                new($"{outputFilename}-394816-405105.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-394816-405105.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-394816-405105.subq", OutputFileFlags.Zippable),
+
+                // 405105-415394
+                new($"{outputFilename}-405105-415394.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-405105-415394.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-405105-415394.subq", OutputFileFlags.Zippable),
+
+                // 415394-425683
+                new($"{outputFilename}-415394-425683.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-415394-425683.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-415394-425683.subq", OutputFileFlags.Zippable),
+
+                // 425683-435972
+                new($"{outputFilename}-425683-435972.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-425683-435972.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-425683-435972.subq", OutputFileFlags.Zippable),
+
+                // 435972-446261
+                new($"{outputFilename}-435972-446261.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-435972-446261.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-435972-446261.subq", OutputFileFlags.Zippable),
+
+                // 446261-549152
+                new($"{outputFilename}-446261-549152.hash", OutputFileFlags.Zippable),
+                new($"{outputFilename}-446261-549152.scram", OutputFileFlags.Deleteable),
+                new($"{outputFilename}-446261-549152.subq", OutputFileFlags.Zippable),
             ];
         }
 
