@@ -13,9 +13,9 @@ namespace MPF.Avalonia.Services
     /// <see cref="ToolOutputWindow"/>.
     /// </summary>
     /// <remarks>
-    /// Only created on platforms that need an in-app console for the dumping tool (Linux,
-    /// where the tool has no console window of its own). The window is shown modeless and
-    /// owned, so the MPF main window keeps working and its Stop button stays reachable.
+    /// Only created on platforms that need an in-app console for the dumping tool (Linux and
+    /// macOS, where the tool has no console window of its own). The window is shown modeless
+    /// and owned, so the MPF main window keeps working and its Stop button stays reachable.
     /// </remarks>
     public sealed class ToolOutputConsole : IToolOutputConsole
     {
