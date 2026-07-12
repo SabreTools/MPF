@@ -42,58 +42,19 @@ namespace MPF.Frontend.Tools
         /// <param name="configPath">Output string indicating the loaded configuration path, if it could load</remarks>
         public static Options LoadFromConfig(out string? configPath)
         {
-            // Set the default config path
+            // Attempt native loading first
+            var nativeOptions = LoadFromConfigNative(out configPath);
+            if (configPath is not null)
+                return nativeOptions;
+
+            // Attempt dictionary loading
+            var dictOptions = LoadFromConfigDict(out configPath);
+            if (configPath is not null)
+                return dictOptions;
+
+            // Otherwise, assume failure to load
             configPath = null;
-
-            // If no options path can be found
-            if (string.IsNullOrEmpty(ConfigurationPath))
-                return new Options();
-
-            // If the file does not exist
-            if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
-                return new Options();
-
-            // Set the configuration path
-            configPath = ConfigurationPath;
-
-            var serializer = JsonSerializer.Create();
-            var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
-            using var reader = new StreamReader(stream);
-            var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string?>)) as Dictionary<string, string?>;
-
-            return ConvertFromDictionary(settings);
-        }
-
-        /// <summary>
-        /// Load the current set of options from the application configuration
-        /// </summary>
-        /// <param name="configPath">Output string indicating the loaded configuration path, if it could load</remarks>
-        public static Options LoadFromConfigNative(out string? configPath)
-        {
-            // Set the default config path
-            configPath = null;
-
-            // If no options path can be found
-            if (string.IsNullOrEmpty(ConfigurationPath))
-                return new Options();
-
-            // If the file does not exist
-            if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
-                return new Options();
-
-            // Set the configuration path
-            configPath = ConfigurationPath;
-
-            var serializer = JsonSerializer.Create();
-            serializer.DefaultValueHandling = DefaultValueHandling.Ignore;
-            serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
-            serializer.NullValueHandling = NullValueHandling.Ignore;
-
-            var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
-            using var sr = new StreamReader(stream);
-            var reader = new JsonTextReader(sr);
-
-            return serializer.Deserialize<Options>(reader) ?? new Options();
+            return new Options();
         }
 
         /// <summary>
@@ -215,6 +176,86 @@ namespace MPF.Frontend.Tools
                 string local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 #endif
                 return Path.Combine(local, "mpf");
+            }
+        }
+
+        /// <summary>
+        /// Load the current set of options from the application configuration
+        /// </summary>
+        /// <param name="configPath">Output string indicating the loaded configuration path, if it could load</remarks>
+        /// <remarks>Assumes a flat dictionary configuration</remarks>
+        private static Options LoadFromConfigDict(out string? configPath)
+        {
+            // Set the default config path
+            configPath = null;
+
+            // If no options path can be found
+            if (string.IsNullOrEmpty(ConfigurationPath))
+                return new Options();
+
+            // If the file does not exist
+            if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
+                return new Options();
+
+            // Set the configuration path
+            configPath = ConfigurationPath;
+
+            try
+            {
+                var serializer = JsonSerializer.Create();
+                var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
+                using var reader = new StreamReader(stream);
+                var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string?>)) as Dictionary<string, string?>;
+
+                return ConvertFromDictionary(settings);
+            }
+            catch
+            {
+                // Reset found configuration path on exception
+                configPath = null;
+                return new Options();
+            }
+        }
+
+        /// <summary>
+        /// Load the current set of options from the application configuration
+        /// </summary>
+        /// <param name="configPath">Output string indicating the loaded configuration path, if it could load</remarks>
+        /// <remarks>Assumes a nested structure configuration</remarks>
+        private static Options LoadFromConfigNative(out string? configPath)
+        {
+            // Set the default config path
+            configPath = null;
+
+            // If no options path can be found
+            if (string.IsNullOrEmpty(ConfigurationPath))
+                return new Options();
+
+            // If the file does not exist
+            if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
+                return new Options();
+
+            // Set the configuration path
+            configPath = ConfigurationPath;
+
+            try
+            {
+                var serializer = JsonSerializer.Create();
+                serializer.DefaultValueHandling = DefaultValueHandling.Ignore;
+                serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
+                serializer.NullValueHandling = NullValueHandling.Ignore;
+
+                var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
+                using var sr = new StreamReader(stream);
+                var reader = new JsonTextReader(sr);
+
+                return serializer.Deserialize<Options>(reader) ?? new Options();
+            }
+            catch
+            {
+                // Reset found configuration path on exception
+                configPath = null;
+                return new Options();
             }
         }
 

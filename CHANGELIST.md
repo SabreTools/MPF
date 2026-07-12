@@ -25,6 +25,7 @@
 - Separate options loading for MacOS
 - Separate options loading for Windows
 - Update accuracy of the README
+- Internally prepare for native configuration files
 
 ### 3.8.3 (2026-07-06)
 
