@@ -32,6 +32,7 @@
 - Add all Dreamdump settings to UI
 - Enable naive relative path handling
 - Bind the main window to properties that exist (gmipf)
+- Force add Dreamdump log file
 
 ### 3.8.3 (2026-07-06)
 

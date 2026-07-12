@@ -1,0 +1,39 @@
+DUMPING DATE (DateTime.Now)
+dreamdump (build: 0.2.0)
+<< GetVersion (above) >>
+
+<< GetParameters >>
+arguments: disc --verbose
+
+<< GetCuesheet >>
+CUE [
+    cuesheet
+
+<< GetDatfile >>
+dat:
+    <rom name="INVALID" size="12345" crc="00000000" md5="d41d8cd98f00b204e9800998ecf8427e" sha1="da39a3ee5e6b4b0d3255bfef95601890afd80709" />
+
+<< GetGDROMHeader >>
+DC Header:
+    build date: date
+    version: version
+    serial: serial
+    region: region
+    header:
+0000 TEST DATA
+0010 TEST DATA
+0020 TEST DATA
+0030 TEST DATA
+0040 TEST DATA
+0050 TEST DATA
+0060 TEST DATA
+0070 TEST DATA
+0080 TEST DATA
+0090 TEST DATA
+00A0 TEST DATA
+
+<< GetHardwareInfo >>
+Drive: manufacturer - model (revision level: revision, vendor specific: vendor)  Read Offset: 0  Sector Order: DATA_SUB_C2  Read at once: 12
+
+<< GetWriteOffset >>
+Write Offset: +0
