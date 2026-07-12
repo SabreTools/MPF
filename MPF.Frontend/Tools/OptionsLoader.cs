@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
@@ -145,7 +146,7 @@ namespace MPF.Frontend.Tools
         private static string GetConfigurationPath()
         {
             // User configuration
-            string homeDir = GetCentralConfigurationPath();
+            string homeDir = GetUserConfigurationPath();
             if (File.Exists(Path.Combine(homeDir, ConfigurationFileName)))
                 return Path.Combine(homeDir, ConfigurationFileName);
 
@@ -177,16 +178,15 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
-        /// Get the central configuration path
+        /// Get the user configuration path
         /// </summary>
         /// <remarks>Typically this is located in the profile or home directory</remarks>
-        private static string GetCentralConfigurationPath()
+        private static string GetUserConfigurationPath()
         {
-            string homeDir = PathTool.GetHomeDirectory();
-
             // MacOS
-            if (System.Environment.OSVersion.Platform == System.PlatformID.MacOSX)
+            if (Environment.OSVersion.Platform == PlatformID.MacOSX)
             {
+                string homeDir = PathTool.GetHomeDirectory();
 #if NET20 || NET35
                 return Path.Combine(Path.Combine(Path.Combine(homeDir, "Library"), "Application Support"), "mpf");
 #else
@@ -195,8 +195,9 @@ namespace MPF.Frontend.Tools
             }
 
             // Linux
-            else if (System.Environment.OSVersion.Platform == System.PlatformID.Unix)
+            else if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
+                string homeDir = PathTool.GetHomeDirectory();
 #if NET20 || NET35
                 return Path.Combine(Path.Combine(homeDir, ".config"), "mpf");
 #else
@@ -204,14 +205,16 @@ namespace MPF.Frontend.Tools
 #endif
             }
 
-            // Windows and other platforms
+            // Windows
             else
             {
+                // TODO: Make a path helper for this?
 #if NET20 || NET35
-                return Path.Combine(Path.Combine(homeDir, ".config"), "mpf");
+                string local = Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%");
 #else
-                return Path.Combine(homeDir, ".config", "mpf");
+                string local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 #endif
+                return Path.Combine(local, "mpf");
             }
         }
 

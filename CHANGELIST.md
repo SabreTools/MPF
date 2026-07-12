@@ -23,6 +23,7 @@
 - Always attempt to read cuesheet in generic processor
 - Add MDF to generic processor hashed outputs
 - Separate options loading for MacOS
+- Separate options loading for Windows
 
 ### 3.8.3 (2026-07-06)
 
