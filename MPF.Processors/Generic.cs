@@ -117,6 +117,12 @@ namespace MPF.Processors
                 if (rom is not null)
                     return GetDatafile(basePath, rom);
             }
+            else if (File.Exists($"{basePath}.mdf"))
+            {
+                var rom = GetRom($"{basePath}.mdf");
+                if (rom is not null)
+                    return GetDatafile(basePath, rom);
+            }
             else if (File.Exists($"{basePath}.wud"))
             {
                 var rom = GetRom($"{basePath}.wud");

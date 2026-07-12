@@ -21,6 +21,7 @@
 - Enable generic outputs processor
 - Add WUD and WUX to generic processor
 - Always attempt to read cuesheet in generic processor
+- Add MDF to generic processor hashed outputs
 
 ### 3.8.3 (2026-07-06)
 
