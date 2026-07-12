@@ -36,6 +36,7 @@
 - Do not let a failed file dialog terminate MPF (gmipf)
 - Disable native loading for config due to how deserializer works
 - Fix writing relative paths setting
+- Wire native options loading properly
 
 ### 3.8.3 (2026-07-06)
 

@@ -42,10 +42,10 @@ namespace MPF.Frontend.Tools
         /// <param name="configPath">Output string indicating the loaded configuration path, if it could load</remarks>
         public static Options LoadFromConfig(out string? configPath)
         {
-            // // Attempt native loading
-            // var nativeOptions = LoadFromConfigNative(out configPath);
-            // if (configPath is not null)
-            //     return nativeOptions;
+            // Attempt native loading
+            var nativeOptions = LoadFromConfigNative(out configPath);
+            if (configPath is not null)
+                return nativeOptions;
 
             // Attempt dictionary loading
             var dictOptions = LoadFromConfigDict(out configPath);
@@ -94,6 +94,10 @@ namespace MPF.Frontend.Tools
                 Directory.CreateDirectory(parentDirectory);
 
             var serializer = JsonSerializer.Create();
+            serializer.DefaultValueHandling = DefaultValueHandling.Include;
+            serializer.MissingMemberHandling = MissingMemberHandling.Error; // TODO: Change to Ignore when using consistently
+            serializer.NullValueHandling = NullValueHandling.Include;
+
             var stream = File.Open(ConfigurationPath, FileMode.Create, FileAccess.Write, FileShare.None);
             using var sw = new StreamWriter(stream) { AutoFlush = true };
             var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
@@ -232,9 +236,7 @@ namespace MPF.Frontend.Tools
         /// </summary>
         /// <param name="configPath">Output string indicating the loaded configuration path, if it could load</remarks>
         /// <remarks>Assumes a nested structure configuration</remarks>
-#pragma warning disable IDE0051 // Remove unused private members
         private static Options LoadFromConfigNative(out string? configPath)
-#pragma warning restore IDE0051 // Remove unused private members
         {
             // Set the default config path
             configPath = null;
@@ -254,8 +256,8 @@ namespace MPF.Frontend.Tools
             {
                 // Create the native format deserializer
                 var serializer = JsonSerializer.Create();
-                serializer.DefaultValueHandling = DefaultValueHandling.Ignore;
-                serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
+                serializer.DefaultValueHandling = DefaultValueHandling.Include;
+                serializer.MissingMemberHandling = MissingMemberHandling.Error; // TODO: Change to Ignore when using consistently
                 serializer.NullValueHandling = NullValueHandling.Ignore;
 
                 // Attempt to open the configuration path for reading
