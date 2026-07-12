@@ -73,6 +73,7 @@
     <system:String x:Key="PathsTabString">경로</system:String>
     <system:String x:Key="AaruPathLabelString">Aaru 경로</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">DiscImageCreator 경로</system:String>
+    <system:String x:Key="DreamdumpPathLabelString">Dreamdump 경로</system:String>
     <system:String x:Key="RedumperPathLabelString">Redumper 경로</system:String>
     <system:String x:Key="DefaultDumpingProgramLabelString">기본 덤핑 프로그램</system:String>
     <system:String x:Key="DefaultOutputPathLabelString">기본 출력 경로</system:String>

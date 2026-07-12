@@ -78,6 +78,7 @@
     <x:String x:Key="PathsTabString">Pfad</x:String>
     <x:String x:Key="AaruPathLabelString">Aaru-Pfad</x:String>
     <x:String x:Key="DiscImageCreatorPathLabelString">DiscImageCreator-Pfad</x:String>
+    <x:String x:Key="DreamdumpPathLabelString">Dreamdump-Pfad</x:String>
     <x:String x:Key="RedumperPathLabelString">Redumper-Pfad</x:String>
     <x:String x:Key="DefaultDumpingProgramLabelString">Standard-Dump-Programm</x:String>
     <x:String x:Key="DefaultOutputPathLabelString">Standard-Ausgabepfad</x:String>

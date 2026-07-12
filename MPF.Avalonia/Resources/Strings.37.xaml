@@ -73,6 +73,7 @@
     <x:String x:Key="PathsTabString">P47hz</x:String>
     <x:String x:Key="AaruPathLabelString">44ru P47h</x:String>
     <x:String x:Key="DiscImageCreatorPathLabelString">D1zc1m493Cr3470r P47h</x:String>
+    <x:String x:Key="DreamdumpPathLabelString">Dr34mdump P47h</x:String>
     <x:String x:Key="RedumperPathLabelString">R3dump3r P47h</x:String>
     <x:String x:Key="DefaultDumpingProgramLabelString">D3f4u17 Dump1n9 Pr09r4m</x:String>
     <x:String x:Key="DefaultOutputPathLabelString">D3f4u17 0u7pu7 P47h</x:String>

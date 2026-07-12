@@ -73,6 +73,7 @@
     <system:String x:Key="PathsTabString">Chemins</system:String>
     <system:String x:Key="AaruPathLabelString">Chemin Aaru</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">Chemin DiscImageCreator</system:String>
+    <system:String x:Key="DreamdumpPathLabelString">Chemin Dreamdump</system:String>
     <system:String x:Key="RedumperPathLabelString">Chemin Redumper</system:String>
     <system:String x:Key="DefaultDumpingProgramLabelString">Programme par défaut</system:String>
     <system:String x:Key="DefaultOutputPathLabelString">Chemin de sortie par défaut</system:String>

@@ -74,6 +74,7 @@
     <system:String x:Key="PathsTabString">Paths</system:String>
     <system:String x:Key="AaruPathLabelString">Aaru Path</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">DiscImageCreator Path</system:String>
+    <system:String x:Key="DreamdumpPathLabelString">Dreamdump Path</system:String>
     <system:String x:Key="RedumperPathLabelString">Redumper Path</system:String>
     <system:String x:Key="DefaultDumpingProgramLabelString">Default Dumping Program</system:String>
     <system:String x:Key="DefaultOutputPathLabelString">Default Output Path</system:String>

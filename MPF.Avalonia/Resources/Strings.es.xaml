@@ -72,6 +72,7 @@
     <x:String x:Key="PathsTabString">Rutas</x:String>
     <x:String x:Key="AaruPathLabelString">Ruta de Aaru</x:String>
     <x:String x:Key="DiscImageCreatorPathLabelString">Ruta de DiscImageCreator</x:String>
+    <x:String x:Key="DreamdumpPathLabelString">Ruta de Dreamdump</x:String>
     <x:String x:Key="RedumperPathLabelString">Ruta de Redumper</x:String>
     <x:String x:Key="DefaultDumpingProgramLabelString">Programa predeterminado</x:String>
     <x:String x:Key="DefaultOutputPathLabelString">Ruta de salida predeterminada</x:String>

@@ -25,6 +25,7 @@ namespace MPF.UI.Windows
         private System.Windows.Controls.Button? CancelButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CancelButton");
         private System.Windows.Controls.Button? DefaultOutputPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DefaultOutputPathButton");
         private System.Windows.Controls.Button? DiscImageCreatorPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DiscImageCreatorPathButton");
+        private System.Windows.Controls.Button? DreamdumpPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DreamdumpPathButton");
         private System.Windows.Controls.Button? RedumperPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "RedumperPathButton");
 
 #endif
@@ -58,6 +59,7 @@ namespace MPF.UI.Windows
             // Add handlers
             AaruPathButton!.Click += BrowseForAaruPathClick;
             DiscImageCreatorPathButton!.Click += BrowseForDiscImageCreatorPathClick;
+            DreamdumpPathButton!.Click += BrowseForDreamdumpPathClick;
             RedumperPathButton!.Click += BrowseForRedumperPathClick;
             DefaultOutputPathButton!.Click += BrowseForDefaultOutputPathClick;
 
@@ -203,6 +205,16 @@ namespace MPF.UI.Windows
             string? result = BrowseForPath(this, sender as System.Windows.Controls.Button);
             if (result is not null)
                 OptionsViewModel.Options.Dumping.DiscImageCreatorPath = result;
+        }
+
+        /// <summary>
+        /// Handler for generic Click event
+        /// </summary>
+        private void BrowseForDreamdumpPathClick(object sender, EventArgs e)
+        {
+            string? result = BrowseForPath(this, sender as System.Windows.Controls.Button);
+            if (result is not null)
+                OptionsViewModel.Options.Dumping.DreamdumpPath = result;
         }
 
         /// <summary>

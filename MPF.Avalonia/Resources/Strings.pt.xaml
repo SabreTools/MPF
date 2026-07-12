@@ -73,6 +73,7 @@
     <x:String x:Key="PathsTabString">Caminhos</x:String>
     <x:String x:Key="AaruPathLabelString">Caminho do Aaru</x:String>
     <x:String x:Key="DiscImageCreatorPathLabelString">Caminho do DiscImageCreator</x:String>
+    <x:String x:Key="DreamdumpPathLabelString">Caminho do Dreamdump</x:String>
     <x:String x:Key="RedumperPathLabelString">Caminho do Redumper</x:String>
     <x:String x:Key="DefaultDumpingProgramLabelString">Programa padrão para dump</x:String>
     <x:String x:Key="DefaultOutputPathLabelString">Caminho de saída padrão</x:String>

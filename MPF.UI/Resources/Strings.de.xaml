@@ -73,6 +73,7 @@
     <system:String x:Key="PathsTabString">Pfad</system:String>
     <system:String x:Key="AaruPathLabelString">Aaru-Pfad</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">DiscImageCreator-Pfad</system:String>
+    <system:String x:Key="DreamdumpPathLabelString">Dreamdump-Pfad</system:String>
     <system:String x:Key="RedumperPathLabelString">Redumper-Pfad</system:String>
     <system:String x:Key="DefaultDumpingProgramLabelString">Standard-Dump-Programm</system:String>
     <system:String x:Key="DefaultOutputPathLabelString">Standard-Ausgabepfad</system:String>

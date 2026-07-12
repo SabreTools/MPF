@@ -198,15 +198,15 @@
                                         VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="2"
-                                           Text="{DynamicResource RedumperPathLabelString}"
+                                           Text="{DynamicResource DreamdumpPathLabelString}"
                                            HorizontalAlignment="Right"
                                            VerticalAlignment="Center" />
-                                <TextBox x:Name="RedumperPathTextBox"
+                                <TextBox x:Name="DreamdumpPathTextBox"
                                          Grid.Row="2"
                                          Grid.Column="1"
-                                         Text="{Binding Options.Dumping.RedumperPath, Mode=TwoWay}"
+                                         Text="{Binding Options.Dumping.DreamdumpPath, Mode=TwoWay}"
                                          VerticalAlignment="Center" />
-                                <Button x:Name="RedumperPathButton"
+                                <Button x:Name="DreamdumpPathButton"
                                         Grid.Row="2"
                                         Grid.Column="2"
                                         Width="26"
@@ -216,27 +216,45 @@
                                         VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="3"
+                                           Text="{DynamicResource RedumperPathLabelString}"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Center" />
+                                <TextBox x:Name="RedumperPathTextBox"
+                                         Grid.Row="3"
+                                         Grid.Column="1"
+                                         Text="{Binding Options.Dumping.RedumperPath, Mode=TwoWay}"
+                                         VerticalAlignment="Center" />
+                                <Button x:Name="RedumperPathButton"
+                                        Grid.Row="3"
+                                        Grid.Column="2"
+                                        Width="26"
+                                        MinHeight="23"
+                                        Padding="0,2"
+                                        Content="..."
+                                        VerticalAlignment="Center" />
+
+                                <TextBlock Grid.Row="4"
                                            Text="{DynamicResource DefaultDumpingProgramLabelString}"
                                            HorizontalAlignment="Right"
                                            VerticalAlignment="Center" />
                                 <ComboBox x:Name="InternalProgramComboBox"
-                                          Grid.Row="3"
+                                          Grid.Row="4"
                                           Grid.Column="1"
                                           ItemsSource="{Binding AvailableInternalPrograms}"
                                           SelectedItem="{Binding Options.InternalProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           VerticalAlignment="Center" />
 
-                                <TextBlock Grid.Row="4"
+                                <TextBlock Grid.Row="5"
                                            Text="{DynamicResource DefaultOutputPathLabelString}"
                                            HorizontalAlignment="Right"
                                            VerticalAlignment="Center" />
                                 <TextBox x:Name="DefaultOutputPathTextBox"
-                                         Grid.Row="4"
+                                         Grid.Row="5"
                                          Grid.Column="1"
                                          Text="{Binding Options.Dumping.DefaultOutputPath, Mode=TwoWay}"
                                          VerticalAlignment="Center" />
                                 <Button x:Name="DefaultOutputPathButton"
-                                        Grid.Row="4"
+                                        Grid.Row="5"
                                         Grid.Column="2"
                                         Width="26"
                                         MinHeight="23"

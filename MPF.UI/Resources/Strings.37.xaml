@@ -74,6 +74,7 @@
     <system:String x:Key="PathsTabString">P47hz</system:String>
     <system:String x:Key="AaruPathLabelString">44ru P47h</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">D1zc1m493Cr3470r P47h</system:String>
+    <system:String x:Key="DreamdumpPathLabelString">Dr34mdump P47h</system:String>
     <system:String x:Key="RedumperPathLabelString">R3dump3r P47h</system:String>
     <system:String x:Key="DefaultDumpingProgramLabelString">D3f4u17 Dump1n9 Pr09r4m</system:String>
     <system:String x:Key="DefaultOutputPathLabelString">D3f4u17 0u7pu7 P47h</system:String>

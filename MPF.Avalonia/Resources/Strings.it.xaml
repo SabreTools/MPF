@@ -72,6 +72,7 @@
     <x:String x:Key="PathsTabString">Percorsi</x:String>
     <x:String x:Key="AaruPathLabelString">Percorso Aaru</x:String>
     <x:String x:Key="DiscImageCreatorPathLabelString">Percorso DiscImageCreator</x:String>
+    <x:String x:Key="DreamdumpPathLabelString">Percorso Dreamdump</x:String>
     <x:String x:Key="RedumperPathLabelString">Percorso Redumper</x:String>
     <x:String x:Key="DefaultDumpingProgramLabelString">Programma di Dump Predefinito</x:String>
     <x:String x:Key="DefaultOutputPathLabelString">Percorso Output Predefinito</x:String>

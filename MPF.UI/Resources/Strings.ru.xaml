@@ -73,6 +73,7 @@
     <system:String x:Key="PathsTabString">Пути</system:String>
     <system:String x:Key="AaruPathLabelString">Путь к Aaru</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">Путь к DiscImageCreator</system:String>
+    <system:String x:Key="DreamdumpPathLabelString">Путь к Dreamdump</system:String>
     <system:String x:Key="RedumperPathLabelString">Путь к Redumper</system:String>
     <system:String x:Key="DefaultDumpingProgramLabelString">Программа дампа по умолчанию</system:String>
     <system:String x:Key="DefaultOutputPathLabelString">Путь вывода по умолчанию</system:String>

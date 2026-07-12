@@ -73,6 +73,7 @@
     <system:String x:Key="PathsTabString">Sökvägar</system:String>
     <system:String x:Key="AaruPathLabelString">Aaru-sökväg</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">DiscImageCreator-sökväg</system:String>
+    <system:String x:Key="DreamdumpPathLabelString">Dreamdump-sökväg</system:String>
     <system:String x:Key="RedumperPathLabelString">Redumper-sökväg</system:String>
     <system:String x:Key="DefaultDumpingProgramLabelString">Standard dumpningsprogram</system:String>
     <system:String x:Key="DefaultOutputPathLabelString">Standard utdatamapp</system:String>

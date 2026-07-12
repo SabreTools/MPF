@@ -73,6 +73,7 @@
     <system:String x:Key="PathsTabString">パス</system:String>
     <system:String x:Key="AaruPathLabelString">Aaru のパス</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">DiscImageCreator のパス</system:String>
+    <system:String x:Key="DreamdumpPathLabelString">Dreamdump のパス</system:String>
     <system:String x:Key="RedumperPathLabelString">Redumper のパス</system:String>
     <system:String x:Key="DefaultDumpingProgramLabelString">既定のダンプログラム</system:String>
     <system:String x:Key="DefaultOutputPathLabelString">既定の出力先</system:String>

@@ -74,6 +74,7 @@
     <system:String x:Key="PathsTabString">Теки</system:String>
     <system:String x:Key="AaruPathLabelString">Шлях до Aaru</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">Шлях до DiscImageCreator</system:String>
+    <system:String x:Key="DreamdumpPathLabelString">Шлях до Dreamdump</system:String>
     <system:String x:Key="RedumperPathLabelString">Шлях до Redumper</system:String>
     <system:String x:Key="DefaultDumpingProgramLabelString">Програма за замовчуванням</system:String>
     <system:String x:Key="DefaultOutputPathLabelString">Вихідна тека за замовчуванням</system:String>

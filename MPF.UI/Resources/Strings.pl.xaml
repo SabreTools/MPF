@@ -73,6 +73,7 @@
     <system:String x:Key="PathsTabString">Ścieżki</system:String>
     <system:String x:Key="AaruPathLabelString">Ścieżka Aaru</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">Ścieżka DiscImageCreator</system:String>
+    <system:String x:Key="DreamdumpPathLabelString">Ścieżka Dreamdump</system:String>
     <system:String x:Key="RedumperPathLabelString">Ścieżka Redumper</system:String>
     <system:String x:Key="DefaultDumpingProgramLabelString">Domyślny program do dumpingu</system:String>
     <system:String x:Key="DefaultOutputPathLabelString">Domyślna ścieżka wyjściowa</system:String>
