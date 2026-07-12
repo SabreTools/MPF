@@ -26,6 +26,7 @@
 - Separate options loading for Windows
 - Update accuracy of the README
 - Internally prepare for native configuration files
+- Make OptionsLoader slightly more uniform
 
 ### 3.8.3 (2026-07-06)
 

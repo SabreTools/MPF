@@ -202,11 +202,18 @@ namespace MPF.Frontend.Tools
 
             try
             {
+                // Create the dictionary deserializer
                 var serializer = JsonSerializer.Create();
-                var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
-                using var reader = new StreamReader(stream);
-                var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string?>)) as Dictionary<string, string?>;
 
+                // Attempt to open the configuration path for reading
+                var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
+                using var sr = new StreamReader(stream);
+                var reader = new JsonTextReader(sr);
+
+                // Attempt to deserialize the configuration
+                var settings = serializer.Deserialize<Dictionary<string, string?>>(reader);
+
+                // Return the deserialized options, if possible
                 return ConvertFromDictionary(settings);
             }
             catch
@@ -240,16 +247,24 @@ namespace MPF.Frontend.Tools
 
             try
             {
+                // Create the native format deserializer
                 var serializer = JsonSerializer.Create();
                 serializer.DefaultValueHandling = DefaultValueHandling.Ignore;
                 serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
                 serializer.NullValueHandling = NullValueHandling.Ignore;
 
+                // Attempt to open the configuration path for reading
                 var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
                 using var sr = new StreamReader(stream);
                 var reader = new JsonTextReader(sr);
 
-                return serializer.Deserialize<Options>(reader) ?? new Options();
+                // Attempt to deserialize the configuration
+                var deserialized = serializer.Deserialize<Options>(reader);
+                if (deserialized is null)
+                    configPath = null;
+
+                // Return the deserialized options, if possible
+                return deserialized ?? new Options();
             }
             catch
             {
