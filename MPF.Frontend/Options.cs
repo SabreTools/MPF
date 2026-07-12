@@ -281,6 +281,36 @@ namespace MPF.Frontend
             }
         }
 
+        /// <summary>
+        /// Default output path for dumps
+        /// </summary>
+        /// <remarks>
+        /// Windows keeps the portable layout, where the relative path lands in a folder next to the
+        /// executable. An installed application has no such folder: the path resolves against the
+        /// working directory instead, so dumps land wherever MPF happened to be started from.
+        /// </remarks>
+        [JsonIgnore]
+        internal static string DefaultOutputPathValue
+        {
+            get
+            {
+#if NET20 || NET35
+                return "ISO";
+#else
+                bool portable = Environment.OSVersion.Platform != PlatformID.Unix
+                    && Environment.OSVersion.Platform != PlatformID.MacOSX;
+                if (portable)
+                    return "ISO";
+
+                string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                if (string.IsNullOrEmpty(homeDir))
+                    return "ISO";
+
+                return Path.Combine(homeDir, "ISO");
+#endif
+            }
+        }
+
         #endregion
 
         #region Internal Program
@@ -350,9 +380,9 @@ namespace MPF.Frontend
             get;
             set
             {
-                field = value ?? "ISO";
+                field = value ?? DefaultOutputPathValue;
             }
-        } = "ISO";
+        } = DefaultOutputPathValue;
 
         /// <summary>
         /// Default system if none can be detected

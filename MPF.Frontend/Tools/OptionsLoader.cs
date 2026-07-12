@@ -386,7 +386,7 @@ namespace MPF.Frontend.Tools
             options.Dumping.DreamdumpPath = GetStringSetting(source, "DreamdumpPath", DumpSettings.DefaultDreamdumpPath) ?? DumpSettings.DefaultDreamdumpPath;
             options.Dumping.RedumperPath = GetStringSetting(source, "RedumperPath", DumpSettings.DefaultRedumperPath) ?? DumpSettings.DefaultRedumperPath;
 
-            options.Dumping.DefaultOutputPath = GetStringSetting(source, "DefaultOutputPath", "ISO");
+            options.Dumping.DefaultOutputPath = GetStringSetting(source, "DefaultOutputPath", DumpSettings.DefaultOutputPathValue);
             valueString = GetStringSetting(source, "DefaultSystem", PhysicalSystem.IBMPCcompatible.ToString());
             options.Dumping.DefaultSystem = (valueString ?? string.Empty).ToPhysicalSystem();
             options.Dumping.DumpSpeeds.CD = GetInt32Setting(source, "PreferredDumpSpeedCD", 24);
