@@ -256,7 +256,7 @@ if [ $NO_BUILD = false ]; then
     for FRAMEWORK in "${AVALONIA_FRAMEWORKS[@]}"; do
         for RUNTIME in "${AVALONIA_RUNTIMES[@]}"; do
             # Output the current build
-            echo "===== Build Avaloniia - $FRAMEWORK, $RUNTIME ====="
+            echo "===== Build Avalonia - $FRAMEWORK, $RUNTIME ====="
 
             # If we have an invalid combination of framework and runtime
             if [[ ! $(echo ${VALID_CROSS_PLATFORM_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then

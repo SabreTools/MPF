@@ -42,7 +42,14 @@ namespace MPF.Processors
         /// <inheritdoc/>
         internal override List<OutputFile> GetOutputFiles(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
-            return [];
+            // Assemble the original filename
+            string filePath = Path.GetFileNameWithoutExtension(outputFilename);
+            if (!string.IsNullOrEmpty(outputDirectory))
+                filePath = Path.Combine(outputDirectory, filePath);
+
+            return [
+                new(filePath, OutputFileFlags.Preserve)
+            ];
         }
 
         #endregion
