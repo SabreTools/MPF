@@ -112,14 +112,14 @@ function download_programs() {
     DL_MAP["Dreamdump_win-x86"]=""
 
     # Redumper
-    DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-linux-arm64.zip"
-    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-linux-x64.zip"
-    #DL_MAP["Redumper_linux_x86"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-linux-x86.zip"
-    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-macos-arm64.zip"
-    DL_MAP["Redumper_osx-x64"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-macos-x64.zip"
-    DL_MAP["Redumper_win-arm64"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-windows-arm64.zip"
-    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-windows-x64.zip"
-    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-windows-x86.zip"
+    DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-linux-arm64.zip"
+    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-linux-x64.zip"
+    #DL_MAP["Redumper_linux_x86"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-linux-x86.zip"
+    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-macos-arm64.zip"
+    DL_MAP["Redumper_osx-x64"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-macos-x64.zip"
+    DL_MAP["Redumper_win-arm64"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-windows-arm64.zip"
+    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-windows-x64.zip"
+    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-windows-x86.zip"
 
     # Download and extract files
     echo "===== Downloading Required Programs ====="
