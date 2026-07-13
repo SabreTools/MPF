@@ -67,36 +67,56 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="drives">Drives already discovered via DriveInfo</param>
         /// <param name="ignoreFixedDrives">True to ignore fixed and floppy drives, false otherwise</param>
-        /// <returns>The drive array, extended with any devices not already present</returns>
+        /// <returns>The drive list, with mounted volumes replaced by the devices behind them</returns>
         private static Drive[] AppendMacOSDrives(Drive[] drives, bool ignoreFixedDrives)
         {
             // Defensive: this shells out to macOS-only tooling, so never run it off macOS
             if (!IsMacOS())
                 return drives;
 
-            var existingNames = new HashSet<string>();
-            foreach (var d in drives)
+            // macOS mounts every readable disc on insertion, so DriveInfo reports the mounted
+            // volume (e.g. "/Volumes/LABEL") as a CD-ROM drive. That is a mount point rather
+            // than a dumpable device, and diskutil surfaces the drive holding the disc below,
+            // so the mount point would only sit next to the real drive as a second, unusable
+            // entry. Drop it here rather than in the shared DriveInfo query, which is unchanged.
+            var kept = new List<Drive>();
+            foreach (var drive in drives)
             {
-                if (d?.DevicePath is not null)
-                    existingNames.Add(d.DevicePath);
+                if (!IsMacOSMountPoint(drive?.DevicePath))
+                    kept.Add(drive!);
             }
 
-            var extra = new List<Drive>();
-            foreach (var device in EnumerateMacOSDevices())
+            var existingPaths = new HashSet<string>();
+            foreach (var drive in kept)
+            {
+                if (drive?.DevicePath is not null)
+                    existingPaths.Add(drive.DevicePath);
+            }
+
+            foreach (var device in EnumerateMacOSDevices("/dev"))
             {
                 // Optical drives are always surfaced; everything else follows the toggle
-                if (device.DriveType != Frontend.InternalDriveType.Optical && ignoreFixedDrives)
+                if (device.InternalDriveType != Frontend.InternalDriveType.Optical && ignoreFixedDrives)
                     continue;
 
-                // Skip names already surfaced by DriveInfo or an earlier device
-                if (!existingNames.Add(device.BsdName))
+                // Skip devices already surfaced by an earlier entry
+                if (!existingPaths.Add(device.DevicePath!))
                     continue;
 
                 try
                 {
-                    var d = CreateMacOSDrive(device);
-                    if (d is not null)
-                        extra.Add(d);
+                    var d = Create(device.InternalDriveType, device.DevicePath!);
+                    if (d is null)
+                        continue;
+
+                    // A BSD name is never a mount point, so DriveInfo reports it as not-ready
+                    // with no size. Mirror how Windows and the Linux enumerator surface these:
+                    // optical, floppy, and fixed drives are always ready, while a removable
+                    // drive is only ready when media is present (a non-zero size).
+                    d.TotalSize = device.TotalSize;
+                    d.MarkedActive = device.InternalDriveType != Frontend.InternalDriveType.Removable
+                        || device.TotalSize > 0;
+                    kept.Add(d);
                 }
                 catch
                 {
@@ -104,37 +124,23 @@ namespace MPF.Frontend
                 }
             }
 
-            if (extra.Count == 0)
-                return drives;
-
-            var combined = new Drive[drives.Length + extra.Count];
-            Array.Copy(drives, combined, drives.Length);
-            extra.CopyTo(combined, drives.Length);
-            return combined;
+            return [.. kept];
         }
 
         /// <summary>
-        /// Build a Drive from a macOS device, mirroring how the Linux enumerator marks activity.
-        /// The drive is named by its BSD name rather than its device node: that is the form a
-        /// macOS dumping program expects, the same way the name is a drive letter on Windows and
-        /// a device node on Linux. Redumper resolves it against the BSD name IOKit publishes for
-        /// the drive and rejects a "/dev/"-prefixed path.
+        /// Whether a device path is a macOS mount point rather than a dumpable device. Devices
+        /// discovered here are named by their BSD name ("disk4"), which never contains a path
+        /// separator, while DriveInfo reports mounted volumes as paths ("/Volumes/LABEL", "/").
         /// </summary>
-        /// <param name="device">Device discovered via diskutil</param>
-        /// <returns>The populated Drive, or null when it cannot be created</returns>
-        private static Drive? CreateMacOSDrive(MacOSBlockDevice device)
+        /// <param name="devicePath">Device path to check</param>
+        /// <returns>True when the path is a mount point; false otherwise</returns>
+        private static bool IsMacOSMountPoint(string? devicePath)
         {
-            var d = Create(device.DriveType, device.BsdName);
-            if (d is null)
-                return null;
+            if (string.IsNullOrEmpty(devicePath))
+                return false;
 
-            // A BSD name is never a mount point, so DriveInfo reports it as not-ready with no
-            // size. Mirror how Windows and the Linux enumerator surface these: optical, floppy,
-            // and fixed drives are always ready, while a removable drive is only ready when
-            // media is present (a non-zero size).
-            d.TotalSize = device.TotalSize;
-            d.MarkedActive = device.DriveType != Frontend.InternalDriveType.Removable || device.TotalSize > 0;
-            return d;
+            return devicePath!.IndexOf(Path.DirectorySeparatorChar) >= 0
+                || devicePath.IndexOf(Path.AltDirectorySeparatorChar) >= 0;
         }
 
         /// <summary>
@@ -144,11 +150,12 @@ namespace MPF.Frontend
         /// whole-device targets and are excluded by the node filter. Synthesized volumes and
         /// disk images are dropped during parsing.
         /// </summary>
+        /// <param name="devRoot">Root directory device nodes live under (typically "/dev")</param>
         /// <returns>Discovered physical devices, or an empty list when none are found</returns>
-        internal static List<MacOSBlockDevice> EnumerateMacOSDevices()
+        internal static List<Drive> EnumerateMacOSDevices(string devRoot)
         {
-            var result = new List<MacOSBlockDevice>();
-            foreach (var node in EnumerateMacOSWholeDiskNodes("/dev"))
+            var result = new List<Drive>();
+            foreach (var node in EnumerateMacOSWholeDiskNodes(devRoot))
             {
                 string info = RunDiskutilInfo(Path.GetFileName(node));
                 if (string.IsNullOrEmpty(info))
@@ -227,7 +234,7 @@ namespace MPF.Frontend
         /// <param name="diskutilInfoOutput">Raw "diskutil info" output for a single device</param>
         /// <param name="devicePath">Fallback device node path when the output omits one</param>
         /// <returns>The classified device, or null when it should not be surfaced</returns>
-        internal static MacOSBlockDevice? ParseMacOSDiskutilInfo(string diskutilInfoOutput, string devicePath)
+        internal static Drive? ParseMacOSDiskutilInfo(string diskutilInfoOutput, string devicePath)
         {
             if (string.IsNullOrEmpty(diskutilInfoOutput))
                 return null;
@@ -251,8 +258,10 @@ namespace MPF.Frontend
                 ? deviceNode
                 : devicePath;
 
-            // The BSD name is what a macOS dumping program takes for a drive, so it becomes the
-            // drive name. diskutil reports it directly; the node's file name is the same string.
+            // A macOS dumping program takes the BSD name for a drive, so that becomes the device
+            // path, the same way it is a drive letter on Windows and a device node on Linux.
+            // Redumper resolves it against the BSD name IOKit publishes and rejects a
+            // "/dev/"-prefixed path. diskutil reports it directly; the node's file name matches.
             string bsdName = fields.TryGetValue("Device Identifier", out var identifier) && !string.IsNullOrEmpty(identifier)
                 ? identifier
                 : Path.GetFileName(node);
@@ -284,7 +293,12 @@ namespace MPF.Frontend
             else
                 driveType = Frontend.InternalDriveType.HardDisk;
 
-            return new MacOSBlockDevice(node, bsdName, driveType, size);
+            return new Drive()
+            {
+                InternalDriveType = driveType,
+                DevicePath = bsdName,
+                TotalSize = size,
+            };
         }
 
         /// <summary>

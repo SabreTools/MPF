@@ -291,16 +291,9 @@ namespace MPF.Frontend
             // points (e.g. "/"), which are not dumpable devices, so they are deliberately left
             // out of the DriveInfo query there.
             bool isUnix = Environment.OSVersion.Platform == PlatformID.Unix;
-
-            // macOS mounts every readable disc on insertion, so DriveInfo reports the mounted
-            // volume (e.g. "/Volumes/LABEL") as a CD-ROM drive. That is a mount point rather
-            // than a dumpable device, and diskutil already surfaces the drive holding the disc
-            // as a device node, so optical media is left out of the DriveInfo query there too.
             bool isMacOS = IsMacOS();
 
-            var desiredDriveTypes = new List<DriveType>();
-            if (!isMacOS)
-                desiredDriveTypes.Add(DriveType.CDRom);
+            var desiredDriveTypes = new List<DriveType>() { DriveType.CDRom };
             if (!ignoreFixedDrives && !isUnix)
             {
                 desiredDriveTypes.Add(DriveType.Fixed);

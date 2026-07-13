@@ -200,33 +200,22 @@ namespace MPF.Frontend.Test
         [Fact]
         public void EnumerateMacOSWholeDiskNodes_OnlyMatchesDiskFollowedByDigits()
         {
-            string root = Path.Combine(Path.GetTempPath(), "mpf-test-dev-" + Guid.NewGuid().ToString("N"));
-            Directory.CreateDirectory(root);
-            try
+            // TestData/MacOSDev stands in for /dev: it holds the three whole-disk nodes that
+            // must be found (disk0, disk1, disk10) alongside the names that must not be — a
+            // partition (disk0s1), the bare prefix (disk), a non-numeric suffix (diska), and a
+            // raw character node (rdisk0).
+            string root = Path.Combine(Environment.CurrentDirectory, "TestData", "MacOSDev");
+
+            var actual = Drive.EnumerateMacOSWholeDiskNodes(root);
+
+            var actualNames = new List<string>();
+            foreach (var p in actual)
             {
-                File.WriteAllText(Path.Combine(root, "disk0"), string.Empty);
-                File.WriteAllText(Path.Combine(root, "disk1"), string.Empty);
-                File.WriteAllText(Path.Combine(root, "disk10"), string.Empty);
-                File.WriteAllText(Path.Combine(root, "disk0s1"), string.Empty); // partition, skipped
-                File.WriteAllText(Path.Combine(root, "disk"), string.Empty);    // no trailing digits, skipped
-                File.WriteAllText(Path.Combine(root, "diska"), string.Empty);   // name not all-digits, skipped
-                File.WriteAllText(Path.Combine(root, "rdisk0"), string.Empty);  // raw character node, skipped
-
-                var actual = Drive.EnumerateMacOSWholeDiskNodes(root);
-
-                var actualNames = new List<string>();
-                foreach (var p in actual)
-                {
-                    actualNames.Add(Path.GetFileName(p));
-                }
-                actualNames.Sort(StringComparer.Ordinal);
-
-                Assert.Equal(new[] { "disk0", "disk1", "disk10" }, actualNames);
+                actualNames.Add(Path.GetFileName(p));
             }
-            finally
-            {
-                Directory.Delete(root, recursive: true);
-            }
+            actualNames.Sort(StringComparer.Ordinal);
+
+            Assert.Equal(new[] { "disk0", "disk1", "disk10" }, actualNames);
         }
 
         #endregion
@@ -259,8 +248,8 @@ namespace MPF.Frontend.Test
             var actual = Drive.ParseMacOSDiskutilInfo(info, "/dev/disk0");
 
             Assert.NotNull(actual);
-            Assert.Equal("/dev/disk0", actual!.DevicePath);
-            Assert.Equal(InternalDriveType.HardDisk, actual.DriveType);
+            Assert.Equal("disk0", actual!.DevicePath);
+            Assert.Equal(InternalDriveType.HardDisk, actual.InternalDriveType);
             Assert.Equal(402653184L, actual.TotalSize);
         }
 
@@ -297,7 +286,7 @@ namespace MPF.Frontend.Test
             var actual = Drive.ParseMacOSDiskutilInfo(info, "/dev/disk5");
 
             Assert.NotNull(actual);
-            Assert.Equal(InternalDriveType.Removable, actual!.DriveType);
+            Assert.Equal(InternalDriveType.Removable, actual!.InternalDriveType);
             Assert.Equal(15518924800L, actual.TotalSize);
         }
 
@@ -318,7 +307,7 @@ namespace MPF.Frontend.Test
             var actual = Drive.ParseMacOSDiskutilInfo(info, "/dev/disk5");
 
             Assert.NotNull(actual);
-            Assert.Equal(InternalDriveType.Floppy, actual!.DriveType);
+            Assert.Equal(InternalDriveType.Floppy, actual!.InternalDriveType);
             Assert.Equal(1474560L, actual.TotalSize);
         }
 
@@ -339,7 +328,7 @@ namespace MPF.Frontend.Test
             var actual = Drive.ParseMacOSDiskutilInfo(info, "/dev/disk6");
 
             Assert.NotNull(actual);
-            Assert.Equal(InternalDriveType.Optical, actual!.DriveType);
+            Assert.Equal(InternalDriveType.Optical, actual!.InternalDriveType);
         }
 
         /// <remarks>
@@ -375,8 +364,8 @@ namespace MPF.Frontend.Test
             var actual = Drive.ParseMacOSDiskutilInfo(info, "/dev/disk1");
 
             Assert.NotNull(actual);
-            Assert.Equal(InternalDriveType.Optical, actual!.DriveType);
-            Assert.Equal("/dev/disk1", actual.DevicePath);
+            Assert.Equal(InternalDriveType.Optical, actual!.InternalDriveType);
+            Assert.Equal("disk1", actual.DevicePath);
             Assert.Equal(10061856L, actual.TotalSize);
         }
 
@@ -415,9 +404,8 @@ namespace MPF.Frontend.Test
             var actual = Drive.ParseMacOSDiskutilInfo(info, "/dev/disk4");
 
             Assert.NotNull(actual);
-            Assert.Equal(InternalDriveType.Optical, actual!.DriveType);
-            Assert.Equal("/dev/disk4", actual.DevicePath);
-            Assert.Equal("disk4", actual.BsdName);
+            Assert.Equal(InternalDriveType.Optical, actual!.InternalDriveType);
+            Assert.Equal("disk4", actual.DevicePath);
             Assert.Equal(310635696L, actual.TotalSize);
         }
 
@@ -434,7 +422,7 @@ namespace MPF.Frontend.Test
             var actual = Drive.ParseMacOSDiskutilInfo(info, "/dev/disk9");
 
             Assert.NotNull(actual);
-            Assert.Equal(InternalDriveType.HardDisk, actual!.DriveType);
+            Assert.Equal(InternalDriveType.HardDisk, actual!.InternalDriveType);
             Assert.Equal(0L, actual.TotalSize);
         }
 
@@ -450,8 +438,7 @@ namespace MPF.Frontend.Test
             var actual = Drive.ParseMacOSDiskutilInfo(info, "/dev/disk4");
 
             Assert.NotNull(actual);
-            Assert.Equal("/dev/disk4", actual!.DevicePath);
-            Assert.Equal("disk4", actual.BsdName);
+            Assert.Equal("disk4", actual!.DevicePath);
         }
 
         /// <remarks>
@@ -475,8 +462,8 @@ namespace MPF.Frontend.Test
             var actual = Drive.ParseMacOSDiskutilInfo(info, "/dev/disk4");
 
             Assert.NotNull(actual);
-            Assert.DoesNotContain("/dev/", actual!.BsdName);
-            Assert.Equal("disk4", actual.BsdName);
+            Assert.DoesNotContain("/dev/", actual!.DevicePath);
+            Assert.Equal("disk4", actual.DevicePath);
         }
 
         #endregion

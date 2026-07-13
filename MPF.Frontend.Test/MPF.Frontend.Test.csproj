@@ -14,6 +14,16 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Remove="TestData\*" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="TestData\**">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Microsoft.CodeCoverage" Version="18.7.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
