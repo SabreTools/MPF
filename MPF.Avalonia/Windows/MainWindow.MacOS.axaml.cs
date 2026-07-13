@@ -209,7 +209,7 @@ namespace MPF.Avalonia.Windows
             if (!OperatingSystem.IsMacOS() || MainViewModel.CurrentProgram != InternalProgram.Redumper)
                 return;
 
-            string? driveName = MainViewModel.CurrentDrive?.Name?.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            string? driveName = MainViewModel.CurrentDrive?.DevicePath?.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
             if (string.IsNullOrWhiteSpace(driveName) || !driveName.StartsWith("/Volumes/", StringComparison.Ordinal))
                 return;
 

@@ -134,7 +134,7 @@ namespace MPF.Frontend.Tools
                     if (options.Processing.ProtectionScanning.ScanForProtection)
                     {
                         // Explicitly note missing/invalid device paths
-                        if (drive?.Name is null)
+                        if (drive?.DevicePath is null)
                             resultProgress?.Report(ResultEventArgs.Success("No mounted device path found, protection outputs may be incomplete!"));
 
                         protections = await ProtectionTool.RunCombinedProtectionScans(basePath, drive, options, protectionProgress);
@@ -440,7 +440,8 @@ namespace MPF.Frontend.Tools
                 Aaru => InternalProgram.Aaru,
                 CleanRip => InternalProgram.CleanRip,
                 DiscImageCreator => InternalProgram.DiscImageCreator,
-                // Dreamdump => InternalProgram.Dreamdump,
+                Dreamdump => InternalProgram.Dreamdump,
+                Generic => InternalProgram.Generic,
                 PS3CFW => InternalProgram.PS3CFW,
                 Redumper => InternalProgram.Redumper,
                 UmdImageCreator => InternalProgram.UmdImageCreator,

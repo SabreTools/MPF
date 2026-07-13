@@ -79,6 +79,11 @@ namespace MPF.Frontend.Features
             Console.WriteLine($"  Default Blu-ray Speed = {options.Dumping.DumpSpeeds.Bluray}");
             Console.WriteLine();
 
+            // Pre-processing
+            Console.WriteLine("Pre-Processing Options:");
+            Console.WriteLine($"  Use Relative Paths = {options.Dumping.UseRelativePaths}");
+            Console.WriteLine();
+
             // Aaru
             Console.WriteLine("Aaru-Specific Options:");
             Console.WriteLine($"  Enable Debug = {options.Dumping.Aaru.EnableDebug}");

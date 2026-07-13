@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-#if NET20 || NET35 || NET40 || NET452
-using System.Reflection;
-#endif
 using Newtonsoft.Json;
+using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 using AaruConstants = MPF.ExecutionContexts.Aaru.SettingConstants;
 using DiscImageCreatorConstants = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
@@ -28,161 +26,13 @@ namespace MPF.Frontend.Tools
         {
             get
             {
-                if (_configPath is not null)
-                    return _configPath;
+                if (field is not null)
+                    return field;
 
-                _configPath = GetConfigurationPath();
-                return _configPath;
+                field = GetConfigurationPath();
+                return field;
             }
         }
-        private static string? _configPath = null;
-
-        #region Arguments
-
-        /// <summary>
-        /// Get the PhysicalMediaType enum value for a given string
-        /// </summary>
-        /// <param name="type">String value to convert</param>
-        /// <returns>PhysicalMediaType represented by the string, if possible</returns>
-        public static PhysicalMediaType ToPhysicalMediaType(string? type)
-        {
-            return (type?.ToLowerInvariant()) switch
-            {
-                #region Punched Media
-
-                "aperture"
-                    or "aperturecard"
-                    or "aperture card" => PhysicalMediaType.ApertureCard,
-                "jacquardloom"
-                    or "jacquardloomcard"
-                    or "jacquard loom card" => PhysicalMediaType.JacquardLoomCard,
-                "magneticstripe"
-                    or "magneticstripecard"
-                    or "magnetic stripe card" => PhysicalMediaType.MagneticStripeCard,
-                "opticalphone"
-                    or "opticalphonecard"
-                    or "optical phonecard" => PhysicalMediaType.OpticalPhonecard,
-                "punchcard"
-                    or "punchedcard"
-                    or "punched card" => PhysicalMediaType.PunchedCard,
-                "punchtape"
-                    or "punchedtape"
-                    or "punched tape" => PhysicalMediaType.PunchedTape,
-
-                #endregion
-
-                #region Tape
-
-                "openreel"
-                    or "openreeltape"
-                    or "open reel tape" => PhysicalMediaType.OpenReel,
-                "datacart"
-                    or "datacartridge"
-                    or "datatapecartridge"
-                    or "data tape cartridge" => PhysicalMediaType.DataCartridge,
-                "cassette"
-                    or "cassettetape"
-                    or "cassette tape" => PhysicalMediaType.Cassette,
-
-                #endregion
-
-                #region Disc / Disc
-
-                "bd"
-                    or "bdrom"
-                    or "bd-rom"
-                    or "bluray" => PhysicalMediaType.BluRay,
-                "cd"
-                    or "cdrom"
-                    or "cd-rom" => PhysicalMediaType.CDROM,
-                "dvd"
-                    or "dvd5"
-                    or "dvd-5"
-                    or "dvd9"
-                    or "dvd-9"
-                    or "dvdrom"
-                    or "dvd-rom" => PhysicalMediaType.DVD,
-                "fd"
-                    or "floppy"
-                    or "floppydisk"
-                    or "floppy disk"
-                    or "floppy diskette" => PhysicalMediaType.FloppyDisk,
-                "floptical" => PhysicalMediaType.Floptical,
-                "gd"
-                    or "gdrom"
-                    or "gd-rom" => PhysicalMediaType.GDROM,
-                "hddvd"
-                    or "hd-dvd"
-                    or "hddvdrom"
-                    or "hd-dvd-rom" => PhysicalMediaType.HDDVD,
-                "hdd"
-                    or "harddisk"
-                    or "hard disk" => PhysicalMediaType.HardDisk,
-                "bernoullidisk"
-                    or "iomegabernoullidisk"
-                    or "bernoulli disk"
-                    or "iomega bernoulli disk" => PhysicalMediaType.IomegaBernoulliDisk,
-                "jaz"
-                    or "iomegajaz"
-                    or "iomega jaz" => PhysicalMediaType.IomegaJaz,
-                "zip"
-                    or "zipdisk"
-                    or "iomegazip"
-                    or "iomega zip" => PhysicalMediaType.IomegaZip,
-                "ldrom"
-                    or "lvrom"
-                    or "ld-rom"
-                    or "lv-rom"
-                    or "laserdisc"
-                    or "laservision"
-                    or "ld-rom / lv-rom" => PhysicalMediaType.LaserDisc,
-                "64dd"
-                    or "n64dd"
-                    or "64dddisk"
-                    or "n64dddisk"
-                    or "64dd disk"
-                    or "n64dd disk" => PhysicalMediaType.Nintendo64DD,
-                "fds"
-                    or "famicom"
-                    or "nfds"
-                    or "nintendofamicom"
-                    or "famicomdisksystem"
-                    or "famicom disk system"
-                    or "famicom disk system disk" => PhysicalMediaType.NintendoFamicomDiskSystem,
-                "gc"
-                    or "gamecube"
-                    or "nintendogamecube"
-                    or "nintendo gamecube"
-                    or "gamecube disc"
-                    or "gamecube game disc" => PhysicalMediaType.NintendoGameCubeGameDisc,
-                "wii"
-                    or "nintendowii"
-                    or "nintendo wii"
-                    or "nintendo wii disc"
-                    or "wii optical disc" => PhysicalMediaType.NintendoWiiOpticalDisc,
-                "wiiu"
-                    or "nintendowiiu"
-                    or "nintendo wiiu"
-                    or "nintendo wiiu disc"
-                    or "wiiu optical disc"
-                    or "wii u optical disc" => PhysicalMediaType.NintendoWiiUOpticalDisc,
-                "umd" => PhysicalMediaType.UMD,
-
-                #endregion
-
-                // Unsorted Formats
-                "cartridge" => PhysicalMediaType.Cartridge,
-                "ced"
-                    or "rcaced"
-                    or "rca ced"
-                    or "videodisc"
-                    or "rca videodisc" => PhysicalMediaType.CED,
-
-                _ => PhysicalMediaType.NONE,
-            };
-        }
-
-        #endregion
 
         #region Configuration
 
@@ -192,58 +42,19 @@ namespace MPF.Frontend.Tools
         /// <param name="configPath">Output string indicating the loaded configuration path, if it could load</remarks>
         public static Options LoadFromConfig(out string? configPath)
         {
-            // Set the default config path
+            // Attempt native loading
+            var nativeOptions = LoadFromConfigNative(out configPath);
+            if (configPath is not null)
+                return nativeOptions;
+
+            // Attempt dictionary loading
+            var dictOptions = LoadFromConfigDict(out configPath);
+            if (configPath is not null)
+                return dictOptions;
+
+            // Otherwise, assume failure to load
             configPath = null;
-
-            // If no options path can be found
-            if (string.IsNullOrEmpty(ConfigurationPath))
-                return new Options();
-
-            // If the file does not exist
-            if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
-                return new Options();
-
-            // Set the configuration path
-            configPath = ConfigurationPath;
-
-            var serializer = JsonSerializer.Create();
-            var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
-            using var reader = new StreamReader(stream);
-            var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string?>)) as Dictionary<string, string?>;
-
-            return ConvertFromDictionary(settings);
-        }
-
-        /// <summary>
-        /// Load the current set of options from the application configuration
-        /// </summary>
-        /// <param name="configPath">Output string indicating the loaded configuration path, if it could load</remarks>
-        public static Options LoadFromConfigNative(out string? configPath)
-        {
-            // Set the default config path
-            configPath = null;
-
-            // If no options path can be found
-            if (string.IsNullOrEmpty(ConfigurationPath))
-                return new Options();
-
-            // If the file does not exist
-            if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
-                return new Options();
-
-            // Set the configuration path
-            configPath = ConfigurationPath;
-
-            var serializer = JsonSerializer.Create();
-            serializer.DefaultValueHandling = DefaultValueHandling.Ignore;
-            serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
-            serializer.NullValueHandling = NullValueHandling.Ignore;
-
-            var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
-            using var sr = new StreamReader(stream);
-            var reader = new JsonTextReader(sr);
-
-            return serializer.Deserialize<Options>(reader) ?? new Options();
+            return new Options();
         }
 
         /// <summary>
@@ -254,6 +65,11 @@ namespace MPF.Frontend.Tools
             // If no options path can be found
             if (string.IsNullOrEmpty(ConfigurationPath))
                 return;
+
+            // Ensure the output directory has been created
+            string? parentDirectory = Path.GetDirectoryName(ConfigurationPath);
+            if (parentDirectory is not null)
+                Directory.CreateDirectory(parentDirectory);
 
             var serializer = JsonSerializer.Create();
             var stream = File.Open(ConfigurationPath, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -272,7 +88,16 @@ namespace MPF.Frontend.Tools
             if (string.IsNullOrEmpty(ConfigurationPath))
                 return;
 
+            // Ensure the output directory has been created
+            string? parentDirectory = Path.GetDirectoryName(ConfigurationPath);
+            if (parentDirectory is not null)
+                Directory.CreateDirectory(parentDirectory);
+
             var serializer = JsonSerializer.Create();
+            serializer.DefaultValueHandling = DefaultValueHandling.Include;
+            serializer.MissingMemberHandling = MissingMemberHandling.Error; // TODO: Change to Ignore when using consistently
+            serializer.NullValueHandling = NullValueHandling.Include;
+
             var stream = File.Open(ConfigurationPath, FileMode.Create, FileAccess.Write, FileShare.None);
             using var sw = new StreamWriter(stream) { AutoFlush = true };
             var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
@@ -291,7 +116,7 @@ namespace MPF.Frontend.Tools
                 return Path.Combine(homeDir, ConfigurationFileName);
 
             // Portable configuration
-            string runtimeDir = GetRuntimeConfigurationPath();
+            string runtimeDir = PathTool.GetRuntimeDirectory();
             if (File.Exists(Path.Combine(runtimeDir, ConfigurationFileName)))
                 return Path.Combine(runtimeDir, ConfigurationFileName);
 
@@ -318,31 +143,142 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
-        /// Get the runtime configuration path
-        /// </summary>
-        private static string GetRuntimeConfigurationPath()
-        {
-#if NET20 || NET35 || NET40 || NET452
-            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-#else
-            return AppContext.BaseDirectory;
-#endif
-        }
-
-        /// <summary>
         /// Get the user configuration path
         /// </summary>
         /// <remarks>Typically this is located in the profile or home directory</remarks>
         private static string GetUserConfigurationPath()
         {
+            // MacOS
+            if (Environment.OSVersion.Platform == PlatformID.MacOSX)
+            {
+                string homeDir = PathTool.GetHomeDirectory();
 #if NET20 || NET35
-            string homeDir = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
-            homeDir = Path.Combine(Path.Combine(homeDir, ".config"), "mpf");
+                return Path.Combine(Path.Combine(Path.Combine(homeDir, "Library"), "Application Support"), "mpf");
 #else
-            string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            homeDir = Path.Combine(homeDir, ".config", "mpf");
+                return Path.Combine(homeDir, "Library", "Application Support", "mpf");
 #endif
-            return homeDir;
+            }
+
+            // Linux
+            else if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                string homeDir = PathTool.GetHomeDirectory();
+#if NET20 || NET35
+                return Path.Combine(Path.Combine(homeDir, ".config"), "mpf");
+#else
+                return Path.Combine(homeDir, ".config", "mpf");
+#endif
+            }
+
+            // Windows
+            else
+            {
+                // TODO: Make a path helper for this?
+#if NET20 || NET35
+                string local = Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%");
+#else
+                string local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+#endif
+                return Path.Combine(local, "mpf");
+            }
+        }
+
+        /// <summary>
+        /// Load the current set of options from the application configuration
+        /// </summary>
+        /// <param name="configPath">Output string indicating the loaded configuration path, if it could load</remarks>
+        /// <remarks>Assumes a flat dictionary configuration</remarks>
+        private static Options LoadFromConfigDict(out string? configPath)
+        {
+            // Set the default config path
+            configPath = null;
+
+            // If no options path can be found
+            if (string.IsNullOrEmpty(ConfigurationPath))
+                return new Options();
+
+            // If the file does not exist
+            if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
+                return new Options();
+
+            // Set the configuration path
+            configPath = ConfigurationPath;
+
+            try
+            {
+                // Create the dictionary deserializer
+                var serializer = JsonSerializer.Create();
+
+                // Attempt to open the configuration path for reading
+                var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
+                using var sr = new StreamReader(stream);
+                var reader = new JsonTextReader(sr);
+
+                // Attempt to deserialize and convert the configuration
+                var settings = serializer.Deserialize<Dictionary<string, string?>>(reader);
+                var deserialized = ConvertFromDictionary(settings);
+                if (deserialized is null)
+                    configPath = null;
+
+                // Return the deserialized options, if possible
+                return deserialized ?? new Options();
+            }
+            catch
+            {
+                // Reset found configuration path on exception
+                configPath = null;
+                return new Options();
+            }
+        }
+
+        /// <summary>
+        /// Load the current set of options from the application configuration
+        /// </summary>
+        /// <param name="configPath">Output string indicating the loaded configuration path, if it could load</remarks>
+        /// <remarks>Assumes a nested structure configuration</remarks>
+        private static Options LoadFromConfigNative(out string? configPath)
+        {
+            // Set the default config path
+            configPath = null;
+
+            // If no options path can be found
+            if (string.IsNullOrEmpty(ConfigurationPath))
+                return new Options();
+
+            // If the file does not exist
+            if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
+                return new Options();
+
+            // Set the configuration path
+            configPath = ConfigurationPath;
+
+            try
+            {
+                // Create the native format deserializer
+                var serializer = JsonSerializer.Create();
+                serializer.DefaultValueHandling = DefaultValueHandling.Include;
+                serializer.MissingMemberHandling = MissingMemberHandling.Error; // TODO: Change to Ignore when using consistently
+                serializer.NullValueHandling = NullValueHandling.Ignore;
+
+                // Attempt to open the configuration path for reading
+                var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
+                using var sr = new StreamReader(stream);
+                var reader = new JsonTextReader(sr);
+
+                // Attempt to deserialize the configuration
+                var deserialized = serializer.Deserialize<Options>(reader);
+                if (deserialized is null)
+                    configPath = null;
+
+                // Return the deserialized options, if possible
+                return deserialized ?? new Options();
+            }
+            catch
+            {
+                // Reset found configuration path on exception
+                configPath = null;
+                return new Options();
+            }
         }
 
         #endregion
@@ -394,6 +330,8 @@ namespace MPF.Frontend.Tools
             options.Dumping.DumpSpeeds.HDDVD = GetInt32Setting(source, "PreferredDumpSpeedHDDVD", 8);
             options.Dumping.DumpSpeeds.Bluray = GetInt32Setting(source, "PreferredDumpSpeedBD", 8);
 
+            options.Dumping.UseRelativePaths = GetBooleanSetting(source, "UseRelativePaths", false);
+
             options.Dumping.Aaru.EnableDebug = GetBooleanSetting(source, AaruConstants.EnableDebug, AaruConstants.EnableDebugDefault);
             options.Dumping.Aaru.EnableVerbose = GetBooleanSetting(source, AaruConstants.EnableVerbose, AaruConstants.EnableVerboseDefault);
             options.Dumping.Aaru.ForceDumping = GetBooleanSetting(source, AaruConstants.ForceDumping, AaruConstants.ForceDumpingDefault);
@@ -433,8 +371,6 @@ namespace MPF.Frontend.Tools
             options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = GetBooleanSetting(source, "IncludeDebugProtectionInformation", false);
 
             options.Processing.Login.PullAllInformation = GetBooleanSetting(source, "PullAllInformation", false);
-            options.Processing.Login.RedumpOrgUsername = null; // TODO: Remove entirely
-            options.Processing.Login.RedumpOrgPassword = null; // TODO: Remove entirely
             options.Processing.Login.RetrieveMatchInformation = GetBooleanSetting(source, "RetrieveMatchInformation", true);
             options.Processing.Login.AttemptCount = GetInt32Setting(source, "AttemptCount", 3);
             options.Processing.Login.TimeoutSeconds = GetInt32Setting(source, "TimeoutSeconds", 30);
@@ -488,6 +424,8 @@ namespace MPF.Frontend.Tools
                 { "PreferredDumpSpeedDVD", options.Dumping.DumpSpeeds.DVD.ToString() },
                 { "PreferredDumpSpeedHDDVD", options.Dumping.DumpSpeeds.HDDVD.ToString() },
                 { "PreferredDumpSpeedBD", options.Dumping.DumpSpeeds.Bluray.ToString() },
+
+                { "UseRelativePaths", options.Dumping.UseRelativePaths.ToString() },
 
                 { AaruConstants.EnableDebug, options.Dumping.Aaru.EnableDebug.ToString() },
                 { AaruConstants.EnableVerbose, options.Dumping.Aaru.EnableVerbose.ToString() },
@@ -545,8 +483,6 @@ namespace MPF.Frontend.Tools
                 { "ToolConsoleAutoClose", options.GUI.ToolConsoleAutoClose.ToString() },
 
                 { "RetrieveMatchInformation", options.Processing.Login.RetrieveMatchInformation.ToString() },
-                { "RedumpOrgUsername", null }, // TODO: Remove entirely
-                { "RedumpOrgPassword", null }, // TODO: Remove entirely
                 { "AttemptCount", options.Processing.Login.AttemptCount.ToString() },
                 { "TimeoutSeconds", options.Processing.Login.TimeoutSeconds.ToString() },
             };

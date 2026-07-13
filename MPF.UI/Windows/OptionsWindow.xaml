@@ -280,15 +280,15 @@
                                Grid.Column="0"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Right"
-                               Content="{DynamicResource RedumperPathLabelString}"/>
-                        <TextBox x:Name="RedumperPathTextBox"
+                               Content="{DynamicResource DreamdumpPathLabelString}"/>
+                        <TextBox x:Name="DreamdumpPathTextBox"
                                  Grid.Row="2"
                                  Grid.Column="1"
                                  Height="22"
                                  HorizontalAlignment="Stretch"
-                                 Text="{Binding Options.Dumping.RedumperPath}"
+                                 Text="{Binding Options.Dumping.DreamdumpPath}"
                                  VerticalContentAlignment="Center"/>
-                        <Button x:Name="RedumperPathButton"
+                        <Button x:Name="DreamdumpPathButton"
                                 Grid.Row="2"
                                 Grid.Column="2"
                                 Height="22"
@@ -300,9 +300,29 @@
                                Grid.Column="0"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Right"
+                               Content="{DynamicResource RedumperPathLabelString}"/>
+                        <TextBox x:Name="RedumperPathTextBox"
+                                 Grid.Row="3"
+                                 Grid.Column="1"
+                                 Height="22"
+                                 HorizontalAlignment="Stretch"
+                                 Text="{Binding Options.Dumping.RedumperPath}"
+                                 VerticalContentAlignment="Center"/>
+                        <Button x:Name="RedumperPathButton"
+                                Grid.Row="3"
+                                Grid.Column="2"
+                                Height="22"
+                                Width="22"
+                                Content="..."
+                                Style="{DynamicResource CustomButtonStyle}"/>
+
+                        <Label Grid.Row="4"
+                               Grid.Column="0"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
                                Content="{DynamicResource DefaultDumpingProgramLabelString}"/>
                         <ComboBox x:Name="InternalProgramComboBox"
-                                  Grid.Row="3"
+                                  Grid.Row="4"
                                   Grid.Column="1"
                                   Height="22"
                                   HorizontalAlignment="Stretch"
@@ -310,14 +330,14 @@
                                   SelectedItem="{Binding Options.InternalProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                   Style="{DynamicResource CustomComboBoxStyle}"/>
 
-                        <Label Grid.Row="4"
+                        <Label Grid.Row="5"
                                Grid.Column="0"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Right"
                                Content="{DynamicResource DefaultOutputPathLabelString}"
                                ToolTip="Variables allowed:&#x0a;  &#37;SYSTEM&#37;&#9;(System name, long)&#x0a;  &#37;SYS&#37;&#9;&#9;(System name, short)&#x0a;  &#37;MEDIA&#37;&#9;(Media type)&#x0a;  &#37;PROGRAM&#37;&#9;(Program name, long)&#x0a;  &#37;PROG&#37;&#9;(Program name, short)&#x0a;  &#37;LABEL&#37;&#9;(Volume label)&#x0a;  &#37;DATE&#37;&#9;(Current date)&#x0a;  &#37;DATETIME&#37;&#9;(Current date and time)"/>
                         <TextBox x:Name="DefaultOutputPathTextBox"
-                                 Grid.Row="4"
+                                 Grid.Row="5"
                                  Grid.Column="1"
                                  Height="22"
                                  HorizontalAlignment="Stretch"
@@ -325,7 +345,7 @@
                                  VerticalContentAlignment="Center"
                                  ToolTip="Variables allowed:&#x0a;  &#37;SYSTEM&#37;&#9;(System name, long)&#x0a;  &#37;SYS&#37;&#9;&#9;(System name, short)&#x0a;  &#37;MEDIA&#37;&#9;(Media type)&#x0a;  &#37;PROGRAM&#37;&#9;(Program name, long)&#x0a;  &#37;PROG&#37;&#9;(Program name, short)&#x0a;  &#37;LABEL&#37;&#9;(Volume label)&#x0a;  &#37;DATE&#37;&#9;(Current date)&#x0a;  &#37;DATETIME&#37;&#9;(Current date and time)"/>
                         <Button x:Name="DefaultOutputPathButton"
-                                Grid.Row="4"
+                                Grid.Row="5"
                                 Grid.Column="2"
                                 Height="22"
                                 Width="22"
@@ -342,7 +362,13 @@
                                   VerticalAlignment="Stretch"
                                   Header="{DynamicResource DumpingGroupBoxString}">
                             <UniformGrid Columns="2"
-                                         Rows="7">
+                                         Rows="8">
+                                <CheckBox VerticalAlignment="Center"
+                                          Content="{DynamicResource UseRelativePathsCheckBoxString}"
+                                          IsChecked="{Binding Options.Dumping.UseRelativePaths}"
+                                          ToolTip="Use relative paths when calling the dumping programs"
+                                          Margin="0,4"/>
+
                                 <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource ShowDiscInfoCheckBoxString}"
                                           IsChecked="{Binding Options.Processing.MediaInformation.PromptForDiscInformation}"
@@ -404,6 +430,8 @@
                                           IsChecked="{Binding Options.Processing.CompressLogFiles}"
                                           ToolTip="Compress output log files to reduce space"
                                           Margin="0,4"/>
+                                <Label/>
+                                <!-- Empty label for padding -->
 
                                 <Label VerticalAlignment="Center"
                                        Content="{DynamicResource LogCompressionLabelString}"
@@ -592,7 +620,7 @@
                             <UniformGrid Columns="2"
                                          Rows="3">
                                 <CheckBox VerticalAlignment="Center"
-                                          Content="{DynamicResource EnableDebugOutputCheckBoxString}"
+                                          Content="{DynamicResource AaruEnableDebugOutputCheckBoxString}"
                                           IsChecked="{Binding Options.Dumping.Aaru.EnableDebug}"
                                           ToolTip="Enable debug output in logs"
                                           Margin="0,4"/>
@@ -604,13 +632,13 @@
                                           Margin="0,4"/>
 
                                 <CheckBox VerticalAlignment="Center"
-                                          Content="{DynamicResource ForceDumpingCheckBoxString}"
+                                          Content="{DynamicResource AaruForceDumpingCheckBoxString}"
                                           IsChecked="{Binding Options.Dumping.Aaru.ForceDumping}"
                                           ToolTip="Enable forcing dump even if there are issues"
                                           Margin="0,4"/>
 
                                 <CheckBox VerticalAlignment="Center"
-                                          Content="{DynamicResource StripPersonalDataCheckBoxString}"
+                                          Content="{DynamicResource AaruStripPersonalDataCheckBoxString}"
                                           IsChecked="{Binding Options.Dumping.Aaru.StripPersonalData}"
                                           ToolTip="Enable stripping of personally identifiable information from metadata"
                                           Margin="0,4,0,0"/>
@@ -634,30 +662,30 @@
                             <UniformGrid Columns="2"
                                          Rows="5">
                                 <CheckBox VerticalAlignment="Center"
-                                          Content="{DynamicResource QuietModeCheckBoxString}"
+                                          Content="{DynamicResource DiscImageCreatorQuietModeCheckBoxString}"
                                           IsChecked="{Binding Options.Dumping.DIC.QuietMode}"
                                           ToolTip="Disable sounds (beeps) during and after operations"
                                           Margin="0,4"/>
 
                                 <CheckBox VerticalAlignment="Center"
-                                          Content="{DynamicResource ParanoidModeCheckBoxString}"
+                                          Content="{DynamicResource DiscImageCreatorParanoidModeCheckBoxString}"
                                           IsChecked="{Binding Options.Dumping.DIC.ParanoidMode}"
                                           ToolTip="Enable pedantic and super-safe flags"
                                           Margin="0,4"/>
 
                                 <CheckBox VerticalAlignment="Center"
-                                          Content="{DynamicResource UseCMIFlagCheckBoxString}"
+                                          Content="{DynamicResource DiscImageCreatorUseCMIFlagCheckBoxString}"
                                           IsChecked="{Binding Options.Dumping.DIC.UseCMIFlag}"
                                           ToolTip="Enable the CMI flag for supported disc types (DVD/HD-DVD only)"
                                           Margin="0,4"/>
 
                                 <CheckBox VerticalAlignment="Center"
-                                          Content="{DynamicResource MultiSectorReadCheckBoxString}"
+                                          Content="{DynamicResource DiscImageCreatorMultiSectorReadCheckBoxString}"
                                           IsChecked="{Binding Options.Dumping.DIC.MultiSectorRead}"
                                           ToolTip="Enable the /mr flag for BD drive dumping"
                                           Margin="0,4"/>
 
-                                <Label Content="{DynamicResource MultiSectorReadValueLabelString}"
+                                <Label Content="{DynamicResource DiscImageCreatorMultiSectorReadValueLabelString}"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center"
@@ -669,7 +697,7 @@
                                          ToolTip="Set the default value for the /mr flag"
                                          ToolTipService.ShowOnDisabled="True"/>
 
-                                <Label Content="{DynamicResource DICCDRereadTriesLabelString}"
+                                <Label Content="{DynamicResource DiscImageCreatorCDRereadTriesLabelString}"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center"
@@ -679,7 +707,7 @@
                                          Text="{Binding Options.Dumping.DIC.RereadCount}"
                                          ToolTip="Specifies how many rereads are attempted on C2 error [CD only]"/>
 
-                                <Label Content="{DynamicResource DICDVDRereadTriesLabelString}"
+                                <Label Content="{DynamicResource DiscImageCreatorDVDRereadTriesLabelString}"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center"
@@ -688,6 +716,45 @@
                                          HorizontalAlignment="Left"
                                          Text="{Binding Options.Dumping.DIC.DVDRereadCount}"
                                          ToolTip="Specifies how many rereads are attempted on read error [DVD/HD-DVD/BD only]"/>
+                            </UniformGrid>
+                        </GroupBox>
+
+                        <GroupBox Margin="5,5,5,5"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  Header="{DynamicResource DreamdumpGroupBoxString}">
+                            <UniformGrid Columns="2"
+                                         Rows="3">
+                                <Label Content="{DynamicResource DreamdumpRereadTriesLabelString}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"/>
+                                <TextBox VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center"
+                                         Width="200"
+                                         HorizontalAlignment="Left"
+                                         Text="{Binding Options.Dumping.Dreamdump.RereadCount}"
+                                         ToolTip="Specifies how many rereads are attempted on read error"/>
+
+                                <CheckBox VerticalAlignment="Center"
+                                          Content="{DynamicResource DreamdumpNonRedumpOptionsCheckBoxString}"
+                                          Click="DreamdumpNonRedumpModeClicked"
+                                          IsChecked="{Binding Options.Dumping.Dreamdump.NonRedumpMode}"
+                                          ToolTip="Enable non-redump options"
+                                          Margin="0,4"/>
+                                <Label/>
+                                <!-- Empty label for padding -->
+
+                                <Label Content="{DynamicResource DreamdumpDefaultSectorOrderLabelString}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"/>
+                                <ComboBox x:Name="DefaultDreamdumpSectorOrderComboBox"
+                                          Height="22"
+                                          Width="200"
+                                          HorizontalAlignment="Left"
+                                          ItemsSource="{Binding DreamdumpSectorOrders}"
+                                          SelectedItem="{Binding Options.Dumping.Dreamdump.SectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          Style="{DynamicResource CustomComboBoxStyle}"
+                                          IsEnabled="{Binding Options.Dumping.Dreamdump.NonRedumpMode}"/>
                             </UniformGrid>
                         </GroupBox>
 
@@ -704,7 +771,7 @@
                                           Margin="0,4"/>
 
                                 <CheckBox VerticalAlignment="Center"
-                                          Content="{DynamicResource EnableRefineSectorModeFlagCheckBoxString}"
+                                          Content="{DynamicResource RedumperEnableRefineSectorModeFlagCheckBoxString}"
                                           IsChecked="{Binding Options.Dumping.Redumper.RefineSectorMode}"
                                           ToolTip="Enable the refine sector mode flag by default"
                                           Margin="0,4"/>
@@ -719,7 +786,7 @@
                                          Text="{Binding Options.Dumping.Redumper.RereadCount}"
                                          ToolTip="Specifies how many rereads are attempted on read error"/>
 
-                                <Label Content="{DynamicResource PlextorLeadinRetriesLabelString}"
+                                <Label Content="{DynamicResource RedumperPlextorLeadinRetriesLabelString}"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center"
@@ -731,15 +798,15 @@
                                          ToolTipService.ShowOnDisabled="True"/>
 
                                 <CheckBox VerticalAlignment="Center"
-                                          Content="{DynamicResource NonRedumpOptionsCheckBoxString}"
-                                          Click="NonRedumpModeClicked"
+                                          Content="{DynamicResource RedumperNonRedumpOptionsCheckBoxString}"
+                                          Click="RedumperNonRedumpModeClicked"
                                           IsChecked="{Binding Options.Dumping.Redumper.NonRedumpMode}"
                                           ToolTip="Enable non-redump options"
                                           Margin="0,4"/>
                                 <Label/>
                                 <!-- Empty label for padding -->
 
-                                <Label Content="{DynamicResource DefaultReadMethodLabelString}"
+                                <Label Content="{DynamicResource RedumperDefaultReadMethodLabelString}"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Right"/>
                                 <ComboBox x:Name="DefaultRedumperReadMethodComboBox"
@@ -751,7 +818,7 @@
                                           Style="{DynamicResource CustomComboBoxStyle}"
                                           IsEnabled="{Binding Options.Dumping.Redumper.NonRedumpMode}"/>
 
-                                <Label Content="{DynamicResource DefaultSectorOrderLabelString}"
+                                <Label Content="{DynamicResource RedumperDefaultSectorOrderLabelString}"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Right"/>
                                 <ComboBox x:Name="DefaultRedumperSectorOrderComboBox"
@@ -763,7 +830,7 @@
                                           Style="{DynamicResource CustomComboBoxStyle}"
                                           IsEnabled="{Binding Options.Dumping.Redumper.NonRedumpMode}"/>
 
-                                <Label Content="{DynamicResource DefaultDriveTypeLabelString}"
+                                <Label Content="{DynamicResource RedumperDefaultDriveTypeLabelString}"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Right"/>
                                 <ComboBox x:Name="DefaultRedumperDriveTypeComboBox"
@@ -775,7 +842,7 @@
                                           Style="{DynamicResource CustomComboBoxStyle}"
                                           IsEnabled="{Binding Options.Dumping.Redumper.NonRedumpMode}"/>
 
-                                <Label Content="{DynamicResource DefaultDrivePregapStartLabelString}"
+                                <Label Content="{DynamicResource RedumperDefaultDrivePregapStartLabelString}"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center"
