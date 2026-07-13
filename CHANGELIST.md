@@ -1,7 +1,69 @@
 ### WIP (xxxx-xx-xx)
 
+- Pre-compress subcode files with Zstd
+- Make environment determination more performant
+- Add ability to resize main window width
+- Update options loader to use PathTool more
+- Prepare to move more helpers to IO
+- Remove need for UnixBlockDevice
+- Rename drive name to device path
+- Remove unused auto-property from dump environment
+- Use field keyword for configuration loading
+- Mark method as moved to RedumpLib
+- Update packages, relax requirements
+- Update RedumpLib to 2.2.0
+- Ensure directories immediately before writing
+- Remove redump.org credential placeholders, update options version
+- Add initial version of Dreamdump processor
+- Add full set of Dreamdump output files
+- Enable Dreamdump across all programs
+- Add Dreamdump processor tests, fix issues found
+- Enable generic outputs processor
+- Add WUD and WUX to generic processor
+- Always attempt to read cuesheet in generic processor
+- Add MDF to generic processor hashed outputs
+- Separate options loading for MacOS
+- Separate options loading for Windows
+- Update accuracy of the README
+- Internally prepare for native configuration files
+- Make OptionsLoader slightly more uniform
+- Ensure dictionary path returns properly
+- Add Dreamdump path to options window
+- Add all Dreamdump settings to UI
+- Enable naive relative path handling
+- Bind the main window to properties that exist (gmipf)
+- Force add Dreamdump log file
+- Do not let a failed file dialog terminate MPF (gmipf)
+- Disable native loading for config due to how deserializer works
+- Fix writing relative paths setting
+- Wire native options loading properly
+- Update Redumper to build 732
+- Fix and update some string resources
+- Add Dreamdump sector order to converter
+- Relative paths only work if non-empty
+- Fix resizing of main window in WPF
+- Use placeholder for media type for Generic processor
+- Use input file as only output file in generic processor
 - Add man page output to the command-line programs (gmipf)
 - Add a man page for the graphical frontend (gmipf)
+
+### 3.8.3 (2026-07-06)
+
+- Add live tool output console for the Linux GUI (gmipf)
+- Normalize null checks in recent code
+- Cleanup around Avalonia code
+- Fix language menu requiring two clicks in the Avalonia GUI (gmipf)
+- Add some explicit comments and code for clarity
+- Be more verbose about program path resolution
+- Use updated version of ResolvePath from IO
+- Make program support sets more obvious
+- Detect and list USB floppy drives on Linux (gmipf)
+- Fix media type dropdown not updating dumping parameters (gmipf)
+- Fix media type sticking when switching drives (gmipf)
+- Clean up XAML files with auto-formatting
+- Strip out majority of commented credentials code
+- Update RedumpLib to 2.1.0
+- Update Serialization to 3.0.1 and BOS to 3.7.1
 
 ### 3.8.2 (2026-07-01)
 

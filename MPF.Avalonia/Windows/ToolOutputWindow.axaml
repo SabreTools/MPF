@@ -1,0 +1,103 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MPF.Avalonia.Windows.ToolOutputWindow"
+        Width="1040"
+        Height="600"
+        MinWidth="480"
+        MinHeight="240"
+        Title="{DynamicResource ToolOutputTitleString}">
+
+    <!-- Fixed default size. Width fits redumper's longest *regular* output line - the
+    drive "configuration:" line (~122 chars), which has no user-controllable parts
+    (no filenames or paths). 1040 covers it with margin; the genuinely unbounded
+    lines (dat <rom> filenames, output paths) are intentionally left to scroll
+    horizontally. Height is then chosen to keep a standard terminal's proportions:
+    KDE Konsole's default 80x24 grid at a typical monospace cell is ~1.73:1, so
+    1040 wide -> ~600 tall. The values are hard-coded literals; the ratio is just
+    the rationale, not computed at runtime. -->
+    <Grid RowDefinitions="*,Auto,Auto" Margin="8" RowSpacing="6">
+
+        <!-- Committed output. Virtualized, fixed-height rows; '\r' progress redraws
+        collapse onto the single live line below and never enter this list. -->
+        <Border Grid.Row="0"
+                Background="#0F1115"
+                CornerRadius="3">
+            <ListBox x:Name="LinesList"
+                     Background="Transparent"
+                     Padding="6,4"
+                     SelectionMode="Multiple"
+                     AutoScrollToSelectedItem="False"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="CopyMenuItem"
+                                  Header="{DynamicResource CopyMenuItemString}"
+                                  InputGesture="Ctrl+C" />
+                        <MenuItem x:Name="SelectAllMenuItem"
+                                  Header="{DynamicResource SelectAllMenuItemString}"
+                                  InputGesture="Ctrl+A" />
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+                <ListBox.Styles>
+                    <!-- Fixed row height -> exact virtualization extent -> the scrollbar
+                    bottom does not jitter as rows realize/derealize. -->
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="MinHeight"
+                                Value="0" />
+                        <Setter Property="Height"
+                                Value="16" />
+                        <Setter Property="Padding"
+                                Value="0" />
+                        <!-- Non-focusable: a focused item raises RequestBringIntoView, which scrolls
+                        the row fully into view and kicks the content horizontally on selection.
+                        Shift/Ctrl-click multi-select does not need item focus, and Ctrl+C /
+                        Ctrl+A are handled at the window level, so keyboard still works. -->
+                        <Setter Property="Focusable"
+                                Value="False" />
+                    </Style>
+                </ListBox.Styles>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"
+                                   Foreground="#D8DEE9"
+                                   FontFamily="Consolas, Menlo, monospace"
+                                   FontSize="12"
+                                   LineHeight="15" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+
+        <!-- Live line: ONE row, redrawn in place by '\r' handling -->
+        <Border Grid.Row="1"
+                Background="#08090C"
+                CornerRadius="3"
+                Padding="6,4">
+            <TextBlock x:Name="LiveLine"
+                       FontFamily="Consolas, Menlo, monospace"
+                       FontSize="12"
+                       Foreground="#A3BE8C"
+                       Text="" />
+        </Border>
+
+        <!-- Auto-close toggle. Checked (default) = close this window when the tool exits;
+        unchecked = keep it open to read the final output. The main MPF window keeps
+        working regardless. The state is persisted to the options. -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    Spacing="12"
+                    Margin="2,2,2,0"
+                    VerticalAlignment="Center">
+            <CheckBox x:Name="AutoCloseCheck"
+                      Content="{DynamicResource ToolOutputCloseOnExitCheckBoxString}"
+                      IsChecked="True"
+                      VerticalAlignment="Center" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using MPF.Frontend.ComboBoxItems;
+using DreamdumpSectorOrder = MPF.ExecutionContexts.Dreamdump.SectorOrder;
 using LogCompression = MPF.Processors.LogCompression;
 using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
@@ -49,7 +50,12 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of available internal programs
         /// </summary>
-        public static List<Element<InternalProgram>> InternalPrograms => PopulateInternalPrograms();
+        public static List<Element<InternalProgram>> AvailableInternalPrograms => PopulateInternalPrograms();
+
+        /// <summary>
+        /// Current list of supported Dreamdump sector orders
+        /// </summary>
+        public static List<Element<DreamdumpSectorOrder>> DreamdumpSectorOrders => Element<DreamdumpSectorOrder>.GenerateElements();
 
         /// <summary>
         /// List of available interface languages
@@ -83,6 +89,21 @@ namespace MPF.Frontend.ViewModels
 
         #endregion
 
+        #region Constants
+
+        /// <summary>
+        /// Ordered set of dumping-supported programs
+        /// </summary>
+        private static readonly List<InternalProgram> DumpingPrograms =
+        [
+            InternalProgram.Redumper,
+            InternalProgram.DiscImageCreator,
+            InternalProgram.Aaru,
+            InternalProgram.Dreamdump,
+        ];
+
+        #endregion
+
         /// <summary>
         /// Constructor for pure view model
         /// </summary>
@@ -105,38 +126,25 @@ namespace MPF.Frontend.ViewModels
         /// Get a complete list of supported internal programs
         /// </summary>
         private static List<Element<InternalProgram>> PopulateInternalPrograms()
-        {
-            var internalPrograms = new List<InternalProgram>
-            {
-                InternalProgram.Redumper,
-                InternalProgram.DiscImageCreator,
-                InternalProgram.Aaru,
-                // InternalProgram.Dreamdump,
-            };
-            return internalPrograms.ConvertAll(ip => new Element<InternalProgram>(ip));
-        }
+            => DumpingPrograms.ConvertAll(ip => new Element<InternalProgram>(ip));
 
         #endregion
 
         #region UI Commands
 
         /// <summary>
-        /// Get the human-readable result for a redump.org login result
+        /// Reset Dreamdump non-redump options (Read Method, Sector Order, Drive Type)
         /// </summary>
-        // public static string GetRedumpOrgLoginResult(bool? success)
-        // {
-        //     return success switch
-        //     {
-        //         true => "redump.org username and password accepted!",
-        //         false => "redump.org username and password denied!",
-        //         null => "An error occurred validating your redump.org credentials!",
-        //     };
-        // }
+        public void DreamdumpNonRedumpModeUnChecked()
+        {
+            Options.Dumping.Dreamdump.SectorOrder = DreamdumpSectorOrder.NONE;
+            TriggerPropertyChanged(nameof(Options));
+        }
 
         /// <summary>
-        /// Reset Redumper non-redump options (Read Method, Sector Order, Drive Type)
+        /// Reset and Redumper non-redump options (Read Method, Sector Order, Drive Type)
         /// </summary>
-        public void NonRedumpModeUnChecked()
+        public void RedumperNonRedumpModeUnChecked()
         {
             Options.Dumping.Redumper.ReadMethod = RedumperReadMethod.NONE;
             Options.Dumping.Redumper.SectorOrder = RedumperSectorOrder.NONE;

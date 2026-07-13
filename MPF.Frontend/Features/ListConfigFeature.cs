@@ -79,6 +79,11 @@ namespace MPF.Frontend.Features
             Console.WriteLine($"  Default Blu-ray Speed = {options.Dumping.DumpSpeeds.Bluray}");
             Console.WriteLine();
 
+            // Pre-processing
+            Console.WriteLine("Pre-Processing Options:");
+            Console.WriteLine($"  Use Relative Paths = {options.Dumping.UseRelativePaths}");
+            Console.WriteLine();
+
             // Aaru
             Console.WriteLine("Aaru-Specific Options:");
             Console.WriteLine($"  Enable Debug = {options.Dumping.Aaru.EnableDebug}");
@@ -130,8 +135,6 @@ namespace MPF.Frontend.Features
             // Web Login Information
             Console.WriteLine("Web Login Information:");
             Console.WriteLine($"  Pull All Information = {options.Processing.Login.PullAllInformation}");
-            // Console.WriteLine($"  redump.org Username = {options.Processing.Login.RedumpOrgUsername}");
-            // Console.WriteLine($"  redump.org Password = {(string.IsNullOrEmpty(options.Processing.Login.RedumpOrgPassword) ? "[UNSET]" : "[SET]")}");
             Console.WriteLine($"  Retrieve Match Information = {options.Processing.Login.RetrieveMatchInformation}");
             Console.WriteLine($"  Web client attempt count = {options.Processing.Login.AttemptCount}");
             Console.WriteLine($"  Web client timeout in seconds = {options.Processing.Login.TimeoutSeconds}");

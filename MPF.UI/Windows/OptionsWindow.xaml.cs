@@ -25,10 +25,8 @@ namespace MPF.UI.Windows
         private System.Windows.Controls.Button? CancelButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CancelButton");
         private System.Windows.Controls.Button? DefaultOutputPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DefaultOutputPathButton");
         private System.Windows.Controls.Button? DiscImageCreatorPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DiscImageCreatorPathButton");
+        private System.Windows.Controls.Button? DreamdumpPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DreamdumpPathButton");
         private System.Windows.Controls.Button? RedumperPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "RedumperPathButton");
-        // private System.Windows.Controls.Button? RedumpLoginTestButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "RedumpLoginTestButton");
-        // private PasswordBox? RedumpOrgPasswordBox => ItemHelper.FindChild<PasswordBox>(this, "RedumpOrgPasswordBox");
-        // private System.Windows.Controls.TextBox? RedumpOrgUsernameTextBox => ItemHelper.FindChild<System.Windows.Controls.TextBox>(this, "RedumpOrgUsernameTextBox");
 
 #endif
 
@@ -58,19 +56,15 @@ namespace MPF.UI.Windows
 #endif
             DataContext = new OptionsViewModel(options);
 
-            // Set initial value for binding
-            // RedumpOrgPasswordBox!.Password = options.Processing.Login.RedumpOrgPassword;
-
             // Add handlers
             AaruPathButton!.Click += BrowseForAaruPathClick;
             DiscImageCreatorPathButton!.Click += BrowseForDiscImageCreatorPathClick;
+            DreamdumpPathButton!.Click += BrowseForDreamdumpPathClick;
             RedumperPathButton!.Click += BrowseForRedumperPathClick;
             DefaultOutputPathButton!.Click += BrowseForDefaultOutputPathClick;
 
             AcceptButton!.Click += OnAcceptClick;
             CancelButton!.Click += OnCancelClick;
-            // RedumpOrgPasswordBox!.PasswordChanged += OnPasswordChanged;
-            // RedumpLoginTestButton!.Click += OnRedumpOrgTestClick;
         }
 
         /// <summary>
@@ -179,24 +173,6 @@ namespace MPF.UI.Windows
             };
         }
 
-        /// <summary>
-        /// Test redump.org credentials for validity
-        /// </summary>
-        // private async Task<bool?> ValidateRedumpOrgCredentials()
-        // {
-        //     bool? success = await RedumpClient.ValidateCredentials(RedumpOrgUsernameTextBox!.Text, RedumpOrgPasswordBox!.Password);
-        //     string message = OptionsViewModel.GetRedumpOrgLoginResult(success);
-
-        //     if (success == true)
-        //         CustomMessageBox.Show(this, message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-        //     else if (success == false)
-        //         CustomMessageBox.Show(this, message, (string)System.Windows.Application.Current.FindResource("ErrorMessageString"), MessageBoxButton.OK, MessageBoxImage.Error);
-        //     else
-        //         CustomMessageBox.Show(this, message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-
-        //     return success;
-        // }
-
         #endregion
 
         #region Event Handlers
@@ -234,6 +210,16 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Handler for generic Click event
         /// </summary>
+        private void BrowseForDreamdumpPathClick(object sender, EventArgs e)
+        {
+            string? result = BrowseForPath(this, sender as System.Windows.Controls.Button);
+            if (result is not null)
+                OptionsViewModel.Options.Dumping.DreamdumpPath = result;
+        }
+
+        /// <summary>
+        /// Handler for generic Click event
+        /// </summary>
         private void BrowseForRedumperPathClick(object sender, EventArgs e)
         {
             string? result = BrowseForPath(this, sender as System.Windows.Controls.Button);
@@ -244,13 +230,25 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Alert user of non-redump mode implications
         /// </summary>
-        private void NonRedumpModeClicked(object sender, EventArgs e)
+        private void DreamdumpNonRedumpModeClicked(object sender, EventArgs e)
+        {
+            if (OptionsViewModel.Options.Dumping.Dreamdump.NonRedumpMode)
+                CustomMessageBox.Show(this, "All logs generated with these options will not be acceptable for Redump submission",
+                    (string)System.Windows.Application.Current.FindResource("WarningMessageString"), MessageBoxButton.OK, MessageBoxImage.Warning);
+            else
+                OptionsViewModel.DreamdumpNonRedumpModeUnChecked();
+        }
+
+        /// <summary>
+        /// Alert user of non-redump mode implications
+        /// </summary>
+        private void RedumperNonRedumpModeClicked(object sender, EventArgs e)
         {
             if (OptionsViewModel.Options.Dumping.Redumper.NonRedumpMode)
                 CustomMessageBox.Show(this, "All logs generated with these options will not be acceptable for Redump submission",
                     (string)System.Windows.Application.Current.FindResource("WarningMessageString"), MessageBoxButton.OK, MessageBoxImage.Warning);
             else
-                OptionsViewModel.NonRedumpModeUnChecked();
+                OptionsViewModel.RedumperNonRedumpModeUnChecked();
         }
 
         /// <summary>
@@ -270,20 +268,6 @@ namespace MPF.UI.Windows
             OptionsViewModel.SavedSettings = false;
             Close();
         }
-
-        /// <summary>
-        /// Handler for RedumpOrgPasswordBox PasswordChanged event
-        /// </summary>
-        // private void OnPasswordChanged(object sender, EventArgs e)
-        // {
-        //     OptionsViewModel.Options.Processing.Login.RedumpOrgPassword = RedumpOrgPasswordBox!.Password;
-        // }
-
-        /// <summary>
-        /// Test redump.org credentials for validity
-        /// </summary>
-        // private async void OnRedumpOrgTestClick(object sender, EventArgs e)
-        //     => await ValidateRedumpOrgCredentials();
 
         #endregion
     }

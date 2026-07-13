@@ -1,5 +1,6 @@
 ﻿using MPF.Frontend.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
+using DreamdumpSectorOrder = MPF.ExecutionContexts.Dreamdump.SectorOrder;
 using LogCompression = MPF.Processors.LogCompression;
 using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
@@ -20,6 +21,7 @@ namespace MPF.Frontend
             return value switch
             {
                 DiscCategory discCategory => new Element<DiscCategory>(discCategory),
+                DreamdumpSectorOrder sectorOrder => new Element<DreamdumpSectorOrder>(sectorOrder),
                 InterfaceLanguage interfaceLanguage => new Element<InterfaceLanguage>(interfaceLanguage),
                 InternalProgram internalProgram => new Element<InternalProgram>(internalProgram),
                 LogCompression logCompression => new Element<LogCompression>(logCompression),
@@ -49,6 +51,7 @@ namespace MPF.Frontend
             return element switch
             {
                 Element<DiscCategory> dcElement => dcElement.Value,
+                Element<DreamdumpSectorOrder> soElement => soElement.Value,
                 Element<InterfaceLanguage> ilElement => ilElement.Value,
                 Element<InternalProgram> ipElement => ipElement.Value,
                 Element<LogCompression> lcElement => lcElement.Value,

@@ -83,8 +83,6 @@ namespace MPF.CLI.Features
 
             // Web Login Information
             Options.Processing.Login.PullAllInformation = false;
-            // Options.Processing.Login.RedumpOrgUsername = null;
-            // Options.Processing.Login.RedumpOrgPassword = null;
             Options.Processing.Login.RetrieveMatchInformation = true;
 
             // Media Information
@@ -105,7 +103,7 @@ namespace MPF.CLI.Features
         public override bool Execute()
         {
             // Validate a system type is provided
-            if (System == null)
+            if (System is null)
             {
                 Console.Error.WriteLine("A system name needs to be provided");
                 return false;
@@ -122,78 +120,65 @@ namespace MPF.CLI.Features
                 Console.Error.WriteLine(extraInputs);
             }
 
-            // Validate the supplied credentials
-            // if (Options.Processing.Login.RetrieveMatchInformation)
-            // {
-            //     if (!string.IsNullOrEmpty(Options.Processing.Login.RedumpOrgUsername)
-            //         && !string.IsNullOrEmpty(Options.Processing.Login.RedumpOrgPassword))
-            //     {
-            //         bool? validated = RedumpClient.ValidateCredentials(Options.Processing.Login.RedumpOrgUsername!, Options.Processing.Login.RedumpOrgPassword!).GetAwaiter().GetResult();
-            //         string message = validated switch
-            //         {
-            //             true => "redump.org username and password accepted!",
-            //             false => "redump.org username and password denied!",
-            //             null => "An error occurred validating your redump.org credentials!",
-            //         };
-
-            //         Console.WriteLine(message);
-            //     }
-            // }
-
             // Validate the internal program
 #pragma warning disable IDE0010
             switch (Options.InternalProgram)
             {
                 case InternalProgram.Aaru:
+                {
+                    string? resolved = Options.Dumping.AaruPath.ResolvePath();
+                    if (resolved is null)
                     {
-                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
-                        if (resolved == null)
-                        {
-                            Console.Error.WriteLine("A path needs to be supplied in config.json for Aaru, exiting...");
-                            return false;
-                        }
-
-                        Options.Dumping.AaruPath = resolved;
+                        Console.Error.WriteLine("A path needs to be supplied in config.json for Aaru, exiting...");
+                        return false;
                     }
 
-                    break;
+                    Options.Dumping.AaruPath = resolved;
+                }
+
+                break;
 
                 case InternalProgram.DiscImageCreator:
+                {
+                    string? resolved = Options.Dumping.DiscImageCreatorPath.ResolvePath();
+                    if (resolved is null)
                     {
-                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
-                        if (resolved == null)
-                        {
-                            Console.Error.WriteLine("A path needs to be supplied in config.json for DIC, exiting...");
-                            return false;
-                        }
-
-                        Options.Dumping.DiscImageCreatorPath = resolved;
+                        Console.Error.WriteLine("A path needs to be supplied in config.json for DIC, exiting...");
+                        return false;
                     }
 
-                    break;
+                    Options.Dumping.DiscImageCreatorPath = resolved;
+                }
 
-                // case InternalProgram.Dreamdump:
-                //     if (!File.Exists(Options.Dumping.DreamdumpPath))
-                //     {
-                //         Console.Error.WriteLine("A path needs to be supplied in config.json for Dreamdump, exiting...");
-                //         return false;
-                //     }
+                break;
 
-                //     break;
+                case InternalProgram.Dreamdump:
+                {
+                    string? resolved = Options.Dumping.DreamdumpPath.ResolvePath();
+                    if (resolved is null)
+                    {
+                        Console.Error.WriteLine("A path needs to be supplied in config.json for Dreamdump, exiting...");
+                        return false;
+                    }
+
+                    Options.Dumping.AaruPath = resolved;
+                }
+
+                break;
 
                 case InternalProgram.Redumper:
+                {
+                    string? resolved = Options.Dumping.RedumperPath.ResolvePath();
+                    if (resolved is null)
                     {
-                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
-                        if (resolved == null)
-                        {
-                            Console.Error.WriteLine("A path needs to be supplied in config.json for Redumper, exiting...");
-                            return false;
-                        }
-
-                        Options.Dumping.RedumperPath = resolved;
+                        Console.Error.WriteLine("A path needs to be supplied in config.json for Redumper, exiting...");
+                        return false;
                     }
 
-                    break;
+                    Options.Dumping.RedumperPath = resolved;
+                }
+
+                break;
 
                 default:
                     Console.Error.WriteLine($"{Options.InternalProgram} is not a supported dumping program, exiting...");
@@ -240,11 +225,17 @@ namespace MPF.CLI.Features
             if (FilePath is not null)
                 FilePath = IOExtensions.NormalizeFilePath(FilePath, fullPath: true);
 
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            // If relative paths are enabled, use those
+            if (Options.Dumping.UseRelativePaths && !string.IsNullOrEmpty(FilePath))
+                FilePath = Path.GetRelativePath(Environment.CurrentDirectory, FilePath);
+#endif
+
             // Get the speed from the options
             int speed = DriveSpeed ?? FrontendTool.GetDefaultSpeedForPhysicalMediaType(PhysicalMediaType, Options);
 
             // Get the retry count and override if needed
-            if (Retries != null && Retries >= 0)
+            if (Retries is not null && Retries >= 0)
             {
                 // Set all possible reread options
                 Options.Dumping.Aaru.RereadCount = Retries.Value;

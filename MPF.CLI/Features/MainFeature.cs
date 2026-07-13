@@ -88,7 +88,7 @@ namespace MPF.CLI.Features
 
                 // Set a media type
                 else if (PhysicalMediaTypeInput.ProcessInput(args, ref index))
-                    PhysicalMediaType = OptionsLoader.ToPhysicalMediaType(PhysicalMediaTypeInput.Value?.Trim('"'));
+                    PhysicalMediaType = PhysicalMediaTypeInput.Value?.Trim('"').ToPhysicalMediaType();
 
                 // Use a device path
                 else if (DeviceInput.ProcessInput(args, ref index))

@@ -10,6 +10,8 @@
     <x:String x:Key="CancelButtonString">Abbrechen</x:String>
     <x:String x:Key="MinimizeMenuItemString">Minimieren</x:String>
     <x:String x:Key="CloseMenuItemString">Schließen</x:String>
+    <x:String x:Key="CopyMenuItemString">Kopieren</x:String>
+    <x:String x:Key="SelectAllMenuItemString">Alles auswählen</x:String>
     <x:String x:Key="SettingsGroupBoxString">Einstellungen</x:String>
     <x:String x:Key="StatusGroupBoxString">Status</x:String>
     <x:String x:Key="WarningLabelString">WARNUNG:</x:String>
@@ -49,6 +51,10 @@
     <x:String x:Key="ClearButtonString">Löschen</x:String>
     <x:String x:Key="SaveButtonString">Speichern</x:String>
 
+    <!-- Tool Output Window -->
+    <x:String x:Key="ToolOutputTitleString">Programmausgabe</x:String>
+    <x:String x:Key="ToolOutputCloseOnExitCheckBoxString">Dieses Fenster schließen, wenn das Programm beendet ist</x:String>
+
     <!-- Options Window -->
     <x:String x:Key="OptionsTitleString">Optionen</x:String>
     <x:String x:Key="OptionsFirstRunTitleString">Willkommen bei MPF, erkunden Sie die Optionen</x:String>
@@ -72,6 +78,7 @@
     <x:String x:Key="PathsTabString">Pfad</x:String>
     <x:String x:Key="AaruPathLabelString">Aaru-Pfad</x:String>
     <x:String x:Key="DiscImageCreatorPathLabelString">DiscImageCreator-Pfad</x:String>
+    <x:String x:Key="DreamdumpPathLabelString">Dreamdump-Pfad</x:String>
     <x:String x:Key="RedumperPathLabelString">Redumper-Pfad</x:String>
     <x:String x:Key="DefaultDumpingProgramLabelString">Standard-Dump-Programm</x:String>
     <x:String x:Key="DefaultOutputPathLabelString">Standard-Ausgabepfad</x:String>
@@ -100,34 +107,38 @@
     <!-- Programs Tab -->
     <x:String x:Key="ProgramsTabString">Programme</x:String>
     <x:String x:Key="AaruGroupBoxString">Aaru</x:String>
-    <x:String x:Key="EnableDebugOutputCheckBoxString">Debug-Ausgabe aktivieren</x:String>
+    <x:String x:Key="AaruEnableDebugOutputCheckBoxString">Debug-Ausgabe aktivieren</x:String>
     <x:String x:Key="AaruEnableVerboseOutputCheckBoxString">Detaillierte Ausgabe aktivieren</x:String>
-    <x:String x:Key="ForceDumpingCheckBoxString">Dumping erzwingen</x:String>
-    <x:String x:Key="StripPersonalDataCheckBoxString">Persönliche Daten entfernen</x:String>
+    <x:String x:Key="AaruForceDumpingCheckBoxString">Dumping erzwingen</x:String>
+    <x:String x:Key="AaruStripPersonalDataCheckBoxString">Persönliche Daten entfernen</x:String>
     <x:String x:Key="AaruRereadTriesLabelString">Wiederholungsversuche:</x:String>
     <x:String x:Key="DiscImageCreatorGroupBoxString">DiscImageCreator</x:String>
-    <x:String x:Key="QuietModeCheckBoxString">Leiser Modus</x:String>
-    <x:String x:Key="ParanoidModeCheckBoxString">Paranoider Modus</x:String>
-    <x:String x:Key="UseCMIFlagCheckBoxString">CMI-Flag verwenden</x:String>
-    <x:String x:Key="MultiSectorReadCheckBoxString">Mehrsektor-Lesen</x:String>
-    <x:String x:Key="MultiSectorReadValueLabelString">Wert für Mehrsektor-Lesen:</x:String>
-    <x:String x:Key="DICCDRereadTriesLabelString">CD-Wiederholungsversuche:</x:String>
-    <x:String x:Key="DICDVDRereadTriesLabelString">DVD/HD-DVD/BD-Wiederholungsversuche:</x:String>
+    <x:String x:Key="DiscImageCreatorQuietModeCheckBoxString">Leiser Modus</x:String>
+    <x:String x:Key="DiscImageCreatorParanoidModeCheckBoxString">Paranoider Modus</x:String>
+    <x:String x:Key="DiscImageCreatorUseCMIFlagCheckBoxString">CMI-Flag verwenden</x:String>
+    <x:String x:Key="DiscImageCreatorMultiSectorReadCheckBoxString">Mehrsektor-Lesen</x:String>
+    <x:String x:Key="DiscImageCreatorMultiSectorReadValueLabelString">Wert für Mehrsektor-Lesen:</x:String>
+    <x:String x:Key="DiscImageCreatorCDRereadTriesLabelString">CD-Wiederholungsversuche:</x:String>
+    <x:String x:Key="DiscImageCreatorDVDRereadTriesLabelString">DVD/HD-DVD/BD-Wiederholungsversuche:</x:String>
+    <x:String x:Key="DreamdumpGroupBoxString">Dreamdump</x:String>
+    <x:String x:Key="DreamdumpRereadTriesLabelString">Wiederholungsversuche:</x:String>
+    <x:String x:Key="DreamdumpNonRedumpOptionsCheckBoxString">Nicht-Redump-Optionen</x:String>
+    <x:String x:Key="DreamdumpDefaultSectorOrderLabelString">Standard-Sektorordnung:</x:String>
     <x:String x:Key="RedumperGroupBoxString">Redumper</x:String>
     <x:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Detaillierte Ausgabe aktivieren</x:String>
-    <x:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Refine-Sektor-Modus-Flag aktivieren</x:String>
+    <x:String x:Key="RedumperEnableRefineSectorModeFlagCheckBoxString">Refine-Sektor-Modus-Flag aktivieren</x:String>
     <x:String x:Key="RedumperRereadTriesLabelString">Wiederholungsversuche:</x:String>
-    <x:String x:Key="PlextorLeadinRetriesLabelString">Plextor Lead-in Wiederholungen:</x:String>
-    <x:String x:Key="NonRedumpOptionsCheckBoxString">Nicht-Redump-Optionen</x:String>
-    <x:String x:Key="DefaultReadMethodLabelString">Standard-Lesemethode:</x:String>
-    <x:String x:Key="DefaultSectorOrderLabelString">Standard-Sektorordnung:</x:String>
-    <x:String x:Key="DefaultDriveTypeLabelString">Standard-Laufwerkstyp:</x:String>
-    <x:String x:Key="DefaultDrivePregapStartLabelString">Standard-Laufwerk Pregap Start:</x:String>
+    <x:String x:Key="RedumperPlextorLeadinRetriesLabelString">Plextor Lead-in Wiederholungen:</x:String>
+    <x:String x:Key="RedumperNonRedumpOptionsCheckBoxString">Nicht-Redump-Optionen</x:String>
+    <x:String x:Key="RedumperDefaultReadMethodLabelString">Standard-Lesemethode:</x:String>
+    <x:String x:Key="RedumperDefaultSectorOrderLabelString">Standard-Sektorordnung:</x:String>
+    <x:String x:Key="RedumperDefaultDriveTypeLabelString">Standard-Laufwerkstyp:</x:String>
+    <x:String x:Key="RedumperDefaultDrivePregapStartLabelString">Standard-Laufwerk Pregap Start:</x:String>
     <!-- Login Info Tab -->
     <x:String x:Key="LoginInfoTabString">Login-Informationen</x:String>
     <x:String x:Key="RetrievalGroupBoxString">Abruf</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">Übereinstimmung informationen abrufen</x:String>
-    <x:String x:Key="RedumpGroupBoxString">redump.org</x:String>
+    <x:String x:Key="RedumpGroupBoxString">redump.info</x:String>
     <x:String x:Key="UsernameLabelString">Benutzername</x:String>
     <x:String x:Key="PasswordLabelString">Passwort</x:String>
     <x:String x:Key="TestLoginButtonString">Login testen</x:String>

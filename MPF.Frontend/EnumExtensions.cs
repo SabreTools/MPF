@@ -147,7 +147,7 @@ namespace MPF.Frontend
 
                 InternalProgram.Aaru => "Aaru",
                 InternalProgram.DiscImageCreator => "DiscImageCreator",
-                // InternalProgram.Dreamdump => "Dreamdump",
+                InternalProgram.Dreamdump => "Dreamdump",
                 InternalProgram.Redumper => "Redumper",
 
                 #endregion
@@ -155,6 +155,7 @@ namespace MPF.Frontend
                 #region Verification support only
 
                 InternalProgram.CleanRip => "CleanRip",
+                InternalProgram.Generic => "Generic",
                 InternalProgram.PS3CFW => "PS3 CFW",
                 InternalProgram.UmdImageCreator => "UmdImageCreator",
                 InternalProgram.XboxBackupCreator => "XboxBackupCreator",
@@ -329,7 +330,7 @@ namespace MPF.Frontend
 
                 InternalProgram.Aaru => "aaru",
                 InternalProgram.DiscImageCreator => "dic",
-                // InternalProgram.Dreamdump => "dreamdump",
+                InternalProgram.Dreamdump => "dreamdump",
                 InternalProgram.Redumper => "redumper",
 
                 #endregion
@@ -337,6 +338,7 @@ namespace MPF.Frontend
                 #region Verification support only
 
                 InternalProgram.CleanRip => "cleanrip",
+                InternalProgram.Generic => "generic",
                 InternalProgram.PS3CFW => "ps3cfw",
                 InternalProgram.UmdImageCreator => "uic",
                 InternalProgram.XboxBackupCreator => "xbc",
@@ -428,13 +430,14 @@ namespace MPF.Frontend
                     or "dic"
                     or "dicreator"
                     or "discimagecreator" => InternalProgram.DiscImageCreator,
-                // "dreamdump" => InternalProgram.Dreamdump,
+                "dreamdump" => InternalProgram.Dreamdump,
                 "rd"
                     or "redumper" => InternalProgram.Redumper,
 
                 // Verification support only
                 "cleanrip"
                     or "cr" => InternalProgram.CleanRip,
+                "generic" => InternalProgram.Generic,
                 "ps3cfw"
                     or "ps3"
                     or "getkey"

@@ -127,6 +127,8 @@ namespace MPF.Processors
                 _ = CompressZstandard($"{basePath}.skeleton");
             if (File.Exists($"{basePath}.state"))
                 _ = CompressZstandard($"{basePath}.state");
+            if (File.Exists($"{basePath}.subcode"))
+                _ = CompressZstandard($"{basePath}.subcode");
 
             // Pre-compress all skeletons for multi-track CDs
             if (File.Exists($"{basePath}.cue"))
@@ -295,7 +297,7 @@ namespace MPF.Processors
                         if (!redumpCompat)
                         {
                             info.DiscIdentifiers.Version = xmid?.Version ?? string.Empty;
-                            info.RegionsAndLanguages.Regions = [ProcessingTool.GetXGDRegion(xmid?.Model.RegionIdentifier)];
+                            info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xmid?.Model.RegionIdentifier);
                         }
                     }
 
@@ -308,7 +310,7 @@ namespace MPF.Processors
                         if (!redumpCompat)
                         {
                             info.DiscIdentifiers.Version = xemid?.Version ?? string.Empty;
-                            info.RegionsAndLanguages.Regions = [ProcessingTool.GetXGDRegion(xemid?.Model.RegionIdentifier)];
+                            info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xemid?.Model.RegionIdentifier);
                         }
                     }
 
@@ -571,8 +573,10 @@ namespace MPF.Processors
                         new($"{outputFilename}.state.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "state_zst"),
-                        new($"{outputFilename}.subcode", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
+                        new($"{outputFilename}.subcode", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "subcode"),
+                        new($"{outputFilename}.subcode.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "subcode"),
                         new($"{outputFilename}.toc", OutputFileFlags.Required

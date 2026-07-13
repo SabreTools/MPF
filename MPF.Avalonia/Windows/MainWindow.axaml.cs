@@ -116,10 +116,18 @@ namespace MPF.Avalonia.Windows
             if (MainViewModel.Options.GUI.ShowDebugViewMenuItem)
                 DebugViewMenuItem!.IsVisible = true;
 
+            // On Linux the dumping tool has no console window of its own, so stream its
+            // live output into a separate MPF window. Windows/macOS keep the tool's own
+            // console (leave this null), preserving the original behavior.
+            IToolOutputConsole? toolConsole = OperatingSystem.IsLinux()
+                ? new ToolOutputConsole(this, MainViewModel.Options)
+                : null;
+
             MainViewModel.Init(
                 LogOutput!.EnqueueLog,
                 DisplayUserMessage,
-                ShowMediaInformationWindow);
+                ShowMediaInformationWindow,
+                toolConsole);
 
             // Pass translation strings to MainViewModel
             var translationStrings = new Dictionary<string, string>
@@ -874,7 +882,7 @@ namespace MPF.Avalonia.Windows
         public void DriveSpeedComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
-                MainViewModel.EnsureMediaInformation();
+                MainViewModel.EnsureMediaInformation(resolveProgramPaths: false);
         }
 
         /// <summary>
@@ -925,7 +933,7 @@ namespace MPF.Avalonia.Windows
             if (!string.IsNullOrWhiteSpace(selectedPath))
             {
                 MainViewModel.OutputPath = selectedPath;
-                MainViewModel.EnsureMediaInformation();
+                MainViewModel.EnsureMediaInformation(resolveProgramPaths: false);
             }
         }
 
@@ -935,7 +943,7 @@ namespace MPF.Avalonia.Windows
         public void OutputPathTextBoxTextChanged(object? sender, TextChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
-                MainViewModel.EnsureMediaInformation();
+                MainViewModel.EnsureMediaInformation(resolveProgramPaths: false);
         }
 
         /// <summary>
@@ -998,7 +1006,7 @@ namespace MPF.Avalonia.Windows
                 return;
 
             MainViewModel.OutputPath = Path.Combine(outputPath, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
-            MainViewModel.EnsureMediaInformation();
+            MainViewModel.EnsureMediaInformation(resolveProgramPaths: false);
         }
 
         #endregion

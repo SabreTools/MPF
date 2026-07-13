@@ -10,7 +10,7 @@
         <Nullable>enable</Nullable>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <VersionPrefix>3.8.2</VersionPrefix>
+        <VersionPrefix>3.8.3</VersionPrefix>
 
         <!-- Package Properties -->
         <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
@@ -32,14 +32,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="BinaryObjectScanner" Version="[3.7.0]" />
-        <PackageReference Include="LibIRD" Version="[1.0.5]" />
+        <PackageReference Include="BinaryObjectScanner" Version="3.8.0" />
+        <PackageReference Include="LibIRD" Version="1.0.5" />
         <PackageReference Include="Microsoft.Management.Infrastructure" Version="3.0.0" Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))" />
         <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" Condition="$(TargetFramework.StartsWith(`net452`))" />
         <PackageReference Include="MinThreadingBridge" Version="0.11.4" Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net40`))" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-        <PackageReference Include="SabreTools.CommandLine" Version="[1.4.0]" />
-        <PackageReference Include="SabreTools.RedumpLib" Version="[2.0.8]" />
+        <PackageReference Include="SabreTools.CommandLine" Version="1.5.0" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="2.2.0" />
         <PackageReference Include="System.Net.Http" Version="4.3.4" Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))" />
     </ItemGroup>
 

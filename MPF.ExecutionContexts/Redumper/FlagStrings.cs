@@ -63,6 +63,7 @@ namespace MPF.ExecutionContexts.Redumper
 
         public const string ForceSplit = "--force-split";
         public const string LeaveUnchanged = "--leave-unchanged";
+        public const string AutoDetect = "--auto-detect";
         public const string ForceQTOC = "--force-qtoc";
         public const string SkipFill = "--skip-fill";
         public const string FilesystemTrim = "--filesystem-trim";

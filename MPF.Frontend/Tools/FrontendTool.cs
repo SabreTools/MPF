@@ -1,8 +1,6 @@
 using System;
-using System.IO;
 using System.Reflection;
 using System.Text;
-using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.Tools
@@ -102,66 +100,6 @@ namespace MPF.Frontend.Tools
             // Sony PlayStation 5
             if (volumeLabel.Equals("PS5VOLUME", StringComparison.OrdinalIgnoreCase))
                 return PhysicalSystem.SonyPlayStation5;
-
-            return null;
-        }
-
-        #endregion
-
-        #region Binary Resolution
-
-        /// <summary>
-        /// Resolve a configured dumping-tool path to an absolute file path.
-        /// </summary>
-        /// <param name="configuredPath">Raw value from the user's options</param>
-        /// <returns>
-        /// The absolute path of the located binary, or null when nothing exists.
-        /// A value containing a path separator is treated as an explicit location and
-        /// returned as-is when it exists. A bare name (no separator) is searched in the
-        /// runtime directory first, then in each PATH entry.
-        /// </returns>
-        public static string? ResolveBinaryPath(string? configuredPath)
-        {
-            if (string.IsNullOrEmpty(configuredPath))
-                return null;
-
-            // If the configured path starts with a home character
-            if (configuredPath!.StartsWith("~/") || configuredPath.StartsWith("~\\"))
-            {
-                string homeDirectory = PathTool.GetHomeDirectory();
-
-                configuredPath = configuredPath.Substring(2);
-                configuredPath = Path.Combine(homeDirectory, configuredPath);
-
-                return File.Exists(configuredPath) ? configuredPath : null;
-            }
-
-            // Explicit location (absolute or relative path) — keep historical behavior.
-            if (configuredPath!.Contains("/") || configuredPath.Contains("\\"))
-                return File.Exists(configuredPath) ? configuredPath : null;
-
-            // Bare name — search runtime directory first, then $PATH.
-            string runtimeDir = PathTool.GetRuntimeDirectory();
-            if (!string.IsNullOrEmpty(runtimeDir))
-            {
-                string candidate = Path.Combine(runtimeDir, configuredPath);
-                if (File.Exists(candidate))
-                    return candidate;
-            }
-
-            string? pathEnv = Environment.GetEnvironmentVariable("PATH");
-            if (string.IsNullOrEmpty(pathEnv))
-                return null;
-
-            foreach (string dir in pathEnv!.Split(Path.PathSeparator))
-            {
-                if (string.IsNullOrEmpty(dir))
-                    continue;
-
-                string candidate = Path.Combine(dir, configuredPath);
-                if (File.Exists(candidate))
-                    return candidate;
-            }
 
             return null;
         }

@@ -433,17 +433,17 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="region">Character denoting the region</param>
         /// <returns>Region, if possible</returns>
-        public static Region? GetXGDRegion(char? region)
+        public static Region?[]? GetXGDRegions(char? region)
         {
             return region switch
             {
-                'W' => (Region?)Region.World,
-                'A' => (Region?)Region.UnitedStatesOfAmerica,
-                'J' => (Region?)Region.JapanAsia,
-                'E' => (Region?)Region.Europe,
-                'K' => (Region?)Region.USAJapan,
-                'L' => (Region?)Region.USAEurope,
-                'H' => (Region?)Region.JapanEurope,
+                'W' => [Region.World],
+                'A' => [Region.UnitedStatesOfAmerica],
+                'J' => [Region.Japan, Region.Asia],
+                'E' => [Region.Europe],
+                'K' => [Region.UnitedStatesOfAmerica, Region.Japan],
+                'L' => [Region.UnitedStatesOfAmerica, Region.Europe],
+                'H' => [Region.Japan, Region.Europe],
                 _ => null,
             };
         }

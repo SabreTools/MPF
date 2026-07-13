@@ -80,7 +80,7 @@ VALID_CROSS_PLATFORM_RUNTIMES=("win-arm64" "linux-x64" "linux-arm64" "osx-x64" "
 # Download programs step
 function download_programs() {
     # Define download constants
-    DL_PREFIXES=("Aaru" "Creator" "Redumper")
+    DL_PREFIXES=("Aaru" "Creator" "Dreamdump" "Redumper")
     declare -A DL_MAP
 
     # Aaru
@@ -102,15 +102,24 @@ function download_programs() {
     DL_MAP["Creator_win-x64"]="https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
     DL_MAP["Creator_win-x86"]="https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
 
+    # Dreamdump
+    DL_MAP["Dreamdump_linux-arm64"]=""
+    DL_MAP["Dreamdump_linux-x64"]="https://github.com/MoriGM/dreamdump/releases/download/0.3.0/dreamdump-build_312_linux_64.zip"
+    DL_MAP["Dreamdump_osx-arm64"]=""
+    DL_MAP["Dreamdump_osx-x64"]=""
+    DL_MAP["Dreamdump_win-arm64"]=""
+    DL_MAP["Dreamdump_win-x64"]="https://github.com/MoriGM/dreamdump/releases/download/0.3.0/dreamdump-build_312_win_64.zip"
+    DL_MAP["Dreamdump_win-x86"]=""
+
     # Redumper
-    DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-linux-arm64.zip"
-    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-linux-x64.zip"
-    #DL_MAP["Redumper_linux_x86"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-linux-x86.zip"
-    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-macos-arm64.zip"
-    DL_MAP["Redumper_osx-x64"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-macos-x64.zip"
-    DL_MAP["Redumper_win-arm64"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-windows-arm64.zip"
-    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-windows-x64.zip"
-    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/b726/redumper-b726-windows-x86.zip"
+    DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-linux-arm64.zip"
+    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-linux-x64.zip"
+    #DL_MAP["Redumper_linux_x86"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-linux-x86.zip"
+    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-macos-arm64.zip"
+    DL_MAP["Redumper_osx-x64"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-macos-x64.zip"
+    DL_MAP["Redumper_win-arm64"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-windows-arm64.zip"
+    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-windows-x64.zip"
+    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-windows-x86.zip"
 
     # Download and extract files
     echo "===== Downloading Required Programs ====="
@@ -247,7 +256,7 @@ if [ $NO_BUILD = false ]; then
     for FRAMEWORK in "${AVALONIA_FRAMEWORKS[@]}"; do
         for RUNTIME in "${AVALONIA_RUNTIMES[@]}"; do
             # Output the current build
-            echo "===== Build Avaloniia - $FRAMEWORK, $RUNTIME ====="
+            echo "===== Build Avalonia - $FRAMEWORK, $RUNTIME ====="
 
             # If we have an invalid combination of framework and runtime
             if [[ ! $(echo ${VALID_CROSS_PLATFORM_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then

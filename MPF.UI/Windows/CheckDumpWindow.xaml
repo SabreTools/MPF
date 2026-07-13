@@ -7,18 +7,26 @@
                         xmlns:coreWindows="clr-namespace:MPF.UI.Windows"
                         xmlns:viewModels="clr-namespace:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
                         mc:Ignorable="d"
-                        Title="{DynamicResource CheckDumpTitleString}" Width="600" WindowStyle="None"
-                        WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
-                        AllowsTransparency="True" Background="Transparent">
+                        Title="{DynamicResource CheckDumpTitleString}"
+                        Width="600"
+                        WindowStyle="None"
+                        WindowStartupLocation="CenterOwner"
+                        ResizeMode="CanMinimize"
+                        SizeToContent="Height"
+                        AllowsTransparency="True"
+                        Background="Transparent">
 
     <Window.DataContext>
         <viewModels:CheckDumpViewModel/>
     </Window.DataContext>
     <Window.Resources>
-        <core:ElementConverter x:Key="ElementConverter" />
+        <core:ElementConverter x:Key="ElementConverter"/>
     </Window.Resources>
 
-    <Border CornerRadius="8" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="2">
+    <Border CornerRadius="8"
+            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+            BorderBrush="Gray"
+            BorderThickness="2">
         <StackPanel Orientation="Vertical">
             <Grid Margin="0,2,0,0">
                 <Grid.ColumnDefinitions>
@@ -31,20 +39,34 @@
                     <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
-                <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
+                <Image Grid.Column="0"
+                       Source="/Images/Icon.ico"
+                       Height="20"
+                       Width="20"
+                       Margin="1"
+                       MouseDown="TitleMouseDown"/>
+                <Label Grid.Column="1"
+                       Grid.ColumnSpan="4"
+                       HorizontalAlignment="Stretch"
+                       HorizontalContentAlignment="Center"
+                       MouseDown="TitleMouseDown">
                     <Label.Content>
-                        <Run FontWeight="Bold" Text="{DynamicResource CheckDumpTitleString}" />
+                        <Run FontWeight="Bold"
+                             Text="{DynamicResource CheckDumpTitleString}"/>
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                      Style="{DynamicResource CustomContextMenuStyle}">
-                            <MenuItem Header="{DynamicResource MinimizeMenuItemString}" Click="MinimizeButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource MinimizeMenuItemString}"
+                                      Click="MinimizeButtonClick"
+                                      Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}"/>
-                            <MenuItem Header="{DynamicResource CloseMenuItemString}" Click="CloseButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource CloseMenuItemString}"
+                                      Click="CloseButtonClick"
+                                      Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}"/>
@@ -57,16 +79,32 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="MinimizeButton" Grid.Column="0" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
-                        <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
+                    <Button x:Name="MinimizeButton"
+                            Grid.Column="0"
+                            BorderThickness="0"
+                            Background="Transparent"
+                            Style="{DynamicResource CustomButtonStyle}"
+                            Click="MinimizeButtonClick">
+                        <Path Data="M 0,0 L 10,0"
+                              Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                              StrokeThickness="1"/>
                     </Button>
-                    <Button x:Name="CloseButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
-                        <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
+                    <Button x:Name="CloseButton"
+                            Grid.Column="1"
+                            BorderThickness="0"
+                            Background="Transparent"
+                            Style="{DynamicResource CustomButtonStyle}"
+                            Click="CloseButtonClick">
+                        <Path Data="M 0,0 L 12,12 M 0,12 L 12,0"
+                              Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                              StrokeThickness="1"/>
                     </Button>
                 </Grid>
             </Grid>
 
-            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource SettingsGroupBoxString}">
+            <GroupBox Margin="5,5,5,5"
+                      HorizontalAlignment="Stretch"
+                      Header="{DynamicResource SettingsGroupBoxString}">
                 <Grid Margin="5,5,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -78,79 +116,147 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Label x:Name="InputPathLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource InputPathLabelString}"/>
-                    <TextBox x:Name="InputPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
-                 Text="{Binding InputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 IsEnabled="{Binding InputPathTextBoxEnabled}" />
-                    <Button x:Name="InputPathBrowseButton" Grid.Row="0" Grid.Column="1" Height="22" Width="53" HorizontalAlignment="Right" Content="{DynamicResource BrowseButtonString}"
-                IsEnabled="{Binding InputPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
+                    <Label x:Name="InputPathLabel"
+                           Grid.Row="0"
+                           Grid.Column="0"
+                           VerticalAlignment="Center"
+                           Content="{DynamicResource InputPathLabelString}"/>
+                    <TextBox x:Name="InputPathTextBox"
+                             Grid.Row="0"
+                             Grid.Column="1"
+                             Height="22"
+                             Width="345"
+                             HorizontalAlignment="Left"
+                             VerticalContentAlignment="Center"
+                             Text="{Binding InputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding InputPathTextBoxEnabled}"/>
+                    <Button x:Name="InputPathBrowseButton"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Height="22"
+                            Width="53"
+                            HorizontalAlignment="Right"
+                            Content="{DynamicResource BrowseButtonString}"
+                            IsEnabled="{Binding InputPathBrowseButtonEnabled}"
+                            Style="{DynamicResource CustomButtonStyle}"/>
 
-                    <Label x:Name="SystemTypeLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource SystemLabelString}" />
-                    <ComboBox x:Name="SystemTypeComboBox" Grid.Row="1" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
-                  ItemsSource="{Binding Systems}" SelectedItem="{Binding Path=CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  IsEnabled="{Binding SystemTypeComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}">
+                    <Label x:Name="SystemTypeLabel"
+                           Grid.Row="1"
+                           Grid.Column="0"
+                           VerticalAlignment="Center"
+                           Content="{DynamicResource SystemLabelString}"/>
+                    <ComboBox x:Name="SystemTypeComboBox"
+                              Grid.Row="1"
+                              Grid.Column="1"
+                              Height="22"
+                              Width="250"
+                              HorizontalAlignment="Left"
+                              ItemsSource="{Binding Systems}"
+                              SelectedItem="{Binding Path=CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              IsEnabled="{Binding SystemTypeComboBoxEnabled}"
+                              Style="{DynamicResource CustomComboBoxStyle}">
                         <ComboBox.ItemContainerStyle>
                             <Style TargetType="{x:Type ComboBoxItem}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsHeader}" Value="True">
-                                        <Setter Property="IsEnabled" Value="False"/>
+                                    <DataTrigger Binding="{Binding IsHeader}"
+                                                 Value="True">
+                                        <Setter Property="IsEnabled"
+                                                Value="False"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </ComboBox.ItemContainerStyle>
                     </ComboBox>
 
-                    <Label x:Name="DumpingProgramLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DumpingProgramLabelString}"/>
-                    <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="2" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
-                  ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding Path=CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  IsEnabled="{Binding DumpingProgramComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
+                    <Label x:Name="DumpingProgramLabel"
+                           Grid.Row="2"
+                           Grid.Column="0"
+                           VerticalAlignment="Center"
+                           Content="{DynamicResource DumpingProgramLabelString}"/>
+                    <ComboBox x:Name="DumpingProgramComboBox"
+                              Grid.Row="2"
+                              Grid.Column="1"
+                              Height="22"
+                              Width="250"
+                              HorizontalAlignment="Left"
+                              ItemsSource="{Binding AvailableInternalPrograms}"
+                              SelectedItem="{Binding Path=CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              IsEnabled="{Binding DumpingProgramComboBoxEnabled}"
+                              Style="{DynamicResource CustomComboBoxStyle}"/>
                 </Grid>
             </GroupBox>
 
-            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource StatusGroupBoxString}">
-                <UniformGrid Margin="5,5,5,5" Grid.ColumnSpan="2">
-                    <TextBlock x:Name="StatusLabel" VerticalAlignment="Center" HorizontalAlignment="Center"
+            <GroupBox Margin="5,5,5,5"
+                      HorizontalAlignment="Stretch"
+                      Header="{DynamicResource StatusGroupBoxString}">
+                <UniformGrid Margin="5,5,5,5"
+                             Grid.ColumnSpan="2">
+                    <TextBlock x:Name="StatusLabel"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
                                ToolTipService.ToolTip="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                               Text="{Binding StatusFirstLine}" />
+                               Text="{Binding StatusFirstLine}"/>
                 </UniformGrid>
             </GroupBox>
 
-            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <GroupBox Margin="5,5,5,5"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
                 <GroupBox.Template>
                     <ControlTemplate TargetType="GroupBox">
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
-                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5">
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              Margin="{TemplateBinding Padding}"/>
                         </Border>
                     </ControlTemplate>
                 </GroupBox.Template>
                 <Label>
                     <Label.Content>
                         <TextBlock TextWrapping="Wrap">
-                            <Run FontWeight="Bold" Foreground="Red" Text="{DynamicResource WarningLabelString}" />
-                            <Run Text="{DynamicResource CheckDumpWarningString}" />
+                            <Run FontWeight="Bold"
+                                 Foreground="Red"
+                                 Text="{DynamicResource WarningLabelString}"/>
+                            <Run Text="{DynamicResource CheckDumpWarningString}"/>
                         </TextBlock>
                     </Label.Content>
                 </Label>
             </GroupBox>
 
             <!-- Check Dump / Cancel -->
-            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <GroupBox Margin="5,5,5,5"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
                 <GroupBox.Template>
                     <ControlTemplate TargetType="GroupBox">
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
-                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5">
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              Margin="{TemplateBinding Padding}"/>
                         </Border>
                     </ControlTemplate>
                 </GroupBox.Template>
-                <UniformGrid Columns="4" Margin="5,5,5,5" Height="27">
-                    <Label/>
-                    <!-- Empty label for padding -->
-                    <Button Name="CheckDumpButton" Height="25" Width="100" IsDefault="True" Content="{DynamicResource CheckDumpButtonString}"
-                            IsEnabled="{Binding CheckDumpButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="CancelButton" Height="25" Width="100" IsCancel="True" Content="{DynamicResource CancelButtonString}"
-                            IsEnabled="{Binding CancelButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                    <Label/>
-                    <!-- Empty label for padding -->
+                <UniformGrid Columns="4"
+                             Margin="5,5,5,5"
+                             Height="27">
+                    <Button Name="CheckDumpButton"
+                            Grid.Column="1"
+                            Height="25"
+                            Width="100"
+                            IsDefault="True"
+                            Content="{DynamicResource CheckDumpButtonString}"
+                            IsEnabled="{Binding CheckDumpButtonEnabled}"
+                            Style="{DynamicResource CustomButtonStyle}"/>
+                    <Button Name="CancelButton"
+                            Grid.Column="2"
+                            Height="25"
+                            Width="100"
+                            IsCancel="True"
+                            Content="{DynamicResource CancelButtonString}"
+                            IsEnabled="{Binding CancelButtonEnabled}"
+                            Style="{DynamicResource CustomButtonStyle}"/>
                 </UniformGrid>
             </GroupBox>
         </StackPanel>

@@ -16,7 +16,9 @@ For the latest WIP build here: [Rolling Release](https://github.com/SabreTools/M
 
 MPF is the main, UI-centric application of the MPF suite. This program allows users to use Redumper, Aaru, or DiscImageCreator in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. There are many customization options and quality of life settings that can be access through the Options menu.
 
-Configuration files are stored by default next to the application as `config.json`. This contains all settings for the UI including credentials. In addition to this, the configuration can also be located at `%userprofile%\.config\mpf\config.json` on Windows or `~/.config/mpf/config.json` on Unix-like systems. The second path will be used by default if running from a read-only device or folder. If neither directory is readable, no options will be loaded or saved.
+Configuration files are stored by default next to the application as `config.json`. This contains all settings for the UI including credentials. In addition to this, the configuration can also be located at `~/Library/Application Support/mpf/config.json` on MacOS, `%localappdata%\mpf\config.json` on Windows, or `~/.config/mpf/config.json` on Unix-like systems. The second path will be used by default if running from a read-only device or folder. If neither directory is readable, no options will be loaded or saved.
+
+**Note:** On Windows, older versions may have stored configuration files in `%userprofile%\.config\mpf\config.json`. These should be moved or deleted to avoid any confusion.
 
 ### UI Support Limitations
 
@@ -32,7 +34,9 @@ The main UI has some known limitations that are documented in code and in some p
 
 MPF.CLI is a commandline-only program that allows users to use Redumper, Aaru, or DiscImageCreator in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. All options are manually configured through the configuration file. See below for details.
 
-Configuration files are stored by default next to the application as `config.json`. This contains all settings for the UI including credentials. In addition to this, the configuration can also be located at `%userprofile%\.config\mpf\config.json` on Windows or `~/.config/mpf/config.json` on Unix-like systems. The second path will be used by default if running from a read-only device or folder. If neither directory is readable, no options will be loaded or saved.
+Configuration files are stored by default next to the application as `config.json`. This contains all settings for the UI including credentials. In addition to this, the configuration can also be located at `~/Library/Application Support/mpf/config.json` on MacOS, `%localappdata%\mpf\config.json` on Windows, or `~/.config/mpf/config.json` on Unix-like systems. The second path will be used by default if running from a read-only device or folder. If neither directory is readable, no options will be loaded or saved.
+
+**Note:** On Windows, older versions may have stored configuration files in `%userprofile%\.config\mpf\config.json`. These should be moved or deleted to avoid any confusion.
 
 ### CLI Support Limitations
 
@@ -42,7 +46,11 @@ The main CLI has some known limitations that are documented in code and in some 
 
 ## Media Preservation Frontend Checker (MPF.Check)
 
-MPF.Check is a commandline-only program that allows users to generate submission information from their personal rips. This program supports the outputs from Redumper, Aaru, DiscImageCreator, Cleanrip, and UmdImageCreator. Running this program without any parameters will display the help text, including all supported parameters.
+MPF.Check is a commandline-only program that allows users to generate submission information from their personal rips. This program supports the outputs from Redumper, Aaru, DiscImageCreator, Cleanrip, PS3 custom firmware (CFW), UmdImageCreator, and Xbox Backup Creator (XBC). Running this program without any parameters will display the help text, including all supported parameters.
+
+If using alongside an application like MPF.UI or MPF.CLI, the genereated configuration files may be used for common settings. Configuration files are stored by default next to the application as `config.json`. This contains all settings for the UI including credentials. In addition to this, the configuration can also be located at `~/Library/Application Support/mpf/config.json` on MacOS, `%localappdata%\mpf\config.json` on Windows, or `~/.config/mpf/config.json` on Unix-like systems. The second path will be used by default if running from a read-only device or folder. If neither directory is readable, no options will be loaded or saved.
+
+**Note:** On Windows, older versions may have stored configuration files in `%userprofile%\.config\mpf\config.json`. These should be moved or deleted to avoid any confusion.
 
 ## System Requirements
 

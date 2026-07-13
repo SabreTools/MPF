@@ -99,6 +99,7 @@ namespace MPF.ExecutionContexts.Redumper
             // Split
             [FlagStrings.ForceSplit] = new FlagInput(FlagStrings.ForceSplit),
             [FlagStrings.LeaveUnchanged] = new FlagInput(FlagStrings.LeaveUnchanged),
+            [FlagStrings.AutoDetect] = new FlagInput(FlagStrings.AutoDetect),
             [FlagStrings.ForceQTOC] = new FlagInput(FlagStrings.ForceQTOC),
             [FlagStrings.SkipFill] = new UInt8Input(FlagStrings.SkipFill),
             [FlagStrings.FilesystemTrim] = new FlagInput(FlagStrings.FilesystemTrim),
@@ -203,6 +204,7 @@ namespace MPF.ExecutionContexts.Redumper
                     // Split
                     FlagStrings.ForceSplit,
                     FlagStrings.LeaveUnchanged,
+                    FlagStrings.AutoDetect,
                     FlagStrings.ForceQTOC,
                     FlagStrings.SkipFill,
                     FlagStrings.FilesystemTrim,
@@ -480,6 +482,7 @@ namespace MPF.ExecutionContexts.Redumper
                     case CommandStrings.FixMSF:
                     case CommandStrings.DebugFlip:
                     case CommandStrings.DriveTest:
+                    case CommandStrings.DriveDetect:
                         // Only allow one mode per command
                         if (BaseCommand is not null)
                             continue;

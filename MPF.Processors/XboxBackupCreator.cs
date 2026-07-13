@@ -64,7 +64,7 @@ namespace MPF.Processors
                         if (!redumpCompat)
                         {
                             info.DiscIdentifiers.Version = xmid.Version ?? string.Empty;
-                            info.RegionsAndLanguages.Regions = [ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier)];
+                            info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xmid.Model.RegionIdentifier);
                         }
                     }
 
@@ -89,7 +89,7 @@ namespace MPF.Processors
                         if (!redumpCompat)
                             info.DiscIdentifiers.Version = xemid.Version ?? string.Empty;
 
-                        info.RegionsAndLanguages.Regions = [ProcessingTool.GetXGDRegion(xemid.Model.RegionIdentifier)];
+                        info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xemid.Model.RegionIdentifier);
                     }
 
                     break;

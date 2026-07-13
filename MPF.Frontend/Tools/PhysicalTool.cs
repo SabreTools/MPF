@@ -25,11 +25,11 @@ namespace MPF.Frontend.Tools
         public static string? GetFileDate(Drive? drive, string? filePath, bool fixTwoDigitYear = false)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             // If the executable name is invalid, we can't do this part
@@ -37,7 +37,7 @@ namespace MPF.Frontend.Tools
                 return null;
 
             // Now that we have the EXE name, try to get the fileinfo for it
-            string exePath = Path.Combine(drive.Name, filePath);
+            string exePath = Path.Combine(drive.DevicePath, filePath);
             if (!File.Exists(exePath))
                 return null;
 
@@ -115,19 +115,19 @@ namespace MPF.Frontend.Tools
         public static string? GetBluRayProtection(Drive? drive)
         {
             // If there's no drive path, we can't get information
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't get information
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             // Generate unit key file hash
             string? unitKeyFileHash = null;
 #if NET20 || NET35
-            string unitKeyPath = Path.Combine(Path.Combine(drive.Name, "AACS"), "Unit_Key_RO.inf ");
+            string unitKeyPath = Path.Combine(Path.Combine(drive.DevicePath, "AACS"), "Unit_Key_RO.inf ");
 #else
-            string unitKeyPath = Path.Combine(drive.Name, "AACS", "Unit_Key_RO.inf ");
+            string unitKeyPath = Path.Combine(drive.DevicePath, "AACS", "Unit_Key_RO.inf ");
 #endif
             if (File.Exists(unitKeyPath))
                 unitKeyFileHash = HashTool.GetFileHash(unitKeyPath, HashType.SHA1)?.ToUpperInvariant();
@@ -151,20 +151,20 @@ namespace MPF.Frontend.Tools
         public static bool GetBusEncryptionEnabled(Drive? drive)
         {
             // If there's no drive path, we can't get BEE flag
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return false;
 
             // If the folder no longer exists, we can't get BEE flag
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return false;
 
             // Get the two possible file paths
 #if NET20 || NET35
-            string content000 = Path.Combine(Path.Combine(drive.Name, "AACS"), "Content000.cer");
-            string content001 = Path.Combine(Path.Combine(drive.Name, "AACS"), "Content001.cer");
+            string content000 = Path.Combine(Path.Combine(drive.DevicePath, "AACS"), "Content000.cer");
+            string content001 = Path.Combine(Path.Combine(drive.DevicePath, "AACS"), "Content001.cer");
 #else
-            string content000 = Path.Combine(drive.Name, "AACS", "Content000.cer");
-            string content001 = Path.Combine(drive.Name, "AACS", "Content001.cer");
+            string content000 = Path.Combine(drive.DevicePath, "AACS", "Content000.cer");
+            string content001 = Path.Combine(drive.DevicePath, "AACS", "Content001.cer");
 #endif
 
             try
@@ -205,11 +205,11 @@ namespace MPF.Frontend.Tools
         public static string? GetSteamSimSidInfo(Drive? drive)
         {
             // If there's no drive path, we can't get any sis files
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't get any information
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             try
@@ -221,9 +221,9 @@ namespace MPF.Frontend.Tools
                     MatchCasing = MatchCasing.CaseInsensitive,
                     RecurseSubdirectories = true,
                 };
-                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", options);
+                string[] sisPaths = Directory.GetFiles(drive.DevicePath, "?*.sis", options);
 #else
-                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
+                string[] sisPaths = Directory.GetFiles(drive.DevicePath, "?*.sis", SearchOption.AllDirectories);
 #endif
 
                 var steamDepotIdList = new List<long>();
@@ -277,11 +277,11 @@ namespace MPF.Frontend.Tools
         public static string? GetSteamCsmCsdInfo(Drive? drive)
         {
             // If there's no drive path, we can't get exe name
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't get any information
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             try
@@ -293,9 +293,9 @@ namespace MPF.Frontend.Tools
                     MatchCasing = MatchCasing.CaseInsensitive,
                     RecurseSubdirectories = true,
                 };
-                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", options);
+                string[] sisPaths = Directory.GetFiles(drive.DevicePath, "?*.sis", options);
 #else
-                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
+                string[] sisPaths = Directory.GetFiles(drive.DevicePath, "?*.sis", SearchOption.AllDirectories);
 #endif
 
                 var steamDepotIdDict = new SortedDictionary<long, long>();
@@ -358,11 +358,11 @@ namespace MPF.Frontend.Tools
         public static string? GetSteamAppInfo(Drive? drive)
         {
             // If there's no drive path, we can't get exe name
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't get any information
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             try
@@ -374,9 +374,9 @@ namespace MPF.Frontend.Tools
                     MatchCasing = MatchCasing.CaseInsensitive,
                     RecurseSubdirectories = true,
                 };
-                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", options);
+                string[] sisPaths = Directory.GetFiles(drive.DevicePath, "?*.sis", options);
 #else
-                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
+                string[] sisPaths = Directory.GetFiles(drive.DevicePath, "?*.sis", SearchOption.AllDirectories);
 #endif
 
                 // Looping needed in case i.e. this is a coverdisc with multiple steam game installers on it.
@@ -433,16 +433,16 @@ namespace MPF.Frontend.Tools
         public static string? GetPlayStationExecutableName(Drive? drive)
         {
             // If there's no drive path, we can't get exe name
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't get exe name
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             // Get the two paths that we will need to check
-            string psxExePath = Path.Combine(drive.Name, "PSX.EXE");
-            string systemCnfPath = Path.Combine(drive.Name, "SYSTEM.CNF");
+            string psxExePath = Path.Combine(drive.DevicePath, "PSX.EXE");
+            string systemCnfPath = Path.Combine(drive.DevicePath, "SYSTEM.CNF");
 
             try
             {
@@ -519,15 +519,15 @@ namespace MPF.Frontend.Tools
         public static string? GetPlayStation2Version(Drive? drive)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             // Get the SYSTEM.CNF path to check
-            string systemCnfPath = Path.Combine(drive.Name, "SYSTEM.CNF");
+            string systemCnfPath = Path.Combine(drive.DevicePath, "SYSTEM.CNF");
 
             try
             {
@@ -554,15 +554,15 @@ namespace MPF.Frontend.Tools
         public static string? GetPlayStation3Serial(Drive? drive)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             // Attempt to use PS3_DISC.SFB
-            string sfbPath = Path.Combine(drive.Name, "PS3_DISC.SFB");
+            string sfbPath = Path.Combine(drive.DevicePath, "PS3_DISC.SFB");
             if (File.Exists(sfbPath))
             {
                 try
@@ -580,9 +580,9 @@ namespace MPF.Frontend.Tools
 
             // Attempt to use PARAM.SFO
 #if NET20 || NET35
-            string sfoPath = Path.Combine(Path.Combine(drive.Name, "PS3_GAME"), "PARAM.SFO");
+            string sfoPath = Path.Combine(Path.Combine(drive.DevicePath, "PS3_GAME"), "PARAM.SFO");
 #else
-            string sfoPath = Path.Combine(drive.Name, "PS3_GAME", "PARAM.SFO");
+            string sfoPath = Path.Combine(drive.DevicePath, "PS3_GAME", "PARAM.SFO");
 #endif
             if (File.Exists(sfoPath))
             {
@@ -610,15 +610,15 @@ namespace MPF.Frontend.Tools
         public static string? GetPlayStation3Version(Drive? drive)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             // Attempt to use PS3_DISC.SFB
-            string sfbPath = Path.Combine(drive.Name, "PS3_DISC.SFB");
+            string sfbPath = Path.Combine(drive.DevicePath, "PS3_DISC.SFB");
             if (File.Exists(sfbPath))
             {
                 try
@@ -638,9 +638,9 @@ namespace MPF.Frontend.Tools
 
             // Attempt to use PARAM.SFO
 #if NET20 || NET35
-            string sfoPath = Path.Combine(Path.Combine(drive.Name, "PS3_GAME"), "PARAM.SFO");
+            string sfoPath = Path.Combine(Path.Combine(drive.DevicePath, "PS3_GAME"), "PARAM.SFO");
 #else
-            string sfoPath = Path.Combine(drive.Name, "PS3_GAME", "PARAM.SFO");
+            string sfoPath = Path.Combine(drive.DevicePath, "PS3_GAME", "PARAM.SFO");
 #endif
             if (File.Exists(sfoPath))
             {
@@ -668,18 +668,18 @@ namespace MPF.Frontend.Tools
         public static string? GetPlayStation3FirmwareVersion(Drive? drive)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             // Attempt to read from /PS3_UPDATE/PS3UPDAT.PUP
 #if NET20 || NET35
-            string pupPath = Path.Combine(Path.Combine(drive.Name, "PS3_UPDATE"), "PS3UPDAT.PUP");
+            string pupPath = Path.Combine(Path.Combine(drive.DevicePath, "PS3_UPDATE"), "PS3UPDAT.PUP");
 #else
-            string pupPath = Path.Combine(drive.Name, "PS3_UPDATE", "PS3UPDAT.PUP");
+            string pupPath = Path.Combine(drive.DevicePath, "PS3_UPDATE", "PS3UPDAT.PUP");
 #endif
             if (!File.Exists(pupPath))
                 return null;
@@ -710,18 +710,18 @@ namespace MPF.Frontend.Tools
         public static string? GetPlayStation4Serial(Drive? drive)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             // If we can't find param.sfo, we don't have a PlayStation 4 disc
 #if NET20 || NET35
-            string paramSfoPath = Path.Combine(Path.Combine(drive.Name, "bd"), "param.sfo");
+            string paramSfoPath = Path.Combine(Path.Combine(drive.DevicePath, "bd"), "param.sfo");
 #else
-            string paramSfoPath = Path.Combine(drive.Name, "bd", "param.sfo");
+            string paramSfoPath = Path.Combine(drive.DevicePath, "bd", "param.sfo");
 #endif
             if (!File.Exists(paramSfoPath))
                 return null;
@@ -748,18 +748,18 @@ namespace MPF.Frontend.Tools
         public static string? GetPlayStation4Version(Drive? drive)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             // If we can't find param.sfo, we don't have a PlayStation 4 disc
 #if NET20 || NET35
-            string paramSfoPath = Path.Combine(Path.Combine(drive.Name, "bd"), "param.sfo");
+            string paramSfoPath = Path.Combine(Path.Combine(drive.DevicePath, "bd"), "param.sfo");
 #else
-            string paramSfoPath = Path.Combine(drive.Name, "bd", "param.sfo");
+            string paramSfoPath = Path.Combine(drive.DevicePath, "bd", "param.sfo");
 #endif
             if (!File.Exists(paramSfoPath))
                 return null;
@@ -786,11 +786,11 @@ namespace MPF.Frontend.Tools
         public static string? GetPlayStation4PkgInfo(Drive? drive)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             // Try parse the app.pkg (multiple if they exist)
@@ -798,7 +798,7 @@ namespace MPF.Frontend.Tools
             {
                 string? pkgInfo = "";
 
-                string[] appDirs = Directory.GetDirectories(Path.Combine(drive.Name, "app"), "?????????", SearchOption.TopDirectoryOnly);
+                string[] appDirs = Directory.GetDirectories(Path.Combine(drive.DevicePath, "app"), "?????????", SearchOption.TopDirectoryOnly);
 
                 foreach (string dir in appDirs)
                 {
@@ -885,18 +885,18 @@ namespace MPF.Frontend.Tools
         private static JObject? GetPlayStation5ParamsJsonFromDrive(Drive? drive)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             // If we can't find param.json, we don't have a PlayStation 5 disc
 #if NET20 || NET35
-            string paramJsonPath = Path.Combine(Path.Combine(drive.Name, "bd"), "param.json");
+            string paramJsonPath = Path.Combine(Path.Combine(drive.DevicePath, "bd"), "param.json");
 #else
-            string paramJsonPath = Path.Combine(drive.Name, "bd", "param.json");
+            string paramJsonPath = Path.Combine(drive.DevicePath, "bd", "param.json");
 #endif
             return GetPlayStation5ParamsJsonFromFile(paramJsonPath);
         }
@@ -937,11 +937,11 @@ namespace MPF.Frontend.Tools
         public static string? GetPlayStation5PkgInfo(Drive? drive)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             // Try parse the app_sc.pkg (multiple if they exist)
@@ -949,7 +949,7 @@ namespace MPF.Frontend.Tools
             {
                 string? pkgInfo = "";
 
-                string[] appDirs = Directory.GetDirectories(Path.Combine(drive.Name, "app"), "?????????", SearchOption.TopDirectoryOnly);
+                string[] appDirs = Directory.GetDirectories(Path.Combine(drive.DevicePath, "app"), "?????????", SearchOption.TopDirectoryOnly);
 
                 foreach (string dir in appDirs)
                 {
@@ -994,15 +994,15 @@ namespace MPF.Frontend.Tools
         public static string? GetXboxFilenames(Drive? drive)
         {
             // If there's no drive path, can't do anything
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, can't do anything
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             // Get the MSXC directory path
-            string msxc = Path.Combine(drive.Name, "MSXC");
+            string msxc = Path.Combine(drive.DevicePath, "MSXC");
             if (!Directory.Exists(msxc))
                 return null;
 
@@ -1027,18 +1027,18 @@ namespace MPF.Frontend.Tools
         public static string? GetXboxTitleID(Drive? drive)
         {
             // If there's no drive path, can't do anything
-            if (string.IsNullOrEmpty(drive?.Name))
+            if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
             // If the folder no longer exists, can't do anything
-            if (!Directory.Exists(drive!.Name))
+            if (!Directory.Exists(drive!.DevicePath))
                 return null;
 
             // Get the catalog.js path
 #if NET20 || NET35
-            string catalogjs = Path.Combine(drive.Name, Path.Combine("MSXC", Path.Combine("Metadata", "catalog.js")));
+            string catalogjs = Path.Combine(drive.DevicePath, Path.Combine("MSXC", Path.Combine("Metadata", "catalog.js")));
 #else
-            string catalogjs = Path.Combine(drive.Name, "MSXC", "Metadata", "catalog.js");
+            string catalogjs = Path.Combine(drive.DevicePath, "MSXC", "Metadata", "catalog.js");
 #endif
             // Check catalog.js exists
             if (!File.Exists(catalogjs))

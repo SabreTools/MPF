@@ -11,7 +11,7 @@
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <VersionPrefix>3.8.2</VersionPrefix>
+        <VersionPrefix>3.8.3</VersionPrefix>
         <WarningsNotAsErrors>NU5104</WarningsNotAsErrors>
 
         <!-- Package Properties -->
@@ -33,7 +33,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SabreTools.RedumpLib" Version="[2.0.8]" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="2.2.0" />
     </ItemGroup>
 
 </Project>

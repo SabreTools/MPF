@@ -12,7 +12,7 @@
         <Nullable>enable</Nullable>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <VersionPrefix>3.8.2</VersionPrefix>
+        <VersionPrefix>3.8.3</VersionPrefix>
 
         <!-- Package Properties -->
         <Title>MPF CLI</Title>
@@ -44,8 +44,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SabreTools.CommandLine" Version="[1.4.0]" />
-        <PackageReference Include="SabreTools.RedumpLib" Version="[2.0.8]" />
+        <PackageReference Include="SabreTools.CommandLine" Version="1.5.0" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="2.2.0" />
     </ItemGroup>
 
 </Project>

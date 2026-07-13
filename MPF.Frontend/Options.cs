@@ -20,7 +20,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Internal structure version
         /// </summary>
-        public int Version { get; set; } = 1;
+        public int Version { get; set; } = 2;
 
         /// <summary>
         /// Indicate if the program is being run with a clean configuration
@@ -88,6 +88,7 @@ namespace MPF.Frontend
 
             GUI.CopyUpdateUrlToClipboard = source.GUI.CopyUpdateUrlToClipboard;
             GUI.OpenLogWindowAtStartup = source.GUI.OpenLogWindowAtStartup;
+            GUI.ToolConsoleAutoClose = source.GUI.ToolConsoleAutoClose;
 
             GUI.DefaultInterfaceLanguage = source.GUI.DefaultInterfaceLanguage;
             GUI.ShowDebugViewMenuItem = source.GUI.ShowDebugViewMenuItem;
@@ -111,6 +112,8 @@ namespace MPF.Frontend
             Dumping.DumpSpeeds.DVD = source.Dumping.DumpSpeeds.DVD;
             Dumping.DumpSpeeds.HDDVD = source.Dumping.DumpSpeeds.HDDVD;
             Dumping.DumpSpeeds.Bluray = source.Dumping.DumpSpeeds.Bluray;
+
+            Dumping.UseRelativePaths = source.Dumping.UseRelativePaths;
 
             Dumping.Aaru.EnableDebug = source.Dumping.Aaru.EnableDebug;
             Dumping.Aaru.EnableVerbose = source.Dumping.Aaru.EnableVerbose;
@@ -147,8 +150,6 @@ namespace MPF.Frontend
             Processing.ProtectionScanning.IncludeDebugProtectionInformation = source.Processing.ProtectionScanning.IncludeDebugProtectionInformation;
 
             Processing.Login.PullAllInformation = source.Processing.Login.PullAllInformation;
-            Processing.Login.RedumpOrgUsername = source.Processing.Login.RedumpOrgUsername;
-            Processing.Login.RedumpOrgPassword = source.Processing.Login.RedumpOrgPassword;
             Processing.Login.RetrieveMatchInformation = source.Processing.Login.RetrieveMatchInformation;
             Processing.Login.AttemptCount = source.Processing.Login.AttemptCount;
             Processing.Login.TimeoutSeconds = source.Processing.Login.TimeoutSeconds;
@@ -366,6 +367,16 @@ namespace MPF.Frontend
 
         #endregion
 
+        #region Pre-Processing
+
+        /// <summary>
+        /// Pre-process input paths to be relative
+        /// </summary>
+        /// <remarks>Version 2 and greater</remarks>
+        public bool UseRelativePaths { get; set; } = false;
+
+        #endregion
+
         #region Per-Program
 
         /// <summary>
@@ -443,6 +454,12 @@ namespace MPF.Frontend
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public bool OpenLogWindowAtStartup { get; set; } = true;
+
+        /// <summary>
+        /// Automatically close the separate tool-output window when the dumping program exits
+        /// </summary>
+        /// <remarks>Version 1 and greater; currently used by the Linux GUI tool-output window</remarks>
+        public bool ToolConsoleAutoClose { get; set; } = true;
 
         #endregion
 
@@ -649,19 +666,6 @@ namespace MPF.Frontend
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public bool PullAllInformation { get; set; } = false;
-
-        /// <summary>
-        /// Username for redump.org, requires <see cref="RedumpOrgPassword"/>
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public string? RedumpOrgUsername { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Password for redump.org, requires <see cref="RedumpOrgUsername"/>
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        // TODO: Figure out a way to keep this encrypted in some way, BASE64 to start?
-        public string? RedumpOrgPassword { get; set; } = string.Empty;
 
         /// <summary>
         /// Enable retrieving match information from Redump
