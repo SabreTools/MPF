@@ -21,9 +21,7 @@ namespace MPF.Processors
 
         /// <inheritdoc/>
         public override PhysicalMediaType? DeterminePhysicalMediaType(string? outputDirectory, string outputFilename)
-        {
-            throw new NotImplementedException();
-        }
+            => PhysicalMediaType.NONE;
 
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, PhysicalMediaType? mediaType, string basePath, bool redumpCompat)

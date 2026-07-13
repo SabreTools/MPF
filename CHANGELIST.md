@@ -42,6 +42,7 @@
 - Add Dreamdump sector order to converter
 - Relative paths only work if non-empty
 - Fix resizing of main window in WPF
+- Use placeholder for media type for Generic processor
 
 ### 3.8.3 (2026-07-06)
 
