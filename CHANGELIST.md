@@ -39,6 +39,7 @@
 - Wire native options loading properly
 - Update Redumper to build 732
 - Fix and update some string resources
+- Add Dreamdump sector order to converter
 
 ### 3.8.3 (2026-07-06)
 
