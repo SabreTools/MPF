@@ -100,7 +100,7 @@ namespace MPF.UI.Windows
             var chrome = new System.Windows.Shell.WindowChrome
             {
                 CaptionHeight = 0,
-                ResizeBorderThickness = new Thickness(0),
+                ResizeBorderThickness = new Thickness(5),
             };
             System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
 #endif
