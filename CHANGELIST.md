@@ -38,6 +38,7 @@
 - Fix writing relative paths setting
 - Wire native options loading properly
 - Update Redumper to build 732
+- Fix and update some string resources
 
 ### 3.8.3 (2026-07-06)
 

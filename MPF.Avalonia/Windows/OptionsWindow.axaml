@@ -506,17 +506,17 @@
                                           ColumnSpacing="16"
                                           RowSpacing="4"
                                           RowDefinitions="Auto,Auto,Auto">
-                                        <CheckBox Content="{DynamicResource EnableDebugOutputCheckBoxString}"
+                                        <CheckBox Content="{DynamicResource AaruEnableDebugOutputCheckBoxString}"
                                                   IsChecked="{Binding Options.Dumping.Aaru.EnableDebug}" />
                                         <CheckBox Grid.Column="1"
                                                   Content="{DynamicResource AaruEnableVerboseOutputCheckBoxString}"
                                                   IsChecked="{Binding Options.Dumping.Aaru.EnableVerbose}" />
                                         <CheckBox Grid.Row="1"
-                                                  Content="{DynamicResource ForceDumpingCheckBoxString}"
+                                                  Content="{DynamicResource AaruForceDumpingCheckBoxString}"
                                                   IsChecked="{Binding Options.Dumping.Aaru.ForceDumping}" />
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="1"
-                                                  Content="{DynamicResource StripPersonalDataCheckBoxString}"
+                                                  Content="{DynamicResource AaruStripPersonalDataCheckBoxString}"
                                                   IsChecked="{Binding Options.Dumping.Aaru.StripPersonalData}" />
                                         <TextBlock Grid.Row="2"
                                                    Text="{DynamicResource AaruRereadTriesLabelString}"
@@ -543,21 +543,21 @@
                                           ColumnSpacing="16"
                                           RowSpacing="4"
                                           RowDefinitions="Auto,Auto,Auto,Auto,Auto">
-                                        <CheckBox Content="{DynamicResource QuietModeCheckBoxString}"
+                                        <CheckBox Content="{DynamicResource DiscImageCreatorQuietModeCheckBoxString}"
                                                   IsChecked="{Binding Options.Dumping.DIC.QuietMode}" />
                                         <CheckBox Grid.Column="1"
-                                                  Content="{DynamicResource ParanoidModeCheckBoxString}"
+                                                  Content="{DynamicResource DiscImageCreatorParanoidModeCheckBoxString}"
                                                   IsChecked="{Binding Options.Dumping.DIC.ParanoidMode}" />
                                         <CheckBox Grid.Row="1"
-                                                  Content="{DynamicResource UseCMIFlagCheckBoxString}"
+                                                  Content="{DynamicResource DiscImageCreatorUseCMIFlagCheckBoxString}"
                                                   IsChecked="{Binding Options.Dumping.DIC.UseCMIFlag}" />
                                         <CheckBox x:Name="MultiSectorReadCheckBox"
                                                   Grid.Row="1"
                                                   Grid.Column="1"
-                                                  Content="{DynamicResource MultiSectorReadCheckBoxString}"
+                                                  Content="{DynamicResource DiscImageCreatorMultiSectorReadCheckBoxString}"
                                                   IsChecked="{Binding Options.Dumping.DIC.MultiSectorRead}" />
                                         <TextBlock Grid.Row="2"
-                                                   Text="{DynamicResource MultiSectorReadValueLabelString}"
+                                                   Text="{DynamicResource DiscImageCreatorMultiSectorReadValueLabelString}"
                                                    HorizontalAlignment="Right"
                                                    VerticalAlignment="Center" />
                                         <TextBox Grid.Row="2"
@@ -567,7 +567,7 @@
                                                  Text="{Binding Options.Dumping.DIC.MultiSectorReadValue, Mode=TwoWay}"
                                                  IsEnabled="{Binding #MultiSectorReadCheckBox.IsChecked}" />
                                         <TextBlock Grid.Row="3"
-                                                   Text="{DynamicResource DICCDRereadTriesLabelString}"
+                                                   Text="{DynamicResource DiscImageCreatorCDRereadTriesLabelString}"
                                                    HorizontalAlignment="Right"
                                                    VerticalAlignment="Center" />
                                         <TextBox Grid.Row="3"
@@ -576,7 +576,7 @@
                                                  HorizontalAlignment="Left"
                                                  Text="{Binding Options.Dumping.DIC.RereadCount, Mode=TwoWay}" />
                                         <TextBlock Grid.Row="4"
-                                                   Text="{DynamicResource DICDVDRereadTriesLabelString}"
+                                                   Text="{DynamicResource DiscImageCreatorDVDRereadTriesLabelString}"
                                                    HorizontalAlignment="Right"
                                                    VerticalAlignment="Center" />
                                         <TextBox Grid.Row="4"
@@ -614,12 +614,12 @@
                                         <CheckBox x:Name="DreamdumpNonRedumpModeCheckBox"
                                                   Grid.Row="1"
                                                   Grid.Column="0"
-                                                  Content="{DynamicResource NonRedumpOptionsCheckBoxString}"
+                                                  Content="{DynamicResource DreamdumpNonRedumpOptionsCheckBoxString}"
                                                   IsChecked="{Binding Options.Dumping.Dreamdump.NonRedumpMode}" />
 
                                         <TextBlock Grid.Row="2"
                                                    Grid.Column="0"
-                                                   Text="{DynamicResource DefaultSectorOrderLabelString}"
+                                                   Text="{DynamicResource DreamdumpDefaultSectorOrderLabelString}"
                                                    HorizontalAlignment="Right"
                                                    VerticalAlignment="Center" />
                                         <ComboBox x:Name="DefaultDreamdumpSectorOrderComboBox"
@@ -649,7 +649,7 @@
                                         <CheckBox Content="{DynamicResource RedumperEnableVerboseOutputCheckBoxString}"
                                                   IsChecked="{Binding Options.Dumping.Redumper.EnableVerbose}" />
                                         <CheckBox Grid.Column="1"
-                                                  Content="{DynamicResource EnableRefineSectorModeFlagCheckBoxString}"
+                                                  Content="{DynamicResource RedumperEnableRefineSectorModeFlagCheckBoxString}"
                                                   IsChecked="{Binding Options.Dumping.Redumper.RefineSectorMode}" />
                                         <TextBlock Grid.Row="1"
                                                    Text="{DynamicResource RedumperRereadTriesLabelString}"
@@ -661,7 +661,7 @@
                                                  HorizontalAlignment="Left"
                                                  Text="{Binding Options.Dumping.Redumper.RereadCount, Mode=TwoWay}" />
                                         <TextBlock Grid.Row="2"
-                                                   Text="{DynamicResource PlextorLeadinRetriesLabelString}"
+                                                   Text="{DynamicResource RedumperPlextorLeadinRetriesLabelString}"
                                                    HorizontalAlignment="Right"
                                                    VerticalAlignment="Center" />
                                         <TextBox Grid.Row="2"
@@ -671,10 +671,10 @@
                                                  Text="{Binding Options.Dumping.Redumper.LeadinRetryCount, Mode=TwoWay}" />
                                         <CheckBox x:Name="RedumperNonRedumpModeCheckBox"
                                                   Grid.Row="3"
-                                                  Content="{DynamicResource NonRedumpOptionsCheckBoxString}"
+                                                  Content="{DynamicResource RedumperNonRedumpOptionsCheckBoxString}"
                                                   IsChecked="{Binding Options.Dumping.Redumper.NonRedumpMode}" />
                                         <TextBlock Grid.Row="4"
-                                                   Text="{DynamicResource DefaultReadMethodLabelString}"
+                                                   Text="{DynamicResource RedumperDefaultReadMethodLabelString}"
                                                    HorizontalAlignment="Right"
                                                    VerticalAlignment="Center" />
                                         <ComboBox x:Name="DefaultRedumperReadMethodComboBox"
@@ -686,7 +686,7 @@
                                                   SelectedItem="{Binding Options.Dumping.Redumper.ReadMethod, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                                   IsEnabled="{Binding #RedumperNonRedumpModeCheckBox.IsChecked}" />
                                         <TextBlock Grid.Row="5"
-                                                   Text="{DynamicResource DefaultSectorOrderLabelString}"
+                                                   Text="{DynamicResource RedumperDefaultSectorOrderLabelString}"
                                                    HorizontalAlignment="Right"
                                                    VerticalAlignment="Center" />
                                         <ComboBox x:Name="DefaultRedumperSectorOrderComboBox"
@@ -698,7 +698,7 @@
                                                   SelectedItem="{Binding Options.Dumping.Redumper.SectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                                   IsEnabled="{Binding #RedumperNonRedumpModeCheckBox.IsChecked}" />
                                         <TextBlock Grid.Row="6"
-                                                   Text="{DynamicResource DefaultDriveTypeLabelString}"
+                                                   Text="{DynamicResource RedumperDefaultDriveTypeLabelString}"
                                                    HorizontalAlignment="Right"
                                                    VerticalAlignment="Center" />
                                         <ComboBox x:Name="DefaultRedumperDriveTypeComboBox"
@@ -710,7 +710,7 @@
                                                   SelectedItem="{Binding Options.Dumping.Redumper.DriveType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                                   IsEnabled="{Binding #RedumperNonRedumpModeCheckBox.IsChecked}" />
                                         <TextBlock Grid.Row="7"
-                                                   Text="{DynamicResource DefaultDrivePregapStartLabelString}"
+                                                   Text="{DynamicResource RedumperDefaultDrivePregapStartLabelString}"
                                                    HorizontalAlignment="Right"
                                                    VerticalAlignment="Center" />
                                         <TextBox Grid.Row="7"
