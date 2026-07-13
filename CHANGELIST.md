@@ -40,7 +40,6 @@
 - Update Redumper to build 732
 - Fix and update some string resources
 - Add Dreamdump sector order to converter
-- Change Avalonia resource files to match WPF
 
 ### 3.8.3 (2026-07-06)
 
