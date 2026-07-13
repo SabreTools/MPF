@@ -129,7 +129,7 @@ namespace MPF.Frontend
 
 #if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             // If relative paths are enabled, use those
-            if (_options.Dumping.UseRelativePaths)
+            if (_options.Dumping.UseRelativePaths && !string.IsNullOrEmpty(OutputPath))
                 OutputPath = Path.GetRelativePath(Environment.CurrentDirectory, OutputPath);
 #endif
 
@@ -747,7 +747,7 @@ namespace MPF.Frontend
 
 #if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             // If relative paths are enabled, use those
-            if (_options.Dumping.UseRelativePaths)
+            if (_options.Dumping.UseRelativePaths && !string.IsNullOrEmpty(OutputPath))
                 OutputPath = Path.GetRelativePath(Environment.CurrentDirectory, OutputPath);
 #endif
 

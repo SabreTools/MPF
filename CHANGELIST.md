@@ -40,6 +40,7 @@
 - Update Redumper to build 732
 - Fix and update some string resources
 - Add Dreamdump sector order to converter
+- Relative paths only work if non-empty
 
 ### 3.8.3 (2026-07-06)
 

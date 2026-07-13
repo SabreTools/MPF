@@ -227,7 +227,7 @@ namespace MPF.CLI.Features
 
 #if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             // If relative paths are enabled, use those
-            if (Options.Dumping.UseRelativePaths && FilePath is not null)
+            if (Options.Dumping.UseRelativePaths && !string.IsNullOrEmpty(FilePath))
                 FilePath = Path.GetRelativePath(Environment.CurrentDirectory, FilePath);
 #endif
 
