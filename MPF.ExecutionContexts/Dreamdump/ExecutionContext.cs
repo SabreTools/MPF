@@ -166,7 +166,7 @@ namespace MPF.ExecutionContexts.Dreamdump
             // Get the base settings, if possible
             var dumpSettings = baseDumpSettings as DumpSettings ?? new DumpSettings();
 
-            BaseCommand = CommandStrings.NONE;
+            BaseCommand = CommandStrings.Disc;
 
             if (drivePath is not null)
             {

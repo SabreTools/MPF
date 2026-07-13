@@ -45,6 +45,7 @@
 - Use placeholder for media type for Generic processor
 - Use input file as only output file in generic processor
 - Remove unneded mould fields
+- Set disc command by default for Dreamdump
 
 ### 3.8.3 (2026-07-06)
 
