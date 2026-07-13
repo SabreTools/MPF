@@ -44,6 +44,7 @@
 - Fix resizing of main window in WPF
 - Use placeholder for media type for Generic processor
 - Use input file as only output file in generic processor
+- Root the default output path when the current folder is unwritable (gmipf)
 
 ### 3.8.3 (2026-07-06)
 

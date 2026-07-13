@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Newtonsoft.Json;
+using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 using AaruDumpSettings = MPF.ExecutionContexts.Aaru.DumpSettings;
 using DiscImageCreatorDumpSettings = MPF.ExecutionContexts.DiscImageCreator.DumpSettings;
@@ -282,33 +283,78 @@ namespace MPF.Frontend
         }
 
         /// <summary>
+        /// Default output directory name
+        /// </summary>
+        private const string DefaultOutputDirectoryName = "ISO";
+
+        /// <summary>
         /// Default output path for dumps
         /// </summary>
         /// <remarks>
-        /// Windows keeps the portable layout, where the relative path lands in a folder next to the
-        /// executable. An installed application has no such folder: the path resolves against the
-        /// working directory instead, so dumps land wherever MPF happened to be started from.
+        /// The relative path is kept wherever the current directory can be written to, which is the
+        /// portable layout. It only resolves to the home directory when the current directory can
+        /// not be written to, such as an installed copy launched from a read-only location.
         /// </remarks>
         [JsonIgnore]
         internal static string DefaultOutputPathValue
         {
             get
             {
-#if NET20 || NET35
-                return "ISO";
-#else
-                bool portable = Environment.OSVersion.Platform != PlatformID.Unix
-                    && Environment.OSVersion.Platform != PlatformID.MacOSX;
-                if (portable)
-                    return "ISO";
+                if (field is not null)
+                    return field;
 
-                string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                if (string.IsNullOrEmpty(homeDir))
-                    return "ISO";
-
-                return Path.Combine(homeDir, "ISO");
-#endif
+                field = GetDefaultOutputPath(Environment.CurrentDirectory);
+                return field;
             }
+        }
+
+        /// <summary>
+        /// Attempt to determine the default output path
+        /// </summary>
+        /// <param name="currentDirectory">Directory that a relative path would resolve against</param>
+        internal static string GetDefaultOutputPath(string currentDirectory)
+        {
+            // Portable output
+            if (CanCreateFile(currentDirectory))
+                return DefaultOutputDirectoryName;
+
+            // User output
+            string homeDir = PathTool.GetHomeDirectory();
+            if (!string.IsNullOrEmpty(homeDir))
+                return Path.Combine(homeDir, DefaultOutputDirectoryName);
+
+            // This should not happen
+            return DefaultOutputDirectoryName;
+        }
+
+        /// <summary>
+        /// Indicates if a new file can be created in a directory
+        /// </summary>
+        /// <remarks>Creating a file is the only portable way of asking; the file is removed again</remarks>
+        private static bool CanCreateFile(string directory)
+        {
+            if (string.IsNullOrEmpty(directory))
+                return false;
+
+            string probePath = Path.Combine(directory, Path.GetRandomFileName());
+
+            // Only the creation decides, so that a failed cleanup does not read as unwritable
+            try
+            {
+                File.Create(probePath).Dispose();
+            }
+            catch
+            {
+                return false;
+            }
+
+            try
+            {
+                File.Delete(probePath);
+            }
+            catch { }
+
+            return true;
         }
 
         #endregion

@@ -1,5 +1,5 @@
-using System;
 using System.IO;
+using SabreTools.IO;
 using Xunit;
 
 namespace MPF.Frontend.Test
@@ -7,44 +7,73 @@ namespace MPF.Frontend.Test
     public class OptionsTests
     {
         /// <summary>
-        /// The default output path must not be relative anywhere but Windows
+        /// A writable current directory keeps the relative default
         /// </summary>
-        /// <remarks>
-        /// A relative path resolves against the working directory, not against the application
-        /// directory. That is what the portable Windows layout wants, where the folder sits next to
-        /// the executable. An installed application has no such folder, so a relative default sends
-        /// dumps wherever MPF happened to be started from.
-        /// </remarks>
         [Fact]
-        public void DefaultOutputPath_OutsideWindows_IsRooted()
+        public void GetDefaultOutputPath_WritableDirectory_ReturnsRelativePath()
         {
-            var options = new Options();
+            string currentDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(currentDirectory);
 
-            string? actual = options.Dumping.DefaultOutputPath;
-
-            if (Environment.OSVersion.Platform == PlatformID.Unix
-                || Environment.OSVersion.Platform == PlatformID.MacOSX)
-                Assert.True(Path.IsPathRooted(actual), $"Expected a rooted path, found '{actual}'");
-            else
+            try
+            {
+                string actual = DumpSettings.GetDefaultOutputPath(currentDirectory);
                 Assert.Equal("ISO", actual);
+            }
+            finally
+            {
+                Directory.Delete(currentDirectory);
+            }
         }
 
         /// <summary>
-        /// Clearing the default output path restores the platform default, not a relative one
+        /// A current directory that can not hold a file falls back to the home directory
+        /// </summary>
+        /// <remarks>
+        /// A file stands in for the directory because that is the only way of making the creation
+        /// fail on every platform. Denied permissions end up in the same branch.
+        /// </remarks>
+        [Fact]
+        public void GetDefaultOutputPath_UnwritableDirectory_ReturnsHomePath()
+        {
+            string currentDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            File.Create(currentDirectory).Dispose();
+
+            try
+            {
+                string actual = DumpSettings.GetDefaultOutputPath(currentDirectory);
+                Assert.Equal(Path.Combine(PathTool.GetHomeDirectory(), "ISO"), actual);
+            }
+            finally
+            {
+                File.Delete(currentDirectory);
+            }
+        }
+
+        /// <summary>
+        /// A missing current directory falls back to the home directory
         /// </summary>
         [Fact]
-        public void DefaultOutputPath_SetToNull_RestoresPlatformDefault()
+        public void GetDefaultOutputPath_MissingDirectory_ReturnsHomePath()
+        {
+            string currentDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+            string actual = DumpSettings.GetDefaultOutputPath(currentDirectory);
+
+            Assert.Equal(Path.Combine(PathTool.GetHomeDirectory(), "ISO"), actual);
+        }
+
+        /// <summary>
+        /// Clearing the default output path restores the default instead of leaving it empty
+        /// </summary>
+        [Fact]
+        public void DefaultOutputPath_SetToNull_RestoresDefault()
         {
             var options = new Options();
 
             options.Dumping.DefaultOutputPath = null;
 
-            string? actual = options.Dumping.DefaultOutputPath;
-            if (Environment.OSVersion.Platform == PlatformID.Unix
-                || Environment.OSVersion.Platform == PlatformID.MacOSX)
-                Assert.True(Path.IsPathRooted(actual), $"Expected a rooted path, found '{actual}'");
-            else
-                Assert.Equal("ISO", actual);
+            Assert.Equal(DumpSettings.DefaultOutputPathValue, options.Dumping.DefaultOutputPath);
         }
     }
 }
