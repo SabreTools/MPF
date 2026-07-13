@@ -14,6 +14,25 @@ namespace MPF.Frontend
     // removable, floppy, and optical devices from one query.
     public partial class Drive
     {
+        #region Fields
+
+        /// <summary>
+        /// Floppy media sizes in bytes for the standard 5.25" and 3.5" PC formats
+        /// (360 KB, 720 KB, 1.2 MB, 1.44 MB, 2.88 MB). A removable disk reporting one of these
+        /// exact capacities is a floppy drive with media inserted; no other removable storage
+        /// uses these sizes, so this doubles as the floppy identity check.
+        /// </summary>
+        private static readonly HashSet<long> _macOSFloppyMediaSizes =
+        [
+            368640,   // 360 KB (5.25" DD)
+            737280,   // 720 KB (3.5" DD)
+            1228800,  // 1.2 MB (5.25" HD)
+            1474560,  // 1.44 MB (3.5" HD)
+            2949120,  // 2.88 MB (3.5" ED)
+        ];
+
+        #endregion
+
         #region macOS Detection
 
         /// <summary>
@@ -58,8 +77,8 @@ namespace MPF.Frontend
             var existingNames = new HashSet<string>();
             foreach (var d in drives)
             {
-                if (d?.Name is not null)
-                    existingNames.Add(d.Name);
+                if (d?.DevicePath is not null)
+                    existingNames.Add(d.DevicePath);
             }
 
             var extra = new List<Drive>();
@@ -169,11 +188,32 @@ namespace MPF.Frontend
 
             foreach (var path in candidates)
             {
-                if (HasDeviceIndexSuffix(Path.GetFileName(path), "disk"))
+                if (IsMacOSWholeDiskNode(Path.GetFileName(path)))
                     result.Add(path);
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Whether a device node name is a macOS whole disk: the literal "disk" followed by one
+        /// or more digits and nothing else.
+        /// </summary>
+        /// <param name="name">Device node file name (e.g. "disk0")</param>
+        /// <returns>True when the name is a whole-disk node; false otherwise</returns>
+        private static bool IsMacOSWholeDiskNode(string name)
+        {
+            const string prefix = "disk";
+            if (name.Length <= prefix.Length || !name.StartsWith(prefix, StringComparison.Ordinal))
+                return false;
+
+            for (int i = prefix.Length; i < name.Length; i++)
+            {
+                if (!char.IsDigit(name[i]))
+                    return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -237,7 +277,7 @@ namespace MPF.Frontend
             InternalDriveType driveType;
             if (optical)
                 driveType = Frontend.InternalDriveType.Optical;
-            else if (removable && _unixFloppyMediaSizes.Contains(size))
+            else if (removable && _macOSFloppyMediaSizes.Contains(size))
                 driveType = Frontend.InternalDriveType.Floppy;
             else if (removable)
                 driveType = Frontend.InternalDriveType.Removable;

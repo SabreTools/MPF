@@ -6,5 +6,7 @@ namespace MPF.ExecutionContexts.Dreamdump
     public static class CommandStrings
     {
         public const string NONE = "";
+        public const string Disc = "disc";
+        public const string Split = "split";
     }
 }

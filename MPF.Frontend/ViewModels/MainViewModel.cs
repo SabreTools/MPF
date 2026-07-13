@@ -558,7 +558,7 @@ namespace MPF.Frontend.ViewModels
         [
             InternalProgram.Aaru,
             InternalProgram.DiscImageCreator,
-            // InternalProgram.Dreamdump,
+            InternalProgram.Dreamdump,
             InternalProgram.Redumper,
         ];
 
@@ -669,19 +669,19 @@ namespace MPF.Frontend.ViewModels
             UpdateVolumeLabelEnabled = true;
 
             // If we have a selected drive, keep track of it
-            char? lastSelectedDrive = CurrentDrive?.Name?[0] ?? null;
+            char? lastSelectedDrive = CurrentDrive?.DevicePath?[0] ?? null;
 
             // Populate the list of drives and add it to the combo box
             Drives = Drive.CreateListOfDrives(Options.GUI.IgnoreFixedDrives);
 
             if (Drives.Count > 0)
             {
-                VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", [.. Drives.ConvertAll(d => d.Name)])}");
+                VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", [.. Drives.ConvertAll(d => d.DevicePath)])}");
 
                 // Check for the last selected drive, if possible
                 int index = -1;
                 if (lastSelectedDrive is not null)
-                    index = Drives.FindIndex(d => d.MarkedActive && (d.Name?[0] ?? '\0') == lastSelectedDrive);
+                    index = Drives.FindIndex(d => d.MarkedActive && (d.DevicePath?[0] ?? '\0') == lastSelectedDrive);
 
                 // Check for active optical drives
                 if (index == -1)
@@ -792,11 +792,13 @@ namespace MPF.Frontend.ViewModels
         public void ChangeDumpingProgram()
         {
             VerboseLogLn($"Changed dumping program to: {((InternalProgram?)CurrentProgram).LongName()}");
-            EnsureMediaInformation();
+            EnsureMediaInformation(resolveProgramPaths: true);
+
             // New output name depends on new environment
             GetOutputNames(false);
+
             // New environment depends on new output name
-            EnsureMediaInformation();
+            EnsureMediaInformation(resolveProgramPaths: false);
         }
 
         /// <summary>
@@ -809,7 +811,7 @@ namespace MPF.Frontend.ViewModels
                 SetSupportedDriveSpeed();
 
             GetOutputNames(false);
-            EnsureMediaInformation();
+            EnsureMediaInformation(resolveProgramPaths: false);
         }
 
         /// <summary>
@@ -820,7 +822,7 @@ namespace MPF.Frontend.ViewModels
             VerboseLogLn($"Changed system to: {CurrentSystem.LongName()}");
             PopulatePhysicalMediaType();
             GetOutputNames(false);
-            EnsureMediaInformation();
+            EnsureMediaInformation(resolveProgramPaths: false);
         }
 
         /// <summary>
@@ -1056,9 +1058,9 @@ namespace MPF.Frontend.ViewModels
 
             // Set the initial environment and UI values
             SetSupportedDriveSpeed();
-            _environment = DetermineEnvironment();
+            _environment = DetermineEnvironment(resolveProgramPaths: true);
             GetOutputNames(true);
-            EnsureMediaInformation();
+            EnsureMediaInformation(resolveProgramPaths: false);
 
             // Enable event handlers
             EnableEventHandlers();
@@ -1093,9 +1095,9 @@ namespace MPF.Frontend.ViewModels
             CurrentDrive?.RefreshDrive();
 
             // Set the initial environment and UI values
-            _environment = DetermineEnvironment();
+            _environment = DetermineEnvironment(resolveProgramPaths: false);
             GetOutputNames(true);
-            EnsureMediaInformation();
+            EnsureMediaInformation(resolveProgramPaths: false);
 
             // Enable event handlers
             EnableEventHandlers();
@@ -1232,7 +1234,7 @@ namespace MPF.Frontend.ViewModels
             // If the drive is marked active, try to read from it
             if (CurrentDrive.MarkedActive)
             {
-                VerboseLog($"Trying to detect media type for drive {CurrentDrive.Name} [{CurrentDrive.DriveFormat}] using size and filesystem.. ");
+                VerboseLog($"Trying to detect media type for drive {CurrentDrive.DevicePath} [{CurrentDrive.DriveFormat}] using size and filesystem.. ");
                 PhysicalMediaType? detectedPhysicalMediaType = CurrentDrive.GetPhysicalMediaType(CurrentSystem);
 
                 // If we got either an error or no media, default to the current System default
@@ -1259,61 +1261,66 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Create a DumpEnvironment with all current settings
         /// </summary>
+        /// <param name="resolveProgramPaths">Determine if program paths should be resolved</remarks>
         /// <returns>Filled DumpEnvironment Parent</returns>
         /// TODO: Determine if the null-returning cases would actually change program operation
         /// If I'm following the complete logic correctly, resolving the binary path to null is
         /// always correct as an unresolved path should never be able to be run anyway.
-        private DumpEnvironment DetermineEnvironment()
+        private DumpEnvironment DetermineEnvironment(bool resolveProgramPaths)
         {
-            // Resolve the program paths temporarily
-            switch (CurrentProgram)
+            // Resolve the program paths temporarily, if requested
+            if (resolveProgramPaths)
             {
-                // Dumping supported programs
-                case InternalProgram.Aaru:
-                    string? aaruPath = Options.Dumping.AaruPath.ResolvePath();
-                    if (aaruPath is not null)
-                        Options.Dumping.AaruPath = aaruPath;
+                switch (CurrentProgram)
+                {
+                    // Dumping supported programs
+                    case InternalProgram.Aaru:
+                        string? aaruPath = Options.Dumping.AaruPath.ResolvePath();
+                        if (aaruPath is not null)
+                            Options.Dumping.AaruPath = aaruPath;
 
-                    VerboseLogLn($"Using Aaru from {Options.Dumping.AaruPath}");
-                    break;
+                        VerboseLogLn($"Using Aaru from {Options.Dumping.AaruPath}");
+                        break;
 
-                case InternalProgram.DiscImageCreator:
-                    string? dicPath = Options.Dumping.DiscImageCreatorPath.ResolvePath();
-                    if (dicPath is not null)
-                        Options.Dumping.DiscImageCreatorPath = dicPath;
+                    case InternalProgram.DiscImageCreator:
+                        string? dicPath = Options.Dumping.DiscImageCreatorPath.ResolvePath();
+                        if (dicPath is not null)
+                            Options.Dumping.DiscImageCreatorPath = dicPath;
 
-                    VerboseLogLn($"Using DiscImageCreator from {Options.Dumping.DiscImageCreatorPath}");
-                    break;
+                        VerboseLogLn($"Using DiscImageCreator from {Options.Dumping.DiscImageCreatorPath}");
+                        break;
 
-                // case InternalProgram.Dreamdump:
-                //     string? dreamdumpPath = Options.Dumping.DreamdumpPath.ResolvePath();
-                //     if (dreamdumpPath is not null)
-                //         Options.Dumping.DreamdumpPath = dreamdumpPath;
+                    case InternalProgram.Dreamdump:
+                        string? dreamdumpPath = Options.Dumping.DreamdumpPath.ResolvePath();
+                        if (dreamdumpPath is not null)
+                            Options.Dumping.DreamdumpPath = dreamdumpPath;
 
-                //     VerboseLogLn($"Using Dreamdump from {Options.Dumping.DreamdumpPath}");
-                //     break;
+                        VerboseLogLn($"Using Dreamdump from {Options.Dumping.DreamdumpPath}");
+                        break;
 
-                case InternalProgram.Redumper:
-                    string? redumperPath = Options.Dumping.RedumperPath.ResolvePath();
-                    if (redumperPath is not null)
-                        Options.Dumping.RedumperPath = redumperPath;
+                    case InternalProgram.Redumper:
+                        string? redumperPath = Options.Dumping.RedumperPath.ResolvePath();
+                        if (redumperPath is not null)
+                            Options.Dumping.RedumperPath = redumperPath;
 
-                    VerboseLogLn($"Using Redumper from {Options.Dumping.RedumperPath}");
-                    break;
+                        VerboseLogLn($"Using Redumper from {Options.Dumping.RedumperPath}");
+                        break;
 
-                // Non-dumping programs
-                case InternalProgram.CleanRip:
-                case InternalProgram.PS3CFW:
-                case InternalProgram.UmdImageCreator:
-                case InternalProgram.XboxBackupCreator:
-                    VerboseLogLn($"Unsupported dumping program: {CurrentProgram.LongName()}");
-                    break;
+                    // Non-dumping programs
+                    case InternalProgram.CleanRip:
+                    case InternalProgram.Generic:
+                    case InternalProgram.PS3CFW:
+                    case InternalProgram.UmdImageCreator:
+                    case InternalProgram.XboxBackupCreator:
+                        VerboseLogLn($"Unsupported dumping program: {CurrentProgram.LongName()}");
+                        break;
 
-                // Should not happen
-                case InternalProgram.NONE:
-                default:
-                    VerboseLogLn("Invalid dumping program selection");
-                    break;
+                    // Should not happen
+                    case InternalProgram.NONE:
+                    default:
+                        VerboseLogLn("Invalid dumping program selection");
+                        break;
+                }
             }
 
             var env = new DumpEnvironment(
@@ -1338,7 +1345,7 @@ namespace MPF.Frontend.ViewModels
             }
             else if (!Options.GUI.SkipSystemDetection)
             {
-                VerboseLog($"Trying to detect system for drive {CurrentDrive.Name}.. ");
+                VerboseLog($"Trying to detect system for drive {CurrentDrive.DevicePath}.. ");
                 var currentSystem = GetPhysicalSystem(CurrentDrive);
                 if (currentSystem is not null)
                     VerboseLogLn($"detected {currentSystem.LongName()}.");
@@ -1427,14 +1434,15 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Ensure information is consistent with the currently selected media type
         /// </summary>
-        public void EnsureMediaInformation()
+        /// <param name="resolveProgramPaths">Determine if program paths should be resolved</remarks>
+        public void EnsureMediaInformation(bool resolveProgramPaths)
         {
             // If the drive list is empty, ignore updates
             if (Drives.Count == 0)
                 return;
 
             // Get the current environment information
-            _environment = DetermineEnvironment();
+            _environment = DetermineEnvironment(resolveProgramPaths);
 
             // Get the status to write out
             ResultEventArgs result = _environment.GetSupportStatus(CurrentPhysicalMediaType);
@@ -1568,11 +1576,11 @@ namespace MPF.Frontend.ViewModels
         private static PhysicalSystem? GetPhysicalSystem(Drive? drive)
         {
             // If the drive does not exist, we can't do anything
-            if (drive is null || string.IsNullOrEmpty(drive.Name))
+            if (drive is null || string.IsNullOrEmpty(drive.DevicePath))
                 return null;
 
             // If we can't read the files in the drive, we can only perform physical checks
-            if (!drive.MarkedActive || !Directory.Exists(drive.Name))
+            if (!drive.MarkedActive || !Directory.Exists(drive.DevicePath))
             {
                 try
                 {
@@ -1609,14 +1617,14 @@ namespace MPF.Frontend.ViewModels
             #region Arcade
 
             // Funworld Photo Play
-            if (File.Exists(Path.Combine(drive.Name, "PP.INF"))
-                && Directory.Exists(Path.Combine(drive.Name, "PPINC")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "PP.INF"))
+                && Directory.Exists(Path.Combine(drive.DevicePath, "PPINC")))
             {
                 return PhysicalSystem.FunworldPhotoPlay;
             }
 
             // Konami Python 2
-            if (Directory.Exists(Path.Combine(drive.Name, "PY2.D")))
+            if (Directory.Exists(Path.Combine(drive.DevicePath, "PY2.D")))
             {
                 return PhysicalSystem.KonamiPython2;
             }
@@ -1626,7 +1634,7 @@ namespace MPF.Frontend.ViewModels
             #region Consoles
 
             // Apple/Bandai Pippin
-            if (File.Exists(Path.Combine(drive.Name, "PippinAuthenticationFile")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "PippinAuthenticationFile")))
             {
                 return PhysicalSystem.AppleBandaiPippin;
             }
@@ -1634,7 +1642,7 @@ namespace MPF.Frontend.ViewModels
             // Bandai Playdia Quick Interactive System
             try
             {
-                List<string> files = [.. Directory.GetFiles(drive.Name, "*", SearchOption.TopDirectoryOnly)];
+                List<string> files = [.. Directory.GetFiles(drive.DevicePath, "*", SearchOption.TopDirectoryOnly)];
 
                 if (files.Exists(f => f.EndsWith(".AJS", StringComparison.OrdinalIgnoreCase))
                     && files.Exists(f => f.EndsWith(".GLB", StringComparison.OrdinalIgnoreCase)))
@@ -1646,35 +1654,35 @@ namespace MPF.Frontend.ViewModels
 
             // Commodore CDTV/CD32
 #if NET20 || NET35
-            if (File.Exists(Path.Combine(Path.Combine(drive.Name, "S"), "STARTUP-SEQUENCE")))
+            if (File.Exists(Path.Combine(Path.Combine(drive.DevicePath, "S"), "STARTUP-SEQUENCE")))
 #else
-            if (File.Exists(Path.Combine(drive.Name, "S", "STARTUP-SEQUENCE")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "S", "STARTUP-SEQUENCE")))
 #endif
             {
-                if (File.Exists(Path.Combine(drive.Name, "CDTV.TM")))
+                if (File.Exists(Path.Combine(drive.DevicePath, "CDTV.TM")))
                     return PhysicalSystem.CommodoreAmigaCDTV;
                 else
                     return PhysicalSystem.CommodoreAmigaCD32;
             }
 
             // Mattel HyperScan -- TODO: May need case-insensitivity added
-            if (File.Exists(Path.Combine(drive.Name, "hyper.exe")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "hyper.exe")))
             {
                 return PhysicalSystem.MattelHyperScan;
             }
 
             // Mattel Fisher-Price iXL
 #if NET20 || NET35
-            if (File.Exists(Path.Combine(Path.Combine(drive.Name, "iXL"), "iXLUpdater.exe")))
+            if (File.Exists(Path.Combine(Path.Combine(drive.DevicePath, "iXL"), "iXLUpdater.exe")))
 #else
-            if (File.Exists(Path.Combine(drive.Name, "iXL", "iXLUpdater.exe")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "iXL", "iXLUpdater.exe")))
 #endif
             {
                 return PhysicalSystem.MattelFisherPriceiXL;
             }
 
             // Memorex - Visual Information System
-            if (File.Exists(Path.Combine(drive.Name, "CONTROL.TAT")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "CONTROL.TAT")))
             {
                 return PhysicalSystem.MemorexVisualInformationSystem;
             }
@@ -1682,8 +1690,8 @@ namespace MPF.Frontend.ViewModels
             // Microsoft Xbox 360
             try
             {
-                if (Directory.Exists(Path.Combine(drive.Name, "$SystemUpdate"))
-                    && Path.Combine(drive.Name, "$SystemUpdate").SafeGetFiles().Length > 0
+                if (Directory.Exists(Path.Combine(drive.DevicePath, "$SystemUpdate"))
+                    && Path.Combine(drive.DevicePath, "$SystemUpdate").SafeGetFiles().Length > 0
                     && drive.TotalSize <= 500_000_000)
                 {
                     return PhysicalSystem.MicrosoftXbox360;
@@ -1694,14 +1702,14 @@ namespace MPF.Frontend.ViewModels
             // Microsoft Xbox One and Series X
             try
             {
-                if (Directory.Exists(Path.Combine(drive.Name, "MSXC")))
+                if (Directory.Exists(Path.Combine(drive.DevicePath, "MSXC")))
                 {
                     try
                     {
 #if NET20 || NET35
-                        string catalogjs = Path.Combine(drive.Name, Path.Combine("MSXC", Path.Combine("Metadata", "catalog.js")));
+                        string catalogjs = Path.Combine(drive.DevicePath, Path.Combine("MSXC", Path.Combine("Metadata", "catalog.js")));
 #else
-                        string catalogjs = Path.Combine(drive.Name, "MSXC", "Metadata", "catalog.js");
+                        string catalogjs = Path.Combine(drive.DevicePath, "MSXC", "Metadata", "catalog.js");
 #endif
                         if (!File.Exists(catalogjs))
                             return PhysicalSystem.MicrosoftXboxOne;
@@ -1733,7 +1741,7 @@ namespace MPF.Frontend.ViewModels
             catch { }
 
             // Playmaji Polymega
-            if (File.Exists(Path.Combine(drive.Name, "Get Polymega App.url")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "Get Polymega App.url")))
             {
                 return PhysicalSystem.PlaymajiPolymega;
             }
@@ -1750,22 +1758,22 @@ namespace MPF.Frontend.ViewModels
             catch { }
 
             // Sega Dreamcast
-            if (File.Exists(Path.Combine(drive.Name, "IP.BIN")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "IP.BIN")))
             {
                 return PhysicalSystem.SegaDreamcast;
             }
 
             // Sega Mega-CD / Sega-CD
 #if NET20 || NET35
-            if (File.Exists(Path.Combine(Path.Combine(drive.Name, "_BOOT"), "IP.BIN"))
-                || File.Exists(Path.Combine(Path.Combine(drive.Name, "_BOOT"), "SP.BIN"))
-                || File.Exists(Path.Combine(Path.Combine(drive.Name, "_BOOT"), "SP_AS.BIN"))
-                || File.Exists(Path.Combine(drive.Name, "FILESYSTEM.BIN")))
+            if (File.Exists(Path.Combine(Path.Combine(drive.DevicePath, "_BOOT"), "IP.BIN"))
+                || File.Exists(Path.Combine(Path.Combine(drive.DevicePath, "_BOOT"), "SP.BIN"))
+                || File.Exists(Path.Combine(Path.Combine(drive.DevicePath, "_BOOT"), "SP_AS.BIN"))
+                || File.Exists(Path.Combine(drive.DevicePath, "FILESYSTEM.BIN")))
 #else
-            if (File.Exists(Path.Combine(drive.Name, "_BOOT", "IP.BIN"))
-                || File.Exists(Path.Combine(drive.Name, "_BOOT", "SP.BIN"))
-                || File.Exists(Path.Combine(drive.Name, "_BOOT", "SP_AS.BIN"))
-                || File.Exists(Path.Combine(drive.Name, "FILESYSTEM.BIN")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "_BOOT", "IP.BIN"))
+                || File.Exists(Path.Combine(drive.DevicePath, "_BOOT", "SP.BIN"))
+                || File.Exists(Path.Combine(drive.DevicePath, "_BOOT", "SP_AS.BIN"))
+                || File.Exists(Path.Combine(drive.DevicePath, "FILESYSTEM.BIN")))
 #endif
             {
                 return PhysicalSystem.SegaMegaCDSegaCD;
@@ -1774,10 +1782,10 @@ namespace MPF.Frontend.ViewModels
             // SNK Neo-Geo CD
             try
             {
-                if (File.Exists(Path.Combine(drive.Name, "ABS.TXT"))
-                    || File.Exists(Path.Combine(drive.Name, "BIB.TXT"))
-                    || File.Exists(Path.Combine(drive.Name, "CPY.TXT"))
-                    || File.Exists(Path.Combine(drive.Name, "IPL.TXT")))
+                if (File.Exists(Path.Combine(drive.DevicePath, "ABS.TXT"))
+                    || File.Exists(Path.Combine(drive.DevicePath, "BIB.TXT"))
+                    || File.Exists(Path.Combine(drive.DevicePath, "CPY.TXT"))
+                    || File.Exists(Path.Combine(drive.DevicePath, "IPL.TXT")))
                 {
                     return PhysicalSystem.SNKNeoGeoCD;
                 }
@@ -1785,8 +1793,8 @@ namespace MPF.Frontend.ViewModels
             catch { }
 
             // Sony PlayStation and Sony PlayStation 2
-            string psxExePath = Path.Combine(drive.Name, "PSX.EXE");
-            string systemCnfPath = Path.Combine(drive.Name, "SYSTEM.CNF");
+            string psxExePath = Path.Combine(drive.DevicePath, "PSX.EXE");
+            string systemCnfPath = Path.Combine(drive.DevicePath, "SYSTEM.CNF");
             if (File.Exists(systemCnfPath))
             {
                 // Check for either BOOT or BOOT2
@@ -1804,9 +1812,9 @@ namespace MPF.Frontend.ViewModels
             // Sony PlayStation 3
             try
             {
-                if (Directory.Exists(Path.Combine(drive.Name, "PS3_GAME"))
-                    || Directory.Exists(Path.Combine(drive.Name, "PS3_UPDATE"))
-                    || File.Exists(Path.Combine(drive.Name, "PS3_DISC.SFB")))
+                if (Directory.Exists(Path.Combine(drive.DevicePath, "PS3_GAME"))
+                    || Directory.Exists(Path.Combine(drive.DevicePath, "PS3_UPDATE"))
+                    || File.Exists(Path.Combine(drive.DevicePath, "PS3_DISC.SFB")))
                 {
                     return PhysicalSystem.SonyPlayStation3;
                 }
@@ -1815,9 +1823,9 @@ namespace MPF.Frontend.ViewModels
 
             // Sony PlayStation 4
 #if NET20 || NET35
-            if (File.Exists(Path.Combine(Path.Combine(Path.Combine(drive.Name, "PS4"), "UPDATE"), "PS4UPDATE.PUP")))
+            if (File.Exists(Path.Combine(Path.Combine(Path.Combine(drive.DevicePath, "PS4"), "UPDATE"), "PS4UPDATE.PUP")))
 #else
-            if (File.Exists(Path.Combine(drive.Name, "PS4", "UPDATE", "PS4UPDATE.PUP")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "PS4", "UPDATE", "PS4UPDATE.PUP")))
 #endif
             {
                 return PhysicalSystem.SonyPlayStation4;
@@ -1825,32 +1833,32 @@ namespace MPF.Frontend.ViewModels
 
             // Sony PlayStation 5
 #if NET20 || NET35
-            if (File.Exists(Path.Combine(Path.Combine(Path.Combine(drive.Name, "PS5"), "UPDATE"), "PS5UPDATE.PUP")))
+            if (File.Exists(Path.Combine(Path.Combine(Path.Combine(drive.DevicePath, "PS5"), "UPDATE"), "PS5UPDATE.PUP")))
 #else
-            if (File.Exists(Path.Combine(drive.Name, "PS5", "UPDATE", "PS5UPDATE.PUP")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "PS5", "UPDATE", "PS5UPDATE.PUP")))
 #endif
             {
                 return PhysicalSystem.SonyPlayStation5;
             }
 
             // V.Tech V.Flash / V.Smile Pro
-            if (File.Exists(Path.Combine(drive.Name, "0SYSTEM")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "0SYSTEM")))
             {
                 return PhysicalSystem.VTechVFlashVSmilePro;
             }
 
             // VM Labs NUON
 #if NET20 || NET35
-            if (File.Exists(Path.Combine(Path.Combine(drive.Name, "NUON"), "nuon.run")))
+            if (File.Exists(Path.Combine(Path.Combine(drive.DevicePath, "NUON"), "nuon.run")))
 #else
-            if (File.Exists(Path.Combine(drive.Name, "NUON", "nuon.run")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "NUON", "nuon.run")))
 #endif
             {
                 return PhysicalSystem.VMLabsNUON;
             }
 
             // ZAPit Games - GameWave
-            if (File.Exists(Path.Combine(drive.Name, "gamewave.diz")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "gamewave.diz")))
             {
                 return PhysicalSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem;
             }
@@ -1860,7 +1868,7 @@ namespace MPF.Frontend.ViewModels
             #region Computers
 
             // Amiga CD (Do this check AFTER CD32/CDTV)
-            if (File.Exists(Path.Combine(drive.Name, "Disk.info")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "Disk.info")))
             {
                 return PhysicalSystem.CommodoreAmigaCD;
             }
@@ -1868,9 +1876,9 @@ namespace MPF.Frontend.ViewModels
             // Fujitsu FM Towns
             try
             {
-                if (File.Exists(Path.Combine(drive.Name, "TMENU.EXP"))
-                    || File.Exists(Path.Combine(drive.Name, "TBIOS.SYS"))
-                    || File.Exists(Path.Combine(drive.Name, "TBIOS.BIN")))
+                if (File.Exists(Path.Combine(drive.DevicePath, "TMENU.EXP"))
+                    || File.Exists(Path.Combine(drive.DevicePath, "TBIOS.SYS"))
+                    || File.Exists(Path.Combine(drive.DevicePath, "TBIOS.BIN")))
                 {
                     return PhysicalSystem.FujitsuFMTownsSeries;
                 }
@@ -1878,7 +1886,7 @@ namespace MPF.Frontend.ViewModels
             catch { }
 
             // Sharp X68000
-            if (File.Exists(Path.Combine(drive.Name, "COMMAND.X")))
+            if (File.Exists(Path.Combine(drive.DevicePath, "COMMAND.X")))
             {
                 return PhysicalSystem.SharpX68000;
             }
@@ -1888,7 +1896,7 @@ namespace MPF.Frontend.ViewModels
             #region Video Formats
 
             // BD-Video
-            if (Directory.Exists(Path.Combine(drive.Name, "BDMV")))
+            if (Directory.Exists(Path.Combine(drive.DevicePath, "BDMV")))
             {
                 // Technically BD-Audio has this as well, but it's hard to split that out right now
                 return PhysicalSystem.BDVideo;
@@ -1897,14 +1905,14 @@ namespace MPF.Frontend.ViewModels
             // DVD-Audio and DVD-Video
             try
             {
-                if (Directory.Exists(Path.Combine(drive.Name, "AUDIO_TS"))
-                    && Path.Combine(drive.Name, "AUDIO_TS").SafeGetFiles().Length > 0)
+                if (Directory.Exists(Path.Combine(drive.DevicePath, "AUDIO_TS"))
+                    && Path.Combine(drive.DevicePath, "AUDIO_TS").SafeGetFiles().Length > 0)
                 {
                     return PhysicalSystem.DVDAudio;
                 }
 
-                else if (Directory.Exists(Path.Combine(drive.Name, "VIDEO_TS"))
-                    && Path.Combine(drive.Name, "VIDEO_TS").SafeGetFiles().Length > 0)
+                else if (Directory.Exists(Path.Combine(drive.DevicePath, "VIDEO_TS"))
+                    && Path.Combine(drive.DevicePath, "VIDEO_TS").SafeGetFiles().Length > 0)
                 {
                     return PhysicalSystem.DVDVideo;
                 }
@@ -1914,8 +1922,8 @@ namespace MPF.Frontend.ViewModels
             // HD-DVD-Video
             try
             {
-                if (Directory.Exists(Path.Combine(drive.Name, "HVDVD_TS"))
-                    && Path.Combine(drive.Name, "HVDVD_TS").SafeGetFiles().Length > 0)
+                if (Directory.Exists(Path.Combine(drive.DevicePath, "HVDVD_TS"))
+                    && Path.Combine(drive.DevicePath, "HVDVD_TS").SafeGetFiles().Length > 0)
                 {
                     return PhysicalSystem.HDDVDVideo;
                 }
@@ -1925,8 +1933,8 @@ namespace MPF.Frontend.ViewModels
             // Photo CD
             try
             {
-                if (Directory.Exists(Path.Combine(drive.Name, "PHOTO_CD"))
-                    && Path.Combine(drive.Name, "PHOTO_CD").SafeGetFiles().Length > 0)
+                if (Directory.Exists(Path.Combine(drive.DevicePath, "PHOTO_CD"))
+                    && Path.Combine(drive.DevicePath, "PHOTO_CD").SafeGetFiles().Length > 0)
                 {
                     return PhysicalSystem.PhotoCD;
                 }
@@ -1936,8 +1944,8 @@ namespace MPF.Frontend.ViewModels
             // VCD
             try
             {
-                if (Directory.Exists(Path.Combine(drive.Name, "VCD"))
-                    && Path.Combine(drive.Name, "VCD").SafeGetFiles().Length > 0)
+                if (Directory.Exists(Path.Combine(drive.DevicePath, "VCD"))
+                    && Path.Combine(drive.DevicePath, "VCD").SafeGetFiles().Length > 0)
                 {
                     return PhysicalSystem.VideoCD;
                 }
@@ -1972,7 +1980,7 @@ namespace MPF.Frontend.ViewModels
             // Catch this in case there's an input path issue
             try
             {
-                int driveIndex = Drives.ConvertAll(d => d.Name?[0] ?? '\0')
+                int driveIndex = Drives.ConvertAll(d => d.DevicePath?[0] ?? '\0')
                     .IndexOf(_environment.ContextInputPath?[0] ?? default);
                 CurrentDrive = driveIndex != -1 ? Drives[driveIndex] : Drives[0];
             }
@@ -1988,6 +1996,12 @@ namespace MPF.Frontend.ViewModels
             DisableEventHandlers();
 
             OutputPath = IOExtensions.NormalizeFilePath(_environment.ContextOutputPath, fullPath: false);
+
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            // If relative paths are enabled, use those
+            if (_options.Dumping.UseRelativePaths && !string.IsNullOrEmpty(OutputPath))
+                OutputPath = Path.GetRelativePath(Environment.CurrentDirectory, OutputPath);
+#endif
 
             if (MediaTypes is not null)
             {
@@ -2009,16 +2023,16 @@ namespace MPF.Frontend.ViewModels
         public async Task<string?> ScanAndShowProtection()
         {
             // Determine current environment, just in case
-            _environment ??= DetermineEnvironment();
+            _environment ??= DetermineEnvironment(resolveProgramPaths: false);
 
             // If we don't have a valid drive
-            if (CurrentDrive?.Name is null)
+            if (CurrentDrive?.DevicePath is null)
             {
                 ErrorLogLn("No valid drive found!");
                 return null;
             }
 
-            VerboseLogLn($"Scanning for copy protection in {CurrentDrive.Name}");
+            VerboseLogLn($"Scanning for copy protection in {CurrentDrive.DevicePath}");
 
             var tempContent = Status;
             Status = "Scanning for copy protection... this might take a while!";
@@ -2046,10 +2060,10 @@ namespace MPF.Frontend.ViewModels
 
             try
             {
-                var protections = await ProtectionTool.RunProtectionScanOnPath(CurrentDrive.Name, Options, progress);
+                var protections = await ProtectionTool.RunProtectionScanOnPath(CurrentDrive.DevicePath, Options, progress);
                 var output = ProtectionTool.FormatProtections(protections, CurrentDrive);
 
-                LogLn($"Detected the following protections in {CurrentDrive.Name}:\r\n\r\n{output}");
+                LogLn($"Detected the following protections in {CurrentDrive.DevicePath}:\r\n\r\n{output}");
                 return output;
             }
             catch (Exception ex)
@@ -2249,7 +2263,8 @@ namespace MPF.Frontend.ViewModels
                 InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.SDCard => true,
 
                 // Dreamdump
-                // InternalProgram.Dreamdump when CurrentPhysicalMediaType == PhysicalMediaType.GDROM => true,
+                InternalProgram.Dreamdump when CurrentPhysicalMediaType == PhysicalMediaType.CDROM => true,
+                InternalProgram.Dreamdump when CurrentPhysicalMediaType == PhysicalMediaType.GDROM => true,
 
                 // Redumper
                 InternalProgram.Redumper when CurrentPhysicalMediaType == PhysicalMediaType.BluRay => true,
@@ -2276,7 +2291,7 @@ namespace MPF.Frontend.ViewModels
             AskBeforeQuit = true;
 
             // One last check to determine environment, just in case
-            _environment = DetermineEnvironment();
+            _environment = DetermineEnvironment(resolveProgramPaths: true);
 
             // Force an internal drive refresh in case the user entered things manually
             _environment.RefreshDrive();
@@ -2554,11 +2569,11 @@ namespace MPF.Frontend.ViewModels
                         VerboseLogLn(validDicPath ? $"Found DiscImageCreator at {dicPath}" : $"Could not find DiscImageCreator from {Options.Dumping.DiscImageCreatorPath}");
                         return validDicPath;
 
-                    // case InternalProgram.Dreamdump:
-                    //     string? dreamdumpPath = Options.Dumping.DreamdumpPath.ResolvePath();
-                    //     bool validDreamdumpPath = dreamdumpPath is not null;
-                    //     VerboseLogLn(validDreamdumpPath ? $"Found Dreamdump at {dreamdumpPath}" : $"Could not find Dreamdump from {Options.Dumping.DreamdumpPath}");
-                    //     return validDreamdumpPath;
+                    case InternalProgram.Dreamdump:
+                        string? dreamdumpPath = Options.Dumping.DreamdumpPath.ResolvePath();
+                        bool validDreamdumpPath = dreamdumpPath is not null;
+                        VerboseLogLn(validDreamdumpPath ? $"Found Dreamdump at {dreamdumpPath}" : $"Could not find Dreamdump from {Options.Dumping.DreamdumpPath}");
+                        return validDreamdumpPath;
 
                     case InternalProgram.Redumper:
                         string? redumperPath = Options.Dumping.RedumperPath.ResolvePath();
@@ -2568,6 +2583,7 @@ namespace MPF.Frontend.ViewModels
 
                     // Non-dumping programs
                     case InternalProgram.CleanRip:
+                    case InternalProgram.Generic:
                     case InternalProgram.PS3CFW:
                     case InternalProgram.UmdImageCreator:
                     case InternalProgram.XboxBackupCreator:

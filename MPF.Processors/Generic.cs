@@ -11,6 +11,7 @@ namespace MPF.Processors
     /// <summary>
     /// Represents processing generic outputs
     /// </summary>
+    /// TODO: Add tests for this, somehow
     public sealed class Generic : BaseProcessor
     {
         /// <inheritdoc/>
@@ -20,9 +21,7 @@ namespace MPF.Processors
 
         /// <inheritdoc/>
         public override PhysicalMediaType? DeterminePhysicalMediaType(string? outputDirectory, string outputFilename)
-        {
-            throw new NotImplementedException();
-        }
+            => PhysicalMediaType.NONE;
 
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, PhysicalMediaType? mediaType, string basePath, bool redumpCompat)
@@ -36,22 +35,21 @@ namespace MPF.Processors
             if (datafile is not null)
                 info.DumpMetadata.Dat = ProcessingTool.GenerateDatfile(datafile);
 
-            // Extract info based generically on PhysicalMediaType
-#pragma warning disable IDE0010
-            switch (mediaType)
-            {
-                case PhysicalMediaType.CDROM:
-                case PhysicalMediaType.GDROM:
-                    info.DumpMetadata.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
-                    break;
-            }
-#pragma warning restore IDE0010
+            // Try to read the cuesheet, if it exists
+            info.DumpMetadata.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
         }
 
         /// <inheritdoc/>
         internal override List<OutputFile> GetOutputFiles(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
-            return [];
+            // Assemble the original filename
+            string filePath = Path.GetFileNameWithoutExtension(outputFilename);
+            if (!string.IsNullOrEmpty(outputDirectory))
+                filePath = Path.Combine(outputDirectory, filePath);
+
+            return [
+                new(filePath, OutputFileFlags.Preserve)
+            ];
         }
 
         #endregion
@@ -84,6 +82,10 @@ namespace MPF.Processors
                 fileModifiedDate = ProcessingTool.GetFileModifiedDate($"{basePath}.mdf");
             else if (File.Exists($"{basePath}.ima"))
                 fileModifiedDate = ProcessingTool.GetFileModifiedDate($"{basePath}.ima");
+            else if (File.Exists($"{basePath}.wud"))
+                fileModifiedDate = ProcessingTool.GetFileModifiedDate($"{basePath}.wud");
+            else if (File.Exists($"{basePath}.wux"))
+                fileModifiedDate = ProcessingTool.GetFileModifiedDate($"{basePath}.wux");
             else
                 return null;
 
@@ -123,6 +125,18 @@ namespace MPF.Processors
             else if (File.Exists($"{basePath}.mdf"))
             {
                 var rom = GetRom($"{basePath}.mdf");
+                if (rom is not null)
+                    return GetDatafile(basePath, rom);
+            }
+            else if (File.Exists($"{basePath}.wud"))
+            {
+                var rom = GetRom($"{basePath}.wud");
+                if (rom is not null)
+                    return GetDatafile(basePath, rom);
+            }
+            else if (File.Exists($"{basePath}.wux"))
+            {
+                var rom = GetRom($"{basePath}.wux");
                 if (rom is not null)
                     return GetDatafile(basePath, rom);
             }

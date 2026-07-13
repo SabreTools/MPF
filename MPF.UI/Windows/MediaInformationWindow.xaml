@@ -891,7 +891,7 @@
                                 <controls:UserInput x:Name="UniversalHash"
                                                     Label="Universal Hash (SHA-1)"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)UniversalHash], Mode=TwoWay}"/>
+                                                    Text="{Binding Path=SubmissionInfo.DiscIdentifiers.UniversalHash, Mode=TwoWay}"/>
                                 <controls:UserInput x:Name="VolumeLabel"
                                                     Label="Volume Label"
                                                     IsReadOnly="True"

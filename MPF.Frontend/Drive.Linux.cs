@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using SabreTools.IO.Extensions;
 
 namespace MPF.Frontend
 {
@@ -29,21 +30,6 @@ namespace MPF.Frontend
             "zram", // compressed ramdisk
         ];
 
-        /// <summary>
-        /// Floppy media sizes in bytes for the standard 5.25" and 3.5" PC formats
-        /// (360 KB, 720 KB, 1.2 MB, 1.44 MB, 2.88 MB). A removable SCSI disk reporting one of
-        /// these exact capacities is a USB floppy with media inserted; no other removable
-        /// storage uses these sizes, so this doubles as the floppy identity check.
-        /// </summary>
-        private static readonly HashSet<long> _unixFloppyMediaSizes = new HashSet<long>
-        {
-            368640,   // 360 KB (5.25" DD)
-            737280,   // 720 KB (3.5" DD)
-            1228800,  // 1.2 MB (5.25" HD)
-            1474560,  // 1.44 MB (3.5" HD)
-            2949120,  // 2.88 MB (3.5" ED)
-        };
-
         #endregion
 
         #region Linux Helpers
@@ -67,14 +53,14 @@ namespace MPF.Frontend
             var existingNames = new HashSet<string>();
             foreach (var d in drives)
             {
-                if (d?.Name is not null)
-                    existingNames.Add(d.Name);
+                if (d?.DevicePath is not null)
+                    existingNames.Add(d.DevicePath);
             }
 
             // Block nodes first, then their generic SCSI counterparts
             var devicePaths = new List<string>();
-            devicePaths.AddRange(EnumerateUnixOpticalBlockPaths("/dev"));
-            devicePaths.AddRange(EnumerateUnixOpticalGenericPaths("/dev", "/sys/class/scsi_generic"));
+            devicePaths.AddRange(IOExtensions.EnumerateUnixOpticalBlockPaths("/dev"));
+            devicePaths.AddRange(IOExtensions.EnumerateUnixOpticalGenericPaths("/dev", "/sys/class/scsi_generic"));
 
             var extra = new List<Drive>();
             foreach (var devicePath in devicePaths)
@@ -131,14 +117,14 @@ namespace MPF.Frontend
             var existingNames = new HashSet<string>();
             foreach (var d in drives)
             {
-                if (d?.Name is not null)
-                    existingNames.Add(d.Name);
+                if (d?.DevicePath is not null)
+                    existingNames.Add(d.DevicePath);
             }
 
             // Legacy /dev/fd* nodes plus USB floppy drives exposed as SCSI disks (/dev/sd*)
             var devicePaths = new List<string>();
-            devicePaths.AddRange(EnumerateUnixFloppyBlockPaths("/dev"));
-            devicePaths.AddRange(EnumerateUnixUsbFloppyBlockPaths("/sys/block", "/dev"));
+            devicePaths.AddRange(IOExtensions.EnumerateUnixFloppyBlockPaths("/dev"));
+            devicePaths.AddRange(IOExtensions.EnumerateUnixUsbFloppyBlockPaths("/sys/block", "/dev"));
 
             var extra = new List<Drive>();
             foreach (var devicePath in devicePaths)
@@ -177,186 +163,6 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Enumerate Linux optical block devices under a directory by matching
-        /// the kernel convention "sr" followed by one or more digits (sr0, sr1, ...).
-        /// </summary>
-        /// <param name="devRoot">Root directory to scan (typically "/dev")</param>
-        /// <returns>Device paths, or an empty list when the directory is unreadable</returns>
-        internal static List<string> EnumerateUnixOpticalBlockPaths(string devRoot)
-        {
-            var result = new List<string>();
-            if (string.IsNullOrEmpty(devRoot) || !Directory.Exists(devRoot))
-                return result;
-
-            string[] candidates;
-            try
-            {
-                candidates = Directory.GetFiles(devRoot, "sr*");
-            }
-            catch
-            {
-                return result;
-            }
-
-            foreach (var path in candidates)
-            {
-                if (HasDeviceIndexSuffix(Path.GetFileName(path), "sr"))
-                    result.Add(path);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Enumerate Linux floppy block devices under a directory by matching the kernel
-        /// convention "fd" followed by one or more digits (fd0, fd1, ...). This deliberately
-        /// rejects the "/dev/fd" symlink (no trailing digits) and format-specific nodes such
-        /// as "fd0u1440" (embedded non-digit characters), which are not whole-device targets.
-        /// </summary>
-        /// <param name="devRoot">Root directory to scan (typically "/dev")</param>
-        /// <returns>Device paths, or an empty list when the directory is unreadable</returns>
-        internal static List<string> EnumerateUnixFloppyBlockPaths(string devRoot)
-        {
-            var result = new List<string>();
-            if (string.IsNullOrEmpty(devRoot) || !Directory.Exists(devRoot))
-                return result;
-
-            string[] candidates;
-            try
-            {
-                candidates = Directory.GetFiles(devRoot, "fd*");
-            }
-            catch
-            {
-                return result;
-            }
-
-            foreach (var path in candidates)
-            {
-                if (HasDeviceIndexSuffix(Path.GetFileName(path), "fd"))
-                    result.Add(path);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Enumerate USB floppy drives, which the kernel exposes as ordinary SCSI disks
-        /// (/dev/sd*) rather than /dev/fd* nodes. A disk is treated as a floppy when it reports
-        /// itself removable and its media is one of the standard floppy sizes. This mirrors how
-        /// Windows identifies a floppy from the inserted medium (Win32_LogicalDisk.MediaType)
-        /// and, like that path, only recognizes the drive while floppy media is present.
-        /// </summary>
-        /// <param name="sysBlockRoot">sysfs block directory (typically "/sys/block")</param>
-        /// <param name="devRoot">Root directory device nodes live under (typically "/dev")</param>
-        /// <returns>Device paths, or an empty list when the directory is unreadable</returns>
-        internal static List<string> EnumerateUnixUsbFloppyBlockPaths(string sysBlockRoot, string devRoot)
-        {
-            var result = new List<string>();
-            if (string.IsNullOrEmpty(sysBlockRoot) || string.IsNullOrEmpty(devRoot))
-                return result;
-            if (!Directory.Exists(sysBlockRoot))
-                return result;
-
-            string[] entries;
-            try
-            {
-                entries = Directory.GetFileSystemEntries(sysBlockRoot, "sd*");
-            }
-            catch
-            {
-                return result;
-            }
-
-            foreach (var entry in entries)
-            {
-                // A floppy reports itself removable and its media is a standard floppy size;
-                // both come from world-readable sysfs, so no elevated privileges are needed.
-                if (!ReadUnixRemovableFlag(entry))
-                    continue;
-                if (!_unixFloppyMediaSizes.Contains(ReadUnixBlockDeviceSize(entry)))
-                    continue;
-
-                result.Add(Path.Combine(devRoot, Path.GetFileName(entry)));
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Enumerate Linux optical drives via their generic SCSI nodes (/dev/sg*).
-        /// Unlike the block nodes, "sg" is not optical-specific, so each candidate is
-        /// confirmed against sysfs: an optical drive reports SCSI peripheral device type 5.
-        /// </summary>
-        /// <param name="devRoot">Root directory the nodes live under (typically "/dev")</param>
-        /// <param name="sysfsScsiGenericRoot">sysfs class directory (typically "/sys/class/scsi_generic")</param>
-        /// <returns>Device paths, or an empty list when the sysfs directory is unreadable</returns>
-        internal static List<string> EnumerateUnixOpticalGenericPaths(string devRoot, string sysfsScsiGenericRoot)
-        {
-            var result = new List<string>();
-            if (string.IsNullOrEmpty(devRoot) || string.IsNullOrEmpty(sysfsScsiGenericRoot))
-                return result;
-            if (!Directory.Exists(sysfsScsiGenericRoot))
-                return result;
-
-            string[] entries;
-            try
-            {
-                entries = Directory.GetFileSystemEntries(sysfsScsiGenericRoot, "sg*");
-            }
-            catch
-            {
-                return result;
-            }
-
-            foreach (var entry in entries)
-            {
-                string name = Path.GetFileName(entry);
-                if (!HasDeviceIndexSuffix(name, "sg"))
-                    continue;
-
-                // "sg" is generic SCSI; keep only optical drives (peripheral device type 5)
-                string typePath = Path.Combine(Path.Combine(entry, "device"), "type");
-                try
-                {
-                    if (!File.Exists(typePath))
-                        continue;
-                    if (!int.TryParse(File.ReadAllText(typePath).Trim(), out int scsiType) || scsiType != 5)
-                        continue;
-                }
-                catch
-                {
-                    continue;
-                }
-
-                result.Add(Path.Combine(devRoot, name));
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Check that a device node name is the given prefix followed by one or more digits
-        /// (e.g. "sr0", "sg12"), rejecting names with trailing or embedded non-digit characters.
-        /// </summary>
-        /// <param name="name">Device node name to check</param>
-        /// <param name="prefix">Required leading text (e.g. "sr", "sg")</param>
-        /// <returns>True when the name is the prefix followed only by digits</returns>
-        private static bool HasDeviceIndexSuffix(string name, string prefix)
-        {
-            if (name.Length <= prefix.Length || !name.StartsWith(prefix, StringComparison.Ordinal))
-                return false;
-
-            for (int i = prefix.Length; i < name.Length; i++)
-            {
-                if (!char.IsDigit(name[i]))
-                    return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
         /// Append Linux fixed and removable block devices that DriveInfo did not surface.
         /// On Unix, DriveInfo.GetDrives() only reports mount points (e.g. "/"), not the raw
         /// device nodes (/dev/sda, /dev/nvme0n1, ...) needed for dumping, so whole-disk
@@ -375,20 +181,20 @@ namespace MPF.Frontend
             var existingNames = new HashSet<string>();
             foreach (var d in drives)
             {
-                if (d?.Name is not null)
-                    existingNames.Add(d.Name);
+                if (d?.DevicePath is not null)
+                    existingNames.Add(d.DevicePath);
             }
 
             var extra = new List<Drive>();
             foreach (var device in EnumerateUnixFixedDevices("/sys/block", "/dev"))
             {
                 // Skip paths already surfaced by DriveInfo or an earlier enumerator
-                if (!existingNames.Add(device.DevicePath))
+                if (!existingNames.Add(device.DevicePath!))
                     continue;
 
                 try
                 {
-                    var d = Create(device.DriveType, device.DevicePath);
+                    var d = Create(device.InternalDriveType, device.DevicePath!);
                     if (d is not null)
                     {
                         // A raw /dev block node is never a mount point, so DriveInfo reports
@@ -396,7 +202,7 @@ namespace MPF.Frontend
                         // fixed disk is always ready, while a removable drive is only ready
                         // when media is present (sysfs reports a non-zero size).
                         d.TotalSize = device.TotalSize;
-                        d.MarkedActive = device.DriveType == Frontend.InternalDriveType.HardDisk
+                        d.MarkedActive = device.InternalDriveType == Frontend.InternalDriveType.HardDisk
                             || device.TotalSize > 0;
                         extra.Add(d);
                     }
@@ -427,9 +233,9 @@ namespace MPF.Frontend
         /// <param name="sysBlockRoot">sysfs block directory (typically "/sys/block")</param>
         /// <param name="devRoot">Root directory device nodes live under (typically "/dev")</param>
         /// <returns>Discovered devices, or an empty list when the directory is unreadable</returns>
-        internal static List<UnixBlockDevice> EnumerateUnixFixedDevices(string sysBlockRoot, string devRoot)
+        internal static List<Drive> EnumerateUnixFixedDevices(string sysBlockRoot, string devRoot)
         {
-            var result = new List<UnixBlockDevice>();
+            var result = new List<Drive>();
             if (string.IsNullOrEmpty(sysBlockRoot) || string.IsNullOrEmpty(devRoot))
                 return result;
             if (!Directory.Exists(sysBlockRoot))
@@ -455,7 +261,14 @@ namespace MPF.Frontend
                     ? Frontend.InternalDriveType.Removable
                     : Frontend.InternalDriveType.HardDisk;
 
-                result.Add(new UnixBlockDevice(Path.Combine(devRoot, name), driveType, ReadUnixBlockDeviceSize(entry)));
+                long totalSize = ReadUnixBlockDeviceSize(entry);
+
+                result.Add(new Drive()
+                {
+                    InternalDriveType = driveType,
+                    DevicePath = Path.Combine(devRoot, name),
+                    TotalSize = totalSize,
+                });
             }
 
             return result;
@@ -486,6 +299,7 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="sysBlockEntry">Path to the device directory under the sysfs block root</param>
         /// <returns>True when the device reports itself as removable; false otherwise</returns>
+        /// TODO: Remove when IO is updated
         private static bool ReadUnixRemovableFlag(string sysBlockEntry)
         {
             string removablePath = Path.Combine(sysBlockEntry, "removable");
@@ -507,6 +321,7 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="sysBlockEntry">Path to the device directory under the sysfs block root</param>
         /// <returns>The device size in bytes, or 0 when it cannot be determined</returns>
+        /// TODO: Remove when IO is updated
         private static long ReadUnixBlockDeviceSize(string sysBlockEntry)
         {
             string sizePath = Path.Combine(sysBlockEntry, "size");

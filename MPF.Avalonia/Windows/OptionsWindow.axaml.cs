@@ -70,7 +70,8 @@ namespace MPF.Avalonia.Windows
             AcceptButton!.Click += OnAcceptClick;
             CancelButton!.Click += OnCancelClick;
             // RedumpLoginTestButton!.Click += OnRedumpTestClick;
-            NonRedumpModeCheckBox!.Click += NonRedumpModeClicked;
+            DreamdumpNonRedumpModeCheckBox!.Click += DreamdumpNonRedumpModeClicked;
+            RedumperNonRedumpModeCheckBox!.Click += RedumperNonRedumpModeClicked;
         }
 
         /// <summary>
@@ -138,13 +139,25 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Alert user of non-redump mode implications
         /// </summary>
-        private void NonRedumpModeClicked(object? sender, RoutedEventArgs e)
+        private void DreamdumpNonRedumpModeClicked(object? sender, RoutedEventArgs e)
         {
-            if (NonRedumpModeCheckBox!.IsChecked == true)
+            if (DreamdumpNonRedumpModeCheckBox!.IsChecked == true)
                 _ = MessageBoxWindow.ShowAsync(this, StringResource("WarningMessageString", "Warning"),
             "All logs generated with these options will not be acceptable for Redump submission", 1, true);
             else
-                OptionsViewModel.NonRedumpModeUnChecked();
+                OptionsViewModel.DreamdumpNonRedumpModeUnChecked();
+        }
+
+        /// <summary>
+        /// Alert user of non-redump mode implications
+        /// </summary>
+        private void RedumperNonRedumpModeClicked(object? sender, RoutedEventArgs e)
+        {
+            if (RedumperNonRedumpModeCheckBox!.IsChecked == true)
+                _ = MessageBoxWindow.ShowAsync(this, StringResource("WarningMessageString", "Warning"),
+            "All logs generated with these options will not be acceptable for Redump submission", 1, true);
+            else
+                OptionsViewModel.RedumperNonRedumpModeUnChecked();
         }
 
         /// <summary>

@@ -197,6 +197,5 @@ namespace MPF.Avalonia.Windows
                 .Replace($"/{generatedVolumesPrefix}", "/", StringComparison.Ordinal)
                 .Replace($"\\{generatedVolumesPrefix}", "\\", StringComparison.Ordinal);
         }
-
     }
 }

@@ -75,9 +75,6 @@ namespace MPF.Frontend
         /// <inheritdoc cref="Drive.MarkedActive/>
         public bool DriveMarkedActive => _drive?.MarkedActive ?? false;
 
-        /// <inheritdoc cref="Drive.Name/>
-        public string? DriveName => _drive?.Name;
-
         /// <inheritdoc cref="BaseExecutionContext.Speed"/>
         public int? Speed
         {
@@ -130,6 +127,12 @@ namespace MPF.Frontend
             // Output paths
             OutputPath = IOExtensions.NormalizeFilePath(outputPath, fullPath: false);
 
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            // If relative paths are enabled, use those
+            if (_options.Dumping.UseRelativePaths && !string.IsNullOrEmpty(OutputPath))
+                OutputPath = Path.GetRelativePath(Environment.CurrentDirectory, OutputPath);
+#endif
+
             // UI information
             _drive = drive;
             _system = system ?? options.Dumping.DefaultSystem;
@@ -169,13 +172,13 @@ namespace MPF.Frontend
                     programFound = InternalProgram.Aaru;
             }
 
-            // if (programFound is null && _internalProgram != InternalProgram.Dreamdump)
-            // {
-            //     var processor = new Dreamdump(_system);
-            //     var missingFiles = processor.FoundAllFiles(mediaType, outputDirectory, outputFilename);
-            //     if (missingFiles.Count == 0)
-            //         programFound = InternalProgram.Dreamdump;
-            // }
+            if (programFound is null && _internalProgram != InternalProgram.Dreamdump)
+            {
+                var processor = new Dreamdump(_system);
+                var missingFiles = processor.FoundAllFiles(mediaType, outputDirectory, outputFilename);
+                if (missingFiles.Count == 0)
+                    programFound = InternalProgram.Dreamdump;
+            }
 
             return programFound;
         }
@@ -208,12 +211,12 @@ namespace MPF.Frontend
                     programFound = InternalProgram.Aaru;
             }
 
-            // if (programFound is null && _internalProgram != InternalProgram.Dreamdump)
-            // {
-            //     var processor = new Dreamdump(_system);
-            //     if (processor.FoundAnyFiles(mediaType, outputDirectory, outputFilename))
-            //         programFound = InternalProgram.Dreamdump;
-            // }
+            if (programFound is null && _internalProgram != InternalProgram.Dreamdump)
+            {
+                var processor = new Dreamdump(_system);
+                if (processor.FoundAnyFiles(mediaType, outputDirectory, outputFilename))
+                    programFound = InternalProgram.Dreamdump;
+            }
 
             return programFound;
         }
@@ -230,7 +233,7 @@ namespace MPF.Frontend
             {
                 InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(parameters) { ExecutablePath = _options.Dumping.AaruPath },
                 InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(parameters) { ExecutablePath = _options.Dumping.DiscImageCreatorPath },
-                // InternalProgram.Dreamdump => new ExecutionContexts.Dreamdump.ExecutionContext(parameters) { ExecutablePath = _options.Dumping.DreamdumpPath },
+                InternalProgram.Dreamdump => new ExecutionContexts.Dreamdump.ExecutionContext(parameters) { ExecutablePath = _options.Dumping.DreamdumpPath },
                 InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(parameters) { ExecutablePath = _options.Dumping.RedumperPath },
 
                 // If no dumping program found, set to null
@@ -263,7 +266,8 @@ namespace MPF.Frontend
                 InternalProgram.Aaru => new Aaru(_system),
                 InternalProgram.CleanRip => new CleanRip(_system),
                 InternalProgram.DiscImageCreator => new DiscImageCreator(_system),
-                // InternalProgram.Dreamdump => new Dreamdump(_system),
+                InternalProgram.Dreamdump => new Dreamdump(_system),
+                InternalProgram.Generic => new Generic(_system),
                 InternalProgram.PS3CFW => new PS3CFW(_system),
                 InternalProgram.Redumper => new Redumper(_system),
                 InternalProgram.UmdImageCreator => new UmdImageCreator(_system),
@@ -298,28 +302,28 @@ namespace MPF.Frontend
                 {
                     InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(_system,
                         mediaType,
-                        _drive.Name,
+                        _drive.DevicePath,
                         OutputPath,
                         driveSpeed,
                         _options.Dumping.Aaru),
 
                     InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(_system,
                         mediaType,
-                        _drive.Name,
+                        _drive.DevicePath,
                         OutputPath,
                         driveSpeed,
                         _options.Dumping.DIC),
 
-                    // InternalProgram.Dreamdump => new ExecutionContexts.Dreamdump.ExecutionContext(_system,
-                    //     mediaType,
-                    //     _drive.Name,
-                    //     OutputPath,
-                    //     driveSpeed,
-                    //     _options.Dumping.Dreamdump),
+                    InternalProgram.Dreamdump => new ExecutionContexts.Dreamdump.ExecutionContext(_system,
+                        mediaType,
+                        _drive.DevicePath,
+                        OutputPath,
+                        driveSpeed,
+                        _options.Dumping.Dreamdump),
 
                     InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(_system,
                         mediaType,
-                        _drive.Name,
+                        _drive.DevicePath,
                         OutputPath,
                         driveSpeed,
                         _options.Dumping.Redumper),
@@ -741,8 +745,14 @@ namespace MPF.Frontend
             // Fix the output paths, just in case
             OutputPath = IOExtensions.NormalizeFilePath(OutputPath, fullPath: false);
 
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            // If relative paths are enabled, use those
+            if (_options.Dumping.UseRelativePaths && !string.IsNullOrEmpty(OutputPath))
+                OutputPath = Path.GetRelativePath(Environment.CurrentDirectory, OutputPath);
+#endif
+
             // Validate that the output path isn't on the dumping drive
-            if (_drive?.Name is not null && OutputPath.StartsWith(_drive.Name))
+            if (_drive?.DevicePath is not null && OutputPath.StartsWith(_drive.DevicePath))
                 return ResultEventArgs.Failure("Error! Cannot output to same drive that is being dumped!");
 
             // Validate that the required program exists
@@ -751,7 +761,7 @@ namespace MPF.Frontend
 
             // Validate that the dumping drive doesn't contain the executable
             string fullExecutablePath = Path.GetFullPath(_executionContext.ExecutablePath!);
-            if (_drive?.Name is not null && fullExecutablePath.StartsWith(_drive.Name))
+            if (_drive?.DevicePath is not null && fullExecutablePath.StartsWith(_drive.DevicePath))
                 return ResultEventArgs.Failure("Error! Cannot dump same drive that executable resides on!");
 
             // Validate that the current configuration is supported
@@ -791,6 +801,11 @@ namespace MPF.Frontend
                     path = Path.Combine(outputDirectory, "!submissionInfo.txt");
                 else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                     path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt");
+
+                // Ensure the output directory has been created
+                string? parentDirectory = Path.GetDirectoryName(path);
+                if (parentDirectory is not null)
+                    Directory.CreateDirectory(parentDirectory);
 
                 using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.UTF8);
                 sw.Write(lines);
@@ -892,6 +907,11 @@ namespace MPF.Frontend
                     path = Path.Combine(outputDirectory, "!protectionInfo.txt");
                 else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                     path = Path.Combine(outputDirectory, $"!protectionInfo{filenameSuffix}.txt");
+
+                // Ensure the output directory has been created
+                string? parentDirectory = Path.GetDirectoryName(path);
+                if (parentDirectory is not null)
+                    Directory.CreateDirectory(parentDirectory);
 
                 using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.UTF8);
 

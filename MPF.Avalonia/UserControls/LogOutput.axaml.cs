@@ -117,6 +117,11 @@ namespace MPF.Avalonia.UserControls
                 logPath = Path.Combine(directory, "console.log");
             }
 
+            // Ensure the output directory has been created
+            string? parentDirectory = Path.GetDirectoryName(logPath);
+            if (parentDirectory is not null)
+                Directory.CreateDirectory(parentDirectory);
+
             using var writer = new StreamWriter(File.Open(logPath, FileMode.Create, FileAccess.Write, FileShare.Read));
             foreach (LogEntry entry in Entries)
             {

@@ -9,10 +9,11 @@
                         xmlns:viewModels="clr-namespace:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
                         mc:Ignorable="d"
                         Title="{DynamicResource AppTitleString}"
+                        MinWidth="600"
                         Width="600"
                         WindowStyle="None"
                         WindowStartupLocation="CenterScreen"
-                        ResizeMode="CanMinimize"
+                        ResizeMode="CanResize"
                         SizeToContent="Height"
                         AllowsTransparency="True"
                         Background="Transparent">
@@ -305,8 +306,10 @@
                       Header="{DynamicResource SettingsGroupBoxString}">
                 <Grid Margin="5,5,5,5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="2.5*"/>
+                        <ColumnDefinition Width="125"/>
+                        <ColumnDefinition Width="*"
+                                          MinWidth="370"/>
+                        <ColumnDefinition Width="70"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -325,6 +328,7 @@
                     <ComboBox x:Name="SystemTypeComboBox"
                               Grid.Row="0"
                               Grid.Column="1"
+                              Grid.ColumnSpan="2"
                               Height="22"
                               Width="250"
                               HorizontalAlignment="Left"
@@ -347,12 +351,13 @@
                     <ComboBox x:Name="MediaTypeComboBox"
                               Grid.Row="0"
                               Grid.Column="1"
+                              Grid.ColumnSpan="2"
                               Height="22"
                               Width="140"
                               HorizontalAlignment="Right"
                               ItemsSource="{Binding MediaTypes}"
                               SelectedItem="{Binding Path=CurrentPhysicalMediaType, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              IsEnabled="{Binding MediaTypeComboBoxEnabled}"
+                              IsEnabled="{Binding PhysicalMediaTypeComboBoxEnabled}"
                               Style="{DynamicResource CustomComboBoxStyle}"
                               Visibility="Hidden"/>
 
@@ -365,17 +370,17 @@
                              Grid.Row="1"
                              Grid.Column="1"
                              Height="22"
-                             Width="342"
-                             HorizontalAlignment="Left"
+                             MinWidth="370"
+                             HorizontalAlignment="Stretch"
                              VerticalContentAlignment="Center"
                              Text="{Binding OutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{Binding OutputPathTextBoxEnabled}"/>
                     <Button x:Name="OutputPathBrowseButton"
                             Grid.Row="1"
-                            Grid.Column="1"
+                            Grid.Column="2"
                             Height="22"
                             Width="53"
-                            HorizontalAlignment="Right"
+                            HorizontalAlignment="Center"
                             Content="{DynamicResource BrowseButtonString}"
                             IsEnabled="{Binding OutputPathBrowseButtonEnabled}"
                             Style="{DynamicResource CustomButtonStyle}"/>
@@ -388,6 +393,7 @@
                     <ComboBox x:Name="DriveLetterComboBox"
                               Grid.Row="2"
                               Grid.Column="1"
+                              Grid.ColumnSpan="2"
                               Height="22"
                               Width="60"
                               HorizontalAlignment="Left"
@@ -410,6 +416,7 @@
                     <ComboBox x:Name="DriveSpeedComboBox"
                               Grid.Row="3"
                               Grid.Column="1"
+                              Grid.ColumnSpan="2"
                               Height="22"
                               Width="60"
                               HorizontalAlignment="Left"
@@ -426,6 +433,7 @@
                     <ComboBox x:Name="DumpingProgramComboBox"
                               Grid.Row="4"
                               Grid.Column="1"
+                              Grid.ColumnSpan="2"
                               Height="22"
                               Width="250"
                               HorizontalAlignment="Left"
@@ -443,16 +451,16 @@
                              Grid.Row="5"
                              Grid.Column="1"
                              Height="22"
-                             Width="370"
-                             HorizontalAlignment="Left"
+                             MinWidth="370"
+                             HorizontalAlignment="Stretch"
                              VerticalContentAlignment="Center"
                              Text="{Binding Parameters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{Binding ParametersTextBoxEnabled}"/>
                     <CheckBox x:Name="EnableParametersCheckBox"
                               Grid.Row="5"
-                              Grid.Column="1"
+                              Grid.Column="2"
                               Height="22"
-                              HorizontalAlignment="Right"
+                              HorizontalAlignment="Center"
                               IsChecked="{Binding ParametersCheckBoxEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding EnableParametersCheckBoxEnabled}"/>
                 </Grid>

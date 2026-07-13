@@ -28,5 +28,6 @@ namespace MPF.ExecutionContexts.Redumper
         public const string FixMSF = "fixmsf";
         public const string DebugFlip = "debug::flip";
         public const string DriveTest = "drive::test";
+        public const string DriveDetect = "drive::detect";
     }
 }

@@ -20,7 +20,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Internal structure version
         /// </summary>
-        public int Version { get; set; } = 1;
+        public int Version { get; set; } = 2;
 
         /// <summary>
         /// Indicate if the program is being run with a clean configuration
@@ -113,6 +113,8 @@ namespace MPF.Frontend
             Dumping.DumpSpeeds.HDDVD = source.Dumping.DumpSpeeds.HDDVD;
             Dumping.DumpSpeeds.Bluray = source.Dumping.DumpSpeeds.Bluray;
 
+            Dumping.UseRelativePaths = source.Dumping.UseRelativePaths;
+
             Dumping.Aaru.EnableDebug = source.Dumping.Aaru.EnableDebug;
             Dumping.Aaru.EnableVerbose = source.Dumping.Aaru.EnableVerbose;
             Dumping.Aaru.ForceDumping = source.Dumping.Aaru.ForceDumping;
@@ -148,8 +150,6 @@ namespace MPF.Frontend
             Processing.ProtectionScanning.IncludeDebugProtectionInformation = source.Processing.ProtectionScanning.IncludeDebugProtectionInformation;
 
             Processing.Login.PullAllInformation = source.Processing.Login.PullAllInformation;
-            Processing.Login.RedumpOrgUsername = null; // TODO: Remove entirely
-            Processing.Login.RedumpOrgPassword = null; // TODO: Remove entirely
             Processing.Login.RetrieveMatchInformation = source.Processing.Login.RetrieveMatchInformation;
             Processing.Login.AttemptCount = source.Processing.Login.AttemptCount;
             Processing.Login.TimeoutSeconds = source.Processing.Login.TimeoutSeconds;
@@ -364,6 +364,16 @@ namespace MPF.Frontend
         /// Default preferred dumping speeds per media type
         /// </summary>
         public DumpSpeeds DumpSpeeds { get; set; } = new DumpSpeeds();
+
+        #endregion
+
+        #region Pre-Processing
+
+        /// <summary>
+        /// Pre-process input paths to be relative
+        /// </summary>
+        /// <remarks>Version 2 and greater</remarks>
+        public bool UseRelativePaths { get; set; } = false;
 
         #endregion
 
@@ -656,20 +666,6 @@ namespace MPF.Frontend
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public bool PullAllInformation { get; set; } = false;
-
-        /// <summary>
-        /// Username for redump.org, requires <see cref="RedumpOrgPassword"/>
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        /// TODO: Remove in version 2 of configuration
-        public string? RedumpOrgUsername { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Password for redump.org, requires <see cref="RedumpOrgUsername"/>
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        /// TODO: Remove in version 2 of configuration
-        public string? RedumpOrgPassword { get; set; } = string.Empty;
 
         /// <summary>
         /// Enable retrieving match information from Redump
