@@ -896,20 +896,14 @@ namespace MPF.Frontend.ViewModels
                     Layer1MasteringCode = "L1 Mastering Code",
                     Layer1MasteringSID = "L1 Mastering SID",
                     Layer1Toolstamps = "L1 Toolstamp",
-                    Layer1MouldSIDs = "L1 Mould SIDs",
-                    Layer1AdditionalMoulds = "L1 Additional Moulds",
 
                     Layer2MasteringCode = "L2 Mastering Code",
                     Layer2MasteringSID = "L2 Mastering SID",
                     Layer2Toolstamps = "L2 Toolstamp",
-                    Layer2MouldSIDs = "L2 Mould SIDs",
-                    Layer2AdditionalMoulds = "L2 Additional Moulds",
 
                     Layer3MasteringCode = "L3 Mastering Code",
                     Layer3MasteringSID = "L3 Mastering SID",
                     Layer3Toolstamps = "L3 Toolstamp",
-                    Layer3MouldSIDs = "L3 Mould SIDs",
-                    Layer3AdditionalMoulds = "L3 Additional Moulds",
 
                     LabelSideMasteringCode = "Label Side Mastering Code",
                     LabelSideMasteringSID = "Label Side Mastering SID",
