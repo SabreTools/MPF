@@ -17,7 +17,7 @@ namespace MPF.Frontend.ComboBoxItems
         public PhysicalSystemComboBoxItem(PhysicalSystem? system) => Data = system;
         public PhysicalSystemComboBoxItem(SystemCategory? category) => Data = category;
 
-        public static implicit operator PhysicalSystem?(PhysicalSystemComboBoxItem item) => item.Data as PhysicalSystem?;
+        public static implicit operator PhysicalSystem?(PhysicalSystemComboBoxItem item) => item.Data as PhysicalSystem;
 
         /// <inheritdoc/>
         public string Name
@@ -27,7 +27,7 @@ namespace MPF.Frontend.ComboBoxItems
                 if (IsHeader)
                     return "---------- " + (Data as SystemCategory?).LongName() + " ----------";
                 else
-                    return (Data as PhysicalSystem?).LongName() ?? "No system selected";
+                    return (Data as PhysicalSystem)?.Name ?? "No system selected";
             }
         }
 
@@ -36,7 +36,7 @@ namespace MPF.Frontend.ComboBoxItems
         /// <summary>
         /// Internal enum value
         /// </summary>
-        public PhysicalSystem? Value => Data as PhysicalSystem?;
+        public PhysicalSystem? Value => Data as PhysicalSystem;
 
         /// <summary>
         /// Determines if the item is a header value
@@ -46,7 +46,7 @@ namespace MPF.Frontend.ComboBoxItems
         /// <summary>
         /// Determines if the item is a standard system value
         /// </summary>
-        public bool IsSystem => Data is PhysicalSystem?;
+        public bool IsSystem => Data is PhysicalSystem;
 
         /// <summary>
         /// Generate all elements for the known system combo box
@@ -54,30 +54,27 @@ namespace MPF.Frontend.ComboBoxItems
         /// <returns></returns>
         public static List<PhysicalSystemComboBoxItem> GenerateElements()
         {
-            var enumArr = (PhysicalSystem[])Enum.GetValues(typeof(PhysicalSystem));
-            var nullableArr = Array.ConvertAll(enumArr, s => (PhysicalSystem?)s);
-            var knownSystems = Array.FindAll(nullableArr,
-                s => !s.IsMarker() && s.GetCategory() != SystemCategory.NONE);
+            var knownSystems = Array.FindAll(PhysicalSystem.AllSystems,
+                s => !s.IsMarker && s.Category != SystemCategory.NONE);
 
 #if NET20
             // The resulting dictionary does not have ordered value lists
             Dictionary<SystemCategory, List<PhysicalSystem?>> mapping = [];
             foreach (var knownSystem in knownSystems)
             {
-                var category = knownSystem.GetCategory();
-                if (!mapping.ContainsKey(category))
-                    mapping[category] = [];
+                if (!mapping.ContainsKey(knownSystem.Category))
+                    mapping[knownSystem.Category] = [];
 
-                mapping[category].Add(knownSystem);
+                mapping[knownSystem.Category].Add(knownSystem);
             }
 #else
             // The resulting dictionary has ordered value lists
             Dictionary<SystemCategory, List<PhysicalSystem?>> mapping = knownSystems
-                .GroupBy(s => s.GetCategory())
+                .GroupBy(s => s.Category)
                 .ToDictionary(
                     k => k.Key,
-                    v => v
-                        .OrderBy(s => s.LongName())
+                    v => v.Cast<PhysicalSystem?>()
+                        .OrderBy(s => s?.Name ?? string.Empty)
                         .ToList()
                 );
 #endif

@@ -147,25 +147,36 @@ namespace MPF.Check
             // Check Options
             commandSet.Add(mainFeature.UseInput);
             commandSet.Add(mainFeature.LoadSeedInput);
+            commandSet.Add(mainFeature.PlaceholdersInput);
             commandSet.Add(mainFeature.NoPlaceholdersInput);
             commandSet.Add(mainFeature.CreateIrdInput);
+            commandSet.Add(mainFeature.NoCreateIrdInput);
+            commandSet.Add(mainFeature.RetrieveInput);
             commandSet.Add(mainFeature.NoRetrieveInput);
-            // commandSet.Add(mainFeature.UsernameInput);
-            // commandSet.Add(mainFeature.PasswordInput);
             commandSet.Add(mainFeature.AttemptCountInput);
             commandSet.Add(mainFeature.TimeoutSecondsInput);
             commandSet.Add(mainFeature.PullAllInput);
+            commandSet.Add(mainFeature.NoPullAllInput);
             commandSet.Add(mainFeature.PathInput);
             commandSet.Add(mainFeature.ScanInput);
-            commandSet.Add(mainFeature.DisableArchivesInput);
-            commandSet.Add(mainFeature.EnableDebugInput);
+            commandSet.Add(mainFeature.NoScanInput);
+            commandSet.Add(mainFeature.ArchivesInput);
+            commandSet.Add(mainFeature.NoArchivesInput);
+            commandSet.Add(mainFeature.DebugProtectionInput);
+            commandSet.Add(mainFeature.NoDebugProtectionInput);
+            commandSet.Add(mainFeature.ShowDriveLettersInput);
             commandSet.Add(mainFeature.HideDriveLettersInput);
             commandSet.Add(mainFeature.SuffixInput);
+            commandSet.Add(mainFeature.NoSuffixInput);
             commandSet.Add(mainFeature.JsonInput);
-            commandSet.Add(mainFeature.IncludeArtifactsInput);
+            commandSet.Add(mainFeature.NoJsonInput);
+            commandSet.Add(mainFeature.ArtifactsInput);
+            commandSet.Add(mainFeature.NoArtifactsInput);
             commandSet.Add(mainFeature.ZipInput);
+            commandSet.Add(mainFeature.NoZipInput);
             commandSet.Add(mainFeature.LogCompressionInput);
             commandSet.Add(mainFeature.DeleteInput);
+            commandSet.Add(mainFeature.NoDeleteInput);
 
             return commandSet;
         }

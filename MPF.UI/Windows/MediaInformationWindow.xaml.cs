@@ -40,28 +40,21 @@ namespace MPF.UI.Windows
         private UserInput? Layer1MasteringCode => ItemHelper.FindChild<UserInput>(this, "Layer1MasteringCode");
         private UserInput? Layer1MasteringSID => ItemHelper.FindChild<UserInput>(this, "Layer1MasteringSID");
         private UserInput? Layer1Toolstamp => ItemHelper.FindChild<UserInput>(this, "Layer1Toolstamp");
-        private UserInput? Layer1MouldSIDs => ItemHelper.FindChild<UserInput>(this, "Layer1MouldSIDs");
-        private UserInput? Layer1AdditionalMoulds => ItemHelper.FindChild<UserInput>(this, "Layer1AdditionalMoulds");
 
         private GroupBox? Layer2Info => ItemHelper.FindChild<GroupBox>(this, "Layer2Info");
         private UserInput? Layer2MasteringCode => ItemHelper.FindChild<UserInput>(this, "Layer2MasteringCode");
         private UserInput? Layer2MasteringSID => ItemHelper.FindChild<UserInput>(this, "Layer2MasteringSID");
         private UserInput? Layer2Toolstamp => ItemHelper.FindChild<UserInput>(this, "Layer2Toolstamp");
-        private UserInput? Layer2MouldSIDs => ItemHelper.FindChild<UserInput>(this, "Layer2MouldSIDs");
-        private UserInput? Layer2AdditionalMoulds => ItemHelper.FindChild<UserInput>(this, "Layer2AdditionalMoulds");
 
         private GroupBox? Layer3Info => ItemHelper.FindChild<GroupBox>(this, "Layer3Info");
         private UserInput? Layer3MasteringCode => ItemHelper.FindChild<UserInput>(this, "Layer3MasteringCode");
         private UserInput? Layer3MasteringSID => ItemHelper.FindChild<UserInput>(this, "Layer3MasteringSID");
         private UserInput? Layer3Toolstamp => ItemHelper.FindChild<UserInput>(this, "Layer3Toolstamp");
-        private UserInput? Layer3MouldSIDs => ItemHelper.FindChild<UserInput>(this, "Layer3MouldSIDs");
-        private UserInput? Layer3AdditionalMoulds => ItemHelper.FindChild<UserInput>(this, "Layer3AdditionalMoulds");
 
         private GroupBox? LabelSideInfo => ItemHelper.FindChild<GroupBox>(this, "LabelSideInfo");
         private UserInput? LabelSideMasteringCode => ItemHelper.FindChild<UserInput>(this, "LabelSideMasteringCode");
         private UserInput? LabelSideMasteringSID => ItemHelper.FindChild<UserInput>(this, "LabelSideMasteringSID");
         private UserInput? LabelSideToolstamp => ItemHelper.FindChild<UserInput>(this, "LabelSideToolstamp");
-        private UserInput? LabelSideMouldSIDs => ItemHelper.FindChild<UserInput>(this, "LabelSideMouldSIDs");
         private UserInput? LabelSideAdditionalMoulds => ItemHelper.FindChild<UserInput>(this, "LabelSideAdditionalMoulds");
 
         #endregion
@@ -189,20 +182,14 @@ namespace MPF.UI.Windows
             Layer1MasteringCode!.Tab = true;
             Layer1MasteringSID!.Tab = true;
             Layer1Toolstamp!.Tab = true;
-            Layer1MouldSIDs!.Tab = true;
-            Layer1AdditionalMoulds!.Tab = true;
 
             Layer2MasteringCode!.Tab = true;
             Layer2MasteringSID!.Tab = true;
             Layer2Toolstamp!.Tab = true;
-            Layer2MouldSIDs!.Tab = true;
-            Layer2AdditionalMoulds!.Tab = true;
 
             Layer3MasteringCode!.Tab = true;
             Layer3MasteringSID!.Tab = true;
             Layer3Toolstamp!.Tab = true;
-            Layer3MouldSIDs!.Tab = true;
-            Layer3AdditionalMoulds!.Tab = true;
 
             LabelSideMasteringCode!.Tab = true;
             LabelSideMasteringSID!.Tab = true;
@@ -379,33 +366,30 @@ namespace MPF.UI.Windows
         private void UpdateFromSystemType(SubmissionInfo? submissionInfo)
         {
             var system = submissionInfo?.DiscIdentity?.System;
-#pragma warning disable IDE0010
-            switch (system)
+
+            if (system == PhysicalSystem.AppleMacintosh)
             {
-                case PhysicalSystem.AppleMacintosh:
-                    PCMacHybridGrid!.Visibility = Visibility.Visible;
-                    CompatibleOSTextBox!.Visibility = Visibility.Visible;
-                    break;
-
-                case PhysicalSystem.IBMPCcompatible:
-                    PCMacHybridGrid!.Visibility = Visibility.Visible;
-                    CompatibleOSTextBox!.Visibility = Visibility.Visible;
-                    break;
-
-                case PhysicalSystem.NintendoWiiU:
-                    DiscKeyTextBox!.Visibility = Visibility.Visible;
-                    break;
-
-                case PhysicalSystem.SonyPlayStation:
-                    NetYarozeGamesTextBox!.Visibility = Visibility.Visible;
-                    break;
-
-                case PhysicalSystem.SonyPlayStation3:
-                    DiscKeyTextBox!.Visibility = Visibility.Visible;
-                    DiscIDTextBox!.Visibility = Visibility.Visible;
-                    break;
+                PCMacHybridGrid!.Visibility = Visibility.Visible;
+                CompatibleOSTextBox!.Visibility = Visibility.Visible;
             }
-#pragma warning restore IDE0010
+            else if (system == PhysicalSystem.IBMPCcompatible)
+            {
+                PCMacHybridGrid!.Visibility = Visibility.Visible;
+                CompatibleOSTextBox!.Visibility = Visibility.Visible;
+            }
+            else if (system == PhysicalSystem.NintendoWiiU)
+            {
+                DiscKeyTextBox!.Visibility = Visibility.Visible;
+            }
+            else if (system == PhysicalSystem.SonyPlayStation)
+            {
+                NetYarozeGamesTextBox!.Visibility = Visibility.Visible;
+            }
+            else if (system == PhysicalSystem.SonyPlayStation3)
+            {
+                DiscKeyTextBox!.Visibility = Visibility.Visible;
+                DiscIDTextBox!.Visibility = Visibility.Visible;
+            }
         }
 
         /// <summary>

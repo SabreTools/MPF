@@ -82,8 +82,8 @@ namespace MPF.Frontend
             set => _executionContext?.Speed = value;
         }
 
-        /// <inheritdoc cref="Extensions.LongName(PhysicalSystem?)/>
-        public string? SystemName => _system.LongName();
+        /// <inheritdoc cref="PhysicalSystem.Name"/>
+        public string? SystemName => _system?.Name;
 
         #endregion
 

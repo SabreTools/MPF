@@ -21,14 +21,12 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override PhysicalMediaType? DeterminePhysicalMediaType(string? outputDirectory, string outputFilename)
         {
-#pragma warning disable IDE0072
-            return System switch
-            {
-                PhysicalSystem.NintendoGameCube => PhysicalMediaType.NintendoGameCubeGameDisc,
-                PhysicalSystem.NintendoWii => PhysicalMediaType.NintendoWiiOpticalDisc,
-                _ => null,
-            };
-#pragma warning restore IDE0072
+            if (System == PhysicalSystem.NintendoGameCube)
+                return PhysicalMediaType.NintendoGameCubeGameDisc;
+            else if (System == PhysicalSystem.NintendoWii)
+                return PhysicalMediaType.NintendoWiiOpticalDisc;
+
+            return null;
         }
 
         /// <inheritdoc/>
@@ -56,7 +54,7 @@ namespace MPF.Processors
             info.DumpMetadata.BCA = GetBCA($"{basePath}.bca");
 
             // Get internal information
-            if (GetGameCubeWiiInformation($"{basePath}-dumpinfo.txt", out Region? region, out var version, out var internalName, out var serial))
+            if (GetGameCubeWiiInformation($"{basePath}-dumpinfo.txt", out RegionCode? region, out var version, out var internalName, out var serial))
             {
                 info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalName] = internalName ?? string.Empty;
                 info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
@@ -284,7 +282,7 @@ namespace MPF.Processors
         /// <param name="name">Output internal name of the game</param>
         /// <param name="serial">Output internal serial of the game</param>
         /// <returns></returns>
-        internal static bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string? version, out string? name, out string? serial)
+        internal static bool GetGameCubeWiiInformation(string dumpinfo, out RegionCode? region, out string? version, out string? name, out string? serial)
         {
             region = null; version = null; name = null; serial = null;
 
@@ -343,49 +341,49 @@ namespace MPF.Processors
                         switch (serial[3])
                         {
                             case 'A':
-                                region = Region.World;
+                                region = RegionCode.World;
                                 break;
                             case 'D':
-                                region = Region.Germany;
+                                region = RegionCode.Germany;
                                 break;
                             case 'E':
-                                region = Region.UnitedStatesOfAmerica;
+                                region = RegionCode.UnitedStatesOfAmerica;
                                 break;
                             case 'F':
-                                region = Region.France;
+                                region = RegionCode.France;
                                 break;
                             case 'I':
-                                region = Region.Italy;
+                                region = RegionCode.Italy;
                                 break;
                             case 'J':
-                                region = Region.Japan;
+                                region = RegionCode.Japan;
                                 break;
                             case 'K':
-                                region = Region.SouthKorea;
+                                region = RegionCode.SouthKorea;
                                 break;
                             case 'L':
-                                region = Region.Europe; // Japanese import to Europe
+                                region = RegionCode.Europe; // Japanese import to Europe
                                 break;
                             case 'M':
-                                region = Region.Europe; // American import to Europe
+                                region = RegionCode.Europe; // American import to Europe
                                 break;
                             case 'N':
-                                region = Region.UnitedStatesOfAmerica; // Japanese import to USA
+                                region = RegionCode.UnitedStatesOfAmerica; // Japanese import to USA
                                 break;
                             case 'P':
-                                region = Region.Europe;
+                                region = RegionCode.Europe;
                                 break;
                             case 'R':
-                                region = Region.RussianFederation;
+                                region = RegionCode.RussianFederation;
                                 break;
                             case 'S':
-                                region = Region.Spain;
+                                region = RegionCode.Spain;
                                 break;
                             case 'Q':
-                                region = Region.SouthKorea; // Korea with Japanese language
+                                region = RegionCode.SouthKorea; // Korea with Japanese language
                                 break;
                             case 'T':
-                                region = Region.SouthKorea; // Korea with English language
+                                region = RegionCode.SouthKorea; // Korea with English language
                                 break;
                             case 'X':
                                 region = null; // Not a real region code

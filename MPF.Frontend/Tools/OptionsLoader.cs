@@ -417,7 +417,7 @@ namespace MPF.Frontend.Tools
                 { "FastUpdateLabel", options.GUI.FastUpdateLabel.ToString() },
                 { "DefaultInterfaceLanguage", options.GUI.DefaultInterfaceLanguage.ShortName() },
                 { "DefaultOutputPath", options.Dumping.DefaultOutputPath },
-                { "DefaultSystem", options.Dumping.DefaultSystem.ToString() },
+                { "DefaultSystem", options.Dumping.DefaultSystem?.ToString() },
                 { "ShowDebugViewMenuItem", options.GUI.ShowDebugViewMenuItem.ToString() },
 
                 { "PreferredDumpSpeedCD", options.Dumping.DumpSpeeds.CD.ToString() },

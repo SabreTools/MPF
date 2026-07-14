@@ -30,7 +30,6 @@ namespace MPF.Frontend
                 RedumperSectorOrder sectorOrder => new Element<RedumperSectorOrder>(sectorOrder),
                 RedumperDriveType driveType => new Element<RedumperDriveType>(driveType),
                 PhysicalSystem redumpSystem => new PhysicalSystemComboBoxItem(redumpSystem),
-                Region region => new Element<Region>(region),
 
                 // Null values are treated as a system value
                 _ => new PhysicalSystemComboBoxItem((PhysicalSystem?)null),
@@ -60,7 +59,6 @@ namespace MPF.Frontend
                 Element<RedumperSectorOrder> soElement => soElement.Value,
                 Element<RedumperDriveType> dtElement => dtElement.Value,
                 PhysicalSystemComboBoxItem rsElement => rsElement.Value,
-                Element<Region> reValue => reValue.Value,
                 _ => null,
             };
         }

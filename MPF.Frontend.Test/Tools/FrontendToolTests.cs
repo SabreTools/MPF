@@ -35,29 +35,40 @@ namespace MPF.Frontend.Test.Tools
         #region GetPhysicalSystemFromVolumeLabel
 
         [Theory]
-        [InlineData(null, null)]
-        [InlineData("", null)]
-        [InlineData("Audio CD", PhysicalSystem.AudioCD)]
-        [InlineData("SEP13011042", PhysicalSystem.MicrosoftXbox)]
-        [InlineData("SEP13011042072", PhysicalSystem.MicrosoftXbox)]
-        [InlineData("XBOX360", PhysicalSystem.MicrosoftXbox360)]
-        [InlineData("XGD2DVD_NTSC", PhysicalSystem.MicrosoftXbox360)]
-        [InlineData("Sega_CD", PhysicalSystem.SegaMegaCDSegaCD)]
-        [InlineData("PS3VOLUME", PhysicalSystem.SonyPlayStation3)]
-        [InlineData("PS4VOLUME", PhysicalSystem.SonyPlayStation4)]
-        [InlineData("PS5VOLUME", PhysicalSystem.SonyPlayStation5)]
+        [MemberData(nameof(GeneratePhysicalSystemFromVolumeLabelData))]
         public void GetPhysicalSystemFromVolumeLabelTest(string? volumeLabel, PhysicalSystem? expected)
         {
             PhysicalSystem? actual = FrontendTool.GetPhysicalSystemFromVolumeLabel(volumeLabel);
             Assert.Equal(expected, actual);
         }
 
+        /// <summary>
+        /// Generate a test set for GetPhysicalSystemFromVolumeLabelTest
+        /// </summary>
+        public static TheoryData<string?, PhysicalSystem?> GeneratePhysicalSystemFromVolumeLabelData()
+        {
+            return new TheoryData<string?, PhysicalSystem?>
+            {
+                { null, null },
+                { "", null },
+                { "Audio CD", PhysicalSystem.AudioCD },
+                { "SEP13011042", PhysicalSystem.MicrosoftXbox },
+                { "SEP13011042072", PhysicalSystem.MicrosoftXbox },
+                { "XBOX360", PhysicalSystem.MicrosoftXbox360 },
+                { "XGD2DVD_NTSC", PhysicalSystem.MicrosoftXbox360 },
+                { "Sega_CD", PhysicalSystem.SegaMegaCDSegaCD },
+                { "PS3VOLUME", PhysicalSystem.SonyPlayStation3 },
+                { "PS4VOLUME", PhysicalSystem.SonyPlayStation4 },
+                { "PS5VOLUME", PhysicalSystem.SonyPlayStation5 },
+            };
+        }
+
         #endregion
 
         #region NormalizeDiscTitle
 
-        // TODO: Write NormalizeDiscTitle(string?, Language?[]?) test
-        // TODO: Write NormalizeDiscTitle(string?, Language?) test
+        // TODO: Write NormalizeDiscTitle(string?, LanguageCode?[]?) test
+        // TODO: Write NormalizeDiscTitle(string?, LanguageCode?) test
 
         #endregion
     }

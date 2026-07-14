@@ -216,21 +216,19 @@ namespace MPF.Processors
                     if (mediaType == PhysicalMediaType.BluRay || mediaType == PhysicalMediaType.NintendoWiiUOpticalDisc)
                     {
                         int trimLength = -1;
-                        switch (System)
+                        if (System == PhysicalSystem.MicrosoftXboxOne
+                            || System == PhysicalSystem.MicrosoftXboxSeriesXS
+                            || System == PhysicalSystem.NintendoWiiU
+                            || System == PhysicalSystem.SonyPlayStation3
+                            || System == PhysicalSystem.SonyPlayStation4
+                            || System == PhysicalSystem.SonyPlayStation5)
                         {
-                            case PhysicalSystem.MicrosoftXboxOne:
-                            case PhysicalSystem.MicrosoftXboxSeriesXS:
-                            case PhysicalSystem.NintendoWiiU:
-                            case PhysicalSystem.SonyPlayStation3:
-                            case PhysicalSystem.SonyPlayStation4:
-                            case PhysicalSystem.SonyPlayStation5:
-                                if (info.DiscIdentifiers.Layerbreak3 != default)
-                                    trimLength = 520;
-                                else if (info.DiscIdentifiers.Layerbreak2 != default)
-                                    trimLength = 392;
-                                else
-                                    trimLength = 264;
-                                break;
+                            if (info.DiscIdentifiers.Layerbreak3 != default)
+                                trimLength = 520;
+                            else if (info.DiscIdentifiers.Layerbreak2 != default)
+                                trimLength = 392;
+                            else
+                                trimLength = 264;
                         }
 
                         info.DumpMetadata.PIC = GetPIC($"{basePath}.physical", trimLength)
@@ -246,275 +244,261 @@ namespace MPF.Processors
 
                     break;
             }
-
-            // Extract info based specifically on PhysicalSystem
-            switch (System)
-            {
-                case PhysicalSystem.AppleMacintosh:
-                case PhysicalSystem.EnhancedCD:
-                case PhysicalSystem.IBMPCcompatible:
-                case PhysicalSystem.RainbowDisc:
-                case PhysicalSystem.SonyElectronicBook:
-                    info.DumpMetadata.SBI = GetSecuROMData($"{basePath}.log", out SecuROMScheme secuROMScheme) ?? string.Empty;
-                    if (secuROMScheme == SecuROMScheme.Unknown)
-                        info.DumpMetadata.Comments += $"Warning: Incorrect SecuROM sector count{Environment.NewLine}";
-
-                    // Needed for some odd copy protections
-                    info.DumpMetadata.Protection += GetDVDProtection($"{basePath}.log", false) ?? string.Empty;
-                    break;
-
-                case PhysicalSystem.DVDAudio:
-                case PhysicalSystem.DVDVideo:
-                    info.DumpMetadata.Protection = GetDVDProtection($"{basePath}.log", true) ?? string.Empty;
-                    break;
-
-                case PhysicalSystem.KonamiPython2:
-                    if (GetPlayStationInfo($"{basePath}.log", out string? kp2EXEDate, out string? kp2Serial, out string? kp2Version))
-                    {
-                        info.DiscIdentifiers.EXEDate = kp2EXEDate;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = kp2Serial ?? string.Empty;
-                        info.DiscIdentifiers.Version = kp2Version ?? string.Empty;
-                    }
-
-                    break;
-
-                case PhysicalSystem.MicrosoftXbox:
-                case PhysicalSystem.MicrosoftXbox360:
-                    // If .dmi / .pfi / .ss don't already exist, create them
-                    if (!File.Exists($"{basePath}.dmi"))
-                        RemoveHeaderAndTrim($"{basePath}.manufacturer", $"{basePath}.dmi");
-                    if (!File.Exists($"{basePath}.pfi"))
-                        RemoveHeaderAndTrim($"{basePath}.physical", $"{basePath}.pfi");
-                    if (!File.Exists($"{basePath}.ss"))
-                        ProcessingTool.FixSS($"{basePath}.security", $"{basePath}.ss");
-
-                    string xmidString = ProcessingTool.GetXMID($"{basePath}.dmi").Trim('\0');
-                    if (!string.IsNullOrEmpty(xmidString))
-                    {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.XMID] = xmidString;
-                        var xmid = SabreTools.Wrappers.XMID.Create(xmidString);
-                        info.DiscIdentifiers.DiscSerials = xmid?.Serial ?? string.Empty;
-                        if (!redumpCompat)
-                        {
-                            info.DiscIdentifiers.Version = xmid?.Version ?? string.Empty;
-                            info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xmid?.Model.RegionIdentifier);
-                        }
-                    }
-
-                    string xemidString = ProcessingTool.GetXeMID($"{basePath}.dmi").Trim('\0');
-                    if (!string.IsNullOrEmpty(xemidString))
-                    {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.XeMID] = xemidString;
-                        var xemid = SabreTools.Wrappers.XeMID.Create(xemidString);
-                        info.DiscIdentifiers.DiscSerials = xemid?.Serial ?? string.Empty;
-                        if (!redumpCompat)
-                        {
-                            info.DiscIdentifiers.Version = xemid?.Version ?? string.Empty;
-                            info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xemid?.Model.RegionIdentifier);
-                        }
-                    }
-
-                    string? dmiCrc = HashTool.GetFileHash($"{basePath}.dmi", HashType.CRC32);
-                    if (dmiCrc is not null)
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = dmiCrc.ToUpperInvariant();
-                    string? pfiCrc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
-                    if (pfiCrc is not null)
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = pfiCrc.ToUpperInvariant();
-
-                    // Only record SS hash if it is valid
-                    if (ProcessingTool.IsFixedSS($"{basePath}.ss"))
-                    {
-                        string? ssCrc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
-                        if (ssCrc is not null)
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
-                    }
-                    else if (ProcessingTool.FixSS($"{basePath}.ss", $"{basePath}.fixed.ss"))
-                    {
-                        // Attempt to repair bad .ss file succeeded, hash it
-                        string? ssCrc = HashTool.GetFileHash($"{basePath}.fixed.ss", HashType.CRC32);
-                        if (ssCrc is not null)
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
-                    }
-
-                    string? ssRanges = ProcessingTool.GetSSRanges($"{basePath}.ss");
-                    if (!string.IsNullOrEmpty(ssRanges))
-                        info.DumpMetadata.SectorRanges = ssRanges;
-
-                    break;
-
-                case PhysicalSystem.NamcoSegaNintendoTriforce:
-                    if (mediaType == PhysicalMediaType.CDROM)
-                    {
-                        info.DumpMetadata.Header = GetGDROMHeader($"{basePath}.log",
-                            out string? buildDate,
-                            out string? serial,
-                            out _,
-                            out string? version) ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
-                        info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
-                        // TODO: Support region setting from parsed value
-                        info.DiscIdentifiers.Version = version ?? string.Empty;
-                    }
-
-                    break;
-
-                case PhysicalSystem.NintendoGameCube:
-                case PhysicalSystem.NintendoWii:
-                    if (GetGameCubeWiiInfo($"{basePath}.log", out string? gcVersion, out string? gcSerial, out string? gcTitle, out string? _))
-                    {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = gcSerial ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalName] = gcTitle ?? string.Empty;
-
-                        if (!redumpCompat)
-                            info.DiscIdentifiers.Version = gcVersion ?? info.DiscIdentifiers.Version;
-                    }
-
-                    // Get BCA information, if available, and not already set
-                    if (!string.IsNullOrEmpty(info.DumpMetadata.BCA))
-                        info.DumpMetadata.BCA = GetBCA($"{basePath}.bca");
-
-                    break;
-
-                case PhysicalSystem.SegaMegaCDSegaCD:
-                    info.DumpMetadata.Header = GetSegaCDHeader($"{basePath}.log", out var scdBuildDate, out var scdSerial, out _) ?? string.Empty;
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
-                    info.DiscIdentifiers.EXEDate = scdBuildDate ?? string.Empty;
-                    // TODO: Support region setting from parsed value
-                    break;
-
-                case PhysicalSystem.SegaChihiro:
-                    if (mediaType == PhysicalMediaType.CDROM)
-                    {
-                        info.DumpMetadata.Header = GetGDROMHeader($"{basePath}.log",
-                            out string? buildDate,
-                            out string? serial,
-                            out _,
-                            out string? version) ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
-                        info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
-                        // TODO: Support region setting from parsed value
-                        info.DiscIdentifiers.Version = version ?? string.Empty;
-                    }
-
-                    break;
-
-                case PhysicalSystem.SegaDreamcast:
-                    if (mediaType == PhysicalMediaType.CDROM)
-                    {
-                        info.DumpMetadata.Header = GetGDROMHeader($"{basePath}.log",
-                            out string? buildDate,
-                            out string? serial,
-                            out _,
-                            out string? version) ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
-                        info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
-                        // TODO: Support region setting from parsed value
-                        info.DiscIdentifiers.Version = version ?? string.Empty;
-                    }
-
-                    break;
-
-                case PhysicalSystem.SegaNaomi:
-                    if (mediaType == PhysicalMediaType.CDROM)
-                    {
-                        info.DumpMetadata.Header = GetGDROMHeader($"{basePath}.log",
-                            out string? buildDate,
-                            out string? serial,
-                            out _,
-                            out string? version) ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
-                        info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
-                        // TODO: Support region setting from parsed value
-                        info.DiscIdentifiers.Version = version ?? string.Empty;
-                    }
-
-                    break;
-
-                case PhysicalSystem.SegaNaomi2:
-                    if (mediaType == PhysicalMediaType.CDROM)
-                    {
-                        info.DumpMetadata.Header = GetGDROMHeader($"{basePath}.log",
-                            out string? buildDate,
-                            out string? serial,
-                            out _,
-                            out string? version) ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
-                        info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
-                        // TODO: Support region setting from parsed value
-                        info.DiscIdentifiers.Version = version ?? string.Empty;
-                    }
-
-                    break;
-
-                case PhysicalSystem.SegaSaturn:
-                    info.DumpMetadata.Header = GetSaturnHeader($"{basePath}.log",
-                        out string? saturnBuildDate,
-                        out string? saturnSerial,
-                        out _,
-                        out string? saturnVersion) ?? string.Empty;
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
-                    info.DiscIdentifiers.EXEDate = saturnBuildDate ?? string.Empty;
-                    // TODO: Support region setting from parsed value
-                    info.DiscIdentifiers.Version = saturnVersion ?? string.Empty;
-                    break;
-
-                case PhysicalSystem.SonyPlayStation:
-                    if (GetPlayStationInfo($"{basePath}.log", out string? psxEXEDate, out string? psxSerial, out var _))
-                    {
-                        info.DiscIdentifiers.EXEDate = psxEXEDate;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = psxSerial ?? string.Empty;
-                    }
-
-                    // TODO: Reenable when anti-modchip documentation is updated
-                    // info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}.log").ToYesNo();
-                    info.DiscIdentifiers.EDC = GetPlayStationEDCStatus($"{basePath}.log").ToYesNo();
-                    // TODO: Reenable when LibCrypt documentation is updated
-                    // info.CopyProtection.LibCrypt = GetPlayStationLibCryptStatus($"{basePath}.log").ToYesNo();
-                    info.DumpMetadata.SBI = GetPlayStationLibCryptData($"{basePath}.log");
-                    break;
-
-                case PhysicalSystem.SonyPlayStation2:
-                    if (GetPlayStationInfo($"{basePath}.log", out string? ps2EXEDate, out string? ps2Serial, out var ps2Version))
-                    {
-                        info.DiscIdentifiers.EXEDate = ps2EXEDate;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps2Serial ?? string.Empty;
-                        info.DiscIdentifiers.Version = ps2Version ?? string.Empty;
-                    }
-
-                    string? ps2Protection = GetPlayStation2Protection($"{basePath}.log");
-                    if (ps2Protection is not null)
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.Protection] = ps2Protection;
-
-                    break;
-
-                case PhysicalSystem.SonyPlayStation3:
-                    if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps3Serial, out var ps3Version))
-                    {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
-                        info.DiscIdentifiers.Version = ps3Version ?? string.Empty;
-                    }
-
-                    break;
-
-                case PhysicalSystem.SonyPlayStation4:
-                    if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps4Serial, out var ps4Version))
-                    {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps4Serial ?? string.Empty;
-                        info.DiscIdentifiers.Version = ps4Version ?? string.Empty;
-                    }
-
-                    break;
-
-                case PhysicalSystem.SonyPlayStation5:
-                    if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps5Serial, out var ps5Version))
-                    {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps5Serial ?? string.Empty;
-                        info.DiscIdentifiers.Version = ps5Version ?? string.Empty;
-                    }
-
-                    break;
-            }
 #pragma warning restore IDE0010
+
+            // Extract info based specifically on System
+            if (System == PhysicalSystem.AppleMacintosh
+                || System == PhysicalSystem.EnhancedCD
+                || System == PhysicalSystem.IBMPCcompatible
+                || System == PhysicalSystem.RainbowDisc
+                || System == PhysicalSystem.SonyElectronicBook)
+            {
+                info.DumpMetadata.SBI = GetSecuROMData($"{basePath}.log", out SecuROMScheme secuROMScheme) ?? string.Empty;
+                if (secuROMScheme == SecuROMScheme.Unknown)
+                    info.DumpMetadata.Comments += $"Warning: Incorrect SecuROM sector count{Environment.NewLine}";
+
+                // Needed for some odd copy protections
+                info.DumpMetadata.Protection += GetDVDProtection($"{basePath}.log", false) ?? string.Empty;
+            }
+            else if (System == PhysicalSystem.DVDAudio
+                || System == PhysicalSystem.DVDVideo)
+            {
+                info.DumpMetadata.Protection = GetDVDProtection($"{basePath}.log", true) ?? string.Empty;
+            }
+            else if (System == PhysicalSystem.KonamiPython2)
+            {
+                if (GetPlayStationInfo($"{basePath}.log", out string? kp2EXEDate, out string? kp2Serial, out string? kp2Version))
+                {
+                    info.DiscIdentifiers.EXEDate = kp2EXEDate;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = kp2Serial ?? string.Empty;
+                    info.DiscIdentifiers.Version = kp2Version ?? string.Empty;
+                }
+            }
+            else if (System == PhysicalSystem.MicrosoftXbox
+                || System == PhysicalSystem.MicrosoftXbox360)
+            {
+                // If .dmi / .pfi / .ss don't already exist, create them
+                if (!File.Exists($"{basePath}.dmi"))
+                    RemoveHeaderAndTrim($"{basePath}.manufacturer", $"{basePath}.dmi");
+                if (!File.Exists($"{basePath}.pfi"))
+                    RemoveHeaderAndTrim($"{basePath}.physical", $"{basePath}.pfi");
+                if (!File.Exists($"{basePath}.ss"))
+                    ProcessingTool.FixSS($"{basePath}.security", $"{basePath}.ss");
+
+                string xmidString = ProcessingTool.GetXMID($"{basePath}.dmi").Trim('\0');
+                if (!string.IsNullOrEmpty(xmidString))
+                {
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.XMID] = xmidString;
+                    var xmid = SabreTools.Wrappers.XMID.Create(xmidString);
+                    info.DiscIdentifiers.DiscSerials = xmid?.Serial ?? string.Empty;
+                    if (!redumpCompat)
+                    {
+                        info.DiscIdentifiers.Version = xmid?.Version ?? string.Empty;
+                        info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xmid?.Model.RegionIdentifier);
+                    }
+                }
+
+                string xemidString = ProcessingTool.GetXeMID($"{basePath}.dmi").Trim('\0');
+                if (!string.IsNullOrEmpty(xemidString))
+                {
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.XeMID] = xemidString;
+                    var xemid = SabreTools.Wrappers.XeMID.Create(xemidString);
+                    info.DiscIdentifiers.DiscSerials = xemid?.Serial ?? string.Empty;
+                    if (!redumpCompat)
+                    {
+                        info.DiscIdentifiers.Version = xemid?.Version ?? string.Empty;
+                        info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xemid?.Model.RegionIdentifier);
+                    }
+                }
+
+                string? dmiCrc = HashTool.GetFileHash($"{basePath}.dmi", HashType.CRC32);
+                if (dmiCrc is not null)
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = dmiCrc.ToUpperInvariant();
+                string? pfiCrc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
+                if (pfiCrc is not null)
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = pfiCrc.ToUpperInvariant();
+
+                // Only record SS hash if it is valid
+                if (ProcessingTool.IsFixedSS($"{basePath}.ss"))
+                {
+                    string? ssCrc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
+                    if (ssCrc is not null)
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
+                }
+                else if (ProcessingTool.FixSS($"{basePath}.ss", $"{basePath}.fixed.ss"))
+                {
+                    // Attempt to repair bad .ss file succeeded, hash it
+                    string? ssCrc = HashTool.GetFileHash($"{basePath}.fixed.ss", HashType.CRC32);
+                    if (ssCrc is not null)
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
+                }
+
+                string? ssRanges = ProcessingTool.GetSSRanges($"{basePath}.ss");
+                if (!string.IsNullOrEmpty(ssRanges))
+                    info.DumpMetadata.SectorRanges = ssRanges;
+            }
+            else if (System == PhysicalSystem.NamcoSegaNintendoTriforce)
+            {
+                if (mediaType == PhysicalMediaType.CDROM)
+                {
+                    info.DumpMetadata.Header = GetGDROMHeader($"{basePath}.log",
+                        out string? buildDate,
+                        out string? serial,
+                        out _,
+                        out string? version) ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                    info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
+                    // TODO: Support region setting from parsed value
+                    info.DiscIdentifiers.Version = version ?? string.Empty;
+                }
+            }
+            else if (System == PhysicalSystem.NintendoGameCube
+                || System == PhysicalSystem.NintendoWii)
+            {
+                if (GetGameCubeWiiInfo($"{basePath}.log", out string? gcVersion, out string? gcSerial, out string? gcTitle, out string? _))
+                {
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = gcSerial ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalName] = gcTitle ?? string.Empty;
+
+                    if (!redumpCompat)
+                        info.DiscIdentifiers.Version = gcVersion ?? info.DiscIdentifiers.Version;
+                }
+
+                // Get BCA information, if available, and not already set
+                if (!string.IsNullOrEmpty(info.DumpMetadata.BCA))
+                    info.DumpMetadata.BCA = GetBCA($"{basePath}.bca");
+            }
+            else if (System == PhysicalSystem.SegaMegaCDSegaCD)
+            {
+                info.DumpMetadata.Header = GetSegaCDHeader($"{basePath}.log", out var scdBuildDate, out var scdSerial, out _) ?? string.Empty;
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
+                info.DiscIdentifiers.EXEDate = scdBuildDate ?? string.Empty;
+                // TODO: Support region setting from parsed value
+            }
+            else if (System == PhysicalSystem.SegaChihiro)
+            {
+                if (mediaType == PhysicalMediaType.CDROM)
+                {
+                    info.DumpMetadata.Header = GetGDROMHeader($"{basePath}.log",
+                        out string? buildDate,
+                        out string? serial,
+                        out _,
+                        out string? version) ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                    info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
+                    // TODO: Support region setting from parsed value
+                    info.DiscIdentifiers.Version = version ?? string.Empty;
+                }
+            }
+            else if (System == PhysicalSystem.SegaDreamcast)
+            {
+                if (mediaType == PhysicalMediaType.CDROM)
+                {
+                    info.DumpMetadata.Header = GetGDROMHeader($"{basePath}.log",
+                        out string? buildDate,
+                        out string? serial,
+                        out _,
+                        out string? version) ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                    info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
+                    // TODO: Support region setting from parsed value
+                    info.DiscIdentifiers.Version = version ?? string.Empty;
+                }
+            }
+            else if (System == PhysicalSystem.SegaNaomi)
+            {
+                if (mediaType == PhysicalMediaType.CDROM)
+                {
+                    info.DumpMetadata.Header = GetGDROMHeader($"{basePath}.log",
+                        out string? buildDate,
+                        out string? serial,
+                        out _,
+                        out string? version) ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                    info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
+                    // TODO: Support region setting from parsed value
+                    info.DiscIdentifiers.Version = version ?? string.Empty;
+                }
+            }
+            else if (System == PhysicalSystem.SegaNaomi2)
+            {
+                if (mediaType == PhysicalMediaType.CDROM)
+                {
+                    info.DumpMetadata.Header = GetGDROMHeader($"{basePath}.log",
+                        out string? buildDate,
+                        out string? serial,
+                        out _,
+                        out string? version) ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                    info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
+                    // TODO: Support region setting from parsed value
+                    info.DiscIdentifiers.Version = version ?? string.Empty;
+                }
+            }
+            else if (System == PhysicalSystem.SegaSaturn)
+            {
+                info.DumpMetadata.Header = GetSaturnHeader($"{basePath}.log",
+                                        out string? saturnBuildDate,
+                                        out string? saturnSerial,
+                                        out _,
+                                        out string? saturnVersion) ?? string.Empty;
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
+                info.DiscIdentifiers.EXEDate = saturnBuildDate ?? string.Empty;
+                // TODO: Support region setting from parsed value
+                info.DiscIdentifiers.Version = saturnVersion ?? string.Empty;
+            }
+            else if (System == PhysicalSystem.SonyPlayStation)
+            {
+                if (GetPlayStationInfo($"{basePath}.log", out string? psxEXEDate, out string? psxSerial, out var _))
+                {
+                    info.DiscIdentifiers.EXEDate = psxEXEDate;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = psxSerial ?? string.Empty;
+                }
+
+                // TODO: Reenable when anti-modchip documentation is updated
+                // info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}.log").ToYesNo();
+                info.DiscIdentifiers.EDC = GetPlayStationEDCStatus($"{basePath}.log").ToYesNo();
+                // TODO: Reenable when LibCrypt documentation is updated
+                // info.CopyProtection.LibCrypt = GetPlayStationLibCryptStatus($"{basePath}.log").ToYesNo();
+                info.DumpMetadata.SBI = GetPlayStationLibCryptData($"{basePath}.log");
+            }
+            else if (System == PhysicalSystem.SonyPlayStation2)
+            {
+                if (GetPlayStationInfo($"{basePath}.log", out string? ps2EXEDate, out string? ps2Serial, out var ps2Version))
+                {
+                    info.DiscIdentifiers.EXEDate = ps2EXEDate;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps2Serial ?? string.Empty;
+                    info.DiscIdentifiers.Version = ps2Version ?? string.Empty;
+                }
+
+                string? ps2Protection = GetPlayStation2Protection($"{basePath}.log");
+                if (ps2Protection is not null)
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.Protection] = ps2Protection;
+            }
+            else if (System == PhysicalSystem.SonyPlayStation3)
+            {
+                if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps3Serial, out var ps3Version))
+                {
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
+                    info.DiscIdentifiers.Version = ps3Version ?? string.Empty;
+                }
+            }
+            else if (System == PhysicalSystem.SonyPlayStation4)
+            {
+                if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps4Serial, out var ps4Version))
+                {
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps4Serial ?? string.Empty;
+                    info.DiscIdentifiers.Version = ps4Version ?? string.Empty;
+                }
+            }
+            else if (System == PhysicalSystem.SonyPlayStation5)
+            {
+                if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps5Serial, out var ps5Version))
+                {
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps5Serial ?? string.Empty;
+                    info.DiscIdentifiers.Version = ps5Version ?? string.Empty;
+                }
+            }
         }
 
         /// <inheritdoc/>

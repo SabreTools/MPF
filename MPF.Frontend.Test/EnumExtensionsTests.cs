@@ -274,7 +274,7 @@ namespace MPF.Frontend.Test
         public static List<object?[]> GenerateSupportsAntiModchipScansData()
         {
             var testData = new List<object?[]>() { new object?[] { null, false } };
-            foreach (PhysicalSystem redumpSystem in Enum.GetValues<PhysicalSystem>())
+            foreach (PhysicalSystem redumpSystem in PhysicalSystem.AllSystems)
             {
                 if (_antiModchipSystems.Contains(redumpSystem))
                     testData.Add([redumpSystem, true]);
@@ -288,7 +288,7 @@ namespace MPF.Frontend.Test
         public static List<object?[]> GenerateSupportsCopyProtectionScansData()
         {
             var testData = new List<object?[]>() { new object?[] { null, false } };
-            foreach (PhysicalSystem redumpSystem in Enum.GetValues<PhysicalSystem>())
+            foreach (PhysicalSystem redumpSystem in PhysicalSystem.AllSystems)
             {
                 if (_copyProtectionSystems.Contains(redumpSystem))
                     testData.Add([redumpSystem, true]);

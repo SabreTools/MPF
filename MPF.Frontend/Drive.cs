@@ -197,56 +197,54 @@ namespace MPF.Frontend
                 case Frontend.InternalDriveType.Removable:
                     return PhysicalMediaType.FlashDrive;
             }
+#pragma warning restore IDE0010
 
             // Some systems should default to certain media types
-            switch (system)
+            if (system == PhysicalSystem.Panasonic3DOInteractiveMultiplayer
+                || system == PhysicalSystem.PhilipsCDi
+                || system == PhysicalSystem.SegaDreamcast
+                || system == PhysicalSystem.SegaSaturn
+                || system == PhysicalSystem.SonyPlayStation
+                || system == PhysicalSystem.VideoCD)
             {
-                // CD
-                case PhysicalSystem.Panasonic3DOInteractiveMultiplayer:
-                case PhysicalSystem.PhilipsCDi:
-                case PhysicalSystem.SegaDreamcast:
-                case PhysicalSystem.SegaSaturn:
-                case PhysicalSystem.SonyPlayStation:
-                case PhysicalSystem.VideoCD:
-                    return PhysicalMediaType.CDROM;
-
-                // DVD
-                case PhysicalSystem.DVDAudio:
-                case PhysicalSystem.DVDVideo:
-                case PhysicalSystem.MicrosoftXbox:
-                case PhysicalSystem.MicrosoftXbox360:
-                    return PhysicalMediaType.DVD;
-
-                // HD-DVD
-                case PhysicalSystem.HDDVDVideo:
-                    return PhysicalMediaType.HDDVD;
-
-                // Blu-ray
-                case PhysicalSystem.BDVideo:
-                case PhysicalSystem.MicrosoftXboxOne:
-                case PhysicalSystem.MicrosoftXboxSeriesXS:
-                case PhysicalSystem.SonyPlayStation3:
-                case PhysicalSystem.SonyPlayStation4:
-                case PhysicalSystem.SonyPlayStation5:
-                    return PhysicalMediaType.BluRay;
-
-                // GameCube
-                case PhysicalSystem.NintendoGameCube:
-                    return PhysicalMediaType.NintendoGameCubeGameDisc;
-
-                // Wii
-                case PhysicalSystem.NintendoWii:
-                    return PhysicalMediaType.NintendoWiiOpticalDisc;
-
-                // WiiU
-                case PhysicalSystem.NintendoWiiU:
-                    return PhysicalMediaType.NintendoWiiUOpticalDisc;
-
-                // PSP
-                case PhysicalSystem.SonyPlayStationPortable:
-                    return PhysicalMediaType.UMD;
+                return PhysicalMediaType.CDROM;
             }
-#pragma warning restore IDE0010
+            else if (system == PhysicalSystem.DVDAudio
+                || system == PhysicalSystem.DVDVideo
+                || system == PhysicalSystem.MicrosoftXbox
+                || system == PhysicalSystem.MicrosoftXbox360)
+            {
+                return PhysicalMediaType.DVD;
+            }
+            else if (system == PhysicalSystem.HDDVDVideo)
+            {
+                return PhysicalMediaType.HDDVD;
+            }
+            else if (system == PhysicalSystem.BDVideo
+                || system == PhysicalSystem.MicrosoftXboxOne
+                || system == PhysicalSystem.MicrosoftXboxSeriesXS
+                || system == PhysicalSystem.SonyPlayStation3
+                || system == PhysicalSystem.SonyPlayStation4
+                || system == PhysicalSystem.SonyPlayStation5)
+            {
+                return PhysicalMediaType.BluRay;
+            }
+            else if (system == PhysicalSystem.NintendoGameCube)
+            {
+                return PhysicalMediaType.NintendoGameCubeGameDisc;
+            }
+            else if (system == PhysicalSystem.NintendoWii)
+            {
+                return PhysicalMediaType.NintendoWiiOpticalDisc;
+            }
+            else if (system == PhysicalSystem.NintendoWiiU)
+            {
+                return PhysicalMediaType.NintendoWiiUOpticalDisc;
+            }
+            else if (system == PhysicalSystem.SonyPlayStationPortable)
+            {
+                return PhysicalMediaType.UMD;
+            }
 
             // Handle optical media by size and filesystem
             if (TotalSize >= 0 && TotalSize <= 800_000_000 && (DriveFormat == "CDFS" || DriveFormat == "UDF"))

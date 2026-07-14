@@ -51,50 +51,43 @@ namespace MPF.Processors
             if (GetReadErrors(logPath, out long readErrors))
                 info.DiscIdentifiers.ErrorCount = readErrors == -1 ? "Error retrieving error count" : readErrors.ToString();
 
-#pragma warning disable IDE0010
-            switch (System)
+            if (System == PhysicalSystem.MicrosoftXbox)
             {
-                case PhysicalSystem.MicrosoftXbox:
-                    string xmidString = ProcessingTool.GetXMID(Path.Combine(outputDirectory, "DMI.bin"));
-                    var xmid = SabreTools.Wrappers.XMID.Create(xmidString);
-                    if (xmid is not null)
+                string xmidString = ProcessingTool.GetXMID(Path.Combine(outputDirectory, "DMI.bin"));
+                var xmid = SabreTools.Wrappers.XMID.Create(xmidString);
+                if (xmid is not null)
+                {
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
+                    info.DiscIdentifiers.DiscSerials = xmid.Serial ?? string.Empty;
+                    if (!redumpCompat)
                     {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
-                        info.DiscIdentifiers.DiscSerials = xmid.Serial ?? string.Empty;
-                        if (!redumpCompat)
-                        {
-                            info.DiscIdentifiers.Version = xmid.Version ?? string.Empty;
-                            info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xmid.Model.RegionIdentifier);
-                        }
+                        info.DiscIdentifiers.Version = xmid.Version ?? string.Empty;
+                        info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xmid.Model.RegionIdentifier);
                     }
-
-                    break;
-
-                case PhysicalSystem.MicrosoftXbox360:
-
-                    // Get PVD from ISO
-                    if (GetPVD($"{basePath}.iso", out string? pvd))
-                        info.DumpMetadata.PVD = pvd;
-
-                    // Parse Media ID
-                    //string? mediaID = GetMediaID(logPath);
-
-                    // Parse DMI.bin
-                    string xemidString = ProcessingTool.GetXeMID(Path.Combine(outputDirectory, "DMI.bin"));
-                    var xemid = SabreTools.Wrappers.XeMID.Create(xemidString);
-                    if (xemid is not null)
-                    {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
-                        info.DiscIdentifiers.DiscSerials = xemid.Serial ?? string.Empty;
-                        if (!redumpCompat)
-                            info.DiscIdentifiers.Version = xemid.Version ?? string.Empty;
-
-                        info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xemid.Model.RegionIdentifier);
-                    }
-
-                    break;
+                }
             }
-#pragma warning restore IDE0010
+            else if (System == PhysicalSystem.MicrosoftXbox360)
+            {
+                // Get PVD from ISO
+                if (GetPVD($"{basePath}.iso", out string? pvd))
+                    info.DumpMetadata.PVD = pvd;
+
+                // Parse Media ID
+                //string? mediaID = GetMediaID(logPath);
+
+                // Parse DMI.bin
+                string xemidString = ProcessingTool.GetXeMID(Path.Combine(outputDirectory, "DMI.bin"));
+                var xemid = SabreTools.Wrappers.XeMID.Create(xemidString);
+                if (xemid is not null)
+                {
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
+                    info.DiscIdentifiers.DiscSerials = xemid.Serial ?? string.Empty;
+                    if (!redumpCompat)
+                        info.DiscIdentifiers.Version = xemid.Version ?? string.Empty;
+
+                    info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xemid.Model.RegionIdentifier);
+                }
+            }
 
             // Hash DMI/PFI
             string dmiPath = Path.Combine(outputDirectory, "DMI.bin");

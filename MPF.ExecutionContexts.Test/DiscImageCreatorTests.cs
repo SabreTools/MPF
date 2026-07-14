@@ -53,25 +53,7 @@ namespace MPF.ExecutionContexts.Test
         };
 
         [Theory]
-        [InlineData(null, null, null, "filename.bin", null, null)]
-        [InlineData(PhysicalSystem.AppleMacintosh, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /c2 1000 /q /mr 1000 /ns /sf /ss /s 2")]
-        [InlineData(PhysicalSystem.IBMPCcompatible, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /c2 1000 /q /mr 1000 /ns /sf /ss /s 2")]
-        [InlineData(PhysicalSystem.AtariJaguarCDInteractiveMultimediaSystem, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /aj /c2 1000 /q /mr 1000")]
-        [InlineData(PhysicalSystem.HasbroVideoNow, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /a 0 /c2 1000 /q /mr 1000")]
-        [InlineData(PhysicalSystem.HasbroVideoNowColor, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /a 0 /c2 1000 /q /mr 1000")]
-        [InlineData(PhysicalSystem.HasbroVideoNowJr, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /a 0 /c2 1000 /q /mr 1000")]
-        [InlineData(PhysicalSystem.HasbroVideoNowXP, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /a 0 /c2 1000 /q /mr 1000")]
-        [InlineData(PhysicalSystem.SonyPlayStation, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /c2 1000 /q /mr 1000 /nl /am")]
-        [InlineData(PhysicalSystem.IBMPCcompatible, PhysicalMediaType.DVD, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /c /q /rr 1000 /sf")]
-        [InlineData(PhysicalSystem.MicrosoftXbox, PhysicalMediaType.DVD, "/dev/sr0", "filename.bin", 2, "xbox /dev/sr0 \"filename.bin\" 2 /q /rr 1000")]
-        [InlineData(PhysicalSystem.MicrosoftXbox360, PhysicalMediaType.DVD, "/dev/sr0", "filename.bin", 2, "xbox /dev/sr0 \"filename.bin\" 2 /q /rr 1000")]
-        [InlineData(PhysicalSystem.NintendoGameCube, PhysicalMediaType.NintendoGameCubeGameDisc, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /q /raw")]
-        [InlineData(PhysicalSystem.NintendoWii, PhysicalMediaType.NintendoWiiOpticalDisc, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /q /raw")]
-        [InlineData(PhysicalSystem.SegaDreamcast, PhysicalMediaType.GDROM, "/dev/sr0", "filename.bin", 2, "gd /dev/sr0 \"filename.bin\" 2 /c2 1000 /q")]
-        [InlineData(PhysicalSystem.HDDVDVideo, PhysicalMediaType.HDDVD, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /c /q /rr 1000")]
-        [InlineData(PhysicalSystem.BDVideo, PhysicalMediaType.BluRay, "/dev/sr0", "filename.bin", 2, "bd /dev/sr0 \"filename.bin\" 2 /q /rr 1000")]
-        [InlineData(PhysicalSystem.NintendoWiiU, PhysicalMediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "filename.bin", 2, "bd /dev/sr0 \"filename.bin\" 2 /q")]
-        [InlineData(PhysicalSystem.IBMPCcompatible, PhysicalMediaType.FloppyDisk, "/dev/sr0", "filename.bin", 2, "fd /dev/sr0 \"filename.bin\"")]
+        [MemberData(nameof(GenerateDefaultValueTestData))]
         public void DefaultValueTest(PhysicalSystem? system,
             PhysicalMediaType? type,
             string? drivePath,
@@ -82,6 +64,35 @@ namespace MPF.ExecutionContexts.Test
             var context = new ExecutionContext(system, type, drivePath, filename, driveSpeed, AllOptions);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Generate a test set for DefaultValueTest
+        /// </summary>
+        public static TheoryData<PhysicalSystem?, PhysicalMediaType?, string?, string, int?, string?> GenerateDefaultValueTestData()
+        {
+            return new TheoryData<PhysicalSystem?, PhysicalMediaType?, string?, string, int?, string?>
+            {
+                { null, null, null, "filename.bin", null, null },
+                { PhysicalSystem.AppleMacintosh, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /c2 1000 /q /mr 1000 /ns /sf /ss /s 2" },
+                { PhysicalSystem.IBMPCcompatible, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /c2 1000 /q /mr 1000 /ns /sf /ss /s 2" },
+                { PhysicalSystem.AtariJaguarCDInteractiveMultimediaSystem, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /aj /c2 1000 /q /mr 1000" },
+                { PhysicalSystem.HasbroVideoNow, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /a 0 /c2 1000 /q /mr 1000" },
+                { PhysicalSystem.HasbroVideoNowColor, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /a 0 /c2 1000 /q /mr 1000" },
+                { PhysicalSystem.HasbroVideoNowJr, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /a 0 /c2 1000 /q /mr 1000" },
+                { PhysicalSystem.HasbroVideoNowXP, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /a 0 /c2 1000 /q /mr 1000" },
+                { PhysicalSystem.SonyPlayStation, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /c2 1000 /q /mr 1000 /nl /am" },
+                { PhysicalSystem.IBMPCcompatible, PhysicalMediaType.DVD, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /c /q /rr 1000 /sf" },
+                { PhysicalSystem.MicrosoftXbox, PhysicalMediaType.DVD, "/dev/sr0", "filename.bin", 2, "xbox /dev/sr0 \"filename.bin\" 2 /q /rr 1000" },
+                { PhysicalSystem.MicrosoftXbox360, PhysicalMediaType.DVD, "/dev/sr0", "filename.bin", 2, "xbox /dev/sr0 \"filename.bin\" 2 /q /rr 1000" },
+                { PhysicalSystem.NintendoGameCube, PhysicalMediaType.NintendoGameCubeGameDisc, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /q /raw" },
+                { PhysicalSystem.NintendoWii, PhysicalMediaType.NintendoWiiOpticalDisc, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /q /raw" },
+                { PhysicalSystem.SegaDreamcast, PhysicalMediaType.GDROM, "/dev/sr0", "filename.bin", 2, "gd /dev/sr0 \"filename.bin\" 2 /c2 1000 /q" },
+                { PhysicalSystem.HDDVDVideo, PhysicalMediaType.HDDVD, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /c /q /rr 1000" },
+                { PhysicalSystem.BDVideo, PhysicalMediaType.BluRay, "/dev/sr0", "filename.bin", 2, "bd /dev/sr0 \"filename.bin\" 2 /q /rr 1000" },
+                { PhysicalSystem.NintendoWiiU, PhysicalMediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "filename.bin", 2, "bd /dev/sr0 \"filename.bin\" 2 /q" },
+                { PhysicalSystem.IBMPCcompatible, PhysicalMediaType.FloppyDisk, "/dev/sr0", "filename.bin", 2, "fd /dev/sr0 \"filename.bin\"" },
+            };
         }
 
         #endregion

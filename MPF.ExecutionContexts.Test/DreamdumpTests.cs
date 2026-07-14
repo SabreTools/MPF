@@ -16,14 +16,7 @@ namespace MPF.ExecutionContexts.Test
 
         // None of these scenarios are actually supported as all are treated like GD-ROM
         [Theory]
-        [InlineData(null, null, null, "filename.bin", null, "--retries=50 --image-name=\"filename\" --sector-order=DATA_C2_SUB")]
-        [InlineData(PhysicalSystem.IBMPCcompatible, PhysicalMediaType.CDROM, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
-        [InlineData(PhysicalSystem.IBMPCcompatible, PhysicalMediaType.DVD, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
-        [InlineData(PhysicalSystem.NintendoGameCube, PhysicalMediaType.NintendoGameCubeGameDisc, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
-        [InlineData(PhysicalSystem.NintendoWii, PhysicalMediaType.NintendoWiiOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
-        [InlineData(PhysicalSystem.HDDVDVideo, PhysicalMediaType.HDDVD, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
-        [InlineData(PhysicalSystem.BDVideo, PhysicalMediaType.BluRay, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
-        [InlineData(PhysicalSystem.NintendoWiiU, PhysicalMediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
+        [MemberData(nameof(GenerateDefaultValueTestData))]
         public void DefaultValueTest(PhysicalSystem? system,
             PhysicalMediaType? type,
             string? drivePath,
@@ -34,6 +27,24 @@ namespace MPF.ExecutionContexts.Test
             var context = new ExecutionContext(system, type, drivePath, filename, driveSpeed, AllOptions);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Generate a test set for DefaultValueTest
+        /// </summary>
+        public static TheoryData<PhysicalSystem?, PhysicalMediaType?, string?, string, int?, string?> GenerateDefaultValueTestData()
+        {
+            return new TheoryData<PhysicalSystem?, PhysicalMediaType?, string?, string, int?, string?>
+            {
+                { null, null, null, "filename.bin", null, "--retries=50 --image-name=\"filename\" --sector-order=DATA_C2_SUB" },
+                { PhysicalSystem.IBMPCcompatible, PhysicalMediaType.CDROM, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0" },
+                { PhysicalSystem.IBMPCcompatible, PhysicalMediaType.DVD, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0" },
+                { PhysicalSystem.NintendoGameCube, PhysicalMediaType.NintendoGameCubeGameDisc, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0" },
+                { PhysicalSystem.NintendoWii, PhysicalMediaType.NintendoWiiOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0" },
+                { PhysicalSystem.HDDVDVideo, PhysicalMediaType.HDDVD, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0" },
+                { PhysicalSystem.BDVideo, PhysicalMediaType.BluRay, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0" },
+                { PhysicalSystem.NintendoWiiU, PhysicalMediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0" },
+            };
         }
 
         #endregion

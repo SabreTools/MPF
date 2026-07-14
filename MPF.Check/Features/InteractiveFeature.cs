@@ -87,7 +87,7 @@ namespace MPF.Check.Features
             Console.WriteLine();
             Console.WriteLine($"Loaded configuration from: {configPath}");
             Console.WriteLine();
-            Console.WriteLine($"1) Set system (Currently '{System.LongName()}')");
+            Console.WriteLine($"1) Set system (Currently '{System?.Name ?? string.Empty}')");
             Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram.LongName()}')");
             Console.WriteLine($"3) Set seed path (Currently '{Seed}')");
             Console.WriteLine($"4) Add placeholders (Currently '{Options.Processing.MediaInformation.AddPlaceholders}')");

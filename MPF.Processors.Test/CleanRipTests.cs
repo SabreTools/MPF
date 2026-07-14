@@ -417,7 +417,7 @@ namespace MPF.Processors.Test
         public void GetGameCubeWiiInformation_NoFile_False()
         {
             string dumpinfo = string.Empty;
-            bool actual = CleanRip.GetGameCubeWiiInformation(dumpinfo, out Region? region, out string? version, out string? name, out string? serial);
+            bool actual = CleanRip.GetGameCubeWiiInformation(dumpinfo, out RegionCode? region, out string? version, out string? name, out string? serial);
 
             Assert.False(actual);
             Assert.Null(region);
@@ -429,13 +429,13 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetGameCubeWiiInformation_Filled_True()
         {
-            Region? expectedRegion = Region.World;
+            RegionCode? expectedRegion = RegionCode.World;
             string? expectedVersion = "version";
             string? expectedName = "name";
             string? expectedSerial = "000A00";
 
             string dumpinfo = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD", "test-dumpinfo.txt");
-            bool actual = CleanRip.GetGameCubeWiiInformation(dumpinfo, out Region? region, out string? version, out string? name, out string? serial);
+            bool actual = CleanRip.GetGameCubeWiiInformation(dumpinfo, out RegionCode? region, out string? version, out string? name, out string? serial);
 
             Assert.True(actual);
             Assert.Equal(expectedRegion, region);
