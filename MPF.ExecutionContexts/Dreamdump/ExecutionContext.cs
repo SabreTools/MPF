@@ -122,6 +122,11 @@ namespace MPF.ExecutionContexts.Dreamdump
         {
             var parameters = new StringBuilder();
 
+            // Command Mode
+            BaseCommand ??= CommandStrings.NONE;
+            if (BaseCommand != CommandStrings.NONE)
+                parameters.Append($"{BaseCommand} ");
+
             // Loop though and append all existing
             foreach (var kvp in _inputs)
             {
