@@ -50,6 +50,7 @@
 - Add logical opposite flags to Check
 - Fix Dreamdump parameter generation
 - Sync better with supported Dreamdump arguments
+- Fix two recent media information window render issues
 
 ### 3.8.3 (2026-07-06)
 
