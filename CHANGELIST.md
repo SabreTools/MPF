@@ -47,6 +47,7 @@
 - Remove unneded mould fields
 - Set disc command by default for Dreamdump
 - Update RedumpLib to 3.0.0
+- Add logical opposite flags to Check
 
 ### 3.8.3 (2026-07-06)
 
