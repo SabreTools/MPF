@@ -46,6 +46,7 @@
 - Use input file as only output file in generic processor
 - Remove unneded mould fields
 - Set disc command by default for Dreamdump
+- Update RedumpLib to 3.0.0
 
 ### 3.8.3 (2026-07-06)
 

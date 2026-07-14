@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 #if NET35_OR_GREATER || NETCOREAPP
@@ -823,282 +823,276 @@ namespace MPF.Frontend.Tools
         /// </summary>
         private static bool ProcessSystem(SubmissionInfo info, PhysicalSystem? system, Drive? drive, bool addPlaceholders, bool isDiscImageCreator, string basePath)
         {
-#pragma warning disable IDE0010
-            // Extract info based specifically on PhysicalSystem
-            switch (system)
+            if (system == PhysicalSystem.AcornArchimedesAndRiscPC)
             {
-                case PhysicalSystem.AcornArchimedesAndRiscPC:
-                    info.RegionsAndLanguages.Regions ??= [Region.UnitedKingdom];
-                    break;
-
-                case PhysicalSystem.AudioCD:
-                case PhysicalSystem.DVDAudio:
-                case PhysicalSystem.EnhancedCD:
-                case PhysicalSystem.SuperAudioCD:
-                    info.DiscIdentity.Category ??= DiscCategory.Audio;
-                    break;
-
-                case PhysicalSystem.BandaiPlaydiaQuickInteractiveSystem:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
-                    break;
-
-                case PhysicalSystem.BDVideo:
-                    info.DiscIdentity.Category ??= DiscCategory.Video;
-
-                    // General protection info
-                    string? bdProtection = PhysicalTool.GetBluRayProtection(drive);
-                    if (bdProtection is not null && string.IsNullOrEmpty(info.DumpMetadata.Protection))
-                        info.DumpMetadata.Protection = bdProtection;
-                    else if (bdProtection is not null)
-                        info.DumpMetadata.Protection += $"\n{bdProtection}";
-                    else
-                        info.DumpMetadata.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
-
-                    // Determine if BEE is set
-                    bool busEncryptionEnabled = PhysicalTool.GetBusEncryptionEnabled(drive);
-                    if (busEncryptionEnabled && !info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.Protection))
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.Protection] = "Bus Encryption Enabled";
-                    else if (busEncryptionEnabled && info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.Protection))
-                        info.DumpMetadata.Protection += $"\nBus Encryption Enabled";
-
-                    break;
-
-                case PhysicalSystem.DVDVideo:
-                case PhysicalSystem.HDDVDVideo:
-                    info.DiscIdentity.Category ??= DiscCategory.Video;
-                    info.DumpMetadata.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.CommodoreAmigaCD:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.CommodoreAmigaCD32:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    info.RegionsAndLanguages.Regions ??= [Region.Europe];
-                    break;
-
-                case PhysicalSystem.CommodoreAmigaCDTV:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    info.RegionsAndLanguages.Regions ??= [Region.Europe];
-                    break;
-
-                case PhysicalSystem.FujitsuFMTownsSeries:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
-                    break;
-
-                case PhysicalSystem.FujitsuFMTownsMarty:
-                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
-                    break;
-
-                case PhysicalSystem.HasbroVideoNow:
-                case PhysicalSystem.HasbroVideoNowColor:
-                case PhysicalSystem.HasbroVideoNowJr:
-                case PhysicalSystem.VideoCD:
-                    info.DiscIdentity.Category ??= DiscCategory.Video;
-                    break;
-
-                case PhysicalSystem.HasbroVideoNowXP:
-                case PhysicalSystem.PhotoCD:
-                case PhysicalSystem.SonyElectronicBook:
-                    info.DiscIdentity.Category ??= DiscCategory.Multimedia;
-                    break;
-
-                case PhysicalSystem.IBMPCcompatible:
-                case PhysicalSystem.AppleMacintosh:
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.SteamAppID] =
-                        PhysicalTool.GetSteamAppInfo(drive) ?? string.Empty;
-                    info.DumpMetadata.ContentsSpecialFields[SiteCode.SteamSimSidDepotID] =
-                        PhysicalTool.GetSteamSimSidInfo(drive) ?? string.Empty;
-                    info.DumpMetadata.ContentsSpecialFields[SiteCode.SteamCsmCsdDepotID] =
-                        PhysicalTool.GetSteamCsmCsdInfo(drive) ?? string.Empty;
-                    break;
-
-                case PhysicalSystem.IncredibleTechnologiesEagle:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.KonamieAmusement:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.KonamiFireBeat:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.KonamiPython2:
-                    string? kp2Exe = PhysicalTool.GetPlayStationExecutableName(drive);
-
-                    // TODO: Remove this hack when DIC supports build date output
-                    if (isDiscImageCreator)
-                        info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", kp2Exe);
-
-                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                    info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, kp2Exe, fixTwoDigitYear: true);
-
-                    if (CommentFieldExists(info, SiteCode.InternalSerialName, out kp2Exe))
-                        info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(kp2Exe)];
-
-                    SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
-                    break;
-
-                case PhysicalSystem.KonamiSystemGV:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.KonamiSystem573:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.KonamiTwinkle:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.MattelHyperScan:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.MicrosoftXbox:
-                case PhysicalSystem.MicrosoftXbox360:
-                    if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.MicrosoftXboxOne:
-                    if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
-                    break;
-
-                case PhysicalSystem.MicrosoftXboxSeriesXS:
-                    if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
-                    break;
-
-                case PhysicalSystem.NamcoSegaNintendoTriforce:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.NavisoftNaviken:
-                    info.DiscIdentifiers.EXEDate = addPlaceholders ? RequiredValue : string.Empty;
-                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
-                    break;
-
-                case PhysicalSystem.NECPC88Series:
-                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
-                    break;
-
-                case PhysicalSystem.NECPC98Series:
-                    info.DiscIdentifiers.EXEDate = addPlaceholders ? RequiredValue : string.Empty;
-                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
-                    break;
-
-                case PhysicalSystem.NECPCFXPCFXGA:
-                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
-                    break;
-
-                case PhysicalSystem.NintendoGameCube:
-                case PhysicalSystem.NintendoWii:
-                    if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.CoverID))
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.CoverID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-
-                    break;
-
-                case PhysicalSystem.SegaChihiro:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.SegaDreamcast:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.SegaNaomi:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.SegaNaomi2:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.SegaTitanVideo:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.SharpX68000:
-                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
-                    break;
-
-                case PhysicalSystem.SNKNeoGeoCD:
-                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    break;
-
-                case PhysicalSystem.SonyPlayStation:
-                    string? ps1Exe = PhysicalTool.GetPlayStationExecutableName(drive);
-
-                    // TODO: Remove this hack when DIC supports build date output
-                    if (isDiscImageCreator)
-                        info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps1Exe, psx: true);
-
-                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                    info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, ps1Exe, fixTwoDigitYear: true);
-
-                    if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps1Exe))
-                        info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(ps1Exe)];
-
-                    break;
-
-                case PhysicalSystem.SonyPlayStation2:
-                    string? ps2Exe = PhysicalTool.GetPlayStationExecutableName(drive);
-
-                    // TODO: Remove this hack when DIC supports build date output
-                    if (isDiscImageCreator)
-                        info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps2Exe);
-
-                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                    info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, ps2Exe, fixTwoDigitYear: true);
-
-                    if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps2Exe))
-                        info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(ps2Exe)];
-
-                    SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
-                    break;
-
-                case PhysicalSystem.SonyPlayStation3:
-                    info.DiscIdentifiers.DiscKey ??= addPlaceholders ? RequiredIfCFW : string.Empty;
-                    info.DiscIdentifiers.DiscID ??= addPlaceholders ? RequiredIfCFW : string.Empty;
-
-                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation3Serial);
-                    SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation3Version);
-                    SetContentFieldIfNotExists(info, SiteCode.Patches, drive, FormatPlayStation3FirmwareVersion);
-                    break;
-
-                case PhysicalSystem.SonyPlayStation4:
-                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation4Serial);
-                    SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation4Version);
-                    SetContentFieldIfNotExists(info, SiteCode.Games, drive, PhysicalTool.GetPlayStation4PkgInfo);
-                    break;
-
-                case PhysicalSystem.SonyPlayStation5:
-                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation5Serial);
-                    SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation5Version);
-                    SetContentFieldIfNotExists(info, SiteCode.Games, drive, PhysicalTool.GetPlayStation5PkgInfo);
-                    break;
-
-                case PhysicalSystem.TomyKissSite:
-                    info.DiscIdentity.Category ??= DiscCategory.Video;
-                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
-                    break;
-
-                case PhysicalSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-                    info.DumpMetadata.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    break;
+                info.RegionsAndLanguages.Regions ??= [RegionCode.UnitedKingdom];
             }
-#pragma warning restore IDE0010
+            else if (system == PhysicalSystem.AudioCD
+                || system == PhysicalSystem.DVDAudio
+                || system == PhysicalSystem.EnhancedCD
+                || system == PhysicalSystem.SuperAudioCD)
+            {
+                info.DiscIdentity.Category ??= DiscCategory.Audio;
+            }
+            else if (system == PhysicalSystem.BandaiPlaydiaQuickInteractiveSystem)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.RegionsAndLanguages.Regions ??= [RegionCode.Japan];
+            }
+            else if (system == PhysicalSystem.BDVideo)
+            {
+                info.DiscIdentity.Category ??= DiscCategory.Video;
+
+                // General protection info
+                string? bdProtection = PhysicalTool.GetBluRayProtection(drive);
+                if (bdProtection is not null && string.IsNullOrEmpty(info.DumpMetadata.Protection))
+                    info.DumpMetadata.Protection = bdProtection;
+                else if (bdProtection is not null)
+                    info.DumpMetadata.Protection += $"\n{bdProtection}";
+                else
+                    info.DumpMetadata.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+
+                // Determine if BEE is set
+                bool busEncryptionEnabled = PhysicalTool.GetBusEncryptionEnabled(drive);
+                if (busEncryptionEnabled && !info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.Protection))
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.Protection] = "Bus Encryption Enabled";
+                else if (busEncryptionEnabled && info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.Protection))
+                    info.DumpMetadata.Protection += $"\nBus Encryption Enabled";
+            }
+            else if (system == PhysicalSystem.CommodoreAmigaCD)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.CommodoreAmigaCD32)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.RegionsAndLanguages.Regions ??= [RegionCode.Europe];
+            }
+            else if (system == PhysicalSystem.CommodoreAmigaCDTV)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.RegionsAndLanguages.Regions ??= [RegionCode.Europe];
+            }
+            else if (system == PhysicalSystem.DVDVideo
+                || system == PhysicalSystem.HDDVDVideo)
+            {
+                info.DiscIdentity.Category ??= DiscCategory.Video;
+                info.DumpMetadata.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.FujitsuFMTownsSeries)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.RegionsAndLanguages.Regions ??= [RegionCode.Japan];
+            }
+            else if (system == PhysicalSystem.FujitsuFMTownsMarty)
+            {
+                info.RegionsAndLanguages.Regions ??= [RegionCode.Japan];
+            }
+            else if (system == PhysicalSystem.HasbroVideoNow
+                || system == PhysicalSystem.HasbroVideoNowColor
+                || system == PhysicalSystem.HasbroVideoNowJr
+                || system == PhysicalSystem.VideoCD)
+            {
+                info.DiscIdentity.Category ??= DiscCategory.Video;
+            }
+            else if (system == PhysicalSystem.HasbroVideoNowXP
+                || system == PhysicalSystem.PhotoCD
+                || system == PhysicalSystem.SonyElectronicBook)
+            {
+                info.DiscIdentity.Category ??= DiscCategory.Multimedia;
+            }
+            else if (system == PhysicalSystem.IBMPCcompatible
+                || system == PhysicalSystem.AppleMacintosh)
+            {
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.SteamAppID] =
+                        PhysicalTool.GetSteamAppInfo(drive) ?? string.Empty;
+                info.DumpMetadata.ContentsSpecialFields[SiteCode.SteamSimSidDepotID] =
+                    PhysicalTool.GetSteamSimSidInfo(drive) ?? string.Empty;
+                info.DumpMetadata.ContentsSpecialFields[SiteCode.SteamCsmCsdDepotID] =
+                    PhysicalTool.GetSteamCsmCsdInfo(drive) ?? string.Empty;
+            }
+            else if (system == PhysicalSystem.IncredibleTechnologiesEagle)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.KonamieAmusement)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.KonamiFireBeat)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.KonamiPython2)
+            {
+                string? kp2Exe = PhysicalTool.GetPlayStationExecutableName(drive);
+
+                // TODO: Remove this hack when DIC supports build date output
+                if (isDiscImageCreator)
+                    info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", kp2Exe);
+
+                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
+                info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, kp2Exe, fixTwoDigitYear: true);
+
+                if (CommentFieldExists(info, SiteCode.InternalSerialName, out kp2Exe))
+                    info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(kp2Exe)];
+
+                SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
+            }
+            else if (system == PhysicalSystem.KonamiSystemGV)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.KonamiSystem573)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.KonamiTwinkle)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.MattelHyperScan)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.MicrosoftXbox
+                || system == PhysicalSystem.MicrosoftXbox360)
+            {
+                if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.MicrosoftXboxOne)
+            {
+                if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
+            }
+            else if (system == PhysicalSystem.MicrosoftXboxSeriesXS)
+            {
+                if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
+            }
+            else if (system == PhysicalSystem.NamcoSegaNintendoTriforce)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.NavisoftNaviken)
+            {
+                info.DiscIdentifiers.EXEDate = addPlaceholders ? RequiredValue : string.Empty;
+                info.RegionsAndLanguages.Regions ??= [RegionCode.Japan];
+            }
+            else if (system == PhysicalSystem.NECPC88Series)
+            {
+                info.RegionsAndLanguages.Regions ??= [RegionCode.Japan];
+            }
+            else if (system == PhysicalSystem.NECPC98Series)
+            {
+                info.DiscIdentifiers.EXEDate = addPlaceholders ? RequiredValue : string.Empty;
+                info.RegionsAndLanguages.Regions ??= [RegionCode.Japan];
+            }
+            else if (system == PhysicalSystem.NECPCFXPCFXGA)
+            {
+                info.RegionsAndLanguages.Regions ??= [RegionCode.Japan];
+            }
+            else if (system == PhysicalSystem.NintendoGameCube
+                || system == PhysicalSystem.NintendoWii)
+            {
+                if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.CoverID))
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.CoverID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.SegaChihiro)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.SegaDreamcast)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.SegaNaomi)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.SegaNaomi2)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.SegaTitanVideo)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.SharpX68000)
+            {
+                info.RegionsAndLanguages.Regions ??= [RegionCode.Japan];
+            }
+            else if (system == PhysicalSystem.SNKNeoGeoCD)
+            {
+                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+            }
+            else if (system == PhysicalSystem.SonyPlayStation)
+            {
+                string? ps1Exe = PhysicalTool.GetPlayStationExecutableName(drive);
+
+                // TODO: Remove this hack when DIC supports build date output
+                if (isDiscImageCreator)
+                    info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps1Exe, psx: true);
+
+                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
+                info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, ps1Exe, fixTwoDigitYear: true);
+
+                if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps1Exe))
+                    info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(ps1Exe)];
+            }
+            else if (system == PhysicalSystem.SonyPlayStation2)
+            {
+                string? ps2Exe = PhysicalTool.GetPlayStationExecutableName(drive);
+
+                // TODO: Remove this hack when DIC supports build date output
+                if (isDiscImageCreator)
+                    info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps2Exe);
+
+                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
+                info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, ps2Exe, fixTwoDigitYear: true);
+
+                if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps2Exe))
+                    info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(ps2Exe)];
+
+                SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
+            }
+            else if (system == PhysicalSystem.SonyPlayStation3)
+            {
+                info.DiscIdentifiers.DiscKey ??= addPlaceholders ? RequiredIfCFW : string.Empty;
+                info.DiscIdentifiers.DiscID ??= addPlaceholders ? RequiredIfCFW : string.Empty;
+
+                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation3Serial);
+                SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation3Version);
+                SetContentFieldIfNotExists(info, SiteCode.Patches, drive, FormatPlayStation3FirmwareVersion);
+            }
+            else if (system == PhysicalSystem.SonyPlayStation4)
+            {
+                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation4Serial);
+                SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation4Version);
+                SetContentFieldIfNotExists(info, SiteCode.Games, drive, PhysicalTool.GetPlayStation4PkgInfo);
+            }
+            else if (system == PhysicalSystem.SonyPlayStation5)
+            {
+                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation5Serial);
+                SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation5Version);
+                SetContentFieldIfNotExists(info, SiteCode.Games, drive, PhysicalTool.GetPlayStation5PkgInfo);
+            }
+            else if (system == PhysicalSystem.TomyKissSite)
+            {
+                info.DiscIdentity.Category ??= DiscCategory.Video;
+                info.RegionsAndLanguages.Regions ??= [RegionCode.Japan];
+            }
+            else if (system == PhysicalSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem)
+            {
+                info.DumpMetadata.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+            }
 
             return true;
         }

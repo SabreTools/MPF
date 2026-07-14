@@ -730,12 +730,11 @@ namespace MPF.Frontend.ViewModels
 
             if (CurrentSystem is not null)
             {
-                var mediaTypeValues = CurrentSystem.MediaTypes();
-                int index = mediaTypeValues.FindIndex(m => m == CurrentPhysicalMediaType);
+                int index = CurrentSystem.MediaTypes.FindIndex(m => m == CurrentPhysicalMediaType);
                 if (CurrentPhysicalMediaType is not null && index == -1)
                     VerboseLogLn($"Disc of type '{CurrentPhysicalMediaType.LongName()}' found, but the current system does not support it!");
 
-                MediaTypes = mediaTypeValues.ConvertAll(m => new Element<PhysicalMediaType>(m ?? PhysicalMediaType.NONE));
+                MediaTypes = CurrentSystem.MediaTypes.ConvertAll(m => new Element<PhysicalMediaType>(m ?? PhysicalMediaType.NONE));
                 PhysicalMediaTypeComboBoxEnabled = MediaTypes.Count > 1;
                 CurrentPhysicalMediaType = index > -1 ? MediaTypes[index] : MediaTypes[0];
             }
@@ -819,7 +818,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public void ChangeSystem()
         {
-            VerboseLogLn($"Changed system to: {CurrentSystem.LongName()}");
+            VerboseLogLn($"Changed system to: {CurrentSystem?.Name ?? string.Empty}");
             PopulatePhysicalMediaType();
             GetOutputNames(false);
             EnsureMediaInformation(resolveProgramPaths: false);
@@ -864,8 +863,8 @@ namespace MPF.Frontend.ViewModels
 
                 RegionsAndLanguages = new RegionsAndLanguagesSection()
                 {
-                    Regions = [Region.World],
-                    Languages = [Language.English, Language.Spanish, Language.French],
+                    Regions = [RegionCode.World],
+                    Languages = [LanguageCode.English, LanguageCode.Spanish, LanguageCode.French],
                 },
 
                 DiscIdentifiers = new DiscIdentifiersSection()
@@ -1220,8 +1219,7 @@ namespace MPF.Frontend.ViewModels
             _detectedPhysicalMediaType = null;
 
             // Get reasonable default values based on the current system
-            var mediaTypes = CurrentSystem.MediaTypes();
-            PhysicalMediaType? defaultPhysicalMediaType = mediaTypes.Count > 0 ? mediaTypes[0] : PhysicalMediaType.CDROM;
+            PhysicalMediaType? defaultPhysicalMediaType = (CurrentSystem?.MediaTypes ?? []).Count > 0 ? CurrentSystem!.MediaTypes[0] : PhysicalMediaType.CDROM;
             if (defaultPhysicalMediaType == PhysicalMediaType.NONE)
                 defaultPhysicalMediaType = PhysicalMediaType.CDROM;
 
@@ -1342,7 +1340,7 @@ namespace MPF.Frontend.ViewModels
                 VerboseLog($"Trying to detect system for drive {CurrentDrive.DevicePath}.. ");
                 var currentSystem = GetPhysicalSystem(CurrentDrive);
                 if (currentSystem is not null)
-                    VerboseLogLn($"detected {currentSystem.LongName()}.");
+                    VerboseLogLn($"detected {currentSystem.Name}.");
 
                 // If undetected system on inactive drive, and PC is the default system, check for potential Mac disc
                 if (currentSystem is null && !CurrentDrive.MarkedActive && Options.Dumping.DefaultSystem == PhysicalSystem.IBMPCcompatible)
@@ -1353,7 +1351,7 @@ namespace MPF.Frontend.ViewModels
                         if (PhysicalTool.GetFirstBytes(CurrentDrive, 1) is not null)
                         {
                             currentSystem = PhysicalSystem.AppleMacintosh;
-                            VerboseLogLn($"unable to detect, defaulting to {currentSystem.LongName()}.");
+                            VerboseLogLn($"unable to detect, defaulting to {currentSystem.Name}.");
                         }
                     }
                     catch { }
@@ -1363,20 +1361,20 @@ namespace MPF.Frontend.ViewModels
                 if (currentSystem is null && CurrentDrive.MarkedActive)
                 {
                     currentSystem = Options.Dumping.DefaultSystem;
-                    VerboseLogLn($"unable to detect, defaulting to {currentSystem.LongName()}.");
+                    VerboseLogLn($"unable to detect, defaulting to {currentSystem?.Name ?? string.Empty}.");
                 }
 
                 if (currentSystem is not null)
                 {
-                    int sysIndex = Systems.FindIndex(s => s == currentSystem);
+                    int sysIndex = Systems.FindIndex(s => s.Value == currentSystem);
                     CurrentSystem = Systems[sysIndex];
                 }
             }
             else if (Options.GUI.SkipSystemDetection && Options.Dumping.DefaultSystem is not null)
             {
                 var currentSystem = Options.Dumping.DefaultSystem;
-                VerboseLogLn($"System detection disabled, defaulting to {currentSystem.LongName()}.");
-                int sysIndex = Systems.FindIndex(s => s == currentSystem);
+                VerboseLogLn($"System detection disabled, defaulting to {currentSystem.Name}.");
+                int sysIndex = Systems.FindIndex(s => s.Value == currentSystem);
                 CurrentSystem = Systems[sysIndex];
             }
         }
@@ -1467,10 +1465,10 @@ namespace MPF.Frontend.ViewModels
         /// <returns>String with %-delimited variables evaluated</returns>
         public string EvaluateOutputPath(string outputPath)
         {
-            string systemLong = _currentSystem.LongName() ?? "Unknown System";
+            string systemLong = _currentSystem?.Name ?? "Unknown System";
             if (string.IsNullOrEmpty(systemLong))
                 systemLong = "Unknown System";
-            string systemShort = _currentSystem.ShortName() ?? "unknown";
+            string systemShort = _currentSystem?.Code ?? "unknown";
             if (string.IsNullOrEmpty(systemShort))
                 systemShort = "unknown";
             string mediaLong = _currentPhysicalMediaType.LongName() ?? "Unknown Media";
@@ -1519,7 +1517,7 @@ namespace MPF.Frontend.ViewModels
             // Get path pieces that are used in all branches
             string defaultOutputPath = Options.Dumping.DefaultOutputPath ?? "ISO";
             string extension = _environment?.GetDefaultExtension(CurrentPhysicalMediaType) ?? ".bin";
-            string label = GetFormattedVolumeLabel(CurrentDrive) ?? CurrentSystem.LongName() ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
+            string label = GetFormattedVolumeLabel(CurrentDrive) ?? CurrentSystem?.Name ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
             string defaultFilename = $"{label}{extension}";
 
             // If no path exists, set one using default values
@@ -2107,44 +2105,42 @@ namespace MPF.Frontend.ViewModels
 
             // Use internal serials where appropriate
             string? volumeLabel = string.IsNullOrEmpty(drive.VolumeLabel) ? null : drive.VolumeLabel!.Trim();
-#pragma warning disable IDE0010
-            switch (GetPhysicalSystem(drive))
+            var system = GetPhysicalSystem(drive);
+
+            if (system == PhysicalSystem.SonyPlayStation
+                || system == PhysicalSystem.SonyPlayStation2)
             {
-                case PhysicalSystem.SonyPlayStation:
-                case PhysicalSystem.SonyPlayStation2:
-                    string? ps12Serial = PhysicalTool.GetPlayStationSerial(drive);
-                    volumeLabel ??= ps12Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
-                    break;
-
-                case PhysicalSystem.SonyPlayStation3:
-                    string? ps3Serial = PhysicalTool.GetPlayStation3Serial(drive);
-                    if (volumeLabel == "PS3VOLUME")
-                        volumeLabel = ps3Serial ?? volumeLabel;
-                    else
-                        volumeLabel ??= ps3Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
-                    break;
-
-                case PhysicalSystem.SonyPlayStation4:
-                    string? ps4Serial = PhysicalTool.GetPlayStation4Serial(drive);
-                    if (volumeLabel == "PS4VOLUME")
-                        volumeLabel = ps4Serial ?? volumeLabel;
-                    else
-                        volumeLabel ??= ps4Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
-                    break;
-
-                case PhysicalSystem.SonyPlayStation5:
-                    string? ps5Serial = PhysicalTool.GetPlayStation5Serial(drive);
-                    if (volumeLabel == "PS5VOLUME")
-                        volumeLabel = ps5Serial ?? volumeLabel;
-                    else
-                        volumeLabel ??= ps5Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
-                    break;
-
-                default:
-                    volumeLabel ??= $"track_{DateTime.Now:yyyyMMdd-HHmm}";
-                    break;
+                string? ps12Serial = PhysicalTool.GetPlayStationSerial(drive);
+                volumeLabel ??= ps12Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
             }
-#pragma warning restore IDE0010
+            else if (system == PhysicalSystem.SonyPlayStation3)
+            {
+                string? ps3Serial = PhysicalTool.GetPlayStation3Serial(drive);
+                if (volumeLabel == "PS3VOLUME")
+                    volumeLabel = ps3Serial ?? volumeLabel;
+                else
+                    volumeLabel ??= ps3Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
+            }
+            else if (system == PhysicalSystem.SonyPlayStation4)
+            {
+                string? ps4Serial = PhysicalTool.GetPlayStation4Serial(drive);
+                if (volumeLabel == "PS4VOLUME")
+                    volumeLabel = ps4Serial ?? volumeLabel;
+                else
+                    volumeLabel ??= ps4Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
+            }
+            else if (system == PhysicalSystem.SonyPlayStation5)
+            {
+                string? ps5Serial = PhysicalTool.GetPlayStation5Serial(drive);
+                if (volumeLabel == "PS5VOLUME")
+                    volumeLabel = ps5Serial ?? volumeLabel;
+                else
+                    volumeLabel ??= ps5Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
+            }
+            else
+            {
+                volumeLabel ??= $"track_{DateTime.Now:yyyyMMdd-HHmm}";
+            }
 
             foreach (char c in Path.GetInvalidFileNameChars())
             {

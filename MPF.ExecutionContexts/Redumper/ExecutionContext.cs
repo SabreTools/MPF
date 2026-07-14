@@ -330,47 +330,39 @@ namespace MPF.ExecutionContexts.Redumper
                 (_inputs[FlagStrings.Verbose] as FlagInput)?.SetValue(true);
             }
 
-            if (dumpSettings.EnableSkeleton)
+            // Enable skeletons for all but systems known to have significant
+            // data outside the ISO9660 filesystem or are BD-based consoles
+            if (dumpSettings.EnableSkeleton
+                && PhysicalSystem != PhysicalSystem.MicrosoftXbox
+                && PhysicalSystem != PhysicalSystem.MicrosoftXbox360
+                && PhysicalSystem != PhysicalSystem.PlaymajiPolymega
+                && PhysicalSystem != PhysicalSystem.MicrosoftXboxOne
+                && PhysicalSystem != PhysicalSystem.MicrosoftXboxSeriesXS
+                && PhysicalSystem != PhysicalSystem.SonyPlayStation3
+                && PhysicalSystem != PhysicalSystem.SonyPlayStation4
+                && PhysicalSystem != PhysicalSystem.SonyPlayStation5
+                && PhysicalSystem != PhysicalSystem.NintendoWiiU)
             {
 #pragma warning disable IDE0010
-                switch (PhysicalSystem)
+                // Enable skeleton for CD and DVD only, by default
+                switch (PhysicalMediaType)
                 {
-                    // Systems known to have significant data outside the ISO9660 filesystem
-                    case SabreTools.RedumpLib.Data.PhysicalSystem.MicrosoftXbox:
-                    case SabreTools.RedumpLib.Data.PhysicalSystem.MicrosoftXbox360:
-                    case SabreTools.RedumpLib.Data.PhysicalSystem.PlaymajiPolymega:
-                    // Skeletons from newer BD-based consoles unnecessary
-                    case SabreTools.RedumpLib.Data.PhysicalSystem.MicrosoftXboxOne:
-                    case SabreTools.RedumpLib.Data.PhysicalSystem.MicrosoftXboxSeriesXS:
-                    case SabreTools.RedumpLib.Data.PhysicalSystem.SonyPlayStation3:
-                    case SabreTools.RedumpLib.Data.PhysicalSystem.SonyPlayStation4:
-                    case SabreTools.RedumpLib.Data.PhysicalSystem.SonyPlayStation5:
-                    case SabreTools.RedumpLib.Data.PhysicalSystem.NintendoWiiU:
+                    case SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM:
+                    case SabreTools.RedumpLib.Data.PhysicalMediaType.DVD:
+                    {
+                        this[FlagStrings.Skeleton] = true;
+                        (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
+                    }
+
+                    break;
+
+                    // If the type is unknown, also enable
+                    case null:
+                        this[FlagStrings.Skeleton] = true;
+                        (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
                         break;
 
                     default:
-                        // Enable skeleton for CD and DVD only, by default
-                        switch (PhysicalMediaType)
-                        {
-                            case SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM:
-                            case SabreTools.RedumpLib.Data.PhysicalMediaType.DVD:
-                            {
-                                this[FlagStrings.Skeleton] = true;
-                                (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
-                            }
-
-                            break;
-
-                            // If the type is unknown, also enable
-                            case null:
-                                this[FlagStrings.Skeleton] = true;
-                                (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
-                                break;
-
-                            default:
-                                break;
-                        }
-
                         break;
                 }
 #pragma warning restore IDE0010

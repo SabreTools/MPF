@@ -1050,7 +1050,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             Filename = filename;
 
             // First check to see if the combination of system and PhysicalMediaType is valid
-            var validTypes = PhysicalSystem.MediaTypes();
+            var validTypes = PhysicalSystem?.MediaTypes ?? [];
             if (!validTypes.Contains(PhysicalMediaType))
                 return;
 
@@ -1084,32 +1084,32 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (dumpSettings.MultiSectorRead)
                         MultiSectorReadValue = dumpSettings.MultiSectorReadValue;
 
-                    switch (PhysicalSystem)
+                    if (PhysicalSystem == PhysicalSystem.AppleMacintosh
+                        || PhysicalSystem == PhysicalSystem.IBMPCcompatible)
                     {
-                        case SabreTools.RedumpLib.Data.PhysicalSystem.AppleMacintosh:
-                        case SabreTools.RedumpLib.Data.PhysicalSystem.IBMPCcompatible:
-                            this[FlagStrings.NoFixSubQSecuROM] = true;
-                            this[FlagStrings.ScanFileProtect] = true;
-                            this[FlagStrings.ScanSectorProtect] = dumpSettings.ParanoidMode;
-                            this[FlagStrings.SubchannelReadLevel] = dumpSettings.ParanoidMode;
-                            if (this[FlagStrings.SubchannelReadLevel] == true)
-                                SubchannelReadLevelValue = 2;
-
-                            break;
-                        case SabreTools.RedumpLib.Data.PhysicalSystem.AtariJaguarCDInteractiveMultimediaSystem:
-                            this[FlagStrings.AtariJaguar] = true;
-                            break;
-                        case SabreTools.RedumpLib.Data.PhysicalSystem.HasbroVideoNow:
-                        case SabreTools.RedumpLib.Data.PhysicalSystem.HasbroVideoNowColor:
-                        case SabreTools.RedumpLib.Data.PhysicalSystem.HasbroVideoNowJr:
-                        case SabreTools.RedumpLib.Data.PhysicalSystem.HasbroVideoNowXP:
-                            this[FlagStrings.AddOffset] = true;
-                            AddOffsetValue = 0; // Value needed for first run and placeholder after
-                            break;
-                        case SabreTools.RedumpLib.Data.PhysicalSystem.SonyPlayStation:
-                            this[FlagStrings.ScanAntiMod] = true;
-                            this[FlagStrings.NoFixSubQLibCrypt] = true;
-                            break;
+                        this[FlagStrings.NoFixSubQSecuROM] = true;
+                        this[FlagStrings.ScanFileProtect] = true;
+                        this[FlagStrings.ScanSectorProtect] = dumpSettings.ParanoidMode;
+                        this[FlagStrings.SubchannelReadLevel] = dumpSettings.ParanoidMode;
+                        if (this[FlagStrings.SubchannelReadLevel] == true)
+                            SubchannelReadLevelValue = 2;
+                    }
+                    else if (PhysicalSystem == PhysicalSystem.AtariJaguarCDInteractiveMultimediaSystem)
+                    {
+                        this[FlagStrings.AtariJaguar] = true;
+                    }
+                    else if (PhysicalSystem == PhysicalSystem.HasbroVideoNow
+                        || PhysicalSystem == PhysicalSystem.HasbroVideoNowColor
+                        || PhysicalSystem == PhysicalSystem.HasbroVideoNowJr
+                        || PhysicalSystem == PhysicalSystem.HasbroVideoNowXP)
+                    {
+                        this[FlagStrings.AddOffset] = true;
+                        AddOffsetValue = 0; // Value needed for first run and placeholder after
+                    }
+                    else if (PhysicalSystem == PhysicalSystem.SonyPlayStation)
+                    {
+                        this[FlagStrings.ScanAntiMod] = true;
+                        this[FlagStrings.NoFixSubQLibCrypt] = true;
                     }
 
                     break;
@@ -1868,7 +1868,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         private void SetBaseCommand(PhysicalSystem? system, PhysicalMediaType? type)
         {
             // If we have an invalid combination, we should BaseCommand = null
-            if (!system.MediaTypes().Contains(type))
+            if (!(system?.MediaTypes ?? []).Contains(type))
             {
                 BaseCommand = null;
                 return;
@@ -1878,14 +1878,14 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             switch (type)
             {
                 case SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM:
-                    if (system == SabreTools.RedumpLib.Data.PhysicalSystem.SuperAudioCD)
+                    if (system == PhysicalSystem.SuperAudioCD)
                         BaseCommand = CommandStrings.SACD;
                     else
                         BaseCommand = CommandStrings.CompactDisc;
                     return;
                 case SabreTools.RedumpLib.Data.PhysicalMediaType.DVD:
-                    if (system == SabreTools.RedumpLib.Data.PhysicalSystem.MicrosoftXbox
-                        || system == SabreTools.RedumpLib.Data.PhysicalSystem.MicrosoftXbox360)
+                    if (system == PhysicalSystem.MicrosoftXbox
+                        || system == PhysicalSystem.MicrosoftXbox360)
                     {
                         BaseCommand = CommandStrings.XBOX;
                         return;

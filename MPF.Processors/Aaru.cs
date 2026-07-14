@@ -168,60 +168,56 @@ namespace MPF.Processors
 
                     break;
             }
-
-            switch (System)
-            {
-                // TODO: Can we get SecuROM data?
-                // TODO: Can we get SS version/ranges?
-                // TODO: Can we get DMI info?
-                // TODO: Can we get Sega Header info?
-                // TODO: Can we get PS1 EDC status?
-                // TODO: Can we get PS1 LibCrypt status?
-
-                case PhysicalSystem.DVDAudio:
-                case PhysicalSystem.DVDVideo:
-                    info.DumpMetadata.Protection = GetDVDProtection(sidecar) ?? string.Empty;
-                    break;
-
-                case PhysicalSystem.MicrosoftXbox:
-                    if (GetXgdAuxInfo(sidecar, out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash, out var ss, out var xgd1SSVer))
-                    {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
-                        info.DumpMetadata.SectorRanges = ss ?? string.Empty;
-                    }
-
-                    if (GetXboxDMIInfo(sidecar, out var serial, out var version, out Region? region))
-                    {
-                        info.DiscIdentifiers.DiscSerials = serial ?? string.Empty;
-                        info.DiscIdentifiers.Version = version ?? string.Empty;
-                        info.RegionsAndLanguages.Regions = [region];
-                    }
-
-                    break;
-
-                case PhysicalSystem.MicrosoftXbox360:
-                    if (GetXgdAuxInfo(sidecar, out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash, out var ss360, out var xgd23SSVer))
-                    {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
-                        info.DumpMetadata.SectorRanges = ss360 ?? string.Empty;
-                    }
-
-                    if (GetXbox360DMIInfo(sidecar, out var serial360, out var version360, out Region? region360))
-                    {
-                        info.DiscIdentifiers.DiscSerials = serial360 ?? string.Empty;
-                        info.DiscIdentifiers.Version = version360 ?? string.Empty;
-                        info.RegionsAndLanguages.Regions = [region360];
-                    }
-
-                    break;
-            }
 #pragma warning restore IDE0010
+
+            // TODO: Can we get SecuROM data?
+            // TODO: Can we get SS version/ranges?
+            // TODO: Can we get DMI info?
+            // TODO: Can we get Sega Header info?
+            // TODO: Can we get PS1 EDC status?
+            // TODO: Can we get PS1 LibCrypt status?
+
+            if (System == PhysicalSystem.DVDAudio
+                || System == PhysicalSystem.DVDVideo)
+            {
+                info.DumpMetadata.Protection = GetDVDProtection(sidecar) ?? string.Empty;
+            }
+            else if (System == PhysicalSystem.MicrosoftXbox)
+            {
+                if (GetXgdAuxInfo(sidecar, out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash, out var ss, out var xgd1SSVer))
+                {
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
+                    info.DumpMetadata.SectorRanges = ss ?? string.Empty;
+                }
+
+                if (GetXboxDMIInfo(sidecar, out var serial, out var version, out RegionCode? region))
+                {
+                    info.DiscIdentifiers.DiscSerials = serial ?? string.Empty;
+                    info.DiscIdentifiers.Version = version ?? string.Empty;
+                    info.RegionsAndLanguages.Regions = [region];
+                }
+            }
+            else if (System == PhysicalSystem.MicrosoftXbox360)
+            {
+                if (GetXgdAuxInfo(sidecar, out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash, out var ss360, out var xgd23SSVer))
+                {
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
+                    info.DumpMetadata.SectorRanges = ss360 ?? string.Empty;
+                }
+
+                if (GetXbox360DMIInfo(sidecar, out var serial360, out var version360, out RegionCode? region360))
+                {
+                    info.DiscIdentifiers.DiscSerials = serial360 ?? string.Empty;
+                    info.DiscIdentifiers.Version = version360 ?? string.Empty;
+                    info.RegionsAndLanguages.Regions = [region360];
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -1385,9 +1381,9 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetXboxDMIInfo(CICMMetadataType? cicmSidecar, out string? serial, out string? version, out Region? region)
+        private static bool GetXboxDMIInfo(CICMMetadataType? cicmSidecar, out string? serial, out string? version, out RegionCode? region)
         {
-            serial = null; version = null; region = Region.World;
+            serial = null; version = null; region = RegionCode.World;
 
             // If the object is null, we can't get information from it
             if (cicmSidecar is null)
@@ -1433,9 +1429,9 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetXbox360DMIInfo(CICMMetadataType? cicmSidecar, out string? serial, out string? version, out Region? region)
+        private static bool GetXbox360DMIInfo(CICMMetadataType? cicmSidecar, out string? serial, out string? version, out RegionCode? region)
         {
-            serial = null; version = null; region = Region.World;
+            serial = null; version = null; region = RegionCode.World;
 
             // If the object is null, we can't get information from it
             if (cicmSidecar is null)

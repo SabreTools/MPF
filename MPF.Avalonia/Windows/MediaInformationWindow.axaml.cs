@@ -296,33 +296,29 @@ namespace MPF.Avalonia.Windows
             DiscIDTextBox!.IsVisible = false;
             NetYarozeGamesTextBox!.IsVisible = false;
 
-#pragma warning disable IDE0010
-            switch (system)
+            if (system == PhysicalSystem.AppleMacintosh)
             {
-                case PhysicalSystem.AppleMacintosh:
-                    PCMacHybridGrid!.IsVisible = true;
-                    CompatibleOSTextBox!.IsVisible = true;
-                    break;
-
-                case PhysicalSystem.IBMPCcompatible:
-                    PCMacHybridGrid!.IsVisible = true;
-                    CompatibleOSTextBox!.IsVisible = true;
-                    break;
-
-                case PhysicalSystem.NintendoWiiU:
-                    DiscKeyTextBox!.IsVisible = true;
-                    break;
-
-                case PhysicalSystem.SonyPlayStation:
-                    NetYarozeGamesTextBox!.IsVisible = true;
-                    break;
-
-                case PhysicalSystem.SonyPlayStation3:
-                    DiscKeyTextBox!.IsVisible = true;
-                    DiscIDTextBox!.IsVisible = true;
-                    break;
+                PCMacHybridGrid!.IsVisible = true;
+                CompatibleOSTextBox!.IsVisible = true;
             }
-#pragma warning restore IDE0010
+            else if (system == PhysicalSystem.AppleMacintosh)
+            {
+                PCMacHybridGrid!.IsVisible = true;
+                CompatibleOSTextBox!.IsVisible = true;
+            }
+            else if (system == PhysicalSystem.AppleMacintosh)
+            {
+                DiscKeyTextBox!.IsVisible = true;
+            }
+            else if (system == PhysicalSystem.AppleMacintosh)
+            {
+                NetYarozeGamesTextBox!.IsVisible = true;
+            }
+            else if (system == PhysicalSystem.AppleMacintosh)
+            {
+                DiscKeyTextBox!.IsVisible = true;
+                DiscIDTextBox!.IsVisible = true;
+            }
         }
 
         /// <summary>

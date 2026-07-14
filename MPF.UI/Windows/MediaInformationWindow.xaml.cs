@@ -366,33 +366,30 @@ namespace MPF.UI.Windows
         private void UpdateFromSystemType(SubmissionInfo? submissionInfo)
         {
             var system = submissionInfo?.DiscIdentity?.System;
-#pragma warning disable IDE0010
-            switch (system)
+
+            if (system == PhysicalSystem.AppleMacintosh)
             {
-                case PhysicalSystem.AppleMacintosh:
-                    PCMacHybridGrid!.Visibility = Visibility.Visible;
-                    CompatibleOSTextBox!.Visibility = Visibility.Visible;
-                    break;
-
-                case PhysicalSystem.IBMPCcompatible:
-                    PCMacHybridGrid!.Visibility = Visibility.Visible;
-                    CompatibleOSTextBox!.Visibility = Visibility.Visible;
-                    break;
-
-                case PhysicalSystem.NintendoWiiU:
-                    DiscKeyTextBox!.Visibility = Visibility.Visible;
-                    break;
-
-                case PhysicalSystem.SonyPlayStation:
-                    NetYarozeGamesTextBox!.Visibility = Visibility.Visible;
-                    break;
-
-                case PhysicalSystem.SonyPlayStation3:
-                    DiscKeyTextBox!.Visibility = Visibility.Visible;
-                    DiscIDTextBox!.Visibility = Visibility.Visible;
-                    break;
+                PCMacHybridGrid!.Visibility = Visibility.Visible;
+                CompatibleOSTextBox!.Visibility = Visibility.Visible;
             }
-#pragma warning restore IDE0010
+            else if (system == PhysicalSystem.IBMPCcompatible)
+            {
+                PCMacHybridGrid!.Visibility = Visibility.Visible;
+                CompatibleOSTextBox!.Visibility = Visibility.Visible;
+            }
+            else if (system == PhysicalSystem.NintendoWiiU)
+            {
+                DiscKeyTextBox!.Visibility = Visibility.Visible;
+            }
+            else if (system == PhysicalSystem.SonyPlayStation)
+            {
+                NetYarozeGamesTextBox!.Visibility = Visibility.Visible;
+            }
+            else if (system == PhysicalSystem.SonyPlayStation3)
+            {
+                DiscKeyTextBox!.Visibility = Visibility.Visible;
+                DiscIDTextBox!.Visibility = Visibility.Visible;
+            }
         }
 
         /// <summary>

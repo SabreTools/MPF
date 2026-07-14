@@ -420,35 +420,46 @@ namespace MPF.Processors.Test
         #region GetPlayStationRegion
 
         [Theory]
-        [InlineData(null, null)]
-        [InlineData("", null)]
-        [InlineData("S_A", Region.Asia)]
-        [InlineData("S_C", Region.China)]
-        [InlineData("S_E", Region.Europe)]
-        [InlineData("S_K", Region.SouthKorea)]
-        [InlineData("S_U", Region.UnitedStatesOfAmerica)]
-        [InlineData("S_PS_46", Region.SouthKorea)]
-        [InlineData("S_PS_51", Region.Asia)]
-        [InlineData("S_PS_56", Region.SouthKorea)]
-        [InlineData("S_PS_55", Region.Asia)]
-        [InlineData("S_PS_XX", Region.Japan)]
-        [InlineData("S_PM_645", Region.SouthKorea)]
-        [InlineData("S_PM_675", Region.SouthKorea)]
-        [InlineData("S_PM_885", Region.SouthKorea)]
-        [InlineData("S_PM_XXX", Region.Japan)]
-        [InlineData("S_PX", Region.Japan)]
-        [InlineData("PAPX", Region.Japan)]
-        [InlineData("PABX", null)]
-        [InlineData("PBPX", null)]
-        [InlineData("PCBX", Region.Japan)]
-        [InlineData("PCXC", Region.Japan)]
-        [InlineData("PDBX", Region.Japan)]
-        [InlineData("PEBX", Region.Europe)]
-        [InlineData("PUBX", Region.UnitedStatesOfAmerica)]
-        public void GetPlayStationRegionTest(string? serial, Region? expected)
+        [MemberData(nameof(GenerateGetPlayStationRegionData))]
+        public void GetPlayStationRegionTest(string? serial, RegionCode? expected)
         {
-            Region? actual = ProcessingTool.GetPlayStationRegion(serial);
+            RegionCode? actual = ProcessingTool.GetPlayStationRegion(serial);
             Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Generate a test set for GetPlayStationRegionTest
+        /// </summary>
+        public static TheoryData<string?, RegionCode?> GenerateGetPlayStationRegionData()
+        {
+            return new TheoryData<string?, RegionCode?>
+            {
+                { null, null },
+                { "", null },
+                { "S_A", RegionCode.Asia },
+                { "S_C", RegionCode.China },
+                { "S_E", RegionCode.Europe },
+                { "S_K", RegionCode.SouthKorea },
+                { "S_U", RegionCode.UnitedStatesOfAmerica },
+                { "S_PS_46", RegionCode.SouthKorea },
+                { "S_PS_51", RegionCode.Asia },
+                { "S_PS_56", RegionCode.SouthKorea },
+                { "S_PS_55", RegionCode.Asia },
+                { "S_PS_XX", RegionCode.Japan },
+                { "S_PM_645", RegionCode.SouthKorea },
+                { "S_PM_675", RegionCode.SouthKorea },
+                { "S_PM_885", RegionCode.SouthKorea },
+                { "S_PM_XXX", RegionCode.Japan },
+                { "S_PX", RegionCode.Japan },
+                { "PAPX", RegionCode.Japan },
+                { "PABX", null },
+                { "PBPX", null },
+                { "PCBX", RegionCode.Japan },
+                { "PCXC", RegionCode.Japan },
+                { "PDBX", RegionCode.Japan },
+                { "PEBX", RegionCode.Europe },
+                { "PUBX", RegionCode.UnitedStatesOfAmerica },
+            };
         }
 
         #endregion
@@ -456,19 +467,10 @@ namespace MPF.Processors.Test
         #region GetXGDRegion
 
         [Theory]
-        [InlineData(null, 0, null, null)]
-        [InlineData(' ', 0, null, null)]
-        [InlineData('W', 1, Region.World, null)]
-        [InlineData('A', 1, Region.UnitedStatesOfAmerica, null)]
-        [InlineData('J', 2, Region.Japan, Region.Asia)]
-        [InlineData('E', 1, Region.Europe, null)]
-        [InlineData('K', 2, Region.UnitedStatesOfAmerica, Region.Japan)]
-        [InlineData('L', 2, Region.UnitedStatesOfAmerica, Region.Europe)]
-        [InlineData('H', 2, Region.Japan, Region.Europe)]
-        [InlineData('X', 0, null, null)]
-        public void GetXGDRegionTest(char? region, int expectedCount, Region? firstExpected, Region? secondExpected)
+        [MemberData(nameof(GenerateGetXGDRegionData))]
+        public void GetXGDRegionTest(char? region, int expectedCount, RegionCode? firstExpected, RegionCode? secondExpected)
         {
-            Region?[]? actual = ProcessingTool.GetXGDRegions(region);
+            RegionCode?[]? actual = ProcessingTool.GetXGDRegions(region);
 
             if (expectedCount == 0)
             {
@@ -503,6 +505,26 @@ namespace MPF.Processors.Test
                 // This should never happen
                 throw new NotImplementedException();
             }
+        }
+
+        /// <summary>
+        /// Generate a test set for GetXGDRegionTest
+        /// </summary>
+        public static TheoryData<char?, int, RegionCode?, RegionCode?> GenerateGetXGDRegionData()
+        {
+            return new TheoryData<char?, int, RegionCode?, RegionCode?>
+            {
+                { null, 0, null, null },
+                { ' ', 0, null, null },
+                { 'W', 1, RegionCode.World, null },
+                { 'A', 1, RegionCode.UnitedStatesOfAmerica, null },
+                { 'J', 2, RegionCode.Japan, RegionCode.Asia },
+                { 'E', 1, RegionCode.Europe, null },
+                { 'K', 2, RegionCode.UnitedStatesOfAmerica, RegionCode.Japan },
+                { 'L', 2, RegionCode.UnitedStatesOfAmerica, RegionCode.Europe },
+                { 'H', 2, RegionCode.Japan, RegionCode.Europe },
+                { 'X', 0, null, null },
+            };
         }
 
         #endregion
