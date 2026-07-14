@@ -36,14 +36,14 @@ namespace MPF.ExecutionContexts.Test
         {
             return new TheoryData<PhysicalSystem?, PhysicalMediaType?, string?, string, int?, string?>
             {
-                { null, null, null, "filename.bin", null, "disc --retries=50 --image-name=\"filename\" --sector-order=DATA_C2_SUB" },
-                { PhysicalSystem.IBMPCcompatible, PhysicalMediaType.CDROM, "/dev/sr0", "path/filename.bin", 2, "disc --retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0" },
-                { PhysicalSystem.IBMPCcompatible, PhysicalMediaType.DVD, "/dev/sr0", "path/filename.bin", 2, "disc --retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0" },
-                { PhysicalSystem.NintendoGameCube, PhysicalMediaType.NintendoGameCubeGameDisc, "/dev/sr0", "path/filename.bin", 2, "disc --retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0" },
-                { PhysicalSystem.NintendoWii, PhysicalMediaType.NintendoWiiOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "disc --retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0" },
-                { PhysicalSystem.HDDVDVideo, PhysicalMediaType.HDDVD, "/dev/sr0", "path/filename.bin", 2, "disc --retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0" },
-                { PhysicalSystem.BDVideo, PhysicalMediaType.BluRay, "/dev/sr0", "path/filename.bin", 2, "disc --retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0" },
-                { PhysicalSystem.NintendoWiiU, PhysicalMediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "disc --retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0" },
+                { null, null, null, "filename.bin", null, "disc --sector-order=DATA_C2_SUB --image-name=\"filename\" --retries=50" },
+                { PhysicalSystem.IBMPCcompatible, PhysicalMediaType.CDROM, "/dev/sr0", "path/filename.bin", 2, "disc --drive=/dev/sr0 --sector-order=DATA_C2_SUB --speed=2 --image-name=\"filename\" --image-path=\"path\" --retries=50" },
+                { PhysicalSystem.IBMPCcompatible, PhysicalMediaType.DVD, "/dev/sr0", "path/filename.bin", 2, "disc --drive=/dev/sr0 --sector-order=DATA_C2_SUB --speed=2 --image-name=\"filename\" --image-path=\"path\" --retries=50" },
+                { PhysicalSystem.NintendoGameCube, PhysicalMediaType.NintendoGameCubeGameDisc, "/dev/sr0", "path/filename.bin", 2, "disc --drive=/dev/sr0 --sector-order=DATA_C2_SUB --speed=2 --image-name=\"filename\" --image-path=\"path\" --retries=50" },
+                { PhysicalSystem.NintendoWii, PhysicalMediaType.NintendoWiiOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "disc --drive=/dev/sr0 --sector-order=DATA_C2_SUB --speed=2 --image-name=\"filename\" --image-path=\"path\" --retries=50" },
+                { PhysicalSystem.HDDVDVideo, PhysicalMediaType.HDDVD, "/dev/sr0", "path/filename.bin", 2, "disc --drive=/dev/sr0 --sector-order=DATA_C2_SUB --speed=2 --image-name=\"filename\" --image-path=\"path\" --retries=50" },
+                { PhysicalSystem.BDVideo, PhysicalMediaType.BluRay, "/dev/sr0", "path/filename.bin", 2, "disc --drive=/dev/sr0 --sector-order=DATA_C2_SUB --speed=2 --image-name=\"filename\" --image-path=\"path\" --retries=50" },
+                { PhysicalSystem.NintendoWiiU, PhysicalMediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "disc --drive=/dev/sr0 --sector-order=DATA_C2_SUB --speed=2 --image-name=\"filename\" --image-path=\"path\" --retries=50" },
             };
         }
 
@@ -52,10 +52,10 @@ namespace MPF.ExecutionContexts.Test
         #region Default
 
         [Theory]
-        [InlineData("--force-qtoc --train --retries=50 --image-name=image --image-path=path --read-offset=0 --read-at-once=0 --speed=8 --sector-order=so --drive=/dev/sr0")]
+        [InlineData("disc --drive=/dev/sr0 --sector-order=so --cutoff=1000 --read-offset=0 --speed=8 --image-name=image --image-path=path --force-qtoc --train --force-sector-order --read-at-once=21 --retries=35")]
         public void DiscTest(string parameters)
         {
-            string? expected = "--force-qtoc --train --retries=50 --image-name=\"image\" --image-path=\"path\" --read-offset=0 --read-at-once=0 --speed=8 --sector-order=so --drive=/dev/sr0";
+            string? expected = "disc --drive=/dev/sr0 --sector-order=so --cutoff=1000 --read-offset=0 --speed=8 --image-name=\"image\" --image-path=\"path\" --force-qtoc --train --force-sector-order --read-at-once=21 --retries=35";
             var context = new ExecutionContext(parameters);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);
@@ -63,10 +63,10 @@ namespace MPF.ExecutionContexts.Test
         }
 
         [Theory]
-        [InlineData("--image-name=\"image name.bin\" --image-path=\"directory name\"")]
+        [InlineData("disc --image-name=\"image name.bin\" --image-path=\"directory name\"")]
         public void SpacesTest(string parameters)
         {
-            string? expected = "--image-name=\"image name.bin\" --image-path=\"directory name\"";
+            string? expected = "disc --image-name=\"image name.bin\" --image-path=\"directory name\"";
             var context = new ExecutionContext(parameters);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);

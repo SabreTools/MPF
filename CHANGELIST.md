@@ -49,6 +49,8 @@
 - Update RedumpLib to 3.0.0
 - Add logical opposite flags to Check
 - Fix Dreamdump parameter generation
+- Sync better with supported Dreamdump arguments
+- Fix two recent media information window render issues
 - Root the default output path when the current folder is unwritable (gmipf)
 
 ### 3.8.3 (2026-07-06)
