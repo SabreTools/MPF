@@ -346,7 +346,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="serial">PlayStation serial code</param>
         /// <returns>Region mapped from name, if possible</returns>
-        public static Region? GetPlayStationRegion(string? serial)
+        public static RegionCode? GetPlayStationRegion(string? serial)
         {
             // If we have a fully invalid serial
             if (string.IsNullOrEmpty(serial))
@@ -360,34 +360,34 @@ namespace MPF.Processors
 #pragma warning disable IDE0010
                 switch (serial[2])
                 {
-                    case 'A': return Region.Asia;
-                    case 'C': return Region.China;
-                    case 'E': return Region.Europe;
-                    case 'K': return Region.SouthKorea;
-                    case 'U': return Region.UnitedStatesOfAmerica;
+                    case 'A': return RegionCode.Asia;
+                    case 'C': return RegionCode.China;
+                    case 'E': return RegionCode.Europe;
+                    case 'K': return RegionCode.SouthKorea;
+                    case 'U': return RegionCode.UnitedStatesOfAmerica;
                     case 'P':
                         // Region of S_P_ serials may be Japan, Asia, or SouthKorea
                         return serial[3] switch
                         {
                             // Check first two digits of S_PS serial
-                            'S' => (Region?)(serial.Substring(5, 2) switch
+                            'S' => (RegionCode?)(serial.Substring(5, 2) switch
                             {
-                                "46" => Region.SouthKorea,
-                                "51" => Region.Asia,
-                                "56" => Region.SouthKorea,
-                                "55" => Region.Asia,
-                                _ => Region.Japan,
+                                "46" => RegionCode.SouthKorea,
+                                "51" => RegionCode.Asia,
+                                "56" => RegionCode.SouthKorea,
+                                "55" => RegionCode.Asia,
+                                _ => RegionCode.Japan,
                             }),
 
                             // Check first three digits of S_PM serial
-                            'M' => (Region?)(serial.Substring(5, 3) switch
+                            'M' => (RegionCode?)(serial.Substring(5, 3) switch
                             {
-                                "645" => Region.SouthKorea,
-                                "675" => Region.SouthKorea,
-                                "885" => Region.SouthKorea,
-                                _ => Region.Japan, // Remaining S_PM serials may be Japan or Asia
+                                "645" => RegionCode.SouthKorea,
+                                "675" => RegionCode.SouthKorea,
+                                "885" => RegionCode.SouthKorea,
+                                _ => RegionCode.Japan, // Remaining S_PM serials may be Japan or Asia
                             }),
-                            _ => (Region?)Region.Japan,
+                            _ => (RegionCode?)RegionCode.Japan,
                         };
                 }
 #pragma warning restore IDE0010
@@ -395,7 +395,7 @@ namespace MPF.Processors
 
             // Japan-only special serial
             else if (serial.StartsWith("PAPX"))
-                return Region.Japan;
+                return RegionCode.Japan;
 
             // Region appears entirely random
             else if (serial.StartsWith("PABX"))
@@ -407,23 +407,23 @@ namespace MPF.Processors
 
             // Japan-only special serial
             else if (serial.StartsWith("PCBX"))
-                return Region.Japan;
+                return RegionCode.Japan;
 
             // Japan-only special serial
             else if (serial.StartsWith("PCXC"))
-                return Region.Japan;
+                return RegionCode.Japan;
 
             // Single disc known, Japan
             else if (serial.StartsWith("PDBX"))
-                return Region.Japan;
+                return RegionCode.Japan;
 
             // Single disc known, Europe
             else if (serial.StartsWith("PEBX"))
-                return Region.Europe;
+                return RegionCode.Europe;
 
             // Single disc known, USA
             else if (serial.StartsWith("PUBX"))
-                return Region.UnitedStatesOfAmerica;
+                return RegionCode.UnitedStatesOfAmerica;
 
             return null;
         }
@@ -433,17 +433,17 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="region">Character denoting the region</param>
         /// <returns>Region, if possible</returns>
-        public static Region?[]? GetXGDRegions(char? region)
+        public static RegionCode?[]? GetXGDRegions(char? region)
         {
             return region switch
             {
-                'W' => [Region.World],
-                'A' => [Region.UnitedStatesOfAmerica],
-                'J' => [Region.Japan, Region.Asia],
-                'E' => [Region.Europe],
-                'K' => [Region.UnitedStatesOfAmerica, Region.Japan],
-                'L' => [Region.UnitedStatesOfAmerica, Region.Europe],
-                'H' => [Region.Japan, Region.Europe],
+                'W' => [RegionCode.World],
+                'A' => [RegionCode.UnitedStatesOfAmerica],
+                'J' => [RegionCode.Japan, RegionCode.Asia],
+                'E' => [RegionCode.Europe],
+                'K' => [RegionCode.UnitedStatesOfAmerica, RegionCode.Japan],
+                'L' => [RegionCode.UnitedStatesOfAmerica, RegionCode.Europe],
+                'H' => [RegionCode.Japan, RegionCode.Europe],
                 _ => null,
             };
         }

@@ -102,20 +102,14 @@ namespace MPF.Avalonia.Windows
             Layer1MasteringCode!.Tab = true;
             Layer1MasteringSID!.Tab = true;
             Layer1Toolstamp!.Tab = true;
-            Layer1MouldSIDs!.Tab = true;
-            Layer1AdditionalMoulds!.Tab = true;
 
             Layer2MasteringCode!.Tab = true;
             Layer2MasteringSID!.Tab = true;
             Layer2Toolstamp!.Tab = true;
-            Layer2MouldSIDs!.Tab = true;
-            Layer2AdditionalMoulds!.Tab = true;
 
             Layer3MasteringCode!.Tab = true;
             Layer3MasteringSID!.Tab = true;
             Layer3Toolstamp!.Tab = true;
-            Layer3MouldSIDs!.Tab = true;
-            Layer3AdditionalMoulds!.Tab = true;
 
             LabelSideMasteringCode!.Tab = true;
             LabelSideMasteringSID!.Tab = true;
@@ -302,33 +296,29 @@ namespace MPF.Avalonia.Windows
             DiscIDTextBox!.IsVisible = false;
             NetYarozeGamesTextBox!.IsVisible = false;
 
-#pragma warning disable IDE0010
-            switch (system)
+            if (system == PhysicalSystem.AppleMacintosh)
             {
-                case PhysicalSystem.AppleMacintosh:
-                    PCMacHybridGrid!.IsVisible = true;
-                    CompatibleOSTextBox!.IsVisible = true;
-                    break;
-
-                case PhysicalSystem.IBMPCcompatible:
-                    PCMacHybridGrid!.IsVisible = true;
-                    CompatibleOSTextBox!.IsVisible = true;
-                    break;
-
-                case PhysicalSystem.NintendoWiiU:
-                    DiscKeyTextBox!.IsVisible = true;
-                    break;
-
-                case PhysicalSystem.SonyPlayStation:
-                    NetYarozeGamesTextBox!.IsVisible = true;
-                    break;
-
-                case PhysicalSystem.SonyPlayStation3:
-                    DiscKeyTextBox!.IsVisible = true;
-                    DiscIDTextBox!.IsVisible = true;
-                    break;
+                PCMacHybridGrid!.IsVisible = true;
+                CompatibleOSTextBox!.IsVisible = true;
             }
-#pragma warning restore IDE0010
+            else if (system == PhysicalSystem.AppleMacintosh)
+            {
+                PCMacHybridGrid!.IsVisible = true;
+                CompatibleOSTextBox!.IsVisible = true;
+            }
+            else if (system == PhysicalSystem.AppleMacintosh)
+            {
+                DiscKeyTextBox!.IsVisible = true;
+            }
+            else if (system == PhysicalSystem.AppleMacintosh)
+            {
+                NetYarozeGamesTextBox!.IsVisible = true;
+            }
+            else if (system == PhysicalSystem.AppleMacintosh)
+            {
+                DiscKeyTextBox!.IsVisible = true;
+                DiscIDTextBox!.IsVisible = true;
+            }
         }
 
         /// <summary>

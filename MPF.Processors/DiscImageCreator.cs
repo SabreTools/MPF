@@ -273,20 +273,18 @@ namespace MPF.Processors
                     if (mediaType == PhysicalMediaType.BluRay)
                     {
                         int trimLength = -1;
-                        switch (System)
+                        if (System == PhysicalSystem.MicrosoftXboxOne
+                            || System == PhysicalSystem.MicrosoftXboxSeriesXS
+                            || System == PhysicalSystem.SonyPlayStation3
+                            || System == PhysicalSystem.SonyPlayStation4
+                            || System == PhysicalSystem.SonyPlayStation5)
                         {
-                            case PhysicalSystem.MicrosoftXboxOne:
-                            case PhysicalSystem.MicrosoftXboxSeriesXS:
-                            case PhysicalSystem.SonyPlayStation3:
-                            case PhysicalSystem.SonyPlayStation4:
-                            case PhysicalSystem.SonyPlayStation5:
-                                if (info.DiscIdentifiers.Layerbreak3 != default)
-                                    trimLength = 520;
-                                else if (info.DiscIdentifiers.Layerbreak2 != default)
-                                    trimLength = 392;
-                                else
-                                    trimLength = 264;
-                                break;
+                            if (info.DiscIdentifiers.Layerbreak3 != default)
+                                trimLength = 520;
+                            else if (info.DiscIdentifiers.Layerbreak2 != default)
+                                trimLength = 392;
+                            else
+                                trimLength = 264;
                         }
 
                         info.DumpMetadata.PIC = GetPIC($"{basePath}_PIC.bin", trimLength) ?? string.Empty;
@@ -296,332 +294,319 @@ namespace MPF.Processors
             }
 
             // Extract info based specifically on PhysicalSystem
-            switch (System)
+            if (System == PhysicalSystem.AppleMacintosh
+                || System == PhysicalSystem.EnhancedCD
+                || System == PhysicalSystem.IBMPCcompatible
+                || System == PhysicalSystem.RainbowDisc
+                || System == PhysicalSystem.SonyElectronicBook)
             {
-                case PhysicalSystem.AppleMacintosh:
-                case PhysicalSystem.EnhancedCD:
-                case PhysicalSystem.IBMPCcompatible:
-                case PhysicalSystem.RainbowDisc:
-                case PhysicalSystem.SonyElectronicBook:
-                    info.DumpMetadata.SBI = GetSecuROMData($"{basePath}_subIntention.txt", out SecuROMScheme secuROMScheme) ?? string.Empty;
-                    if (secuROMScheme == SecuROMScheme.Unknown)
-                        info.DumpMetadata.Comments = $"Warning: Incorrect SecuROM sector count{Environment.NewLine}";
+                info.DumpMetadata.SBI = GetSecuROMData($"{basePath}_subIntention.txt", out SecuROMScheme secuROMScheme) ?? string.Empty;
+                if (secuROMScheme == SecuROMScheme.Unknown)
+                    info.DumpMetadata.Comments = $"Warning: Incorrect SecuROM sector count{Environment.NewLine}";
 
-                    // Needed for some odd copy protections
-                    info.DumpMetadata.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt", false) ?? string.Empty;
-                    break;
-
-                case PhysicalSystem.DVDAudio:
-                case PhysicalSystem.DVDVideo:
-                    info.DumpMetadata.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt", true) ?? string.Empty;
-                    break;
-
-                case PhysicalSystem.MicrosoftXbox:
-                    string xmidString = ProcessingTool.GetXMID($"{basePath}_DMI.bin");
-                    var xmid = SabreTools.Wrappers.XMID.Create(xmidString);
-                    if (xmid is not null)
+                // Needed for some odd copy protections
+                info.DumpMetadata.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt", false) ?? string.Empty;
+            }
+            else if (System == PhysicalSystem.DVDAudio
+                || System == PhysicalSystem.DVDVideo)
+            {
+                info.DumpMetadata.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt", true) ?? string.Empty;
+            }
+            else if (System == PhysicalSystem.MicrosoftXbox)
+            {
+                string xmidString = ProcessingTool.GetXMID($"{basePath}_DMI.bin");
+                var xmid = SabreTools.Wrappers.XMID.Create(xmidString);
+                if (xmid is not null)
+                {
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
+                    info.DiscIdentifiers.DiscSerials = xmid.Serial ?? string.Empty;
+                    if (!redumpCompat)
                     {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
-                        info.DiscIdentifiers.DiscSerials = xmid.Serial ?? string.Empty;
-                        if (!redumpCompat)
-                        {
-                            info.DiscIdentifiers.Version = xmid.Version ?? string.Empty;
-                            info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xmid.Model.RegionIdentifier);
-                        }
+                        info.DiscIdentifiers.Version = xmid.Version ?? string.Empty;
+                        info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xmid.Model.RegionIdentifier);
+                    }
+                }
+
+                // If we have the new, external DAT
+                if (File.Exists($"{basePath}_suppl.dat"))
+                {
+                    var suppl = ProcessingTool.GetDatafile($"{basePath}_suppl.dat");
+                    if (GetXGDAuxHashInfo(suppl, out var xgd1DMIHash, out var xgd1PFIHash, out _))
+                    {
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
+                        // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
+                        //info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
                     }
 
-                    // If we have the new, external DAT
-                    if (File.Exists($"{basePath}_suppl.dat"))
+                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd1SS))
                     {
-                        var suppl = ProcessingTool.GetDatafile($"{basePath}_suppl.dat");
-                        if (GetXGDAuxHashInfo(suppl, out var xgd1DMIHash, out var xgd1PFIHash, out _))
-                        {
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
-                            // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
-                            //info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
-                        }
-
-                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd1SS))
-                        {
-                            info.DumpMetadata.SectorRanges = xgd1SS ?? string.Empty;
-                        }
+                        info.DumpMetadata.SectorRanges = xgd1SS ?? string.Empty;
                     }
-                    else
+                }
+                else
+                {
+                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd1DMIHash, out var xgd1PFIHash, out _, out var xgd1SS))
                     {
-                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd1DMIHash, out var xgd1PFIHash, out _, out var xgd1SS))
-                        {
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
-                            // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
-                            //info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
-                            info.DumpMetadata.SectorRanges = xgd1SS ?? string.Empty;
-                        }
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
+                        // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
+                        //info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
+                        info.DumpMetadata.SectorRanges = xgd1SS ?? string.Empty;
                     }
+                }
 
-                    string xgd1SSPath = $"{basePath}_SS.bin";
-                    string xgd1RawSSPath = $"{basePath}_RawSS.bin";
-                    if (File.Exists(xgd1SSPath) && ProcessingTool.IsValidSS(xgd1SSPath))
+                string xgd1SSPath = $"{basePath}_SS.bin";
+                string xgd1RawSSPath = $"{basePath}_RawSS.bin";
+                if (File.Exists(xgd1SSPath) && ProcessingTool.IsValidSS(xgd1SSPath))
+                {
+                    // Save untouched SS
+                    try
                     {
-                        // Save untouched SS
-                        try
-                        {
-                            if (!File.Exists(xgd1RawSSPath))
-                                File.Copy(xgd1SSPath, xgd1RawSSPath);
-                        }
-                        catch { }
-
-                        // Repair, clean, and validate SS before adding hash to submission info
-                        if (ProcessingTool.FixSS(xgd1SSPath, xgd1SSPath))
-                        {
-                            string? xgd1SSCrc = HashTool.GetFileHash(xgd1SSPath, HashType.CRC32);
-                            if (xgd1SSCrc is not null)
-                                info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSCrc.ToUpperInvariant();
-                        }
+                        if (!File.Exists(xgd1RawSSPath))
+                            File.Copy(xgd1SSPath, xgd1RawSSPath);
                     }
+                    catch { }
 
-                    break;
-
-                case PhysicalSystem.MicrosoftXbox360:
-                    string xemidString = ProcessingTool.GetXeMID($"{basePath}_DMI.bin");
-                    var xemid = SabreTools.Wrappers.XeMID.Create(xemidString);
-                    if (xemid is not null)
+                    // Repair, clean, and validate SS before adding hash to submission info
+                    if (ProcessingTool.FixSS(xgd1SSPath, xgd1SSPath))
                     {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
-                        info.DiscIdentifiers.DiscSerials = xemid.Serial ?? string.Empty;
-                        if (!redumpCompat)
-                            info.DiscIdentifiers.Version = xemid.Version ?? string.Empty;
-
-                        info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xemid.Model.RegionIdentifier);
+                        string? xgd1SSCrc = HashTool.GetFileHash(xgd1SSPath, HashType.CRC32);
+                        if (xgd1SSCrc is not null)
+                            info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSCrc.ToUpperInvariant();
                     }
+                }
+            }
+            else if (System == PhysicalSystem.MicrosoftXbox360)
+            {
+                string xemidString = ProcessingTool.GetXeMID($"{basePath}_DMI.bin");
+                var xemid = SabreTools.Wrappers.XeMID.Create(xemidString);
+                if (xemid is not null)
+                {
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
+                    info.DiscIdentifiers.DiscSerials = xemid.Serial ?? string.Empty;
+                    if (!redumpCompat)
+                        info.DiscIdentifiers.Version = xemid.Version ?? string.Empty;
 
-                    // If we have the new, external DAT
-                    if (File.Exists($"{basePath}_suppl.dat"))
-                    {
-                        var suppl = ProcessingTool.GetDatafile($"{basePath}_suppl.dat");
-                        if (GetXGDAuxHashInfo(suppl, out var xgd23DMIHash, out var xgd23PFIHash, out _))
-                        {
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
-                            // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
-                            //info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
-                        }
+                    info.RegionsAndLanguages.Regions = ProcessingTool.GetXGDRegions(xemid.Model.RegionIdentifier);
+                }
 
-                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd23SS))
-                        {
-                            info.DumpMetadata.SectorRanges = xgd23SS ?? string.Empty;
-                        }
-                    }
-                    else
+                // If we have the new, external DAT
+                if (File.Exists($"{basePath}_suppl.dat"))
+                {
+                    var suppl = ProcessingTool.GetDatafile($"{basePath}_suppl.dat");
+                    if (GetXGDAuxHashInfo(suppl, out var xgd23DMIHash, out var xgd23PFIHash, out _))
                     {
-                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd23DMIHash, out var xgd23PFIHash, out _, out var xgd23SS))
-                        {
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
-                            // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
-                            //info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
-                            info.DumpMetadata.SectorRanges = xgd23SS ?? string.Empty;
-                        }
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
+                        // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
+                        //info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
                     }
 
-                    string xgd2SSPath = $"{basePath}_SS.bin";
-                    string xgd2RawSSPath = $"{basePath}_RawSS.bin";
-                    if (File.Exists(xgd2SSPath) && ProcessingTool.IsValidSS(xgd2SSPath))
+                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd23SS))
                     {
-                        // Save untouched SS
-                        try
-                        {
-                            if (!File.Exists(xgd2RawSSPath))
-                                File.Copy(xgd2SSPath, xgd2RawSSPath);
-                        }
-                        catch { }
-
-                        // Repair, clean, and validate SS before adding hash to submission info
-                        if (ProcessingTool.FixSS(xgd2SSPath, xgd2SSPath))
-                        {
-                            string? xgd2SSCrc = HashTool.GetFileHash(xgd2SSPath, HashType.CRC32);
-                            if (xgd2SSCrc is not null)
-                                info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd2SSCrc.ToUpperInvariant();
-                        }
+                        info.DumpMetadata.SectorRanges = xgd23SS ?? string.Empty;
                     }
-
-                    break;
-
-                case PhysicalSystem.NamcoSegaNintendoTriforce:
-                    if (mediaType == PhysicalMediaType.CDROM)
+                }
+                else
+                {
+                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd23DMIHash, out var xgd23PFIHash, out _, out var xgd23SS))
                     {
-                        info.DumpMetadata.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
-
-                        // Take only the first 16 lines for GD-ROM
-                        if (!string.IsNullOrEmpty(info.DumpMetadata.Header))
-                            info.DumpMetadata.Header = string.Join("\n", info.DumpMetadata.Header.Split('\n'), 0, 16);
-
-                        if (GetGDROMBuildInfo(info.DumpMetadata.Header,
-                            out var serial,
-                            out var version,
-                            out var date))
-                        {
-                            // Ensure internal serial is pulled from local data
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
-                            info.DiscIdentifiers.Version = version ?? string.Empty;
-                            info.DiscIdentifiers.EXEDate = date ?? string.Empty;
-                        }
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
+                        // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
+                        //info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
+                        info.DumpMetadata.SectorRanges = xgd23SS ?? string.Empty;
                     }
+                }
 
-                    break;
+                string xgd2SSPath = $"{basePath}_SS.bin";
+                string xgd2RawSSPath = $"{basePath}_RawSS.bin";
+                if (File.Exists(xgd2SSPath) && ProcessingTool.IsValidSS(xgd2SSPath))
+                {
+                    // Save untouched SS
+                    try
+                    {
+                        if (!File.Exists(xgd2RawSSPath))
+                            File.Copy(xgd2SSPath, xgd2RawSSPath);
+                    }
+                    catch { }
 
-                case PhysicalSystem.SegaMegaCDSegaCD:
+                    // Repair, clean, and validate SS before adding hash to submission info
+                    if (ProcessingTool.FixSS(xgd2SSPath, xgd2SSPath))
+                    {
+                        string? xgd2SSCrc = HashTool.GetFileHash(xgd2SSPath, HashType.CRC32);
+                        if (xgd2SSCrc is not null)
+                            info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd2SSCrc.ToUpperInvariant();
+                    }
+                }
+            }
+            else if (System == PhysicalSystem.NamcoSegaNintendoTriforce)
+            {
+                if (mediaType == PhysicalMediaType.CDROM)
+                {
                     info.DumpMetadata.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
-                    // Take only the last 16 lines for Sega CD
+                    // Take only the first 16 lines for GD-ROM
                     if (!string.IsNullOrEmpty(info.DumpMetadata.Header))
                         info.DumpMetadata.Header = string.Join("\n", info.DumpMetadata.Header.Split('\n'), 0, 16);
 
-                    if (GetSegaCDBuildInfo(info.DumpMetadata.Header, out var scdSerial, out var fixedDate))
+                    if (GetGDROMBuildInfo(info.DumpMetadata.Header,
+                        out var serial,
+                        out var version,
+                        out var date))
                     {
                         // Ensure internal serial is pulled from local data
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
-                        info.DiscIdentifiers.EXEDate = fixedDate ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.DiscIdentifiers.Version = version ?? string.Empty;
+                        info.DiscIdentifiers.EXEDate = date ?? string.Empty;
                     }
+                }
+            }
+            else if (System == PhysicalSystem.SegaMegaCDSegaCD)
+            {
+                info.DumpMetadata.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
-                    break;
+                // Take only the last 16 lines for Sega CD
+                if (!string.IsNullOrEmpty(info.DumpMetadata.Header))
+                    info.DumpMetadata.Header = string.Join("\n", info.DumpMetadata.Header.Split('\n'), 0, 16);
 
-                case PhysicalSystem.SegaChihiro:
-                    if (mediaType == PhysicalMediaType.CDROM)
-                    {
-                        info.DumpMetadata.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
-
-                        // Take only the first 16 lines for GD-ROM
-                        if (!string.IsNullOrEmpty(info.DumpMetadata.Header))
-                            info.DumpMetadata.Header = string.Join("\n", info.DumpMetadata.Header.Split('\n'), 0, 16);
-
-                        if (GetGDROMBuildInfo(info.DumpMetadata.Header,
-                            out var serial,
-                            out var version,
-                            out var date))
-                        {
-                            // Ensure internal serial is pulled from local data
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
-                            info.DiscIdentifiers.Version = version ?? string.Empty;
-                            info.DiscIdentifiers.EXEDate = date ?? string.Empty;
-                        }
-                    }
-
-                    break;
-
-                case PhysicalSystem.SegaDreamcast:
-                    if (mediaType == PhysicalMediaType.CDROM)
-                    {
-                        info.DumpMetadata.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
-
-                        // Take only the first 16 lines for GD-ROM
-                        if (!string.IsNullOrEmpty(info.DumpMetadata.Header))
-                            info.DumpMetadata.Header = string.Join("\n", info.DumpMetadata.Header.Split('\n'), 0, 16);
-
-                        if (GetGDROMBuildInfo(info.DumpMetadata.Header,
-                            out var serial,
-                            out var version,
-                            out var date))
-                        {
-                            // Ensure internal serial is pulled from local data
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
-                            info.DiscIdentifiers.Version = version ?? string.Empty;
-                            info.DiscIdentifiers.EXEDate = date ?? string.Empty;
-                        }
-                    }
-
-                    break;
-
-                case PhysicalSystem.SegaNaomi:
-                    if (mediaType == PhysicalMediaType.CDROM)
-                    {
-                        info.DumpMetadata.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
-
-                        // Take only the first 16 lines for GD-ROM
-                        if (!string.IsNullOrEmpty(info.DumpMetadata.Header))
-                            info.DumpMetadata.Header = string.Join("\n", info.DumpMetadata.Header.Split('\n'), 0, 16);
-
-                        if (GetGDROMBuildInfo(info.DumpMetadata.Header,
-                            out var serial,
-                            out var version,
-                            out var date))
-                        {
-                            // Ensure internal serial is pulled from local data
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
-                            info.DiscIdentifiers.Version = version ?? string.Empty;
-                            info.DiscIdentifiers.EXEDate = date ?? string.Empty;
-                        }
-                    }
-
-                    break;
-
-                case PhysicalSystem.SegaNaomi2:
-                    if (mediaType == PhysicalMediaType.CDROM)
-                    {
-                        info.DumpMetadata.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
-
-                        // Take only the first 16 lines for GD-ROM
-                        if (!string.IsNullOrEmpty(info.DumpMetadata.Header))
-                            info.DumpMetadata.Header = string.Join("\n", info.DumpMetadata.Header.Split('\n'), 0, 16);
-
-                        if (GetGDROMBuildInfo(info.DumpMetadata.Header,
-                            out var serial,
-                            out var version,
-                            out var date))
-                        {
-                            // Ensure internal serial is pulled from local data
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
-                            info.DiscIdentifiers.Version = version ?? string.Empty;
-                            info.DiscIdentifiers.EXEDate = date ?? string.Empty;
-                        }
-                    }
-
-                    break;
-
-                case PhysicalSystem.SegaSaturn:
+                if (GetSegaCDBuildInfo(info.DumpMetadata.Header, out var scdSerial, out var fixedDate))
+                {
+                    // Ensure internal serial is pulled from local data
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
+                    info.DiscIdentifiers.EXEDate = fixedDate ?? string.Empty;
+                }
+            }
+            else if (System == PhysicalSystem.SegaChihiro)
+            {
+                if (mediaType == PhysicalMediaType.CDROM)
+                {
                     info.DumpMetadata.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
-                    // Take only the first 16 lines for Saturn
+                    // Take only the first 16 lines for GD-ROM
                     if (!string.IsNullOrEmpty(info.DumpMetadata.Header))
                         info.DumpMetadata.Header = string.Join("\n", info.DumpMetadata.Header.Split('\n'), 0, 16);
 
-                    if (GetSaturnBuildInfo(info.DumpMetadata.Header, out var saturnSerial, out var saturnVersion, out var buildDate))
+                    if (GetGDROMBuildInfo(info.DumpMetadata.Header,
+                        out var serial,
+                        out var version,
+                        out var date))
                     {
                         // Ensure internal serial is pulled from local data
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
-                        info.DiscIdentifiers.Version = saturnVersion ?? string.Empty;
-                        info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.DiscIdentifiers.Version = version ?? string.Empty;
+                        info.DiscIdentifiers.EXEDate = date ?? string.Empty;
                     }
+                }
+            }
+            else if (System == PhysicalSystem.SegaDreamcast)
+            {
+                if (mediaType == PhysicalMediaType.CDROM)
+                {
+                    info.DumpMetadata.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
-                    break;
+                    // Take only the first 16 lines for GD-ROM
+                    if (!string.IsNullOrEmpty(info.DumpMetadata.Header))
+                        info.DumpMetadata.Header = string.Join("\n", info.DumpMetadata.Header.Split('\n'), 0, 16);
 
-                case PhysicalSystem.SonyPlayStation:
-                    bool? psEdcStatus = null;
-                    if (File.Exists($"{basePath}.img_EdcEcc.txt"))
-                        psEdcStatus = GetPlayStationEDCStatus($"{basePath}.img_EdcEcc.txt");
-                    else if (File.Exists($"{basePath}.img_EccEdc.txt"))
-                        psEdcStatus = GetPlayStationEDCStatus($"{basePath}.img_EccEdc.txt");
-
-                    info.DiscIdentifiers.EDC = psEdcStatus.ToYesNo();
-                    // TODO: Reenable when anti-modchip documentation is updated
-                    // info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}_disc.txt").ToYesNo();
-                    GetLibCryptDetected(basePath, out YesNo libCryptDetected, out string? libCryptData);
-                    // TODO: Reenable when LibCrypt documentation is updated
-                    // info.CopyProtection.LibCrypt = libCryptDetected;
-                    info.DumpMetadata.SBI = libCryptData;
-
-                    break;
-
-                case PhysicalSystem.SonyPlayStation3:
-                    if (GetPlayStation3Info($"{basePath}_disc.txt", out string? ps3Serial, out string? ps3Version, out string? ps3FirmwareVersion))
+                    if (GetGDROMBuildInfo(info.DumpMetadata.Header,
+                        out var serial,
+                        out var version,
+                        out var date))
                     {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
-                        info.DiscIdentifiers.Version = ps3Version ?? string.Empty;
-                        if (ps3FirmwareVersion is not null)
-                            info.DumpMetadata.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {ps3FirmwareVersion}";
+                        // Ensure internal serial is pulled from local data
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.DiscIdentifiers.Version = version ?? string.Empty;
+                        info.DiscIdentifiers.EXEDate = date ?? string.Empty;
                     }
+                }
+            }
+            else if (System == PhysicalSystem.SegaNaomi)
+            {
+                if (mediaType == PhysicalMediaType.CDROM)
+                {
+                    info.DumpMetadata.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
-                    break;
+                    // Take only the first 16 lines for GD-ROM
+                    if (!string.IsNullOrEmpty(info.DumpMetadata.Header))
+                        info.DumpMetadata.Header = string.Join("\n", info.DumpMetadata.Header.Split('\n'), 0, 16);
+
+                    if (GetGDROMBuildInfo(info.DumpMetadata.Header,
+                        out var serial,
+                        out var version,
+                        out var date))
+                    {
+                        // Ensure internal serial is pulled from local data
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.DiscIdentifiers.Version = version ?? string.Empty;
+                        info.DiscIdentifiers.EXEDate = date ?? string.Empty;
+                    }
+                }
+            }
+            else if (System == PhysicalSystem.SegaNaomi2)
+            {
+                if (mediaType == PhysicalMediaType.CDROM)
+                {
+                    info.DumpMetadata.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+
+                    // Take only the first 16 lines for GD-ROM
+                    if (!string.IsNullOrEmpty(info.DumpMetadata.Header))
+                        info.DumpMetadata.Header = string.Join("\n", info.DumpMetadata.Header.Split('\n'), 0, 16);
+
+                    if (GetGDROMBuildInfo(info.DumpMetadata.Header,
+                        out var serial,
+                        out var version,
+                        out var date))
+                    {
+                        // Ensure internal serial is pulled from local data
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.DiscIdentifiers.Version = version ?? string.Empty;
+                        info.DiscIdentifiers.EXEDate = date ?? string.Empty;
+                    }
+                }
+            }
+            else if (System == PhysicalSystem.SegaSaturn)
+            {
+                info.DumpMetadata.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+
+                // Take only the first 16 lines for Saturn
+                if (!string.IsNullOrEmpty(info.DumpMetadata.Header))
+                    info.DumpMetadata.Header = string.Join("\n", info.DumpMetadata.Header.Split('\n'), 0, 16);
+
+                if (GetSaturnBuildInfo(info.DumpMetadata.Header, out var saturnSerial, out var saturnVersion, out var buildDate))
+                {
+                    // Ensure internal serial is pulled from local data
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
+                    info.DiscIdentifiers.Version = saturnVersion ?? string.Empty;
+                    info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
+                }
+            }
+            else if (System == PhysicalSystem.SonyPlayStation)
+            {
+                bool? psEdcStatus = null;
+                if (File.Exists($"{basePath}.img_EdcEcc.txt"))
+                    psEdcStatus = GetPlayStationEDCStatus($"{basePath}.img_EdcEcc.txt");
+                else if (File.Exists($"{basePath}.img_EccEdc.txt"))
+                    psEdcStatus = GetPlayStationEDCStatus($"{basePath}.img_EccEdc.txt");
+
+                info.DiscIdentifiers.EDC = psEdcStatus.ToYesNo();
+                // TODO: Reenable when anti-modchip documentation is updated
+                // info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}_disc.txt").ToYesNo();
+                GetLibCryptDetected(basePath, out YesNo libCryptDetected, out string? libCryptData);
+                // TODO: Reenable when LibCrypt documentation is updated
+                // info.CopyProtection.LibCrypt = libCryptDetected;
+                info.DumpMetadata.SBI = libCryptData;
+            }
+            else if (System == PhysicalSystem.SonyPlayStation3)
+            {
+                if (GetPlayStation3Info($"{basePath}_disc.txt", out string? ps3Serial, out string? ps3Version, out string? ps3FirmwareVersion))
+                {
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
+                    info.DiscIdentifiers.Version = ps3Version ?? string.Empty;
+                    if (ps3FirmwareVersion is not null)
+                        info.DumpMetadata.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {ps3FirmwareVersion}";
+                }
             }
         }
 

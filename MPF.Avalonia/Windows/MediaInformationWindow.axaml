@@ -451,12 +451,6 @@
                                     <controls:UserInput x:Name="Layer1Toolstamp"
                                                         Label="Toolstamps"
                                                         Text="{Binding SubmissionInfo.RingCodes.Layer1Toolstamps, Mode=TwoWay}" />
-                                    <controls:UserInput x:Name="Layer1MouldSIDs"
-                                                        Label="Mould SIDs"
-                                                        Text="{Binding SubmissionInfo.RingCodes.Layer1MouldSIDs, Mode=TwoWay}" />
-                                    <controls:UserInput x:Name="Layer1AdditionalMoulds"
-                                                        Label="Additional Moulds"
-                                                        Text="{Binding SubmissionInfo.RingCodes.Layer1AdditionalMoulds, Mode=TwoWay}" />
                                 </StackPanel>
                             </Border>
 
@@ -479,12 +473,6 @@
                                     <controls:UserInput x:Name="Layer2Toolstamp"
                                                         Label="Toolstamps"
                                                         Text="{Binding SubmissionInfo.RingCodes.Layer2Toolstamps, Mode=TwoWay}" />
-                                    <controls:UserInput x:Name="Layer2MouldSIDs"
-                                                        Label="Mould SIDs"
-                                                        Text="{Binding SubmissionInfo.RingCodes.Layer2MouldSIDs, Mode=TwoWay}" />
-                                    <controls:UserInput x:Name="Layer2AdditionalMoulds"
-                                                        Label="Additional Moulds"
-                                                        Text="{Binding SubmissionInfo.RingCodes.Layer2AdditionalMoulds, Mode=TwoWay}" />
                                 </StackPanel>
                             </Border>
 
@@ -507,12 +495,6 @@
                                     <controls:UserInput x:Name="Layer3Toolstamp"
                                                         Label="Toolstamps"
                                                         Text="{Binding SubmissionInfo.RingCodes.Layer3Toolstamps, Mode=TwoWay}" />
-                                    <controls:UserInput x:Name="Layer3MouldSIDs"
-                                                        Label="Mould SIDs"
-                                                        Text="{Binding SubmissionInfo.RingCodes.Layer3MouldSIDs, Mode=TwoWay}" />
-                                    <controls:UserInput x:Name="Layer3AdditionalMoulds"
-                                                        Label="Additional Moulds"
-                                                        Text="{Binding SubmissionInfo.RingCodes.Layer3AdditionalMoulds, Mode=TwoWay}" />
                                 </StackPanel>
                             </Border>
 

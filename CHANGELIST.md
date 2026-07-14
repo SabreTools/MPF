@@ -44,6 +44,11 @@
 - Fix resizing of main window in WPF
 - Use placeholder for media type for Generic processor
 - Use input file as only output file in generic processor
+- Remove unneded mould fields
+- Set disc command by default for Dreamdump
+- Update RedumpLib to 3.0.0
+- Add logical opposite flags to Check
+- Fix Dreamdump parameter generation
 - Root the default output path when the current folder is unwritable (gmipf)
 
 ### 3.8.3 (2026-07-06)

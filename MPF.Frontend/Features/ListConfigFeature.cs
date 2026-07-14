@@ -72,7 +72,7 @@ namespace MPF.Frontend.Features
             Console.WriteLine("Dump Defaults:");
             Console.WriteLine($"  Default Program = {options.InternalProgram.LongName()}");
             Console.WriteLine($"  Default Output Path = {options.Dumping.DefaultOutputPath}");
-            Console.WriteLine($"  Default System = {options.Dumping.DefaultSystem.LongName()}");
+            Console.WriteLine($"  Default System = {options.Dumping.DefaultSystem?.Name ?? string.Empty}");
             Console.WriteLine($"  Default CD Speed = {options.Dumping.DumpSpeeds.CD}");
             Console.WriteLine($"  Default DVD Speed = {options.Dumping.DumpSpeeds.DVD}");
             Console.WriteLine($"  Default HD-DVD Speed = {options.Dumping.DumpSpeeds.HDDVD}");

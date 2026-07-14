@@ -122,6 +122,11 @@ namespace MPF.ExecutionContexts.Dreamdump
         {
             var parameters = new StringBuilder();
 
+            // Command Mode
+            BaseCommand ??= CommandStrings.NONE;
+            if (BaseCommand != CommandStrings.NONE)
+                parameters.Append($"{BaseCommand} ");
+
             // Loop though and append all existing
             foreach (var kvp in _inputs)
             {
@@ -166,7 +171,7 @@ namespace MPF.ExecutionContexts.Dreamdump
             // Get the base settings, if possible
             var dumpSettings = baseDumpSettings as DumpSettings ?? new DumpSettings();
 
-            BaseCommand = CommandStrings.NONE;
+            BaseCommand = CommandStrings.Disc;
 
             if (drivePath is not null)
             {

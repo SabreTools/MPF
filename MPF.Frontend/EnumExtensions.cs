@@ -63,7 +63,7 @@ namespace MPF.Frontend
             }
         }
 
-       /// <summary>
+        /// <summary>
         /// Get the string representation of the DreamdumpSectorOrder enum values
         /// </summary>
         /// <param name="order">DreamdumpSectorOrder value to convert</param>
@@ -90,7 +90,7 @@ namespace MPF.Frontend
             };
         }
 
-         /// <summary>
+        /// <summary>
         /// Get the string representation of the InterfaceLanguage enum values
         /// </summary>
         /// <param name="lang">InterfaceLanguage value to convert</param>
@@ -623,13 +623,10 @@ namespace MPF.Frontend
         /// </summary>
         public static bool SupportsAntiModchipScans(this PhysicalSystem? system)
         {
-#pragma warning disable IDE0072
-            return system switch
-            {
-                PhysicalSystem.SonyPlayStation => true,
-                _ => false,
-            };
-#pragma warning restore IDE0072
+            if (system == PhysicalSystem.SonyPlayStation)
+                return true;
+
+            return false;
         }
 
         /// <summary>
@@ -637,20 +634,24 @@ namespace MPF.Frontend
         /// </summary>
         public static bool SupportsCopyProtectionScans(this PhysicalSystem? system)
         {
-#pragma warning disable IDE0072
-            return system switch
-            {
-                PhysicalSystem.AppleMacintosh => true,
-                PhysicalSystem.DVDVideo => true,
-                PhysicalSystem.EnhancedCD => true,
-                PhysicalSystem.IBMPCcompatible => true,
-                PhysicalSystem.MicrosoftPocketPC => true,
-                PhysicalSystem.PalmOS => true,
-                PhysicalSystem.RainbowDisc => true,
-                PhysicalSystem.SonyElectronicBook => true,
-                _ => false,
-            };
-#pragma warning restore IDE0072
+            if (system == PhysicalSystem.AppleMacintosh)
+                return true;
+            else if (system == PhysicalSystem.DVDVideo)
+                return true;
+            else if (system == PhysicalSystem.EnhancedCD)
+                return true;
+            else if (system == PhysicalSystem.IBMPCcompatible)
+                return true;
+            else if (system == PhysicalSystem.MicrosoftPocketPC)
+                return true;
+            else if (system == PhysicalSystem.PalmOS)
+                return true;
+            else if (system == PhysicalSystem.RainbowDisc)
+                return true;
+            else if (system == PhysicalSystem.SonyElectronicBook)
+                return true;
+
+            return false;
         }
 
         #endregion

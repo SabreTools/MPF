@@ -110,7 +110,7 @@ namespace MPF.CLI.Features
             }
 
             // Log the system being used, in case it came from config
-            Console.WriteLine($"Using system: {System.LongName()}");
+            Console.WriteLine($"Using system: {System.Name}");
 
             // If "extra" parameters were provided, inform the user
             if (Inputs.Count > 0)
@@ -205,8 +205,7 @@ namespace MPF.CLI.Features
             if (CustomParams is null && (PhysicalMediaType is null || PhysicalMediaType == SabreTools.RedumpLib.Data.PhysicalMediaType.NONE))
             {
                 // Get reasonable default values based on the current system
-                var mediaTypes = System.MediaTypes();
-                PhysicalMediaType = mediaTypes.Count > 0 ? mediaTypes[0] : SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM;
+                PhysicalMediaType = System.MediaTypes.Count > 0 ? System.MediaTypes[0] : SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM;
                 if (PhysicalMediaType == SabreTools.RedumpLib.Data.PhysicalMediaType.NONE)
                     PhysicalMediaType = SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM;
 

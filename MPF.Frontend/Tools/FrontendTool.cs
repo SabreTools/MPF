@@ -114,11 +114,11 @@ namespace MPF.Frontend.Tools
         /// <param name="title">Existing title to potentially reformat</param>
         /// <param name="languages">Array of languages to use for assuming articles</param>
         /// <returns>The reformatted title</returns>
-        public static string? NormalizeDiscTitle(string? title, Language?[]? languages)
+        public static string? NormalizeDiscTitle(string? title, LanguageCode?[]? languages)
         {
             // If we have no set languages, then assume English
             if (languages is null || languages.Length == 0)
-                languages = [Language.English];
+                languages = [LanguageCode.English];
 
             // Loop through all of the given languages
             foreach (var language in languages)
@@ -130,8 +130,8 @@ namespace MPF.Frontend.Tools
             }
 
             // If we didn't already try English, try it now
-            if (!Array.Exists(languages, l => l == Language.English))
-                return NormalizeDiscTitle(title, Language.English);
+            if (!Array.Exists(languages, l => l == LanguageCode.English))
+                return NormalizeDiscTitle(title, LanguageCode.English);
 
             // If all fails, then the title didn't need normalization
             return title;
@@ -145,16 +145,16 @@ namespace MPF.Frontend.Tools
         /// <returns>The reformatted title</returns>
         /// <remarks>
         /// If the language of the title is unknown or if it's multilingual,
-        /// pass in Language.English for standardized coverage.
+        /// pass in LanguageCode.English for standardized coverage.
         /// </remarks>
-        public static string? NormalizeDiscTitle(string? title, Language? language)
+        public static string? NormalizeDiscTitle(string? title, LanguageCode? language)
         {
             // If we have an invalid title, just return it as-is
             if (string.IsNullOrEmpty(title))
                 return title;
 
-            // If we have an invalid language, assume Language.English
-            language ??= Language.English;
+            // If we have an invalid language, assume LanguageCode.English
+            language ??= LanguageCode.English;
 
             // Get the title split into parts
             string[] splitTitle = Array.FindAll(title!.Split(' '), s => !string.IsNullOrEmpty(s));
@@ -169,308 +169,308 @@ namespace MPF.Frontend.Tools
             {
                 // Latin script articles
                 case "'n"
-                    when language is Language.Manx:
+                    when language == LanguageCode.Manx:
                 case "a"
-                    when language is Language.English
-                        || language is Language.Hungarian
-                        || language is Language.Portuguese
-                        || language is Language.Scots:
+                    when language == LanguageCode.English
+                        || language == LanguageCode.Hungarian
+                        || language == LanguageCode.Portuguese
+                        || language == LanguageCode.Scots:
                 case "a'"
-                    when language is Language.English
-                        || language is Language.Hungarian
-                        || language is Language.Irish
-                        || language is Language.Gaelic:     // Scottish Gaelic
+                    when language == LanguageCode.English
+                        || language == LanguageCode.Hungarian
+                        || language == LanguageCode.Irish
+                        || language == LanguageCode.Gaelic:     // Scottish Gaelic
                 case "al"
-                    when language is Language.Breton:
+                    when language == LanguageCode.Breton:
                 case "am"
-                    when language is Language.Gaelic:       // Scottish Gaelic
+                    when language == LanguageCode.Gaelic:       // Scottish Gaelic
                 case "an"
-                    when language is Language.Breton
-                        || language is Language.Cornish
-                        || language is Language.English
-                        || language is Language.Irish
-                        || language is Language.Gaelic:     // Scottish Gaelic
+                    when language == LanguageCode.Breton
+                        || language == LanguageCode.Cornish
+                        || language == LanguageCode.English
+                        || language == LanguageCode.Irish
+                        || language == LanguageCode.Gaelic:     // Scottish Gaelic
                 case "anek"
-                    when language is Language.Nepali:
+                    when language == LanguageCode.Nepali:
                 case "ar"
-                    when language is Language.Breton:
+                    when language == LanguageCode.Breton:
                 case "az"
-                    when language is Language.Hungarian:
+                    when language == LanguageCode.Hungarian:
                 case "ān"
-                    when language is Language.Persian:
+                    when language == LanguageCode.Persian:
                 case "as"
-                    when language is Language.Portuguese:
+                    when language == LanguageCode.Portuguese:
                 case "d'"
-                    when language is Language.Luxembourgish:
+                    when language == LanguageCode.Luxembourgish:
                 case "das"
-                    when language is Language.German:
+                    when language == LanguageCode.German:
                 case "dat"
-                    when language is Language.Luxembourgish:
+                    when language == LanguageCode.Luxembourgish:
                 case "de"
-                    when language is Language.Dutch:
+                    when language == LanguageCode.Dutch:
                 case "déi"
-                    when language is Language.Luxembourgish:
+                    when language == LanguageCode.Luxembourgish:
                 case "dem"
-                    when language is Language.German
-                        || language is Language.Luxembourgish:
+                    when language == LanguageCode.German
+                        || language == LanguageCode.Luxembourgish:
                 case "den"
-                    when language is Language.Dutch
-                        || language is Language.German
-                        || language is Language.Luxembourgish:
+                    when language == LanguageCode.Dutch
+                        || language == LanguageCode.German
+                        || language == LanguageCode.Luxembourgish:
                 case "der"
-                    when language is Language.Dutch
-                        || language is Language.German
-                        || language is Language.Luxembourgish:
+                    when language == LanguageCode.Dutch
+                        || language == LanguageCode.German
+                        || language == LanguageCode.Luxembourgish:
                 case "des"
-                    when language is Language.Dutch
-                        || language is Language.French
-                        || language is Language.German:
+                    when language == LanguageCode.Dutch
+                        || language == LanguageCode.French
+                        || language == LanguageCode.German:
                 case "die"
-                    when language is Language.Afrikaans
-                        || language is Language.German:
+                    when language == LanguageCode.Afrikaans
+                        || language == LanguageCode.German:
                 case "du"
-                    when language is Language.French:
+                    when language == LanguageCode.French:
                 case "e"
-                    when language is Language.Papiamento:
+                    when language == LanguageCode.Papiamento:
                 case "een"
-                    when language is Language.Dutch:
+                    when language == LanguageCode.Dutch:
                 case "egy"
-                    when language is Language.Hungarian:
+                    when language == LanguageCode.Hungarian:
                 case "ei"
-                    when language is Language.Norwegian:
+                    when language == LanguageCode.Norwegian:
                 case "ein"
-                    when language is Language.German
-                        || language is Language.Norwegian:
+                    when language == LanguageCode.German
+                        || language == LanguageCode.Norwegian:
                 case "eine"
-                    when language is Language.German:
+                    when language == LanguageCode.German:
                 case "einem"
-                    when language is Language.German:
+                    when language == LanguageCode.German:
                 case "einen"
-                    when language is Language.German:
+                    when language == LanguageCode.German:
                 case "einer"
-                    when language is Language.German:
+                    when language == LanguageCode.German:
                 case "eines"
-                    when language is Language.German:
+                    when language == LanguageCode.German:
                 case "eit"
-                    when language is Language.Norwegian:
+                    when language == LanguageCode.Norwegian:
                 case "ek"
-                    when language is Language.Nepali:
+                    when language == LanguageCode.Nepali:
                 case "el"
-                    when language is Language.Arabic
-                        || language is Language.Catalan
-                        || language is Language.Spanish:
+                    when language == LanguageCode.Arabic
+                        || language == LanguageCode.Catalan
+                        || language == LanguageCode.Spanish:
                 case "els"
-                    when language is Language.Catalan:
+                    when language == LanguageCode.Catalan:
                 case "en"
-                    when language is Language.Danish
-                        || language is Language.Luxembourgish
-                        || language is Language.Norwegian
-                        || language is Language.Swedish:
+                    when language == LanguageCode.Danish
+                        || language == LanguageCode.Luxembourgish
+                        || language == LanguageCode.Norwegian
+                        || language == LanguageCode.Swedish:
                 case "eng"
-                    when language is Language.Luxembourgish:
+                    when language == LanguageCode.Luxembourgish:
                 case "engem"
-                    when language is Language.Luxembourgish:
+                    when language == LanguageCode.Luxembourgish:
                 case "enger"
-                    when language is Language.Luxembourgish:
+                    when language == LanguageCode.Luxembourgish:
                 case "es"
-                    when language is Language.Catalan:
+                    when language == LanguageCode.Catalan:
                 case "et"
-                    when language is Language.Danish
-                        || language is Language.Norwegian:
+                    when language == LanguageCode.Danish
+                        || language == LanguageCode.Norwegian:
                 case "ett"
-                    when language is Language.Swedish:
+                    when language == LanguageCode.Swedish:
                 case "euta"
-                    when language is Language.Nepali:
+                    when language == LanguageCode.Nepali:
                 case "euti"
-                    when language is Language.Nepali:
+                    when language == LanguageCode.Nepali:
                 case "gli"
-                    when language is Language.Italian:
+                    when language == LanguageCode.Italian:
                 case "he"
-                    when language is Language.Hawaiian
-                        || language is Language.Maori:
+                    when language == LanguageCode.Hawaiian
+                        || language == LanguageCode.Maori:
                 case "het"
-                    when language is Language.Dutch:
+                    when language == LanguageCode.Dutch:
                 case "i"
-                    when language is Language.Italian
-                        || language is Language.Khasi:
+                    when language == LanguageCode.Italian
+                        || language == LanguageCode.Khasi:
                 case "il"
-                    when language is Language.Italian:
+                    when language == LanguageCode.Italian:
                 case "in"
-                    when language is Language.Persian:
+                    when language == LanguageCode.Persian:
                 case "ka"
-                    when language is Language.Hawaiian
-                        || language is Language.Khasi:
+                    when language == LanguageCode.Hawaiian
+                        || language == LanguageCode.Khasi:
                 case "ke"
-                    when language is Language.Hawaiian:
+                    when language == LanguageCode.Hawaiian:
                 case "ki"
-                    when language is Language.Khasi:
+                    when language == LanguageCode.Khasi:
                 case "kunai"
-                    when language is Language.Nepali:
+                    when language == LanguageCode.Nepali:
                 case "l'"
-                    when language is Language.Catalan
-                        || language is Language.French
-                        || language is Language.Italian:
+                    when language == LanguageCode.Catalan
+                        || language == LanguageCode.French
+                        || language == LanguageCode.Italian:
                 case "la"
-                    when language is Language.Catalan
-                        || language is Language.Esperanto
-                        || language is Language.French
-                        || language is Language.Italian
-                        || language is Language.Spanish:
+                    when language == LanguageCode.Catalan
+                        || language == LanguageCode.Esperanto
+                        || language == LanguageCode.French
+                        || language == LanguageCode.Italian
+                        || language == LanguageCode.Spanish:
                 case "las"
-                    when language is Language.Spanish:
+                    when language == LanguageCode.Spanish:
                 case "le"
-                    when language is Language.French
-                        || language is Language.Interlingua
-                        || language is Language.Italian:
+                    when language == LanguageCode.French
+                        || language == LanguageCode.Interlingua
+                        || language == LanguageCode.Italian:
                 case "les"
-                    when language is Language.Catalan
-                        || language is Language.French:
+                    when language == LanguageCode.Catalan
+                        || language == LanguageCode.French:
                 case "lo"
-                    when language is Language.Catalan
-                        || language is Language.Italian
-                        || language is Language.Spanish:
+                    when language == LanguageCode.Catalan
+                        || language == LanguageCode.Italian
+                        || language == LanguageCode.Spanish:
                 case "los"
-                    when language is Language.Catalan
-                        || language is Language.Spanish:
+                    when language == LanguageCode.Catalan
+                        || language == LanguageCode.Spanish:
                 case "na"
-                    when language is Language.Irish
-                        || language is Language.Gaelic:     // Scottish Gaelic
+                    when language == LanguageCode.Irish
+                        || language == LanguageCode.Gaelic:     // Scottish Gaelic
                 case "nam"
-                    when language is Language.Gaelic:       // Scottish Gaelic
+                    when language == LanguageCode.Gaelic:       // Scottish Gaelic
                 case "nan"
-                    when language is Language.Gaelic:       // Scottish Gaelic
+                    when language == LanguageCode.Gaelic:       // Scottish Gaelic
                 case "nā"
-                    when language is Language.Hawaiian:
+                    when language == LanguageCode.Hawaiian:
                 case "ngā"
-                    when language is Language.Maori:
+                    when language == LanguageCode.Maori:
                 case "niște"
-                    when language is Language.Romanian:
+                    when language == LanguageCode.Romanian:
                 case "ny"
-                    when language is Language.Manx:
+                    when language == LanguageCode.Manx:
                 case "o"
-                    when language is Language.Portuguese
-                        || language is Language.Romanian:
+                    when language == LanguageCode.Portuguese
+                        || language == LanguageCode.Romanian:
                 case "os"
-                    when language is Language.Portuguese:
+                    when language == LanguageCode.Portuguese:
                 case "sa"
-                    when language is Language.Catalan:
+                    when language == LanguageCode.Catalan:
                 case "sang"
-                    when language is Language.Malay:
+                    when language == LanguageCode.Malay:
                 case "se"
-                    when language is Language.Finnish:
+                    when language == LanguageCode.Finnish:
                 case "ses"
-                    when language is Language.Catalan:
+                    when language == LanguageCode.Catalan:
                 case "si"
-                    when language is Language.Malay:
+                    when language == LanguageCode.Malay:
                 case "te"
-                    when language is Language.Maori:
+                    when language == LanguageCode.Maori:
                 case "the"
-                    when language is Language.English
-                        || language is Language.Scots:
+                    when language == LanguageCode.English
+                        || language == LanguageCode.Scots:
                 case "u"
-                    when language is Language.Khasi:
+                    when language == LanguageCode.Khasi:
                 case "ul"
-                    when language is Language.Breton:
+                    when language == LanguageCode.Breton:
                 case "um"
-                    when language is Language.Portuguese:
+                    when language == LanguageCode.Portuguese:
                 case "uma"
-                    when language is Language.Portuguese:
+                    when language == LanguageCode.Portuguese:
                 case "umas"
-                    when language is Language.Portuguese:
+                    when language == LanguageCode.Portuguese:
                 case "un"
-                    when language is Language.Breton
-                        || language is Language.Catalan
-                        || language is Language.French
-                        || language is Language.Interlingua
-                        || language is Language.Italian
-                        || language is Language.Papiamento
-                        || language is Language.Romanian
-                        || language is Language.Spanish:
+                    when language == LanguageCode.Breton
+                        || language == LanguageCode.Catalan
+                        || language == LanguageCode.French
+                        || language == LanguageCode.Interlingua
+                        || language == LanguageCode.Italian
+                        || language == LanguageCode.Papiamento
+                        || language == LanguageCode.Romanian
+                        || language == LanguageCode.Spanish:
                 case "un'"
-                    when language is Language.Italian:
+                    when language == LanguageCode.Italian:
                 case "una"
-                    when language is Language.Catalan
-                        || language is Language.Italian:
+                    when language == LanguageCode.Catalan
+                        || language == LanguageCode.Italian:
                 case "unas"
-                    when language is Language.Spanish:
+                    when language == LanguageCode.Spanish:
                 case "une"
-                    when language is Language.French:
+                    when language == LanguageCode.French:
                 case "uno"
-                    when language is Language.Italian:
+                    when language == LanguageCode.Italian:
                 case "unos"
-                    when language is Language.Spanish:
+                    when language == LanguageCode.Spanish:
                 case "uns"
-                    when language is Language.Catalan
-                        || language is Language.Portuguese:
+                    when language == LanguageCode.Catalan
+                        || language == LanguageCode.Portuguese:
                 case "unei"
-                    when language is Language.Romanian:
+                    when language == LanguageCode.Romanian:
                 case "unes"
-                    when language is Language.Catalan:
+                    when language == LanguageCode.Catalan:
                 case "unor"
-                    when language is Language.Romanian:
+                    when language == LanguageCode.Romanian:
                 case "unui"
-                    when language is Language.Romanian:
+                    when language == LanguageCode.Romanian:
                 case "ur"
-                    when language is Language.Breton:
+                    when language == LanguageCode.Breton:
                 case "y"
-                    when language is Language.Manx
-                        || language is Language.Welsh:
+                    when language == LanguageCode.Manx
+                        || language == LanguageCode.Welsh:
                 case "ye"
-                    when language is Language.Persian:
+                    when language == LanguageCode.Persian:
                 case "yek"
-                    when language is Language.Persian:
+                    when language == LanguageCode.Persian:
                 case "yn"
-                    when language is Language.Manx:
+                    when language == LanguageCode.Manx:
                 case "yr"
-                    when language is Language.Welsh:
+                    when language == LanguageCode.Welsh:
 
                 // Non-latin script articles
                 case "ο"
-                    when language is Language.Greek:
+                    when language == LanguageCode.Greek:
                 case "η"
-                    when language is Language.Greek:
+                    when language == LanguageCode.Greek:
                 case "το"
-                    when language is Language.Greek:
+                    when language == LanguageCode.Greek:
                 case "οι"
-                    when language is Language.Greek:
+                    when language == LanguageCode.Greek:
                 case "τα"
-                    when language is Language.Greek:
+                    when language == LanguageCode.Greek:
                 case "ένας"
-                    when language is Language.Greek:
+                    when language == LanguageCode.Greek:
                 case "μια"
-                    when language is Language.Greek:
+                    when language == LanguageCode.Greek:
                 case "ένα"
-                    when language is Language.Greek:
+                    when language == LanguageCode.Greek:
                 case "еден"
-                    when language is Language.Macedonian:
+                    when language == LanguageCode.Macedonian:
                 case "една"
-                    when language is Language.Macedonian:
+                    when language == LanguageCode.Macedonian:
                 case "едно"
-                    when language is Language.Macedonian:
+                    when language == LanguageCode.Macedonian:
                 case "едни"
-                    when language is Language.Macedonian:
+                    when language == LanguageCode.Macedonian:
                 case "एउटा"
-                    when language is Language.Nepali:
+                    when language == LanguageCode.Nepali:
                 case "एउटी"
-                    when language is Language.Nepali:
+                    when language == LanguageCode.Nepali:
                 case "एक"
-                    when language is Language.Nepali:
+                    when language == LanguageCode.Nepali:
                 case "अनेक"
-                    when language is Language.Nepali:
+                    when language == LanguageCode.Nepali:
                 case "कुनै"
-                    when language is Language.Nepali:
+                    when language == LanguageCode.Nepali:
                 case "דער"
-                    when language is Language.Yiddish:
+                    when language == LanguageCode.Yiddish:
                 case "די"
-                    when language is Language.Yiddish:
+                    when language == LanguageCode.Yiddish:
                 case "דאָס"
-                    when language is Language.Yiddish:
+                    when language == LanguageCode.Yiddish:
                 case "דעם"
-                    when language is Language.Yiddish:
+                    when language == LanguageCode.Yiddish:
                 case "אַ"
-                    when language is Language.Yiddish:
+                    when language == LanguageCode.Yiddish:
                 case "אַן"
-                    when language is Language.Yiddish:
+                    when language == LanguageCode.Yiddish:
 
                     break;
 

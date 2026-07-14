@@ -56,7 +56,7 @@ namespace MPF.CLI.Features
             Console.WriteLine($"Loaded configuration from: {configPath}");
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine($"1) Set system (Currently '{System.LongName()}')");
+            Console.WriteLine($"1) Set system (Currently '{System?.Name ?? string.Empty}')");
             Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram.LongName()}')");
             Console.WriteLine($"3) Set media type (Currently '{PhysicalMediaType.LongName()}')");
             Console.WriteLine($"4) Set device path (Currently '{DevicePath}')");
