@@ -49,6 +49,8 @@
 - Update RedumpLib to 3.0.0
 - Add logical opposite flags to Check
 - Fix Dreamdump parameter generation
+- Sync better with supported Dreamdump arguments
+- Fix two recent media information window render issues
 - Add man page output to the command-line programs (gmipf)
 - Add a man page for the graphical frontend (gmipf)
 

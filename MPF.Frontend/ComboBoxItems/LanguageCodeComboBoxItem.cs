@@ -39,10 +39,7 @@ namespace MPF.Frontend.ComboBoxItems
         /// </summary>
         /// <returns></returns>
         public static List<LanguageCodeComboBoxItem> GenerateElements()
-        {
-            var enumArr = (LanguageCode[])Enum.GetValues(typeof(LanguageCode));
-            return [.. Array.ConvertAll(enumArr, e => new LanguageCodeComboBoxItem(e))];
-        }
+            => [.. Array.ConvertAll(LanguageCode.AllLanguages, e => new LanguageCodeComboBoxItem(e))];
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)

@@ -39,10 +39,7 @@ namespace MPF.Frontend.ComboBoxItems
         /// </summary>
         /// <returns></returns>
         public static List<RegionCodeComboBoxItem> GenerateElements()
-        {
-            var enumArr = (RegionCode[])Enum.GetValues(typeof(RegionCode));
-            return [.. Array.ConvertAll(enumArr, e => new RegionCodeComboBoxItem(e))];
-        }
+            => [.. Array.ConvertAll(RegionCode.AllRegions, e => new RegionCodeComboBoxItem(e))];
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
