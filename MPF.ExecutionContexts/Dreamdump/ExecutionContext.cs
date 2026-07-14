@@ -55,21 +55,18 @@ namespace MPF.ExecutionContexts.Dreamdump
         /// </summary>
         private readonly Dictionary<string, Input> _inputs = new()
         {
-            // Special
-            [FlagStrings.ForceQTOC] = new FlagInput(FlagStrings.ForceQTOC),
-            [FlagStrings.Train] = new FlagInput(FlagStrings.Train),
-            [FlagStrings.Retries] = new UInt8Input(FlagStrings.Retries),
-
-            // Paths
+            [FlagStrings.Drive] = new StringInput(FlagStrings.Drive),
+            [FlagStrings.SectorOrder] = new StringInput(FlagStrings.SectorOrder),
+            [FlagStrings.Cutoff] = new Int32Input(FlagStrings.Cutoff),
+            [FlagStrings.ReadOffset] = new Int16Input(FlagStrings.ReadOffset),
+            [FlagStrings.Speed] = new UInt16Input(FlagStrings.Speed),
             [FlagStrings.ImageName] = new StringInput(FlagStrings.ImageName) { Quotes = true },
             [FlagStrings.ImagePath] = new StringInput(FlagStrings.ImagePath) { Quotes = true },
-
-            // Drive Part
-            [FlagStrings.ReadOffset] = new Int16Input(FlagStrings.ReadOffset),
+            [FlagStrings.ForceQTOC] = new FlagInput(FlagStrings.ForceQTOC),
+            [FlagStrings.Train] = new FlagInput(FlagStrings.Train),
+            [FlagStrings.ForceSectorOrder] = new FlagInput(FlagStrings.ForceSectorOrder),
             [FlagStrings.ReadAtOnce] = new UInt8Input(FlagStrings.ReadAtOnce),
-            [FlagStrings.Speed] = new UInt16Input(FlagStrings.Speed),
-            [FlagStrings.SectorOrder] = new StringInput(FlagStrings.SectorOrder),
-            [FlagStrings.Drive] = new StringInput(FlagStrings.Drive),
+            [FlagStrings.Retries] = new UInt8Input(FlagStrings.Retries),
         };
 
         #endregion
@@ -98,21 +95,18 @@ namespace MPF.ExecutionContexts.Dreamdump
             {
                 [CommandStrings.NONE] =
                 [
-                    // Special
-                    FlagStrings.ForceQTOC,
-                    FlagStrings.Train,
-                    FlagStrings.Retries,
-
-                    // Paths
+                    FlagStrings.Drive,
+                    FlagStrings.SectorOrder,
+                    FlagStrings.Cutoff,
+                    FlagStrings.ReadOffset,
+                    FlagStrings.Speed,
                     FlagStrings.ImageName,
                     FlagStrings.ImagePath,
-
-                    // Drive Part
-                    FlagStrings.ReadOffset,
+                    FlagStrings.ForceQTOC,
+                    FlagStrings.Train,
+                    FlagStrings.ForceSectorOrder,
                     FlagStrings.ReadAtOnce,
-                    FlagStrings.Speed,
-                    FlagStrings.SectorOrder,
-                    FlagStrings.Drive,
+                    FlagStrings.Retries,
                 ],
             };
         }
@@ -123,7 +117,7 @@ namespace MPF.ExecutionContexts.Dreamdump
             var parameters = new StringBuilder();
 
             // Command Mode
-            BaseCommand ??= CommandStrings.NONE;
+            BaseCommand ??= CommandStrings.Disc;
             if (BaseCommand != CommandStrings.NONE)
                 parameters.Append($"{BaseCommand} ");
 
@@ -235,8 +229,48 @@ namespace MPF.ExecutionContexts.Dreamdump
             // Setup the modes
             BaseCommand = null;
 
-            // Loop through all auxiliary flags, if necessary
+            // All modes should be cached separately
             int index = 0;
+            for (; index < parts.Length; index++)
+            {
+                // Flag to see if we have a flag
+                bool isFlag = false;
+
+                string part = parts[index];
+                switch (part)
+                {
+                    case CommandStrings.Disc:
+                    case CommandStrings.Split:
+                        // Only allow one mode per command
+                        if (BaseCommand is not null)
+                            continue;
+
+                        BaseCommand = part;
+                        break;
+
+                    // Default is either a flag or an invalid mode
+                    default:
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        if (part.StartsWith('-'))
+#else
+                        if (part.StartsWith("-"))
+#endif
+                        {
+                            isFlag = true;
+                            break;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                }
+
+                // If we had a flag, break out
+                if (isFlag)
+                    break;
+            }
+
+            // Loop through all auxiliary flags, if necessary
             for (int i = index; i < parts.Length; i++)
             {
                 // Match all possible flags

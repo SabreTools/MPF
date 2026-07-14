@@ -91,9 +91,10 @@ function Download-Programs {
         "Creator_win-x86"      = "https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
         "Creator_win-x64"      = "https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
 
-        # DiscImageDreamdump
+        # Dreamdump
         "Dreamdump_linux-arm64"  = ""
         "Dreamdump_linux-x64"    = "https://github.com/MoriGM/dreamdump/releases/download/0.3.0/dreamdump-build_312_linux_64.zip"
+        #"Dreamdump_linux-x86"    = "https://github.com/MoriGM/dreamdump/releases/download/0.3.0/dreamdump-build_312_linux_64.zip"
         "Dreamdump_osx-arm64"    = ""
         "Dreamdump_osx-x64"      = ""
         "Dreamdump_win-arm64"    = ""
