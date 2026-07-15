@@ -104,13 +104,13 @@ function download_programs() {
 
     # Dreamdump
     DL_MAP["Dreamdump_linux-arm64"]=""
-    DL_MAP["Dreamdump_linux-x64"]="https://github.com/MoriGM/dreamdump/releases/download/0.3.0/dreamdump-build_312_linux_64.zip"
-    #DL_MAP["Dreamdump_linux-x86"]="https://github.com/MoriGM/dreamdump/releases/download/0.3.0/dreamdump-build_312_linux_64.zip"
+    DL_MAP["Dreamdump_linux-x64"]="https://github.com/MoriGM/dreamdump/releases/download/0.4.0/dreamdump-_linux_64.zip"
+    #DL_MAP["Dreamdump_linux-x86"]="https://github.com/MoriGM/dreamdump/releases/download/0.4.0/dreamdump-_linux_86.zip"
     DL_MAP["Dreamdump_osx-arm64"]=""
     DL_MAP["Dreamdump_osx-x64"]=""
     DL_MAP["Dreamdump_win-arm64"]=""
-    DL_MAP["Dreamdump_win-x64"]="https://github.com/MoriGM/dreamdump/releases/download/0.3.0/dreamdump-build_312_win_64.zip"
-    DL_MAP["Dreamdump_win-x86"]=""
+    DL_MAP["Dreamdump_win-x64"]="https://github.com/MoriGM/dreamdump/releases/download/0.4.0/dreamdump-_win_64.zip"
+    DL_MAP["Dreamdump_win-x86"]="https://github.com/MoriGM/dreamdump/releases/download/0.4.0/dreamdump-_win7_86.zip"
 
     # Redumper
     DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b732/redumper-b732-linux-arm64.zip"
