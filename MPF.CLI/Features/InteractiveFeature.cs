@@ -155,7 +155,7 @@ namespace MPF.CLI.Features
 
         mountedPath:
             Console.WriteLine();
-            Console.WriteLine("Input the mounted path and press Enter:");
+            Console.WriteLine("Input the mounted filesystem path and press Enter:");
             Console.Write("> ");
             MountedPath = Console.ReadLine();
             goto root;

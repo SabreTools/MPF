@@ -52,6 +52,7 @@
 - Sync better with supported Dreamdump arguments
 - Fix two recent media information window render issues
 - Modify link to new dreamdump release 0.4.0 (MoriGM)
+- Slight wording tweaks for commandline interactive modes
 
 ### 3.8.3 (2026-07-06)
 

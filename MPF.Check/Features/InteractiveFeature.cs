@@ -139,7 +139,7 @@ namespace MPF.Check.Features
                     goto root;
                 case "a":
                 case "A":
-                    goto devicePath;
+                    goto mountedPath;
                 case "b":
                 case "B":
                     scan = !scan;
@@ -257,9 +257,9 @@ namespace MPF.Check.Features
 
             goto root;
 
-        devicePath:
+        mountedPath:
             Console.WriteLine();
-            Console.WriteLine("Input the device path and press Enter:");
+            Console.WriteLine("Input the device or filesystem path and press Enter:");
             Console.Write("> ");
             DevicePath = Console.ReadLine();
             goto root;
