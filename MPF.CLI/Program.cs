@@ -15,25 +15,6 @@ namespace MPF.CLI
     {
         public static void Main(string[] args)
         {
-            // Load options from the config file
-            var options = OptionsLoader.LoadFromConfig(out string? configPath);
-
-            // Log the configuration path
-            Console.WriteLine($"Configuration path: {configPath}");
-            Console.WriteLine();
-
-            // Indicate if this was the initial run
-            if (options.FirstRun)
-            {
-                // Reset first run
-                options.FirstRun = false;
-                OptionsLoader.SaveToConfig(options);
-
-                // Display non-error message
-                Console.WriteLine("First-run detected! Please verify the generated config.json and run again.");
-                return;
-            }
-
             // Create the command set
             var mainFeature = new MainFeature();
             var commandSet = CreateCommands(mainFeature);
@@ -54,6 +35,7 @@ namespace MPF.CLI
             {
                 // Standalone Options
                 case Help: BaseFeature.DisplayHelp(); return;
+                case Manpage manpage: manpage.ProcessArgs(args, 0, commandSet); return;
                 case VersionFeature version: version.Execute(); return;
                 case ListCodesFeature lc: lc.Execute(); return;
                 case ListConfigFeature lc: lc.Execute(); return;
@@ -62,6 +44,32 @@ namespace MPF.CLI
                 case ListProgramsFeature lp: lp.Execute(); return;
                 case ListSystemsFeature ls: ls.Execute(); return;
 
+                // Ignore the two main features
+                default: break;
+            }
+
+            // Load options from the config file
+            var options = OptionsLoader.LoadFromConfig(out string? configPath);
+
+            // Log the configuration path
+            Console.WriteLine($"Configuration path: {configPath}");
+            Console.WriteLine();
+
+            // Indicate if this was the initial run
+            if (options.FirstRun)
+            {
+                // Reset first run
+                options.FirstRun = false;
+                OptionsLoader.SaveToConfig(options);
+
+                // Display non-error message
+                Console.WriteLine("First-run detected! Please verify the generated config.json and run again.");
+                return;
+            }
+
+            // Try processing the main features
+            switch (topLevel)
+            {
                 // Interactive Mode
                 case InteractiveFeature interactive:
                     if (interactive.Options.CheckForUpdatesOnStartup)
@@ -151,6 +159,7 @@ namespace MPF.CLI
 
             // Standalone Options
             commandSet.Add(new Help());
+            commandSet.Add(new Manpage(CreateManpageInfo()));
             commandSet.Add(new VersionFeature());
             commandSet.Add(new ListCodesFeature());
             commandSet.Add(new ListConfigFeature());
@@ -170,6 +179,19 @@ namespace MPF.CLI
             commandSet.Add(mainFeature.CustomInput);
 
             return commandSet;
+        }
+
+        /// <summary>
+        /// Create the man page metadata for the program
+        /// </summary>
+        private static ManpageInfo CreateManpageInfo()
+        {
+            return new ManpageInfo("MPF.CLI")
+            {
+                Version = FrontendTool.GetCurrentVersion(),
+                Title = "User Commands",
+                Description = "CLI frontend for various dumping programs",
+            };
         }
     }
 }

@@ -32,6 +32,7 @@ namespace MPF.Check
             {
                 // Standalone Options
                 case Help: BaseFeature.DisplayHelp(); return;
+                case Manpage manpage: manpage.ProcessArgs(args, 0, commandSet); return;
                 case VersionFeature version: version.Execute(); return;
                 case ListCodesFeature lc: lc.Execute(); return;
                 case ListConfigFeature lc: lc.Execute(); return;
@@ -133,6 +134,7 @@ namespace MPF.Check
 
             // Standalone Options
             commandSet.Add(new Help());
+            commandSet.Add(new Manpage(CreateManpageInfo()));
             commandSet.Add(new VersionFeature());
             commandSet.Add(new ListCodesFeature());
             commandSet.Add(new ListConfigFeature());
@@ -177,6 +179,19 @@ namespace MPF.Check
             commandSet.Add(mainFeature.NoDeleteInput);
 
             return commandSet;
+        }
+
+        /// <summary>
+        /// Create the man page metadata for the program
+        /// </summary>
+        private static ManpageInfo CreateManpageInfo()
+        {
+            return new ManpageInfo("MPF.Check")
+            {
+                Version = FrontendTool.GetCurrentVersion(),
+                Title = "User Commands",
+                Description = "Validator for various dumping programs",
+            };
         }
     }
 }
