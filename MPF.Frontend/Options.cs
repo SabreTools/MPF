@@ -180,6 +180,11 @@ namespace MPF.Frontend
     /// </summary>
     public class DumpSettings
     {
+        /// <summary>
+        /// Default output directory name
+        /// </summary>
+        private const string DefaultOutputDirectoryName = "ISO";
+
         #region Default Paths
 
         /// <summary>
@@ -283,11 +288,6 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Default output directory name
-        /// </summary>
-        private const string DefaultOutputDirectoryName = "ISO";
-
-        /// <summary>
         /// Default output path for dumps
         /// </summary>
         /// <remarks>
@@ -314,9 +314,20 @@ namespace MPF.Frontend
         /// <param name="currentDirectory">Directory that a relative path would resolve against</param>
         internal static string GetDefaultOutputPath(string currentDirectory)
         {
-            // Portable output
-            if (CanCreateFile(currentDirectory))
-                return DefaultOutputDirectoryName;
+            // Portable output -- keep the relative path wherever the current directory can hold a
+            // file. Creating one is the only portable way of asking; the probe is removed again, and
+            // only the creation decides so that a failed cleanup does not read as unwritable.
+            if (!string.IsNullOrEmpty(currentDirectory))
+            {
+                try
+                {
+                    string probePath = Path.Combine(currentDirectory, Path.GetRandomFileName());
+                    File.Create(probePath).Dispose();
+                    try { File.Delete(probePath); } catch { }
+                    return DefaultOutputDirectoryName;
+                }
+                catch { }
+            }
 
             // User output
             string homeDir = PathTool.GetHomeDirectory();
@@ -325,36 +336,6 @@ namespace MPF.Frontend
 
             // This should not happen
             return DefaultOutputDirectoryName;
-        }
-
-        /// <summary>
-        /// Indicates if a new file can be created in a directory
-        /// </summary>
-        /// <remarks>Creating a file is the only portable way of asking; the file is removed again</remarks>
-        private static bool CanCreateFile(string directory)
-        {
-            if (string.IsNullOrEmpty(directory))
-                return false;
-
-            string probePath = Path.Combine(directory, Path.GetRandomFileName());
-
-            // Only the creation decides, so that a failed cleanup does not read as unwritable
-            try
-            {
-                File.Create(probePath).Dispose();
-            }
-            catch
-            {
-                return false;
-            }
-
-            try
-            {
-                File.Delete(probePath);
-            }
-            catch { }
-
-            return true;
         }
 
         #endregion
