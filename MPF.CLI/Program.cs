@@ -19,12 +19,33 @@ namespace MPF.CLI
             var mainFeature = new MainFeature();
             var commandSet = CreateCommands(mainFeature);
 
-            // The man page is rendered purely from the command model, so emit it
-            // before the configuration path and other startup output to keep the roff clean
-            if (args is not null && args.Length > 0 && commandSet.GetTopLevel(args[0]) is Manpage manpage)
+            // If we have no args, show the help and quit
+            if (args is null || args.Length == 0)
             {
-                manpage.ProcessArgs(args, 0, commandSet);
+                BaseFeature.DisplayHelp();
                 return;
+            }
+
+            // Get the first argument as a feature flag
+            string featureName = args[0];
+
+            // Try processing the standalone arguments
+            var topLevel = commandSet.GetTopLevel(featureName);
+            switch (topLevel)
+            {
+                // Standalone Options
+                case Help: BaseFeature.DisplayHelp(); return;
+                case Manpage manpage: manpage.ProcessArgs(args, 0, commandSet); return;
+                case VersionFeature version: version.Execute(); return;
+                case ListCodesFeature lc: lc.Execute(); return;
+                case ListConfigFeature lc: lc.Execute(); return;
+                case ListPathMacrosFeature lpm: lpm.Execute(); return;
+                case ListPhysicalMediaTypesFeature lm: lm.Execute(); return;
+                case ListProgramsFeature lp: lp.Execute(); return;
+                case ListSystemsFeature ls: ls.Execute(); return;
+
+                // Ignore the two main features
+                default: break;
             }
 
             // Load options from the config file
@@ -46,30 +67,9 @@ namespace MPF.CLI
                 return;
             }
 
-            // If we have no args, show the help and quit
-            if (args is null || args.Length == 0)
-            {
-                BaseFeature.DisplayHelp();
-                return;
-            }
-
-            // Get the first argument as a feature flag
-            string featureName = args[0];
-
-            // Try processing the standalone arguments
-            var topLevel = commandSet.GetTopLevel(featureName);
+            // Try processing the main features
             switch (topLevel)
             {
-                // Standalone Options
-                case Help: BaseFeature.DisplayHelp(); return;
-                case VersionFeature version: version.Execute(); return;
-                case ListCodesFeature lc: lc.Execute(); return;
-                case ListConfigFeature lc: lc.Execute(); return;
-                case ListPathMacrosFeature lpm: lpm.Execute(); return;
-                case ListPhysicalMediaTypesFeature lm: lm.Execute(); return;
-                case ListProgramsFeature lp: lp.Execute(); return;
-                case ListSystemsFeature ls: ls.Execute(); return;
-
                 // Interactive Mode
                 case InteractiveFeature interactive:
                     if (interactive.Options.CheckForUpdatesOnStartup)
