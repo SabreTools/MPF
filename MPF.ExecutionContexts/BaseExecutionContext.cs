@@ -225,6 +225,16 @@ namespace MPF.ExecutionContexts
                 RedirectStandardError = redirect,
             };
 
+            // With output redirected, a tool's stdout is no longer a terminal. Some tools
+            // (notably Aaru 5) still query the console width while drawing progress; on a
+            // non-terminal that width is only recoverable from the TERM/terminfo fallback,
+            // and when TERM is unset the width comes back as 0 and the tool aborts on the
+            // very first progress update. Provide a terminal type so the fallback yields a
+            // sane width. Only fill it in when the environment has none, to respect a real
+            // terminal that the frontend may have been launched from.
+            if (redirect && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("TERM")))
+                startInfo.EnvironmentVariables["TERM"] = "xterm";
+
             // Create the new process
             process = new Process() { StartInfo = startInfo };
 
