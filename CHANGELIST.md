@@ -57,6 +57,7 @@
 - Add a man page for the graphical frontend (gmipf)
 - Normalize CLI feature handling
 - Add Crunch to packer filters
+- Update dreamdump to 0.5.0
 
 ### 3.8.3 (2026-07-06)
 
