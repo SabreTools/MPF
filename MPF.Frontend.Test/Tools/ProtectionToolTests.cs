@@ -221,6 +221,19 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
+        public void SanitizeFoundProtections_Crunch()
+        {
+            List<string> protections =
+            [
+                "Crunch",
+                "Crunch ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
         public void SanitizeFoundProtections_dotFuscator()
         {
             List<string> protections =

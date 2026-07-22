@@ -34,6 +34,7 @@ namespace MPF.Frontend.Tools
             "AutoPlay Media Studio",
             "Caphyon Advanced Installer",
             "CExe",
+            "Crunch",
             "dotFuscator",
             "Embedded",
             "EXE Stealth",

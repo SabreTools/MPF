@@ -56,6 +56,7 @@
 - Add man page output to the command-line programs (gmipf)
 - Add a man page for the graphical frontend (gmipf)
 - Normalize CLI feature handling
+- Add Crunch to packer filters
 - Root the default output path when the current folder is unwritable (gmipf)
 
 ### 3.8.3 (2026-07-06)
