@@ -93,13 +93,13 @@ function Download-Programs {
 
         # Dreamdump
         "Dreamdump_linux-arm64"  = ""
-        "Dreamdump_linux-x64"    = "https://github.com/MoriGM/dreamdump/releases/download/0.4.0/dreamdump-_linux_64.zip"
-        #"Dreamdump_linux-x86"    = "https://github.com/MoriGM/dreamdump/releases/download/0.4.0/dreamdump-_linux_86.zip"
+        "Dreamdump_linux-x64"    = "https://github.com/MoriGM/dreamdump/releases/download/0.5.0/dreamdump-_linux_64.zip"
+        #"Dreamdump_linux-x86"    = "https://github.com/MoriGM/dreamdump/releases/download/0.5.0/dreamdump-_linux_86.zip"
         "Dreamdump_osx-arm64"    = ""
         "Dreamdump_osx-x64"      = ""
         "Dreamdump_win-arm64"    = ""
-        "Dreamdump_win-x86"      = "https://github.com/MoriGM/dreamdump/releases/download/0.4.0/dreamdump-_win7_86.zip"
-        "Dreamdump_win-x64"      = "https://github.com/MoriGM/dreamdump/releases/download/0.4.0/dreamdump-_win_64.zip"
+        "Dreamdump_win-x86"      = "https://github.com/MoriGM/dreamdump/releases/download/0.5.0/dreamdump-_win7_86.zip"
+        "Dreamdump_win-x64"      = "https://github.com/MoriGM/dreamdump/releases/download/0.5.0/dreamdump-_win_64.zip"
 
         # Redumper
         "Redumper_linux-arm64" = "https://github.com/superg/redumper/releases/download/b732/redumper-b732-linux-arm64.zip"
