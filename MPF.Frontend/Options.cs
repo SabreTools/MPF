@@ -303,7 +303,14 @@ namespace MPF.Frontend
                 if (field is not null)
                     return field;
 
-                field = GetDefaultOutputPath(Environment.CurrentDirectory);
+                // Reading the current directory throws when it has been removed while the process
+                // is running, which is the one case where it does not name a usable location. That
+                // is what the empty string below stands for.
+                string currentDirectory;
+                try { currentDirectory = Environment.CurrentDirectory; }
+                catch { currentDirectory = string.Empty; }
+
+                field = GetDefaultOutputPath(currentDirectory);
                 return field;
             }
         }
@@ -311,7 +318,9 @@ namespace MPF.Frontend
         /// <summary>
         /// Attempt to determine the default output path
         /// </summary>
-        /// <param name="currentDirectory">Directory that a relative path would resolve against</param>
+        /// <param name="currentDirectory">
+        /// Directory that a relative path would resolve against, empty if there is none
+        /// </param>
         internal static string GetDefaultOutputPath(string currentDirectory)
         {
             // Portable output -- keep the relative path wherever the current directory can hold a

@@ -64,6 +64,21 @@ namespace MPF.Frontend.Test
         }
 
         /// <summary>
+        /// No current directory at all falls back to the home directory
+        /// </summary>
+        /// <remarks>
+        /// This is the state a removed current directory arrives in, because reading
+        /// <see cref="System.Environment.CurrentDirectory"/> throws in that case.
+        /// </remarks>
+        [Fact]
+        public void GetDefaultOutputPath_EmptyDirectory_ReturnsHomePath()
+        {
+            string actual = DumpSettings.GetDefaultOutputPath(string.Empty);
+
+            Assert.Equal(Path.Combine(PathTool.GetHomeDirectory(), "ISO"), actual);
+        }
+
+        /// <summary>
         /// Clearing the default output path restores the default instead of leaving it empty
         /// </summary>
         [Fact]
