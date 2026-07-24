@@ -19,6 +19,7 @@
         <Description>Common code for all MPF execution contexts</Description>
         <Copyright>Copyright (c) Matt Nadareski 2019-2026</Copyright>
         <PackageProjectUrl>https://github.com/SabreTools/</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
