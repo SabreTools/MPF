@@ -60,6 +60,7 @@
 - Update dreamdump to 0.5.0
 - Add macOS support to the GUI (gmipf)
 - Set a terminal type for dumping tools when their output is not a terminal (gmipf)
+- Update Redumper to build 735
 
 ### 3.8.3 (2026-07-06)
 

@@ -83,11 +83,12 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.PlextorSkipLeadin] = new FlagInput(FlagStrings.PlextorSkipLeadin),
             [FlagStrings.PlextorLeadinRetries] = new Int32Input(FlagStrings.PlextorLeadinRetries),
             [FlagStrings.PlextorLeadinForceStore] = new FlagInput(FlagStrings.PlextorLeadinForceStore),
+            [FlagStrings.MediatekSkipLeadout] = new FlagInput(FlagStrings.MediatekSkipLeadout),
+            [FlagStrings.MediatekLeadoutRetries] = new Int32Input(FlagStrings.MediatekLeadoutRetries),
+            [FlagStrings.GenericSkipLeadin] = new FlagInput(FlagStrings.GenericSkipLeadin),
             [FlagStrings.KreonPartialSS] = new FlagInput(FlagStrings.KreonPartialSS),
             [FlagStrings.DvdRaw] = new FlagInput(FlagStrings.DvdRaw),
             [FlagStrings.BdRaw] = new FlagInput(FlagStrings.BdRaw),
-            [FlagStrings.MediatekSkipLeadout] = new FlagInput(FlagStrings.MediatekSkipLeadout),
-            [FlagStrings.MediatekLeadoutRetries] = new Int32Input(FlagStrings.MediatekLeadoutRetries),
             [FlagStrings.DisableCDText] = new FlagInput(FlagStrings.DisableCDText),
 
             // Offset
@@ -188,11 +189,12 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.PlextorSkipLeadin,
                     FlagStrings.PlextorLeadinRetries,
                     FlagStrings.PlextorLeadinForceStore,
+                    FlagStrings.MediatekSkipLeadout,
+                    FlagStrings.MediatekLeadoutRetries,
+                    FlagStrings.GenericSkipLeadin,
                     FlagStrings.KreonPartialSS,
                     FlagStrings.DvdRaw,
                     FlagStrings.BdRaw,
-                    FlagStrings.MediatekSkipLeadout,
-                    FlagStrings.MediatekLeadoutRetries,
                     FlagStrings.DisableCDText,
 
                     // Offset
