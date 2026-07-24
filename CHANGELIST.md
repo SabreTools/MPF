@@ -63,6 +63,7 @@
 - Update Redumper to build 735
 - Update documentation around program support
 - Fix tests broken by Redumper update
+- Move generic to bottom of the Check UI list
 
 ### 3.8.3 (2026-07-06)
 
