@@ -225,6 +225,29 @@ namespace MPF.ExecutionContexts
                 RedirectStandardError = redirect,
             };
 
+            // A tool started with UseShellExecute inherits the frontend's own stdout, so a
+            // frontend whose output is redirected (MPF.CLI in a script or a service) hands
+            // the tool a non-terminal too, even though nothing is redirected here. Unix
+            // only: TERM means nothing on Windows, and there an environment entry cannot be
+            // combined with UseShellExecute.
+#if NET5_0_OR_GREATER
+            bool inheritsRedirectedOutput = !redirect && !OperatingSystem.IsWindows() && Console.IsOutputRedirected;
+#else
+            bool inheritsRedirectedOutput = false;
+#endif
+
+            // Without a terminal on stdout, some tools (notably Aaru 5) still query the
+            // console width while drawing progress; that width is then only recoverable
+            // from the TERM/terminfo fallback, and when TERM is unset it comes back as 0,
+            // so the tool aborts on the very first progress update. Provide a terminal type
+            // so the fallback yields a sane width. Only fill it in when the environment has
+            // none, to respect a real terminal the frontend may have been launched from.
+            if ((redirect || inheritsRedirectedOutput)
+                && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("TERM")))
+            {
+                startInfo.EnvironmentVariables["TERM"] = "xterm";
+            }
+
             // Create the new process
             process = new Process() { StartInfo = startInfo };
 
