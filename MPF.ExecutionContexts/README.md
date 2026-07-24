@@ -1,9 +1,10 @@
 # MPF.ExecutionContexts
 
-This library represents the logic needed to invoke 3 different dumping programs:
+This library represents the logic needed to invoke 4 different dumping programs:
 
-- [Aaru](github.com/aaru-dps/Aaru)
-- [DiscImageCreator](github.com/saramibreak/DiscImageCreator)
+- [Aaru](https://github.com/aaru-dps/Aaru)
+- [DiscImageCreator](https://github.com/saramibreak/DiscImageCreator)
+- [Dreamdump](https://github.com/MoriGM/dreamdump)
 - [Redumper](https://github.com/superg/redumper)
 
 These execution wrappers allow for generating valid parameters for each of the programs as well as provide some helpers that make it easier to determine what those parameters are.
