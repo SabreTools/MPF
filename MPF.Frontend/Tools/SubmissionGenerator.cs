@@ -390,8 +390,7 @@ namespace MPF.Frontend.Tools
                 DiscIdentity = new DiscIdentitySection()
                 {
                     System = system,
-                    // TODO: Make this change in RedumpLib instead
-                    Media = mediaType == PhysicalMediaType.NONE ? MediaType.NONE : mediaType.ToMediaType(),
+                    Media = mediaType.ToMediaType(),
                     Category = null,
                     Title = addPlaceholders ? RequiredValue : string.Empty,
                     ForeignTitle = addPlaceholders ? OptionalValue : string.Empty,

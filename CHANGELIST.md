@@ -68,6 +68,7 @@
 - Handle generic media types better
 - Include Dreamdump in informational messages
 - Grid.Column doesn't work with UniformGrid
+- Update RedumpLib to 3.0.1
 
 ### 3.8.3 (2026-07-06)
 
