@@ -273,7 +273,15 @@ namespace MPF.Avalonia.Windows
                     Layer0InfoPanel!.IsVisible = true;
                     Layer1InfoPanel!.IsVisible = true;
                     LabelSideInfoPanel!.IsVisible = true;
+                    break;
 
+                // Allow all possible fields for unknown media types
+                case MediaType.NONE:
+                    Layer0InfoPanel!.IsVisible = true;
+                    Layer1InfoPanel!.IsVisible = true;
+                    Layer2InfoPanel!.IsVisible = true;
+                    Layer3InfoPanel!.IsVisible = true;
+                    LabelSideInfoPanel!.IsVisible = true;
                     break;
 
                 // Defaults are set above

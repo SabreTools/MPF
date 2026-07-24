@@ -352,6 +352,15 @@ namespace MPF.UI.Windows
                     LabelSideInfo!.Visibility = Visibility.Visible;
                     break;
 
+                // Allow all possible fields for unknown media types
+                case MediaType.NONE:
+                    Layer0Info!.Visibility = Visibility.Visible;
+                    Layer1Info!.Visibility = Visibility.Visible;
+                    Layer2Info!.Visibility = Visibility.Visible;
+                    Layer3Info!.Visibility = Visibility.Visible;
+                    LabelSideInfo!.Visibility = Visibility.Visible;
+                    break;
+
                 // Defaults are set above
                 default:
                     break;
