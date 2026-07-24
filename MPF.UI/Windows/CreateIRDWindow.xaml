@@ -404,8 +404,8 @@
                 <UniformGrid Columns="4"
                              Margin="5,5,5,5"
                              Height="27">
+                    <Label/>
                     <Button Name="CreateIRDButton"
-                            Grid.Column="1"
                             Height="25"
                             Width="80"
                             IsDefault="True"
@@ -413,13 +413,13 @@
                             IsEnabled="{Binding CreateIRDButtonEnabled}"
                             Style="{DynamicResource CustomButtonStyle}"/>
                     <Button Name="CancelButton"
-                            Grid.Column="2"
                             Height="25"
                             Width="80"
                             IsCancel="True"
                             Content="{DynamicResource CancelButtonString}"
                             IsEnabled="{Binding CancelButtonEnabled}"
                             Style="{DynamicResource CustomButtonStyle}"/>
+                    <Label/>
                 </UniformGrid>
             </GroupBox>
         </StackPanel>

@@ -39,18 +39,18 @@
                 <UniformGrid Columns="4"
                              Margin="5,5,5,5"
                              Height="27">
+                    <Label/>
                     <Button Name="ClearButton"
-                            Grid.Column="1"
                             Height="25"
                             Width="80"
                             Content="{DynamicResource ClearButtonString}"
                             Style="{DynamicResource CustomButtonStyle}"/>
                     <Button Name="SaveButton"
-                            Grid.Column="2"
                             Height="25"
                             Width="80"
                             Content="{DynamicResource SaveButtonString}"
                             Style="{DynamicResource CustomButtonStyle}"/>
+                    <Label/>
                 </UniformGrid>
             </GroupBox>
         </StackPanel>

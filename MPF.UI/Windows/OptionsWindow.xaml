@@ -906,20 +906,20 @@
                 <UniformGrid Columns="4"
                              Margin="5,5,5,5"
                              Height="27">
+                    <Label/>
                     <Button Name="AcceptButton"
-                            Grid.Column="1"
                             Height="25"
                             Width="80"
                             IsDefault="True"
                             Content="{DynamicResource AcceptButtonString}"
                             Style="{DynamicResource CustomButtonStyle}"/>
                     <Button Name="CancelButton"
-                            Grid.Column="2"
                             Height="25"
                             Width="80"
                             IsCancel="True"
                             Content="{DynamicResource CancelButtonString}"
                             Style="{DynamicResource CustomButtonStyle}"/>
+                    <Label/>
                 </UniformGrid>
             </GroupBox>
         </StackPanel>
