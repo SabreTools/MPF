@@ -58,6 +58,7 @@
 - Normalize CLI feature handling
 - Add Crunch to packer filters
 - Update dreamdump to 0.5.0
+- Add macOS support to the GUI (gmipf)
 
 ### 3.8.3 (2026-07-06)
 
