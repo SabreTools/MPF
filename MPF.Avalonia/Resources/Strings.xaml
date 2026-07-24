@@ -223,7 +223,7 @@
     <x:String x:Key="AboutTitleString">About</x:String>
     <x:String x:Key="AppTitleFullString">Media Preservation Frontend (MPF)</x:String>
     <x:String x:Key="AboutLine1String">A community preservation frontend developed in C#.</x:String>
-    <x:String x:Key="AboutLine2String">Supports Redumper, Aaru, and DiscImageCreator.</x:String>
+    <x:String x:Key="AboutLine2String">Supports Redumper, Aaru, DiscImageCreator, and Dreamdump.</x:String>
     <x:String x:Key="AboutLine3String">Originally created to help the Redump project.</x:String>
     <x:String x:Key="AboutThanksString">Thanks to everyone who has supported this project!</x:String>
     <x:String x:Key="VersionLabelString">Version</x:String>

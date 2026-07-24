@@ -682,7 +682,7 @@ namespace MPF.Avalonia.Windows
             string aboutText = $"{StringResource("AppTitleFullString", "Media Preservation Frontend (MPF)")}"
                 + $"{Environment.NewLine}"
                 + $"{Environment.NewLine}{StringResource("AboutLine1String", "A community preservation frontend developed in C#.")}"
-                + $"{Environment.NewLine}{StringResource("AboutLine2String", "Supports Redumper, Aaru, and DiscImageCreator.")}"
+                + $"{Environment.NewLine}{StringResource("AboutLine2String", "Supports Redumper, Aaru, DiscImageCreator, and Dreamdump.")}"
                 + $"{Environment.NewLine}{StringResource("AboutLine3String", "Originally created to help the Redump project.")}"
                 + $"{Environment.NewLine}"
                 + $"{Environment.NewLine}{StringResource("AboutThanksString", "Thanks to everyone who has supported this project!")}"

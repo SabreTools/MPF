@@ -66,6 +66,7 @@
 - Move generic to bottom of the Check UI list
 - Show all layers in generic media cases
 - Handle generic media types better
+- Include Dreamdump in informational messages
 
 ### 3.8.3 (2026-07-06)
 
