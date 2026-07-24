@@ -62,6 +62,7 @@
 - Set a terminal type for dumping tools when their output is not a terminal (gmipf)
 - Update Redumper to build 735
 - Update documentation around program support
+- Fix tests broken by Redumper update
 
 ### 3.8.3 (2026-07-06)
 
