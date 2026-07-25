@@ -1029,8 +1029,7 @@ namespace MPF.Frontend.Tools
             else if (system == PhysicalSystem.NintendoGameCube
                 || system == PhysicalSystem.NintendoWii)
             {
-                if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.CoverID))
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.CoverID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                SetCommentFieldIfNotExists(info, SiteCode.CoverID, null, (_) => addPlaceholders ? RequiredIfExistsValue : string.Empty);
             }
             else if (system == PhysicalSystem.SegaChihiro)
             {
