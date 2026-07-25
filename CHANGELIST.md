@@ -70,6 +70,7 @@
 - Grid.Column doesn't work with UniformGrid
 - Update RedumpLib to 3.0.1
 - Add PSP firmware to UIC outputs
+- Update RedumpLib to 3.0.2
 
 ### 3.8.3 (2026-07-06)
 
