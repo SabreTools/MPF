@@ -73,6 +73,7 @@
 - Update RedumpLib to 3.0.2
 - Attempt to fix Cover ID issue
 - Add translation layer for site codes
+- Add translation layer for site codes, Avalonia
 
 ### 3.8.3 (2026-07-06)
 

@@ -40,19 +40,19 @@
                                                         Text="{Binding SubmissionInfo.DiscIdentity.Title, Mode=TwoWay}" />
                                     <controls:UserInput x:Name="AlternativeTitleTextBox"
                                                         Label="{DynamicResource AlternativeTitleInputString}"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[AlternativeTitle], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[AlternativeTitle], Mode=TwoWay}" />
                                     <controls:UserInput Label="{DynamicResource ForeignTitleNonLatinInputString}"
                                                         Text="{Binding SubmissionInfo.DiscIdentity.ForeignTitle, Mode=TwoWay}" />
                                     <controls:UserInput x:Name="AlternativeForeignTitleTextBox"
                                                         Label="{DynamicResource AlternativeForeignTitleInputString}"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[AlternativeForeignTitle], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[AlternativeForeignTitle], Mode=TwoWay}" />
                                     <controls:UserInput Label="{DynamicResource DiscNumberLetterInputString}"
                                                         Text="{Binding SubmissionInfo.DiscIdentity.DiscNumber, Mode=TwoWay}" />
                                     <controls:UserInput Label="{DynamicResource DiscTitleInputString}"
                                                         Text="{Binding SubmissionInfo.DiscIdentity.DiscTitle, Mode=TwoWay}" />
                                     <controls:UserInput x:Name="DiscTitleNonLatinTextBox"
                                                         Label="{DynamicResource DiscTitleNonLatinInputString}"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[DiscTitleNonLatin], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[DiscTitleNonLatin], Mode=TwoWay}" />
 
                                     <Grid ColumnDefinitions="3*,7*"
                                           ColumnSpacing="4"
@@ -101,7 +101,7 @@
                                                         Text="{Binding SubmissionInfo.DiscIdentifiers.Editions, Mode=TwoWay}" />
                                     <controls:UserInput x:Name="EditionNonLatinTextBox"
                                                         Label="{DynamicResource EditionNonLatinInputString}"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[EditionNonLatin], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[EditionNonLatin], Mode=TwoWay}" />
                                 </StackPanel>
                             </Border>
                         </StackPanel>
@@ -130,7 +130,7 @@
                                           ColumnDefinitions="3*,7*"
                                           IsVisible="False">
                                         <CheckBox x:Name="PCMacHybridCheckBox"
-                                                  IsChecked="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[PCMacHybrid], Mode=TwoWay}"
+                                                  IsChecked="{Binding CommentsSpecialFields[PCMacHybrid], Mode=TwoWay}"
                                                   Grid.Column="1"
                                                   Content="PC/Mac Hybrid"
                                                   Margin="0,2" />
@@ -142,7 +142,7 @@
                                                         TextWrapping="Wrap" />
                                     <controls:UserInput x:Name="CompatibleOSTextBox"
                                                         Label="{DynamicResource CompatibleOSInputString}"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[CompatibleOS], Mode=TwoWay}"
+                                                        Text="{Binding CommentsSpecialFields[CompatibleOS], Mode=TwoWay}"
                                                         IsVisible="False" />
                                     <controls:UserInput x:Name="DiscKeyTextBox"
                                                         Label="Disc Key"
@@ -170,31 +170,31 @@
                                                FontWeight="Bold" />
                                     <controls:UserInput x:Name="BBFCRegistrationNumberTextBox"
                                                         Label="BBFC Reg. No."
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[BBFCRegistrationNumber], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[BBFCRegistrationNumber], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="DiscHologramIDTextBox"
                                                         Label="Disc Hologram ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[DiscHologramID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[DiscHologramID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="DNASDiscIDTextBox"
                                                         Label="DNAS Disc ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[DNASDiscID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[DNASDiscID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="CommentDiscIDTextBox"
                                                         Label="Disc ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[DiscID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[DiscID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="CoverIDTextBox"
                                                         Label="Cover ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[CoverID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[CoverID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="ISBNTextBox"
                                                         Label="ISBN"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[ISBN], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[ISBN], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="ISSNTextBox"
                                                         Label="ISSN"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[ISSN], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[ISSN], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="PPNTextBox"
                                                         Label="PPN"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[PPN], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[PPN], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="VFCCodeTextBox"
                                                         Label="VFC code"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[VFCCode], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[VFCCode], Mode=TwoWay}" />
                                 </StackPanel>
                             </Border>
 
@@ -208,94 +208,94 @@
                                                FontWeight="Bold" />
                                     <controls:UserInput x:Name="TwoKGamesIDTextBox"
                                                         Label="2K Games ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[TwoKGamesID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[TwoKGamesID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="AcclaimIDTextBox"
                                                         Label="Acclaim ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[AcclaimID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[AcclaimID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="AccoladeIDTextBox"
                                                         Label="Accolade ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[AccoladeID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[AccoladeID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="ActivisionIDTextBox"
                                                         Label="Activision ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[ActivisionID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[ActivisionID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="BandaiIDTextBox"
                                                         Label="Bandai ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[BandaiID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[BandaiID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="BethesdaIDTextBox"
                                                         Label="Bethesda ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[BethesdaID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[BethesdaID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="CDProjektIDTextBox"
                                                         Label="CD Projekt ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[CDProjektID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[CDProjektID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="DisneyInteractiveIDTextBox"
                                                         Label="Disney Interactive ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[DisneyInteractiveID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[DisneyInteractiveID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="EidosIDTextBox"
                                                         Label="Eidos ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[EidosID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[EidosID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="ElectronicArtsIDTextBox"
                                                         Label="Electronic Arts ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[ElectronicArtsID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[ElectronicArtsID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="FoxInteractiveIDTextBox"
                                                         Label="Fox Interactive ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[FoxInteractiveID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[FoxInteractiveID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="GTInteractiveIDTextBox"
                                                         Label="GT Interactive ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[GTInteractiveID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[GTInteractiveID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="InterplayIDTextBox"
                                                         Label="Interplay ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[InterplayID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[InterplayID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="JASRACIDTextBox"
                                                         Label="JASRAC ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[JASRACID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[JASRACID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="KingRecordsIDTextBox"
                                                         Label="King Records ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[KingRecordsID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[KingRecordsID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="KoeiIDTextBox"
                                                         Label="Koei ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[KoeiID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[KoeiID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="KonamiIDTextBox"
                                                         Label="Konami ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[KonamiID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[KonamiID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="LucasArtsIDTextBox"
                                                         Label="LucasArts ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[LucasArtsID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[LucasArtsID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="MicrosoftIDTextBox"
                                                         Label="Microsoft ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[MicrosoftID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[MicrosoftID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="NaganoIDTextBox"
                                                         Label="Nagano ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[NaganoID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[NaganoID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="NamcoIDTextBox"
                                                         Label="Namco ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[NamcoID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[NamcoID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="NipponIchiSoftwareIDTextBox"
                                                         Label="Nippon Ichi Software ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[NipponIchiSoftwareID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[NipponIchiSoftwareID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="OriginIDTextBox"
                                                         Label="Origin ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[OriginID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[OriginID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="PonyCanyonIDTextBox"
                                                         Label="Pony Canyon ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[PonyCanyonID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[PonyCanyonID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="SegaIDTextBox"
                                                         Label="Sega ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[SegaID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[SegaID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="SelenIDTextBox"
                                                         Label="Selen ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[SelenID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[SelenID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="SierraIDTextBox"
                                                         Label="Sierra ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[SierraID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[SierraID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="TaitoIDTextBox"
                                                         Label="Taito ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[TaitoID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[TaitoID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="UbisoftIDTextBox"
                                                         Label="Ubisoft ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[UbisoftID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[UbisoftID], Mode=TwoWay}" />
                                     <controls:UserInput x:Name="ValveIDTextBox"
                                                         Label="Valve ID"
-                                                        Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[ValveID], Mode=TwoWay}" />
+                                                        Text="{Binding CommentsSpecialFields[ValveID], Mode=TwoWay}" />
                                 </StackPanel>
                             </Border>
                         </StackPanel>
@@ -324,68 +324,68 @@
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="ApplicationsTextBox"
                                                     Label="Applications"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[Applications], Mode=TwoWay}"
+                                                    Text="{Binding ContentsSpecialFields[Applications], Mode=TwoWay}"
                                                     TextHeight="75"
                                                     Enter="True"
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="GamesTextBox"
                                                     Label="Games"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[Games], Mode=TwoWay}"
+                                                    Text="{Binding ContentsSpecialFields[Games], Mode=TwoWay}"
                                                     TextHeight="75"
                                                     Enter="True"
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="NetYarozeGamesTextBox"
                                                     Label="Net Yaroze Games"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[NetYarozeGames], Mode=TwoWay}"
+                                                    Text="{Binding ContentsSpecialFields[NetYarozeGames], Mode=TwoWay}"
                                                     TextHeight="75"
                                                     Enter="True"
                                                     TextWrapping="Wrap"
                                                     IsVisible="False" />
                                 <controls:UserInput x:Name="PlayableDemosTextBox"
                                                     Label="Playable Demos"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[PlayableDemos], Mode=TwoWay}"
+                                                    Text="{Binding ContentsSpecialFields[PlayableDemos], Mode=TwoWay}"
                                                     TextHeight="75"
                                                     Enter="True"
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="RollingDemosTextBox"
                                                     Label="Rolling Demos"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[RollingDemos], Mode=TwoWay}"
+                                                    Text="{Binding ContentsSpecialFields[RollingDemos], Mode=TwoWay}"
                                                     TextHeight="75"
                                                     Enter="True"
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="TechDemosTextBox"
                                                     Label="Tech Demos"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[TechDemos], Mode=TwoWay}"
+                                                    Text="{Binding ContentsSpecialFields[TechDemos], Mode=TwoWay}"
                                                     TextHeight="75"
                                                     Enter="True"
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="GameFootageTextBox"
                                                     Label="Game Footage"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[GameFootage], Mode=TwoWay}"
+                                                    Text="{Binding ContentsSpecialFields[GameFootage], Mode=TwoWay}"
                                                     TextHeight="75"
                                                     Enter="True"
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="VideosTextBox"
                                                     Label="Videos"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[Videos], Mode=TwoWay}"
+                                                    Text="{Binding ContentsSpecialFields[Videos], Mode=TwoWay}"
                                                     TextHeight="75"
                                                     Enter="True"
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="PatchesTextBox"
                                                     Label="Patches"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[Patches], Mode=TwoWay}"
+                                                    Text="{Binding ContentsSpecialFields[Patches], Mode=TwoWay}"
                                                     TextHeight="75"
                                                     Enter="True"
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="SavegamesTextBox"
                                                     Label="Savegames"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[Savegames], Mode=TwoWay}"
+                                                    Text="{Binding ContentsSpecialFields[Savegames], Mode=TwoWay}"
                                                     TextHeight="75"
                                                     Enter="True"
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="ExtrasTextBox"
                                                     Label="Extras"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[Extras], Mode=TwoWay}"
+                                                    Text="{Binding ContentsSpecialFields[Extras], Mode=TwoWay}"
                                                     TextHeight="75"
                                                     Enter="True"
                                                     TextWrapping="Wrap" />
@@ -575,7 +575,7 @@
                                                     Text="{Binding SubmissionInfo.RingCodes.WriteOffset, Mode=TwoWay}" />
                                 <controls:UserInput x:Name="DMIHash"
                                                     Label="DMI Hash"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[DMIHash], Mode=TwoWay}"
+                                                    Text="{Binding CommentsSpecialFields[DMIHash], Mode=TwoWay}"
                                                     IsReadOnly="True" />
                                 <controls:UserInput x:Name="EDC" Label="EDC"
                                                     IsReadOnly="True"
@@ -590,7 +590,7 @@
                                                     Text="{Binding SubmissionInfo.DiscIdentifiers.EXEDate, Mode=TwoWay}" />
                                 <controls:UserInput x:Name="Filename"
                                                     Label="Filename"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[Filename], Mode=TwoWay}"
+                                                    Text="{Binding CommentsSpecialFields[Filename], Mode=TwoWay}"
                                                     IsReadOnly="True"
                                                     TextHeight="90"
                                                     Enter="True"
@@ -604,22 +604,22 @@
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="InternalName"
                                                     Label="Internal Names"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[InternalName], Mode=TwoWay}"
+                                                    Text="{Binding CommentsSpecialFields[InternalName], Mode=TwoWay}"
                                                     IsReadOnly="True" />
                                 <controls:UserInput x:Name="InternalSerialName"
                                                     Label="Internal Serial"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[InternalSerialName], Mode=TwoWay}"
+                                                    Text="{Binding CommentsSpecialFields[InternalSerialName], Mode=TwoWay}"
                                                     IsReadOnly="True" />
                                 <controls:UserInput x:Name="Multisession"
                                                     Label="Multisession"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[Multisession], Mode=TwoWay}"
+                                                    Text="{Binding CommentsSpecialFields[Multisession], Mode=TwoWay}"
                                                     IsReadOnly="True"
                                                     TextHeight="90"
                                                     Enter="True"
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="PFIHash"
                                                     Label="PFI Hash"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[PFIHash], Mode=TwoWay}"
+                                                    Text="{Binding CommentsSpecialFields[PFIHash], Mode=TwoWay}"
                                                     IsReadOnly="True" />
                                 <controls:UserInput x:Name="PIC"
                                                     Label="PIC"
@@ -637,7 +637,7 @@
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="RingPerfectAudioOffset"
                                                     Label="Ring Perfect Audio Offset"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[RingPerfectAudioOffset], Mode=TwoWay}"
+                                                    Text="{Binding CommentsSpecialFields[RingPerfectAudioOffset], Mode=TwoWay}"
                                                     IsReadOnly="True" />
                                 <controls:UserInput x:Name="SampleStart"
                                                     Label="Sample Start"
@@ -652,7 +652,7 @@
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="SSHash"
                                                     Label="Security Sector Hash"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[SSHash], Mode=TwoWay}"
+                                                    Text="{Binding CommentsSpecialFields[SSHash], Mode=TwoWay}"
                                                     IsReadOnly="True" />
                                 <controls:UserInput x:Name="SecuritySectorRanges"
                                                     Label="Security Sector Ranges"
@@ -663,7 +663,7 @@
                                                     TextWrapping="Wrap" />
                                 <controls:UserInput x:Name="SSVersion"
                                                     Label="Security Sector Version"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[SSVersion], Mode=TwoWay}"
+                                                    Text="{Binding CommentsSpecialFields[SSVersion], Mode=TwoWay}"
                                                     IsReadOnly="True" />
                                 <controls:UserInput x:Name="UniversalHash"
                                                     Label="Universal Hash (SHA-1)"
@@ -671,15 +671,15 @@
                                                     IsReadOnly="True" />
                                 <controls:UserInput x:Name="VolumeLabel"
                                                     Label="Volume Label"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[VolumeLabel], Mode=TwoWay}"
+                                                    Text="{Binding CommentsSpecialFields[VolumeLabel], Mode=TwoWay}"
                                                     IsReadOnly="True" />
                                 <controls:UserInput x:Name="XeMID"
                                                     Label="XeMID"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[XeMID], Mode=TwoWay}"
+                                                    Text="{Binding CommentsSpecialFields[XeMID], Mode=TwoWay}"
                                                     IsReadOnly="True" />
                                 <controls:UserInput x:Name="XMID"
                                                     Label="XMID"
-                                                    Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[XMID], Mode=TwoWay}"
+                                                    Text="{Binding CommentsSpecialFields[XMID], Mode=TwoWay}"
                                                     IsReadOnly="True" />
                             </StackPanel>
                         </Border>
