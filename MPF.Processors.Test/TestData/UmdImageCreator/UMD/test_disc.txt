@@ -12,6 +12,29 @@ disc0:/PSP_GAME/PARAM.SFO
 	PSP_SYSTEM_VER: 1.00
 	REGION: 32768
 	TITLE: title
+disc0:/PSP_GAME/SYSDIR/UPDATE/PARAM.SFO
+	magic: PSF
+	version: 1.01
+	BOOTABLE: 1
+	CATEGORY: MG
+	DISC_ID: MSTKUPDATE
+	DISC_VERSION: 1.00
+	PARENTAL_LEVEL: 1
+	REGION: 32768
+	TITLE: PSP™ Update ver 2.80
+	TITLE_0: PSP™ アップデート ver 2.80
+	TITLE_10: PSP™更新 版本 2.80
+	TITLE_11: PSP™升级 版本 2.80
+	TITLE_2: Mise à jour PSP™ ver. 2.80
+	TITLE_3: Actualización de PSP™ ver. 2.80
+	TITLE_4: PSP™-Aktualisierung Ver. 2.80
+	TITLE_5: Aggiornamento della PSP™
+ver. 2.80
+	TITLE_6: PSP™-update versie 2.80
+	TITLE_7: Actualização PSP™ ver 2.80
+	TITLE_8: Обновление PSP™ вер. 2.80
+	TITLE_9: PSP™ 업데이트 버전 2.80
+	UPDATER_VER: 2.80
 
 pspUmdTypes: 0x10 (GAME)
   L0 length: 442560 (0x6c0c0)

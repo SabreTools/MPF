@@ -38,15 +38,17 @@ namespace MPF.Processors
             if (GetUMDAuxInfo($"{basePath}_disc.txt",
                 out var title,
                 out DiscCategory? category,
-                out string? serial,
+                out var serial,
                 out var version,
                 out var layer,
-                out _))
+                out _,
+                out var firmwareVersion))
             {
                 info.DiscIdentity.Title = title ?? string.Empty;
                 info.DiscIdentity.Category = category ?? DiscCategory.Games;
                 info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
                 info.DiscIdentifiers.Version = version ?? string.Empty;
+                info.DumpMetadata.ContentsSpecialFields[SiteCode.Patches] = $"PSP Firmware {firmwareVersion}";
 
                 if (!string.IsNullOrEmpty(layer))
                     info.DiscIdentifiers.Layerbreak = long.Parse(layer ?? "-1");
@@ -142,11 +144,17 @@ namespace MPF.Processors
             out string? serial,
             out string? version,
             out string? layer,
-            out long size)
+            out long size,
+            out string? firmwareVersion)
         {
-            title = null; serial = null; version = null; layer = null;
+            // Set default outputs
+            title = null;
+            serial = null;
+            version = null;
+            layer = null;
             category = null;
             size = -1;
+            firmwareVersion = null;
 
             // If the file doesn't exist, we can't get info from it
             if (string.IsNullOrEmpty(disc))
@@ -180,6 +188,8 @@ namespace MPF.Processors
                         layer = line.Split(' ')[2];
                     else if (line.StartsWith("FileSize:"))
                         size = long.Parse(line.Split(' ')[1]);
+                    else if (line.StartsWith("UPDATER_VER"))
+                        firmwareVersion = line.Split(' ')[1];
                 }
 
                 // If we have a serial, format it

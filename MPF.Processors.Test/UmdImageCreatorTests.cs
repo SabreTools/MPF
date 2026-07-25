@@ -276,7 +276,8 @@ namespace MPF.Processors.Test
                 out string? serial,
                 out string? version,
                 out string? layer,
-                out long size);
+                out long size,
+                out string? firmwareVersion);
 
             Assert.False(actual);
             Assert.Null(title);
@@ -285,6 +286,7 @@ namespace MPF.Processors.Test
             Assert.Null(version);
             Assert.Null(layer);
             Assert.Equal(expectedSize, size);
+            Assert.Null(firmwareVersion);
         }
 
         [Fact]
@@ -299,7 +301,8 @@ namespace MPF.Processors.Test
                 out string? serial,
                 out string? version,
                 out string? layer,
-                out long size);
+                out long size,
+                out string? firmwareVersion);
 
             Assert.False(actual);
             Assert.Null(title);
@@ -308,6 +311,7 @@ namespace MPF.Processors.Test
             Assert.Null(version);
             Assert.Null(layer);
             Assert.Equal(expectedSize, size);
+            Assert.Null(firmwareVersion);
         }
 
         [Fact]
@@ -319,6 +323,7 @@ namespace MPF.Processors.Test
             string? expectedVersion = "1.01";
             string? expectedLayer = "442560";
             long expectedSize = 1471807488;
+            string? expectedFirmwareVersion = "2.80";
 
             string disc = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD", "test_disc.txt");
             bool actual = UmdImageCreator.GetUMDAuxInfo(disc,
@@ -327,7 +332,8 @@ namespace MPF.Processors.Test
                 out string? serial,
                 out string? version,
                 out string? layer,
-                out long size);
+                out long size,
+                out string? firmwareVersion);
 
             Assert.True(actual);
             Assert.Equal(expectedTitle, title);
@@ -336,6 +342,7 @@ namespace MPF.Processors.Test
             Assert.Equal(expectedVersion, version);
             Assert.Equal(expectedLayer, layer);
             Assert.Equal(expectedSize, size);
+            Assert.Equal(expectedFirmwareVersion, firmwareVersion);
         }
 
         #endregion
