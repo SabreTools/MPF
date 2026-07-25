@@ -377,7 +377,7 @@
 
                                 <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource PullAllInformationCheckBoxString}"
-                                          IsChecked="{Binding Options.Processing.MediaInformation.PullAllInformation}"
+                                          IsChecked="{Binding Options.Processing.Login.PullAllInformation}"
                                           ToolTip="Instead of pulling a safe subset of data after dumping, enable pulling all comment and content data"
                                           Margin="0,4"/>
 

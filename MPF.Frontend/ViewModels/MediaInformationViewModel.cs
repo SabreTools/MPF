@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using MPF.Frontend.ComboBoxItems;
 using MPF.Frontend.Tools;
@@ -19,6 +19,16 @@ namespace MPF.Frontend.ViewModels
         /// SubmissionInfo object to fill and save
         /// </summary>
         public SubmissionInfo SubmissionInfo { get; private set; }
+
+        /// <summary>
+        /// Translation layer for comment special fields
+        /// </summary>
+        public Dictionary<string, string> CommentsSpecialFields { get; private set; } = [];
+
+        /// <summary>
+        /// Translation layer for content special fields
+        /// </summary>
+        public Dictionary<string, string> ContentsSpecialFields { get; private set; } = [];
 
         #endregion
 
@@ -195,6 +205,22 @@ namespace MPF.Frontend.ViewModels
                 Regions.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Regions, l) > -1);
             if (SubmissionInfo.RegionsAndLanguages.Languages is not null)
                 Languages.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Languages, l) > -1);
+
+            // Convert comments special fields to string-based keys
+            foreach (var kvp in SubmissionInfo.DumpMetadata.CommentsSpecialFields)
+            {
+                var key = ConvertSiteCodeToString(kvp.Key);
+                if (key is not null)
+                    CommentsSpecialFields[key] = kvp.Value;
+            }
+
+            // Convert contents special fields to string-based keys
+            foreach (var kvp in SubmissionInfo.DumpMetadata.ContentsSpecialFields)
+            {
+                var key = ConvertSiteCodeToString(kvp.Key);
+                if (key is not null)
+                    ContentsSpecialFields[key] = kvp.Value;
+            }
         }
 
         /// <summary>
@@ -212,6 +238,22 @@ namespace MPF.Frontend.ViewModels
                 SubmissionInfo.RegionsAndLanguages.Languages = [null];
 
             SubmissionInfo.DiscIdentity.Title = FrontendTool.NormalizeDiscTitle(SubmissionInfo.DiscIdentity.Title, SubmissionInfo.RegionsAndLanguages.Languages);
+
+            // Convert comments special fields from string-based keys
+            foreach (var kvp in CommentsSpecialFields)
+            {
+                var siteCode = ConvertStringToSiteCode(kvp.Key);
+                if (siteCode is not null)
+                    SubmissionInfo.DumpMetadata.CommentsSpecialFields[siteCode] = kvp.Value;
+            }
+
+            // Convert contents special fields from string-based keys
+            foreach (var kvp in ContentsSpecialFields)
+            {
+                var siteCode = ConvertStringToSiteCode(kvp.Key);
+                if (siteCode is not null)
+                    SubmissionInfo.DumpMetadata.ContentsSpecialFields[siteCode] = kvp.Value;
+            }
         }
 
         /// <summary>
@@ -228,6 +270,317 @@ namespace MPF.Frontend.ViewModels
         public void SetRedumpRegions()
         {
             Regions = RedumpRegions.ConvertAll(r => new RegionCodeComboBoxItem(r));
+        }
+
+        /// <summary>
+        /// Convert a site code to the corresponding index string
+        /// </summary>
+        private static string? ConvertSiteCodeToString(SiteCode? siteCode)
+        {
+            if (siteCode == SiteCode.AcclaimID)
+                return "AcclaimID";
+            else if (siteCode == SiteCode.AccoladeID)
+                return "AccoladeID";
+            else if (siteCode == SiteCode.ActivisionID)
+                return "ActivisionID";
+            else if (siteCode == SiteCode.AdditionalBCAData)
+                return "AdditionalBCAData";
+            else if (siteCode == SiteCode.AlternativeTitle)
+                return "AlternativeTitle";
+            else if (siteCode == SiteCode.AlternativeForeignTitle)
+                return "AlternativeForeignTitle";
+            else if (siteCode == SiteCode.Applications)
+                return "Applications";
+
+            else if (siteCode == SiteCode.BandaiID)
+                return "BandaiID";
+            else if (siteCode == SiteCode.BBFCRegistrationNumber)
+                return "BBFCRegistrationNumber";
+            else if (siteCode == SiteCode.BethesdaID)
+                return "BethesdaID";
+
+            else if (siteCode == SiteCode.CDProjektID)
+                return "CDProjektID";
+            else if (siteCode == SiteCode.CompatibleOS)
+                return "CompatibleOS";
+            else if (siteCode == SiteCode.CoverID)
+                return "CoverID";
+
+            else if (siteCode == SiteCode.DiceMultimedia)
+                return "DiceMultimedia";
+            else if (siteCode == SiteCode.DiscHologramID)
+                return "DiscHologramID";
+            else if (siteCode == SiteCode.DiscID)
+                return "DiscID";
+            else if (siteCode == SiteCode.DiscTitleNonLatin)
+                return "DiscTitleNonLatin";
+            else if (siteCode == SiteCode.DisneyInteractiveID)
+                return "DisneyInteractiveID";
+            else if (siteCode == SiteCode.DMIHash)
+                return "DMIHash";
+            else if (siteCode == SiteCode.DNASDiscID)
+                return "DNASDiscID";
+
+            else if (siteCode == SiteCode.EditionNonLatin)
+                return "EditionNonLatin";
+            else if (siteCode == SiteCode.EidosID)
+                return "EidosID";
+            else if (siteCode == SiteCode.ElectronicArtsID)
+                return "ElectronicArtsID";
+            else if (siteCode == SiteCode.Extras)
+                return "Extras";
+
+            else if (siteCode == SiteCode.Filename)
+                return "Filename";
+            else if (siteCode == SiteCode.FocusMultimedia)
+                return "FocusMultimedia";
+            else if (siteCode == SiteCode.FoxInteractiveID)
+                return "FoxInteractiveID";
+
+            else if (siteCode == SiteCode.GameFootage)
+                return "GameFootage";
+            else if (siteCode == SiteCode.Games)
+                return "Games";
+            else if (siteCode == SiteCode.Genre)
+                return "Genre";
+            else if (siteCode == SiteCode.GSPSoftware)
+                return "GSPSoftware";
+            else if (siteCode == SiteCode.GTInteractiveID)
+                return "GTInteractiveID";
+
+            else if (siteCode == SiteCode.HighSierraVolumeDescriptor)
+                return "HighSierraVolumeDescriptor";
+
+            else if (siteCode == SiteCode.InternalName)
+                return "InternalName";
+            else if (siteCode == SiteCode.InternalSerialName)
+                return "InternalSerialName";
+            else if (siteCode == SiteCode.InterplayID)
+                return "InterplayID";
+            else if (siteCode == SiteCode.ISBN)
+                return "ISBN";
+            else if (siteCode == SiteCode.ISSN)
+                return "ISSN";
+
+            else if (siteCode == SiteCode.JASRACID)
+                return "JASRACID";
+
+            else if (siteCode == SiteCode.KingRecordsID)
+                return "KingRecordsID";
+            else if (siteCode == SiteCode.KoeiID)
+                return "KoeiID";
+            else if (siteCode == SiteCode.KonamiID)
+                return "KonamiID";
+
+            else if (siteCode == SiteCode.LucasArtsID)
+                return "LucasArtsID";
+
+            else if (siteCode == SiteCode.MicrosoftID)
+                return "MicrosoftID";
+            else if (siteCode == SiteCode.Multisession)
+                return "Multisession";
+
+            else if (siteCode == SiteCode.NaganoID)
+                return "NaganoID";
+            else if (siteCode == SiteCode.NamcoID)
+                return "NamcoID";
+            else if (siteCode == SiteCode.NetYarozeGames)
+                return "NetYarozeGames";
+
+            else if (siteCode == SiteCode.NipponIchiSoftwareID)
+                return "NipponIchiSoftwareID";
+
+            else if (siteCode == SiteCode.OriginID)
+                return "OriginID";
+
+            else if (siteCode == SiteCode.Patches)
+                return "Patches";
+            else if (siteCode == SiteCode.PCMacHybrid)
+                return "PCMacHybrid";
+            else if (siteCode == SiteCode.PFIHash)
+                return "PFIHash";
+            else if (siteCode == SiteCode.PlayableDemos)
+                return "PlayableDemos";
+            else if (siteCode == SiteCode.PonyCanyonID)
+                return "PonyCanyonID";
+            else if (siteCode == SiteCode.PostgapType)
+                return "PostgapType";
+            else if (siteCode == SiteCode.PPN)
+                return "PPN";
+            else if (siteCode == SiteCode.Protection)
+                return "Protection";
+
+            else if (siteCode == SiteCode.RingPerfectAudioOffset)
+                return "RingPerfectAudioOffset";
+            else if (siteCode == SiteCode.RollingDemos)
+                return "RollingDemos";
+
+            else if (siteCode == SiteCode.Savegames)
+                return "Savegames";
+            else if (siteCode == SiteCode.SegaID)
+                return "SegaID";
+            else if (siteCode == SiteCode.SelenID)
+                return "SelenID";
+            else if (siteCode == SiteCode.Series)
+                return "Series";
+            else if (siteCode == SiteCode.SierraID)
+                return "SierraID";
+            else if (siteCode == SiteCode.SSHash)
+                return "SSHash";
+            else if (siteCode == SiteCode.SSVersion)
+                return "SSVersion";
+            else if (siteCode == SiteCode.SteamAppID)
+                return "SteamAppID";
+            else if (siteCode == SiteCode.SteamCsmCsdDepotID)
+                return "SteamCsmCsdDepotID";
+            else if (siteCode == SiteCode.SteamSimSidDepotID)
+                return "SteamSimSidDepotID";
+
+            else if (siteCode == SiteCode.TaitoID)
+                return "TaitoID";
+            else if (siteCode == SiteCode.TechDemos)
+                return "TechDemos";
+            else if (siteCode == SiteCode.TitleID)
+                return "TitleID";
+            else if (siteCode == SiteCode.TwoKGamesID)
+                return "TwoKGamesID";
+
+            else if (siteCode == SiteCode.UbisoftID)
+                return "UbisoftID";
+
+            else if (siteCode == SiteCode.ValveID)
+                return "ValveID";
+            else if (siteCode == SiteCode.VFCCode)
+                return "VFCCode";
+            else if (siteCode == SiteCode.Videos)
+                return "Videos";
+            else if (siteCode == SiteCode.VolumeLabel)
+                return "VolumeLabel";
+            else if (siteCode == SiteCode.VCD)
+                return "VCD";
+
+            else if (siteCode == SiteCode.XeMID)
+                return "XeMID";
+            else if (siteCode == SiteCode.XMID)
+                return "XMID";
+
+            return null;
+        }
+
+        /// <summary>
+        /// Convert an index string to the corresponding site code
+        /// </summary>
+        private static SiteCode? ConvertStringToSiteCode(string? str)
+        {
+            return str switch
+            {
+                "AcclaimID" => SiteCode.AcclaimID,
+                "AccoladeID" => SiteCode.AccoladeID,
+                "ActivisionID" => SiteCode.ActivisionID,
+                "AdditionalBCAData" => SiteCode.AdditionalBCAData,
+                "AlternativeTitle" => SiteCode.AlternativeTitle,
+                "AlternativeForeignTitle" => SiteCode.AlternativeForeignTitle,
+                "Applications" => SiteCode.Applications,
+
+                "BandaiID" => SiteCode.BandaiID,
+                "BBFCRegistrationNumber" => SiteCode.BBFCRegistrationNumber,
+                "BethesdaID" => SiteCode.BethesdaID,
+
+                "CDProjektID" => SiteCode.CDProjektID,
+                "CompatibleOS" => SiteCode.CompatibleOS,
+                "CoverID" => SiteCode.CoverID,
+
+                "DiceMultimedia" => SiteCode.DiceMultimedia,
+                "DiscHologramID" => SiteCode.DiscHologramID,
+                "DiscID" => SiteCode.DiscID,
+                "DiscTitleNonLatin" => SiteCode.DiscTitleNonLatin,
+                "DisneyInteractiveID" => SiteCode.DisneyInteractiveID,
+                "DMIHash" => SiteCode.DMIHash,
+                "DNASDiscID" => SiteCode.DNASDiscID,
+
+                "EditionNonLatin" => SiteCode.EditionNonLatin,
+                "EidosID" => SiteCode.EidosID,
+                "ElectronicArtsID" => SiteCode.ElectronicArtsID,
+                "Extras" => SiteCode.Extras,
+
+                "Filename" => SiteCode.Filename,
+                "FocusMultimedia" => SiteCode.FocusMultimedia,
+                "FoxInteractiveID" => SiteCode.FoxInteractiveID,
+
+                "GameFootage" => SiteCode.GameFootage,
+                "Games" => SiteCode.Games,
+                "Genre" => SiteCode.Genre,
+                "GSPSoftware" => SiteCode.GSPSoftware,
+                "GTInteractiveID" => SiteCode.GTInteractiveID,
+
+                "HighSierraVolumeDescriptor" => SiteCode.HighSierraVolumeDescriptor,
+
+                "InternalName" => SiteCode.InternalName,
+                "InternalSerialName" => SiteCode.InternalSerialName,
+                "InterplayID" => SiteCode.InterplayID,
+                "ISBN" => SiteCode.ISBN,
+                "ISSN" => SiteCode.ISSN,
+
+                "JASRACID" => SiteCode.JASRACID,
+
+                "KingRecordsID" => SiteCode.KingRecordsID,
+                "KoeiID" => SiteCode.KoeiID,
+                "KonamiID" => SiteCode.KonamiID,
+
+                "LucasArtsID" => SiteCode.LucasArtsID,
+
+                "MicrosoftID" => SiteCode.MicrosoftID,
+                "Multisession" => SiteCode.Multisession,
+
+                "NaganoID" => SiteCode.NaganoID,
+                "NamcoID" => SiteCode.NamcoID,
+                "NetYarozeGames" => SiteCode.NetYarozeGames,
+
+                "NipponIchiSoftwareID" => SiteCode.NipponIchiSoftwareID,
+
+                "OriginID" => SiteCode.OriginID,
+
+                "Patches" => SiteCode.Patches,
+                "PCMacHybrid" => SiteCode.PCMacHybrid,
+                "PFIHash" => SiteCode.PFIHash,
+                "PlayableDemos" => SiteCode.PlayableDemos,
+                "PonyCanyonID" => SiteCode.PonyCanyonID,
+                "PostgapType" => SiteCode.PostgapType,
+                "PPN" => SiteCode.PPN,
+                "Protection" => SiteCode.Protection,
+
+                "RingPerfectAudioOffset" => SiteCode.RingPerfectAudioOffset,
+                "RollingDemos" => SiteCode.RollingDemos,
+
+                "Savegames" => SiteCode.Savegames,
+                "SegaID" => SiteCode.SegaID,
+                "SelenID" => SiteCode.SelenID,
+                "Series" => SiteCode.Series,
+                "SierraID" => SiteCode.SierraID,
+                "SSHash" => SiteCode.SSHash,
+                "SSVersion" => SiteCode.SSVersion,
+                "SteamAppID" => SiteCode.SteamAppID,
+                "SteamCsmCsdDepotID" => SiteCode.SteamCsmCsdDepotID,
+                "SteamSimSidDepotID" => SiteCode.SteamSimSidDepotID,
+
+                "TaitoID" => SiteCode.TaitoID,
+                "TechDemos" => SiteCode.TechDemos,
+                "TitleID" => SiteCode.TitleID,
+                "TwoKGamesID" => SiteCode.TwoKGamesID,
+
+                "UbisoftID" => SiteCode.UbisoftID,
+
+                "ValveID" => SiteCode.ValveID,
+                "VFCCode" => SiteCode.VFCCode,
+                "Videos" => SiteCode.Videos,
+                "VolumeLabel" => SiteCode.VolumeLabel,
+                "VCD" => SiteCode.VCD,
+
+                "XeMID" => SiteCode.XeMID,
+                "XMID" => SiteCode.XMID,
+
+                _ => null,
+            };
         }
 
         #endregion
