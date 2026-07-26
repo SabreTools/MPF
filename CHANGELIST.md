@@ -80,6 +80,7 @@
 - Reduce number of named inputs in media info window
 - Clean up UI code inconsistencies
 - Handle media info window loading internally
+- Better handling of regions and languages in media info model
 
 ### 3.8.3 (2026-07-06)
 

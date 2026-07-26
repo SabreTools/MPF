@@ -1701,17 +1701,9 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Save the current contents of the UI to the base SubmissionInfo
         /// </summary>
-        /// TODO: Convert selected list item to binding
+        /// TODO: Convert or move normalization to a better place
         public void Save()
         {
-            SubmissionInfo.RegionsAndLanguages.Regions = [.. Regions.FindAll(l => l.IsChecked).ConvertAll(l => l.Value)];
-            if (SubmissionInfo.RegionsAndLanguages.Regions.Length == 0)
-                SubmissionInfo.RegionsAndLanguages.Regions = [null];
-
-            SubmissionInfo.RegionsAndLanguages.Languages = [.. Languages.FindAll(l => l.IsChecked).ConvertAll(l => l.Value)];
-            if (SubmissionInfo.RegionsAndLanguages.Languages.Length == 0)
-                SubmissionInfo.RegionsAndLanguages.Languages = [null];
-
             SubmissionInfo.DiscIdentity.Title = FrontendTool.NormalizeDiscTitle(SubmissionInfo.DiscIdentity.Title, SubmissionInfo.RegionsAndLanguages.Languages);
         }
 
@@ -1727,14 +1719,37 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Load the current contents of the base SubmissionInfo to the UI
         /// </summary>
-        /// TODO: Convert selected list item to binding
         private void LoadRegionsAndLanguages()
         {
+            // Ensure that all existing values are checked
             if (SubmissionInfo.RegionsAndLanguages.Regions is not null)
-                Regions.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Regions, l) > -1);
-
+                Regions.ForEach(r => r.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Regions, r) > -1);
             if (SubmissionInfo.RegionsAndLanguages.Languages is not null)
                 Languages.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Languages, l) > -1);
+
+            // Add handlers for all of the checkboxes
+            Regions.ForEach(r => r.Checked += OnRegionChecked);
+            Languages.ForEach(r => r.Checked += OnLanguageChecked);
+        }
+
+        /// <summary>
+        /// Handle the Checked event for region changes
+        /// </summary>
+        private void OnRegionChecked(object sender)
+        {
+            SubmissionInfo.RegionsAndLanguages.Regions = [.. Regions.FindAll(l => l.IsChecked).ConvertAll(l => l.Value)];
+            if (SubmissionInfo.RegionsAndLanguages.Regions.Length == 0)
+                SubmissionInfo.RegionsAndLanguages.Regions = [null];
+        }
+
+        /// <summary>
+        /// Handle the Checked event for language changes
+        /// </summary>
+        private void OnLanguageChecked(object sender)
+        {
+            SubmissionInfo.RegionsAndLanguages.Languages = [.. Languages.FindAll(l => l.IsChecked).ConvertAll(l => l.Value)];
+            if (SubmissionInfo.RegionsAndLanguages.Languages.Length == 0)
+                SubmissionInfo.RegionsAndLanguages.Languages = [null];
         }
 
         #endregion

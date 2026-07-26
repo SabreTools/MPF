@@ -32,7 +32,15 @@ namespace MPF.Frontend.ComboBoxItems
         /// Determine if the item is selected or not
         /// </summary>
         /// <remarks>Only applies to CheckBox type</remarks>
-        public bool IsChecked { get; set; }
+        public bool IsChecked
+        {
+            get;
+            set
+            {
+                field = value;
+                Checked(this);
+            }
+        }
 
         /// <summary>
         /// Generate all elements associated with the data enum type
@@ -58,5 +66,10 @@ namespace MPF.Frontend.ComboBoxItems
 
         /// <inheritdoc/>
         public override int GetHashCode() => base.GetHashCode();
+
+        /// <summary>
+        /// Occurs when the checked state is changed
+        /// </summary>
+        public event SelectionChanged Checked = (_) => { return; };
     }
 }
