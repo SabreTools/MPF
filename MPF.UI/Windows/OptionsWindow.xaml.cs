@@ -18,18 +18,6 @@ namespace MPF.UI.Windows
         /// </summary>
         public OptionsViewModel OptionsViewModel => DataContext as OptionsViewModel ?? new OptionsViewModel();
 
-#if NET35
-
-        private System.Windows.Controls.Button? AaruPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "AaruPathButton");
-        private System.Windows.Controls.Button? AcceptButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "AcceptButton");
-        private System.Windows.Controls.Button? CancelButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CancelButton");
-        private System.Windows.Controls.Button? DefaultOutputPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DefaultOutputPathButton");
-        private System.Windows.Controls.Button? DiscImageCreatorPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DiscImageCreatorPathButton");
-        private System.Windows.Controls.Button? DreamdumpPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DreamdumpPathButton");
-        private System.Windows.Controls.Button? RedumperPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "RedumperPathButton");
-
-#endif
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -55,24 +43,6 @@ namespace MPF.UI.Windows
             System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
 #endif
             DataContext = new OptionsViewModel(options);
-
-            // Add handlers
-            AaruPathButton!.Click += BrowseForAaruPathClick;
-            DiscImageCreatorPathButton!.Click += BrowseForDiscImageCreatorPathClick;
-            DreamdumpPathButton!.Click += BrowseForDreamdumpPathClick;
-            RedumperPathButton!.Click += BrowseForRedumperPathClick;
-            DefaultOutputPathButton!.Click += BrowseForDefaultOutputPathClick;
-
-            AcceptButton!.Click += OnAcceptClick;
-            CancelButton!.Click += OnCancelClick;
-        }
-
-        /// <summary>
-        /// Handler for OptionsWindow OnContentRendered event
-        /// </summary>
-        protected override void OnContentRendered(EventArgs e)
-        {
-            base.OnContentRendered(e);
 
             // Set the window title
             OptionsViewModel.Title = Title;

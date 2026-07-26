@@ -27,11 +27,13 @@
                                  Grid.Row="0"
                                  Grid.Column="1"
                                  Text="{Binding InputPath, Mode=TwoWay}"
+                                 TextChanged="InputPathTextBoxTextChanged"
                                  VerticalAlignment="Center" />
                         <Button x:Name="InputPathBrowseButton"
                                 Grid.Row="0"
                                 Grid.Column="2"
                                 Content="{DynamicResource BrowseButtonString}"
+                                Click="InputPathBrowseButtonClick"
                                 MinHeight="23"
                                 Padding="10,2"
                                 VerticalAlignment="Center" />
@@ -43,11 +45,13 @@
                                  Grid.Row="1"
                                  Grid.Column="1"
                                  Text="{Binding LogPath, Mode=TwoWay}"
+                                 TextChanged="LogPathTextBoxTextChanged"
                                  VerticalAlignment="Center" />
                         <Button x:Name="LogPathBrowseButton"
                                 Grid.Row="1"
                                 Grid.Column="2"
                                 Content="{DynamicResource BrowseButtonString}"
+                                Click="LogPathBrowseButtonClick"
                                 MinHeight="23"
                                 Padding="10,2"
                                 VerticalAlignment="Center" />
@@ -84,6 +88,7 @@
                                      Grid.Row="0"
                                      Grid.Column="1"
                                      Text="{Binding HexKey, Mode=TwoWay}"
+                                     TextChanged="KeyTextBoxTextChanged"
                                      VerticalAlignment="Center" />
                             <TextBlock Grid.Row="1"
                                        Text="{DynamicResource KeyFilePathLabelString}"
@@ -92,11 +97,13 @@
                                      Grid.Row="1"
                                      Grid.Column="1"
                                      Text="{Binding KeyPath, Mode=TwoWay}"
+                                     TextChanged="KeyPathTextBoxTextChanged"
                                      VerticalAlignment="Center" />
                             <Button x:Name="KeyPathBrowseButton"
                                     Grid.Row="1"
                                     Grid.Column="2"
                                     Content="{DynamicResource BrowseButtonString}"
+                                    Click="KeyPathBrowseButtonClick"
                                     MinHeight="23"
                                     Padding="10,2"
                                     VerticalAlignment="Center" />
@@ -132,6 +139,7 @@
                                      Grid.Row="0"
                                      Grid.Column="1"
                                      Text="{Binding DiscIDString, Mode=TwoWay}"
+                                     TextChanged="DiscIDTextBoxTextChanged"
                                      VerticalAlignment="Center" />
                             <TextBlock Grid.Row="1"
                                        Text="{Binding DiscIDStatus}"
@@ -165,6 +173,7 @@
                                      Grid.Row="0"
                                      Grid.Column="1"
                                      Text="{Binding LayerbreakAsString, Mode=TwoWay}"
+                                     TextChanged="LayerbreakTextBoxTextChanged"
                                      VerticalAlignment="Center" />
                             <TextBlock Grid.Row="1"
                                        Text="{DynamicResource PICLabelString}"
@@ -173,6 +182,7 @@
                                      Grid.Row="1"
                                      Grid.Column="1"
                                      Text="{Binding PICString, Mode=TwoWay}"
+                                     TextChanged="PICTextBoxTextChanged"
                                      Height="57"
                                      AcceptsReturn="True"
                                      TextWrapping="Wrap"
@@ -185,11 +195,13 @@
                                      Grid.Row="2"
                                      Grid.Column="1"
                                      Text="{Binding PICPath, Mode=TwoWay}"
+                                     TextChanged="PICPathTextBoxTextChanged"
                                      VerticalAlignment="Center" />
                             <Button x:Name="PICPathBrowseButton"
                                     Grid.Row="2"
                                     Grid.Column="2"
                                     Content="{DynamicResource BrowseButtonString}"
+                                    Click="PICPathBrowseButtonClick"
                                     MinHeight="23"
                                     Padding="10,2"
                                     VerticalAlignment="Center" />
@@ -230,13 +242,15 @@
                             MinHeight="23"
                             Padding="10,2"
                             Content="{DynamicResource CreateIRDButtonString}"
-                            IsEnabled="{Binding CreateIRDButtonEnabled}" />
+                            IsEnabled="{Binding CreateIRDButtonEnabled}"
+                            Click="OnCreateIRDClick" />
                     <Button x:Name="CancelButton"
                             Width="110"
                             MinHeight="23"
                             Padding="10,2"
                             Content="{DynamicResource CancelButtonString}"
-                            IsEnabled="{Binding CancelButtonEnabled}" />
+                            IsEnabled="{Binding CancelButtonEnabled}"
+                            Click="OnCancelClick" />
                 </StackPanel>
             </Border>
         </Grid>

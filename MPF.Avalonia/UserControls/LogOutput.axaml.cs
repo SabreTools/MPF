@@ -32,10 +32,6 @@ namespace MPF.Avalonia.UserControls
         {
             InitializeComponent();
             DataContext = this;
-
-            // Add handlers
-            ClearButton!.Click += OnClearButton;
-            SaveButton!.Click += OnSaveButton;
         }
 
         #region Logging

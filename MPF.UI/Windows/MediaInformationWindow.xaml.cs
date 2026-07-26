@@ -10,18 +10,6 @@ namespace MPF.UI.Windows
     /// </summary>
     public partial class MediaInformationWindow : WindowBase
     {
-#if NET35
-
-        #region Accept / Cancel
-
-        private Button? AcceptButton => ItemHelper.FindChild<Button>(this, "AcceptButton");
-        private Button? CancelButton => ItemHelper.FindChild<Button>(this, "CancelButton");
-        private Button? RingCodeGuideButton => ItemHelper.FindChild<Button>(this, "RingCodeGuideButton");
-
-        #endregion
-
-#endif
-
         /// <summary>
         /// Read-only access to the current media information view model
         /// </summary>
@@ -47,11 +35,6 @@ namespace MPF.UI.Windows
 #endif
 
             DataContext = new MediaInformationViewModel(options, submissionInfo);
-
-            // Add handlers
-            AcceptButton!.Click += OnAcceptClick;
-            CancelButton!.Click += OnCancelClick;
-            RingCodeGuideButton!.Click += OnRingCodeGuideClick;
         }
 
         #region Event Handlers

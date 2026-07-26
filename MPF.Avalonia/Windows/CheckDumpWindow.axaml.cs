@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -58,30 +57,9 @@ namespace MPF.Avalonia.Windows
             InitializeComponent();
             _parent = parent;
             DataContext = new CheckDumpViewModel();
-            Opened += AddEventHandlers;
         }
 
         #region UI Functionality
-
-        /// <summary>
-        /// Add all event handlers once the window has opened
-        /// </summary>
-        private void AddEventHandlers(object? sender, EventArgs e)
-        {
-            // Main buttons
-            CheckDumpButton!.Click += OnCheckDumpClick;
-            CancelButton!.Click += OnCancelClick;
-
-            // User Area Click
-            InputPathBrowseButton!.Click += InputPathBrowseButtonClick;
-
-            // User Area SelectionChanged
-            SystemTypeComboBox!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
-            DumpingProgramComboBox!.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
-
-            // User Area TextChanged
-            InputPathTextBox!.TextChanged += InputPathTextBoxTextChanged;
-        }
 
         /// <summary>
         /// Show the media information window

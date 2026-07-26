@@ -173,10 +173,11 @@
                                 <Button x:Name="AaruPathButton"
                                         Grid.Row="0"
                                         Grid.Column="2"
+                                        Content="..."
+                                        Click="BrowseForAaruPathClick"
                                         Width="26"
                                         MinHeight="23"
                                         Padding="0,2"
-                                        Content="..."
                                         VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="1"
@@ -191,10 +192,11 @@
                                 <Button x:Name="DiscImageCreatorPathButton"
                                         Grid.Row="1"
                                         Grid.Column="2"
+                                        Content="..."
+                                        Click="BrowseForDiscImageCreatorPathClick"
                                         Width="26"
                                         MinHeight="23"
                                         Padding="0,2"
-                                        Content="..."
                                         VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="2"
@@ -209,10 +211,11 @@
                                 <Button x:Name="DreamdumpPathButton"
                                         Grid.Row="2"
                                         Grid.Column="2"
+                                        Content="..."
+                                        Click="BrowseForDreamdumpPathClick"
                                         Width="26"
                                         MinHeight="23"
                                         Padding="0,2"
-                                        Content="..."
                                         VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="3"
@@ -227,6 +230,7 @@
                                 <Button x:Name="RedumperPathButton"
                                         Grid.Row="3"
                                         Grid.Column="2"
+                                        Click="BrowseForRedumperPathClick"
                                         Width="26"
                                         MinHeight="23"
                                         Padding="0,2"
@@ -256,10 +260,11 @@
                                 <Button x:Name="DefaultOutputPathButton"
                                         Grid.Row="5"
                                         Grid.Column="2"
+                                        Content="..."
+                                        Click="BrowseForDefaultOutputPathClick"
                                         Width="26"
                                         MinHeight="23"
                                         Padding="0,2"
-                                        Content="..."
                                         VerticalAlignment="Center" />
                             </Grid>
                         </Border>
@@ -615,7 +620,8 @@
                                                   Grid.Row="1"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource DreamdumpNonRedumpOptionsCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.Dreamdump.NonRedumpMode}" />
+                                                  IsChecked="{Binding Options.Dumping.Dreamdump.NonRedumpMode}"
+                                                  Click="DreamdumpNonRedumpModeClicked" />
 
                                         <TextBlock Grid.Row="2"
                                                    Grid.Column="0"
@@ -672,7 +678,8 @@
                                         <CheckBox x:Name="RedumperNonRedumpModeCheckBox"
                                                   Grid.Row="3"
                                                   Content="{DynamicResource RedumperNonRedumpOptionsCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.Redumper.NonRedumpMode}" />
+                                                  IsChecked="{Binding Options.Dumping.Redumper.NonRedumpMode}"
+                                                  Click="RedumperNonRedumpModeClicked" />
                                         <TextBlock Grid.Row="4"
                                                    Text="{DynamicResource RedumperDefaultReadMethodLabelString}"
                                                    HorizontalAlignment="Right"
@@ -772,11 +779,13 @@
                     <Button x:Name="AcceptButton"
                             Grid.Column="1"
                             Width="100"
-                            Content="{DynamicResource AcceptButtonString}" />
+                            Content="{DynamicResource AcceptButtonString}"
+                            Click="OnAcceptClick" />
                     <Button x:Name="CancelButton"
                             Grid.Column="2"
                             Width="100"
-                            Content="{DynamicResource CancelButtonString}" />
+                            Content="{DynamicResource CancelButtonString}"
+                            Click="OnCancelClick" />
                 </Grid>
             </Border>
         </Grid>

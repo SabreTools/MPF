@@ -14,8 +14,10 @@
                     BorderThickness="1"
                     Margin="10">
                 <ScrollViewer Name="OutputViewer"
+                              SizeChanged="OutputViewerSizeChanged"
                               Template="{DynamicResource CustomScrollViewerControlStyle}">
                     <RichTextBox Name="Output"
+                                 TextChanged="OnTextChanged"
                                  FontFamily="Consolas"
                                  Background="#FF202020"
                                  IsReadOnly="true"/>
@@ -41,14 +43,16 @@
                              Height="27">
                     <Label/>
                     <Button Name="ClearButton"
+                            Content="{DynamicResource ClearButtonString}"
+                            Click="OnClearButton"
                             Height="25"
                             Width="80"
-                            Content="{DynamicResource ClearButtonString}"
                             Style="{DynamicResource CustomButtonStyle}"/>
                     <Button Name="SaveButton"
+                            Content="{DynamicResource SaveButtonString}"
+                            Click="OnSaveButton"
                             Height="25"
                             Width="80"
-                            Content="{DynamicResource SaveButtonString}"
                             Style="{DynamicResource CustomButtonStyle}"/>
                     <Label/>
                 </UniformGrid>

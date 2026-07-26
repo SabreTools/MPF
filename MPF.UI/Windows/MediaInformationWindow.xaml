@@ -847,18 +847,21 @@
                             Height="25"
                             Width="80"
                             Content="{DynamicResource AcceptButtonString}"
-                            Style="{DynamicResource CustomButtonStyle}"/>
+                            Style="{DynamicResource CustomButtonStyle}"
+                            Click="OnAcceptClick"/>
                     <Button Name="CancelButton"
                             Height="25"
                             Width="80"
                             Content="{DynamicResource CancelButtonString}"
-                            Style="{DynamicResource CustomButtonStyle}"/>
+                            Style="{DynamicResource CustomButtonStyle}"
+                            Click="OnCancelClick"/>
                     <Button Name="RingCodeGuideButton"
                             Grid.Column="2"
                             Height="25"
                             Width="120"
                             Content="{DynamicResource RingCodeGuideButtonString}"
-                            Style="{DynamicResource CustomButtonStyle}"/>
+                            Style="{DynamicResource CustomButtonStyle}"
+                            Click="OnRingCodeGuideClick"/>
                 </UniformGrid>
             </GroupBox>
         </StackPanel>

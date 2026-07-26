@@ -29,10 +29,8 @@ namespace MPF.UI.UserControls
 
 #if NET35
 
-        private Button? ClearButton => ItemHelper.FindChild<Button>(this, "ClearButton");
         private RichTextBox? Output => ItemHelper.FindChild<RichTextBox>(this, "Output");
         private ScrollViewer? OutputViewer => ItemHelper.FindChild<ScrollViewer>(this, "OutputViewer");
-        private Button? SaveButton => ItemHelper.FindChild<Button>(this, "SaveButton");
 
 #endif
 
@@ -49,12 +47,6 @@ namespace MPF.UI.UserControls
             };
             _paragraph = new Paragraph();
             _document.Blocks.Add(_paragraph);
-
-            // Add handlers
-            OutputViewer!.SizeChanged += OutputViewerSizeChanged;
-            Output!.TextChanged += OnTextChanged;
-            ClearButton!.Click += OnClearButton;
-            SaveButton!.Click += OnSaveButton;
 
             // Update the internal state
             Output.Document = _document;

@@ -251,9 +251,10 @@
                         <Button x:Name="AaruPathButton"
                                 Grid.Row="0"
                                 Grid.Column="2"
+                                Content="..."
+                                Click="BrowseForAaruPathClick"
                                 Height="22"
                                 Width="22"
-                                Content="..."
                                 Style="{DynamicResource CustomButtonStyle}"/>
 
                         <Label Grid.Row="1"
@@ -271,9 +272,10 @@
                         <Button x:Name="DiscImageCreatorPathButton"
                                 Grid.Row="1"
                                 Grid.Column="2"
+                                Content="..."
+                                Click="BrowseForDiscImageCreatorPathClick"
                                 Height="22"
                                 Width="22"
-                                Content="..."
                                 Style="{DynamicResource CustomButtonStyle}"/>
 
                         <Label Grid.Row="2"
@@ -291,9 +293,10 @@
                         <Button x:Name="DreamdumpPathButton"
                                 Grid.Row="2"
                                 Grid.Column="2"
+                                Content="..."
+                                Click="BrowseForDreamdumpPathClick"
                                 Height="22"
                                 Width="22"
-                                Content="..."
                                 Style="{DynamicResource CustomButtonStyle}"/>
 
                         <Label Grid.Row="3"
@@ -311,9 +314,10 @@
                         <Button x:Name="RedumperPathButton"
                                 Grid.Row="3"
                                 Grid.Column="2"
+                                Content="..."
+                                Click="BrowseForRedumperPathClick"
                                 Height="22"
                                 Width="22"
-                                Content="..."
                                 Style="{DynamicResource CustomButtonStyle}"/>
 
                         <Label Grid.Row="4"
@@ -347,9 +351,10 @@
                         <Button x:Name="DefaultOutputPathButton"
                                 Grid.Row="5"
                                 Grid.Column="2"
+                                Content="..."
+                                Click="BrowseForDefaultOutputPathClick"
                                 Height="22"
                                 Width="22"
-                                Content="..."
                                 Style="{DynamicResource CustomButtonStyle}"/>
                     </Grid>
                 </TabItem>
@@ -908,17 +913,19 @@
                              Height="27">
                     <Label/>
                     <Button Name="AcceptButton"
-                            Height="25"
-                            Width="80"
                             IsDefault="True"
                             Content="{DynamicResource AcceptButtonString}"
-                            Style="{DynamicResource CustomButtonStyle}"/>
-                    <Button Name="CancelButton"
+                            Click="OnAcceptClick"
+                            Style="{DynamicResource CustomButtonStyle}"
                             Height="25"
-                            Width="80"
+                            Width="80"/>
+                    <Button Name="CancelButton"
                             IsCancel="True"
                             Content="{DynamicResource CancelButtonString}"
-                            Style="{DynamicResource CustomButtonStyle}"/>
+                            Click="OnCancelClick"
+                            Style="{DynamicResource CustomButtonStyle}"
+                            Height="25"
+                            Width="80"/>
                     <Label/>
                 </UniformGrid>
             </GroupBox>

@@ -650,13 +650,16 @@
                             HorizontalAlignment="Center"
                             Spacing="16">
                     <Button x:Name="RingCodeGuideButton"
-                            Content="{DynamicResource RingCodeGuideButtonString}" />
+                            Content="{DynamicResource RingCodeGuideButtonString}"
+                            Click="OnRingCodeGuideClick" />
                     <Button x:Name="AcceptButton"
                             Width="100"
-                            Content="{DynamicResource AcceptButtonString}" />
+                            Content="{DynamicResource AcceptButtonString}"
+                            Click="OnAcceptClick" />
                     <Button x:Name="CancelButton"
                             Width="100"
-                            Content="{DynamicResource CancelButtonString}" />
+                            Content="{DynamicResource CancelButtonString}"
+                            Click="OnCancelClick" />
                 </StackPanel>
             </Border>
         </Grid>

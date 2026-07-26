@@ -109,9 +109,6 @@ namespace MPF.Avalonia.Windows
             MainViewModel.UpdateVolumeLabelEnabled = false;
             MainViewModel.CopyProtectScanButtonEnabled = false;
 
-            // Add the click handlers to the UI
-            AddEventHandlers();
-
             // Display the debug option in the menu, if necessary
             if (MainViewModel.Options.GUI.ShowDebugViewMenuItem)
                 DebugViewMenuItem!.IsVisible = true;
@@ -257,53 +254,6 @@ namespace MPF.Avalonia.Windows
         #endregion
 
         #region UI Functionality
-
-        /// <summary>
-        /// Add all event handlers
-        /// </summary>
-        private void AddEventHandlers()
-        {
-            // Menu Bar Click
-            AboutMenuItem!.Click += AboutClick;
-            AppExitMenuItem!.Click += AppExitClick;
-            CheckForUpdatesMenuItem!.Click += CheckForUpdatesClick;
-            DebugViewMenuItem!.Click += DebugViewClick;
-            CheckDumpMenuItem!.Click += CheckDumpMenuItemClick;
-            CreateIRDMenuItem!.Click += CreateIRDMenuItemClick;
-            OptionsMenuItem!.Click += OptionsMenuItemClick;
-
-            // Languages dropdown
-            EnglishMenuItem!.Click += LanguageMenuItemClick;
-            FrenchMenuItem!.Click += LanguageMenuItemClick;
-            GermanMenuItem!.Click += LanguageMenuItemClick;
-            ItalianMenuItem!.Click += LanguageMenuItemClick;
-            JapaneseMenuItem!.Click += LanguageMenuItemClick;
-            KoreanMenuItem!.Click += LanguageMenuItemClick;
-            PolishMenuItem!.Click += LanguageMenuItemClick;
-            PortugueseMenuItem!.Click += LanguageMenuItemClick;
-            RussianMenuItem!.Click += LanguageMenuItemClick;
-            SpanishMenuItem!.Click += LanguageMenuItemClick;
-            SwedishMenuItem!.Click += LanguageMenuItemClick;
-            UkrainianMenuItem!.Click += LanguageMenuItemClick;
-
-            // User Area Click
-            CopyProtectScanButton!.Click += CopyProtectScanButtonClick;
-            EnableParametersCheckBox!.Click += EnableParametersCheckBoxClick;
-            MediaScanButton!.Click += MediaScanButtonClick;
-            UpdateVolumeLabel!.Click += UpdateVolumeLabelClick;
-            OutputPathBrowseButton!.Click += OutputPathBrowseButtonClick;
-            StartStopButton!.Click += StartStopButtonClick;
-
-            // User Area SelectionChanged
-            SystemTypeComboBox!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
-            MediaTypeComboBox!.SelectionChanged += MediaTypeComboBoxSelectionChanged;
-            DriveLetterComboBox!.SelectionChanged += DriveLetterComboBoxSelectionChanged;
-            DriveSpeedComboBox!.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
-            DumpingProgramComboBox!.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
-
-            // User Area TextChanged
-            OutputPathTextBox!.TextChanged += OutputPathTextBoxTextChanged;
-        }
 
         /// <summary>
         /// Browse for an output file path

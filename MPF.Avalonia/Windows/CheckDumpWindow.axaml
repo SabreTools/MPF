@@ -35,12 +35,14 @@
                                  Grid.Column="1"
                                  Text="{Binding InputPath, Mode=TwoWay}"
                                  IsEnabled="{Binding InputPathTextBoxEnabled}"
+                                 TextChanged="InputPathTextBoxTextChanged"
                                  VerticalAlignment="Center" />
                         <Button x:Name="InputPathBrowseButton"
                                 Grid.Row="0"
                                 Grid.Column="2"
                                 Content="{DynamicResource BrowseButtonString}"
                                 IsEnabled="{Binding InputPathBrowseButtonEnabled}"
+                                Click="InputPathBrowseButtonClick"
                                 MinHeight="23"
                                 Padding="10,2"
                                 VerticalAlignment="Center" />
@@ -54,6 +56,7 @@
                                   ItemsSource="{Binding Systems}"
                                   SelectedItem="{Binding CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                   IsEnabled="{Binding SystemTypeComboBoxEnabled}"
+                                  SelectionChanged="SystemTypeComboBoxSelectionChanged"
                                   HorizontalAlignment="Stretch"
                                   VerticalAlignment="Center" />
 
@@ -66,6 +69,7 @@
                                   ItemsSource="{Binding AvailableInternalPrograms}"
                                   SelectedItem="{Binding CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                   IsEnabled="{Binding DumpingProgramComboBoxEnabled}"
+                                  SelectionChanged="DumpingProgramComboBoxSelectionChanged"
                                   VerticalAlignment="Center" />
                     </Grid>
                 </StackPanel>
@@ -113,11 +117,13 @@
                     <Button x:Name="CheckDumpButton"
                             Width="110"
                             Content="{DynamicResource CheckDumpButtonString}"
-                            IsEnabled="{Binding CheckDumpButtonEnabled}" />
+                            IsEnabled="{Binding CheckDumpButtonEnabled}"
+                            Click="OnCheckDumpClick" />
                     <Button x:Name="CancelButton"
                             Width="110"
                             Content="{DynamicResource CancelButtonString}"
-                            IsEnabled="{Binding CancelButtonEnabled}" />
+                            IsEnabled="{Binding CancelButtonEnabled}"
+                            Click="OnCancelClick" />
                 </StackPanel>
             </Border>
         </Grid>

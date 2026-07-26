@@ -123,21 +123,23 @@
                     <TextBox x:Name="InputPathTextBox"
                              Grid.Row="0"
                              Grid.Column="1"
+                             Text="{Binding InputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding InputPathTextBoxEnabled}"
+                             TextChanged="InputPathTextBoxTextChanged"
                              Height="22"
                              Width="345"
                              HorizontalAlignment="Left"
-                             VerticalContentAlignment="Center"
-                             Text="{Binding InputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             IsEnabled="{Binding InputPathTextBoxEnabled}"/>
+                             VerticalContentAlignment="Center"/>
                     <Button x:Name="InputPathBrowseButton"
                             Grid.Row="0"
                             Grid.Column="1"
-                            Height="22"
-                            Width="53"
-                            HorizontalAlignment="Right"
                             Content="{DynamicResource BrowseButtonString}"
                             IsEnabled="{Binding InputPathBrowseButtonEnabled}"
-                            Style="{DynamicResource CustomButtonStyle}"/>
+                            Click="InputPathBrowseButtonClick"
+                            Style="{DynamicResource CustomButtonStyle}"
+                            Height="22"
+                            Width="53"
+                            HorizontalAlignment="Right"/>
 
                     <Label x:Name="LogPathLabel"
                            Grid.Row="1"
@@ -147,21 +149,23 @@
                     <TextBox x:Name="LogPathTextBox"
                              Grid.Row="1"
                              Grid.Column="1"
+                             Text="{Binding LogPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding LogPathTextBoxEnabled}"
+                             TextChanged="LogPathTextBoxTextChanged"
                              Height="22"
                              Width="345"
                              HorizontalAlignment="Left"
-                             VerticalContentAlignment="Center"
-                             Text="{Binding LogPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             IsEnabled="{Binding LogPathTextBoxEnabled}"/>
+                             VerticalContentAlignment="Center"/>
                     <Button x:Name="LogPathBrowseButton"
                             Grid.Row="1"
                             Grid.Column="1"
-                            Height="22"
-                            Width="53"
-                            HorizontalAlignment="Right"
                             Content="{DynamicResource BrowseButtonString}"
                             IsEnabled="{Binding LogPathBrowseButtonEnabled}"
-                            Style="{DynamicResource CustomButtonStyle}"/>
+                            Click="LogPathBrowseButtonClick"
+                            Style="{DynamicResource CustomButtonStyle}"
+                            Height="22"
+                            Width="53"
+                            HorizontalAlignment="Right"/>
                 </Grid>
             </GroupBox>
 
@@ -192,12 +196,13 @@
                     <TextBox x:Name="KeyTextBox"
                              Grid.Row="0"
                              Grid.Column="1"
+                             Text="{Binding HexKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding HexKeyTextBoxEnabled}"
+                             TextChanged="KeyTextBoxTextChanged"
                              Height="22"
                              Width="345"
                              HorizontalAlignment="Left"
-                             VerticalContentAlignment="Center"
-                             Text="{Binding HexKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             IsEnabled="{Binding HexKeyTextBoxEnabled}"/>
+                             VerticalContentAlignment="Center"/>
 
                     <Label x:Name="KeyPathLabel"
                            Grid.Row="1"
@@ -208,21 +213,23 @@
                     <TextBox x:Name="KeyPathTextBox"
                              Grid.Row="1"
                              Grid.Column="1"
+                             Text="{Binding KeyPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding KeyPathTextBoxEnabled}"
+                             TextChanged="KeyPathTextBoxTextChanged"
                              Height="22"
                              Width="345"
                              HorizontalAlignment="Left"
-                             VerticalContentAlignment="Center"
-                             Text="{Binding KeyPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             IsEnabled="{Binding KeyPathTextBoxEnabled}"/>
+                             VerticalContentAlignment="Center"/>
                     <Button x:Name="KeyPathBrowseButton"
                             Grid.Row="1"
                             Grid.Column="1"
-                            Height="22"
-                            Width="53"
-                            HorizontalAlignment="Right"
                             Content="{DynamicResource BrowseButtonString}"
                             IsEnabled="{Binding KeyPathBrowseButtonEnabled}"
-                            Style="{DynamicResource CustomButtonStyle}"/>
+                            Click="KeyPathBrowseButtonClick"
+                            Style="{DynamicResource CustomButtonStyle}"
+                            Height="22"
+                            Width="53"
+                            HorizontalAlignment="Right"/>
 
                     <Label x:Name="KeyStatusLabel"
                            Grid.Row="2"
@@ -263,12 +270,13 @@
                     <TextBox x:Name="DiscIDTextBox"
                              Grid.Row="0"
                              Grid.Column="1"
+                             Text="{Binding DiscIDString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding DiscIDTextBoxEnabled}"
+                             TextChanged="DiscIDTextBoxTextChanged"
                              Height="22"
                              Width="345"
                              HorizontalAlignment="Left"
-                             VerticalContentAlignment="Center"
-                             Text="{Binding DiscIDString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             IsEnabled="{Binding DiscIDTextBoxEnabled}"/>
+                             VerticalContentAlignment="Center"/>
 
                     <Label x:Name="DiscIDStatusLabel"
                            Grid.Row="1"
@@ -311,12 +319,13 @@
                     <TextBox x:Name="LayerbreakTextBox"
                              Grid.Row="0"
                              Grid.Column="1"
+                             Text="{Binding LayerbreakString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding LayerbreakTextBoxEnabled}"
+                             TextChanged="LayerbreakTextBoxTextChanged"
                              Height="22"
                              Width="345"
                              HorizontalAlignment="Left"
-                             VerticalContentAlignment="Center"
-                             Text="{Binding LayerbreakString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             IsEnabled="{Binding LayerbreakTextBoxEnabled}"/>
+                             VerticalContentAlignment="Center"/>
 
                     <Label x:Name="PICLabel"
                            Grid.Row="1"
@@ -326,6 +335,9 @@
                     <TextBox x:Name="PICTextBox"
                              Grid.Row="1"
                              Grid.Column="1"
+                             Text="{Binding PICString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding PICTextBoxEnabled}"
+                             TextChanged="PICTextBoxTextChanged"
                              Width="345"
                              HorizontalAlignment="Left"
                              VerticalContentAlignment="Top"
@@ -333,9 +345,7 @@
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              MinHeight="55"
                              MaxHeight="146"
-                             AcceptsReturn="True"
-                             Text="{Binding PICString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             IsEnabled="{Binding PICTextBoxEnabled}"/>
+                             AcceptsReturn="True"/>
 
                     <Label x:Name="PICPathLabel"
                            Grid.Row="2"
@@ -346,21 +356,23 @@
                     <TextBox x:Name="PICPathTextBox"
                              Grid.Row="2"
                              Grid.Column="1"
+                             Text="{Binding PICPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding PICPathTextBoxEnabled}"
+                             TextChanged="PICPathTextBoxTextChanged"
                              Height="22"
                              Width="345"
                              HorizontalAlignment="Left"
-                             VerticalContentAlignment="Center"
-                             Text="{Binding PICPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             IsEnabled="{Binding PICPathTextBoxEnabled}"/>
+                             VerticalContentAlignment="Center"/>
                     <Button x:Name="PICPathBrowseButton"
                             Grid.Row="2"
                             Grid.Column="1"
-                            Height="22"
-                            Width="53"
-                            HorizontalAlignment="Right"
                             Content="{DynamicResource BrowseButtonString}"
                             IsEnabled="{Binding PICPathBrowseButtonEnabled}"
-                            Style="{DynamicResource CustomButtonStyle}"/>
+                            Click="PICPathBrowseButtonClick"
+                            Style="{DynamicResource CustomButtonStyle}"
+                            Height="22"
+                            Width="53"
+                            HorizontalAlignment="Right"/>
 
                     <Label x:Name="PICStatusLabel"
                            Grid.Row="3"
@@ -411,6 +423,7 @@
                             IsDefault="True"
                             Content="{DynamicResource CreateIRDButtonString}"
                             IsEnabled="{Binding CreateIRDButtonEnabled}"
+                            Click="OnCreateIRDClick"
                             Style="{DynamicResource CustomButtonStyle}"/>
                     <Button Name="CancelButton"
                             Height="25"
@@ -418,6 +431,7 @@
                             IsCancel="True"
                             Content="{DynamicResource CancelButtonString}"
                             IsEnabled="{Binding CancelButtonEnabled}"
+                            Click="OnCancelClick"
                             Style="{DynamicResource CustomButtonStyle}"/>
                     <Label/>
                 </UniformGrid>

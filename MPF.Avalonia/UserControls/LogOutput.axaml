@@ -41,10 +41,12 @@
                         Spacing="16">
                 <Button x:Name="ClearButton"
                         Width="110"
-                        Content="{DynamicResource ClearButtonString}" />
+                        Content="{DynamicResource ClearButtonString}"
+                        Click="OnClearButton" />
                 <Button x:Name="SaveButton"
                         Width="110"
-                        Content="{DynamicResource SaveButtonString}" />
+                        Content="{DynamicResource SaveButtonString}"
+                        Click="OnSaveButton" />
             </StackPanel>
         </Border>
     </Grid>

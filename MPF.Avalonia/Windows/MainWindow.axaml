@@ -67,28 +67,35 @@
                     <MenuItem x:Name="FileMenuItem"
                               Header="File">
                         <MenuItem x:Name="AppExitMenuItem"
-                                  Header="{DynamicResource ExitMenuItemString}" />
+                                  Header="{DynamicResource ExitMenuItemString}"
+                                  Click="AppExitClick" />
                     </MenuItem>
                     <MenuItem x:Name="ToolsMenuItem"
                               Header="Tools">
                         <MenuItem x:Name="CheckDumpMenuItem"
                                   Header="{DynamicResource CheckDumpMenuItemString}"
-                                  IsEnabled="{Binding CheckDumpMenuItemEnabled}" />
+                                  IsEnabled="{Binding CheckDumpMenuItemEnabled}"
+                                  Click="CheckDumpMenuItemClick" />
                         <MenuItem x:Name="CreateIRDMenuItem"
                                   Header="{DynamicResource CreatePS3IRDDumpMenuItemString}"
-                                  IsEnabled="{Binding CreateIRDMenuItemEnabled}" />
+                                  IsEnabled="{Binding CreateIRDMenuItemEnabled}"
+                                  Click="CreateIRDMenuItemClick" />
                         <MenuItem x:Name="OptionsMenuItem"
                                   Header="{DynamicResource OptionsDumpMenuItemString}"
-                                  IsEnabled="{Binding OptionsMenuItemEnabled}" />
+                                  IsEnabled="{Binding OptionsMenuItemEnabled}"
+                                  Click="OptionsMenuItemClick" />
                         <MenuItem x:Name="DebugViewMenuItem"
-                                  Header="{DynamicResource DebugInfoWindowMenuItemString}" />
+                                  Header="{DynamicResource DebugInfoWindowMenuItemString}"
+                                  Click="DebugViewClick" />
                     </MenuItem>
                     <MenuItem x:Name="HelpMenuItem"
                               Header="Help">
                         <MenuItem x:Name="AboutMenuItem"
-                                  Header="{DynamicResource AboutMenuItemString}" />
+                                  Header="{DynamicResource AboutMenuItemString}"
+                                  Click="AboutClick" />
                         <MenuItem x:Name="CheckForUpdatesMenuItem"
-                                  Header="{DynamicResource CheckForUpdateMenuItemString}" />
+                                  Header="{DynamicResource CheckForUpdateMenuItemString}"
+                                  Click="CheckForUpdatesClick" />
                     </MenuItem>
                 </Menu>
 
@@ -114,40 +121,52 @@
                             and never showed the active-language check mark. -->
                             <MenuItem x:Name="EnglishMenuItem"
                                       Header="English"
-                                      ToggleType="CheckBox" />
+                                      ToggleType="CheckBox"
+                                      Click="LanguageMenuItemClick" />
                             <MenuItem x:Name="GermanMenuItem"
                                       Header="Deutsch"
-                                      ToggleType="CheckBox" />
+                                      ToggleType="CheckBox"
+                                      Click="LanguageMenuItemClick" />
                             <MenuItem x:Name="SpanishMenuItem"
                                       Header="Español"
-                                      ToggleType="CheckBox" />
+                                      ToggleType="CheckBox"
+                                      Click="LanguageMenuItemClick" />
                             <MenuItem x:Name="FrenchMenuItem"
                                       Header="Français"
-                                      ToggleType="CheckBox" />
+                                      ToggleType="CheckBox"
+                                      Click="LanguageMenuItemClick" />
                             <MenuItem x:Name="ItalianMenuItem"
                                       Header="Italiano"
-                                      ToggleType="CheckBox" />
+                                      ToggleType="CheckBox"
+                                      Click="LanguageMenuItemClick" />
                             <MenuItem x:Name="JapaneseMenuItem"
                                       Header="日本語"
-                                      ToggleType="CheckBox" />
+                                      ToggleType="CheckBox"
+                                      Click="LanguageMenuItemClick" />
                             <MenuItem x:Name="KoreanMenuItem"
                                       Header="한국어"
-                                      ToggleType="CheckBox" />
+                                      ToggleType="CheckBox"
+                                      Click="LanguageMenuItemClick" />
                             <MenuItem x:Name="PolishMenuItem"
                                       Header="Polski"
-                                      ToggleType="CheckBox" />
+                                      ToggleType="CheckBox"
+                                      Click="LanguageMenuItemClick" />
                             <MenuItem x:Name="PortugueseMenuItem"
                                       Header="Português"
-                                      ToggleType="CheckBox" />
+                                      ToggleType="CheckBox"
+                                      Click="LanguageMenuItemClick" />
                             <MenuItem x:Name="RussianMenuItem"
                                       Header="Русский"
-                                      ToggleType="CheckBox" />
+                                      ToggleType="CheckBox"
+                                      Click="LanguageMenuItemClick" />
                             <MenuItem x:Name="SwedishMenuItem"
                                       Header="Svenska"
-                                      ToggleType="CheckBox" />
+                                      ToggleType="CheckBox"
+                                      Click="LanguageMenuItemClick" />
                             <MenuItem x:Name="UkrainianMenuItem"
                                       Header="Українська"
-                                      ToggleType="CheckBox" />
+                                      ToggleType="CheckBox"
+                                      Click="LanguageMenuItemClick" />
                         </MenuItem>
                     </Menu>
                     <Button x:Name="MinimizeButton"
@@ -203,12 +222,14 @@
                                       HorizontalAlignment="Stretch"
                                       ItemsSource="{Binding Systems}"
                                       SelectedItem="{Binding CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                      IsEnabled="{Binding SystemTypeComboBoxEnabled}" />
+                                      IsEnabled="{Binding SystemTypeComboBoxEnabled}"
+                                      SelectionChanged="SystemTypeComboBoxSelectionChanged" />
                             <ComboBox x:Name="MediaTypeComboBox"
                                       Grid.Column="1"
                                       ItemsSource="{Binding MediaTypes}"
                                       SelectedItem="{Binding CurrentPhysicalMediaType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                      IsEnabled="{Binding PhysicalMediaTypeComboBoxEnabled}" />
+                                      IsEnabled="{Binding PhysicalMediaTypeComboBoxEnabled}"
+                                      SelectionChanged="MediaTypeComboBoxSelectionChanged" />
                         </Grid>
 
                         <TextBlock Grid.Row="1"
@@ -221,11 +242,13 @@
                             <TextBox x:Name="OutputPathTextBox"
                                      Text="{Binding OutputPath, Mode=TwoWay}"
                                      IsEnabled="{Binding OutputPathTextBoxEnabled}"
+                                     TextChanged="OutputPathTextBoxTextChanged"
                                      VerticalAlignment="Center" />
                             <Button x:Name="OutputPathBrowseButton"
                                     Grid.Column="1"
                                     Content="{DynamicResource BrowseButtonString}"
                                     IsEnabled="{Binding OutputPathBrowseButtonEnabled}"
+                                    Click="OutputPathBrowseButtonClick"
                                     MinHeight="23"
                                     Padding="10,2"
                                     VerticalAlignment="Center" />
@@ -241,7 +264,8 @@
                                   HorizontalAlignment="Left"
                                   ItemsSource="{Binding Drives}"
                                   SelectedItem="{Binding CurrentDrive, Mode=TwoWay}"
-                                  IsEnabled="{Binding DriveLetterComboBoxEnabled}" />
+                                  IsEnabled="{Binding DriveLetterComboBoxEnabled}"
+                                  SelectionChanged="DriveLetterComboBoxSelectionChanged" />
 
                         <TextBlock Grid.Row="3"
                                    Text="{DynamicResource DriveSpeedLabelString}"
@@ -253,7 +277,8 @@
                                   HorizontalAlignment="Left"
                                   ItemsSource="{Binding DriveSpeeds}"
                                   SelectedItem="{Binding DriveSpeed, Mode=TwoWay}"
-                                  IsEnabled="{Binding DriveSpeedComboBoxEnabled}" />
+                                  IsEnabled="{Binding DriveSpeedComboBoxEnabled}"
+                                  SelectionChanged="DriveSpeedComboBoxSelectionChanged" />
 
                         <TextBlock Grid.Row="4"
                                    Text="{DynamicResource DumpingProgramLabelString}"
@@ -265,7 +290,8 @@
                                   HorizontalAlignment="Left"
                                   ItemsSource="{Binding AvailableInternalPrograms}"
                                   SelectedItem="{Binding CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                  IsEnabled="{Binding DumpingProgramComboBoxEnabled}" />
+                                  IsEnabled="{Binding DumpingProgramComboBoxEnabled}"
+                                  SelectionChanged="DumpingProgramComboBoxSelectionChanged" />
 
                         <TextBlock Grid.Row="5"
                                    Text="{DynamicResource ParametersLabelString}"
@@ -282,6 +308,7 @@
                                       Grid.Column="1"
                                       IsChecked="{Binding ParametersCheckBoxEnabled, Mode=TwoWay}"
                                       IsEnabled="{Binding EnableParametersCheckBoxEnabled}"
+                                      Click="EnableParametersCheckBoxClick"
                                       Content=""
                                       Margin="0"
                                       Padding="0"
@@ -310,22 +337,26 @@
                                 Width="132"
                                 Padding="2,1"
                                 Content="{Binding StartStopButtonText}"
-                                IsEnabled="{Binding StartStopButtonEnabled}" />
+                                IsEnabled="{Binding StartStopButtonEnabled}"
+                                Click="StartStopButtonClick" />
                         <Button x:Name="MediaScanButton"
                                 Width="132"
                                 Padding="2,1"
                                 Content="{DynamicResource ScanButtonString}"
-                                IsEnabled="{Binding MediaScanButtonEnabled}" />
+                                IsEnabled="{Binding MediaScanButtonEnabled}"
+                                Click="MediaScanButtonClick" />
                         <Button x:Name="UpdateVolumeLabel"
                                 Width="132"
                                 Padding="2,1"
                                 Content="{DynamicResource UpdateLabelButtonString}"
-                                IsEnabled="{Binding UpdateVolumeLabelEnabled}" />
+                                IsEnabled="{Binding UpdateVolumeLabelEnabled}"
+                                Click="UpdateVolumeLabelClick" />
                         <Button x:Name="CopyProtectScanButton"
                                 Width="132"
                                 Padding="2,1"
                                 Content="{DynamicResource ProtectionScanButtonString}"
-                                IsEnabled="{Binding CopyProtectScanButtonEnabled}" />
+                                IsEnabled="{Binding CopyProtectScanButtonEnabled}"
+                                Click="CopyProtectScanButtonClick" />
                     </StackPanel>
                 </StackPanel>
             </Border>

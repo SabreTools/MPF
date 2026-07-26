@@ -19,31 +19,6 @@ namespace MPF.UI.Windows
 
 #if NET35
 
-        #region Settings
-
-        private Button? InputPathBrowseButton => ItemHelper.FindChild<Button>(this, "InputPathBrowseButton");
-        private TextBox? InputPathTextBox => ItemHelper.FindChild<TextBox>(this, "InputPathTextBox");
-
-        private Button? LogPathBrowseButton => ItemHelper.FindChild<Button>(this, "LogPathBrowseButton");
-        private TextBox? LogPathTextBox => ItemHelper.FindChild<TextBox>(this, "LogPathTextBox");
-        private Button? KeyPathBrowseButton => ItemHelper.FindChild<Button>(this, "KeyPathBrowseButton");
-        private TextBox? KeyPathTextBox => ItemHelper.FindChild<TextBox>(this, "KeyPathTextBox");
-        private TextBox? KeyTextBox => ItemHelper.FindChild<TextBox>(this, "KeyTextBox");
-        private TextBox? DiscIDTextBox => ItemHelper.FindChild<TextBox>(this, "DiscIDTextBox");
-        private Button? PICPathBrowseButton => ItemHelper.FindChild<Button>(this, "PICPathBrowseButton");
-        private TextBox? PICPathTextBox => ItemHelper.FindChild<TextBox>(this, "PICPathTextBox");
-        private TextBox? PICTextBox => ItemHelper.FindChild<TextBox>(this, "PICTextBox");
-        private TextBox? LayerbreakTextBox => ItemHelper.FindChild<TextBox>(this, "LayerbreakTextBox");
-
-        #endregion
-
-        #region Controls
-
-        private System.Windows.Controls.Button? CreateIRDButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CreateIRDButton");
-        private System.Windows.Controls.Button? CancelButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CancelButton");
-
-        #endregion
-
         #region Expanders
 
         private Expander? KeyExpander => ItemHelper.FindChild<Expander>(this, "KeyExpander");
@@ -73,44 +48,7 @@ namespace MPF.UI.Windows
 #endif
         }
 
-        /// <summary>
-        /// Handler for CheckDumpWindow OnContentRendered event
-        /// </summary>
-        protected override void OnContentRendered(EventArgs e)
-        {
-            base.OnContentRendered(e);
-
-            // Add the click handlers to the UI
-            AddEventHandlers();
-        }
-
         #region UI Functionality
-
-        /// <summary>
-        /// Add all event handlers
-        /// </summary>
-        public void AddEventHandlers()
-        {
-            // Main buttons
-            CreateIRDButton!.Click += OnCreateIRDClick;
-            CancelButton!.Click += OnCancelClick;
-
-            // User Area Click
-            InputPathBrowseButton!.Click += InputPathBrowseButtonClick;
-            LogPathBrowseButton!.Click += LogPathBrowseButtonClick;
-            KeyPathBrowseButton!.Click += KeyPathBrowseButtonClick;
-            PICPathBrowseButton!.Click += PICPathBrowseButtonClick;
-
-            // User Area TextChanged
-            InputPathTextBox!.TextChanged += InputPathTextBoxTextChanged;
-            LogPathTextBox!.TextChanged += LogPathTextBoxTextChanged;
-            KeyPathTextBox!.TextChanged += KeyPathTextBoxTextChanged;
-            KeyTextBox!.TextChanged += KeyTextBoxTextChanged;
-            DiscIDTextBox!.TextChanged += DiscIDTextBoxTextChanged;
-            PICPathTextBox!.TextChanged += PICPathTextBoxTextChanged;
-            PICTextBox!.TextChanged += PICTextBoxTextChanged;
-            LayerbreakTextBox!.TextChanged += LayerbreakTextBoxTextChanged;
-        }
 
         /// <summary>
         /// Browse for an input ISO file path

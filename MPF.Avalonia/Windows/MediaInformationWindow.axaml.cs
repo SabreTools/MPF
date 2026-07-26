@@ -32,11 +32,6 @@ namespace MPF.Avalonia.Windows
             InitializeComponent();
 
             DataContext = new MediaInformationViewModel(options, submissionInfo);
-
-            // Add handlers
-            AcceptButton!.Click += OnAcceptClick;
-            CancelButton!.Click += OnCancelClick;
-            RingCodeGuideButton!.Click += OnRingCodeGuideClick;
         }
 
         #region Event Handlers
@@ -45,9 +40,7 @@ namespace MPF.Avalonia.Windows
         /// Handler for AcceptButton Click event
         /// </summary>
         private void OnAcceptClick(object? sender, RoutedEventArgs e)
-        {
-            Close(true);
-        }
+            => Close(true);
 
         /// <summary>
         /// Handler for CancelButton Click event

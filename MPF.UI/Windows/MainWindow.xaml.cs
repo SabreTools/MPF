@@ -28,53 +28,10 @@ namespace MPF.UI.Windows
 
 #if NET35
 
-        #region Top Menu Bar
-
-        // Buttons
-        private MenuItem? AboutMenuItem => ItemHelper.FindChild<MenuItem>(this, "AboutMenuItem");
-        private MenuItem? AppExitMenuItem => ItemHelper.FindChild<MenuItem>(this, "AppExitMenuItem");
-        private MenuItem? CheckForUpdatesMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckForUpdatesMenuItem");
-        private MenuItem? DebugViewMenuItem => ItemHelper.FindChild<MenuItem>(this, "DebugViewMenuItem");
-        private MenuItem? CheckDumpMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckDumpMenuItem");
-        private MenuItem? CreateIRDMenuItem => ItemHelper.FindChild<MenuItem>(this, "CreateIRDMenuItem");
-        private MenuItem? OptionsMenuItem => ItemHelper.FindChild<MenuItem>(this, "OptionsMenuItem");
-
-        // Languages
-        private MenuItem? EnglishMenuItem => ItemHelper.FindChild<MenuItem>(this, "EnglishMenuItem");
-        private MenuItem? FrenchMenuItem => ItemHelper.FindChild<MenuItem>(this, "FrenchMenuItem");
-        private MenuItem? GermanMenuItem => ItemHelper.FindChild<MenuItem>(this, "GermanMenuItem");
-        private MenuItem? ItalianMenuItem => ItemHelper.FindChild<MenuItem>(this, "ItalianMenuItem");
-        private MenuItem? JapaneseMenuItem => ItemHelper.FindChild<MenuItem>(this, "JapaneseMenuItem");
-        private MenuItem? KoreanMenuItem => ItemHelper.FindChild<MenuItem>(this, "KoreanMenuItem");
-        private MenuItem? PolishMenuItem => ItemHelper.FindChild<MenuItem>(this, "PolishMenuItem");
-        private MenuItem? PortugueseMenuItem => ItemHelper.FindChild<MenuItem>(this, "PortugueseMenuItem");
-        private MenuItem? RussianMenuItem => ItemHelper.FindChild<MenuItem>(this, "RussianMenuItem");
-        private MenuItem? SpanishMenuItem => ItemHelper.FindChild<MenuItem>(this, "SpanishMenuItem");
-        private MenuItem? SwedishMenuItem => ItemHelper.FindChild<MenuItem>(this, "SwedishMenuItem");
-        private MenuItem? UkrainianMenuItem => ItemHelper.FindChild<MenuItem>(this, "UkrainianMenuItem");
-
-        #endregion
-
         #region Settings
 
-        private ComboBox? DriveLetterComboBox => ItemHelper.FindChild<ComboBox>(this, "DriveLetterComboBox");
-        private ComboBox? DriveSpeedComboBox => ItemHelper.FindChild<ComboBox>(this, "DriveSpeedComboBox");
-        private ComboBox? DumpingProgramComboBox => ItemHelper.FindChild<ComboBox>(this, "DumpingProgramComboBox");
-        private CheckBox? EnableParametersCheckBox => ItemHelper.FindChild<CheckBox>(this, "EnableParametersCheckBox");
         private ComboBox? MediaTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "MediaTypeComboBox");
-        private Button? OutputPathBrowseButton => ItemHelper.FindChild<Button>(this, "OutputPathBrowseButton");
-        private TextBox? OutputPathTextBox => ItemHelper.FindChild<TextBox>(this, "OutputPathTextBox");
         private Label? SystemMediaTypeLabel => ItemHelper.FindChild<Label>(this, "SystemMediaTypeLabel");
-        private ComboBox? SystemTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "SystemTypeComboBox");
-
-        #endregion
-
-        #region Controls
-
-        private Button? CopyProtectScanButton => ItemHelper.FindChild<Button>(this, "CopyProtectScanButton");
-        private Button? MediaScanButton => ItemHelper.FindChild<Button>(this, "MediaScanButton");
-        private Button? StartStopButton => ItemHelper.FindChild<Button>(this, "StartStopButton");
-        private Button? UpdateVolumeLabel => ItemHelper.FindChild<Button>(this, "UpdateVolumeLabel");
 
         #endregion
 
@@ -121,13 +78,6 @@ namespace MPF.UI.Windows
             MainViewModel.MediaScanButtonEnabled = false;
             MainViewModel.UpdateVolumeLabelEnabled = false;
             MainViewModel.CopyProtectScanButtonEnabled = false;
-
-            // Add the click handlers to the UI
-            AddEventHandlers();
-
-            // Display the debug option in the menu, if necessary
-            if (MainViewModel.Options.GUI.ShowDebugViewMenuItem)
-                DebugViewMenuItem!.Visibility = Visibility.Visible;
 
             MainViewModel.Init(LogOutput!.EnqueueLog,
                 DisplayUserMessage,
@@ -273,53 +223,6 @@ namespace MPF.UI.Windows
         #endregion
 
         #region UI Functionality
-
-        /// <summary>
-        /// Add all event handlers
-        /// </summary>
-        public void AddEventHandlers()
-        {
-            // Menu Bar Click
-            AboutMenuItem!.Click += AboutClick;
-            AppExitMenuItem!.Click += AppExitClick;
-            CheckForUpdatesMenuItem!.Click += CheckForUpdatesClick;
-            DebugViewMenuItem!.Click += DebugViewClick;
-            CheckDumpMenuItem!.Click += CheckDumpMenuItemClick;
-            CreateIRDMenuItem!.Click += CreateIRDMenuItemClick;
-            OptionsMenuItem!.Click += OptionsMenuItemClick;
-
-            // Languages dropdown
-            EnglishMenuItem!.Click += LanguageMenuItemClick;
-            FrenchMenuItem!.Click += LanguageMenuItemClick;
-            GermanMenuItem!.Click += LanguageMenuItemClick;
-            ItalianMenuItem!.Click += LanguageMenuItemClick;
-            JapaneseMenuItem!.Click += LanguageMenuItemClick;
-            KoreanMenuItem!.Click += LanguageMenuItemClick;
-            PolishMenuItem!.Click += LanguageMenuItemClick;
-            PortugueseMenuItem!.Click += LanguageMenuItemClick;
-            RussianMenuItem!.Click += LanguageMenuItemClick;
-            SpanishMenuItem!.Click += LanguageMenuItemClick;
-            SwedishMenuItem!.Click += LanguageMenuItemClick;
-            UkrainianMenuItem!.Click += LanguageMenuItemClick;
-
-            // User Area Click
-            CopyProtectScanButton!.Click += CopyProtectScanButtonClick;
-            EnableParametersCheckBox!.Click += EnableParametersCheckBoxClick;
-            MediaScanButton!.Click += MediaScanButtonClick;
-            UpdateVolumeLabel!.Click += UpdateVolumeLabelClick;
-            OutputPathBrowseButton!.Click += OutputPathBrowseButtonClick;
-            StartStopButton!.Click += StartStopButtonClick;
-
-            // User Area SelectionChanged
-            SystemTypeComboBox!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
-            MediaTypeComboBox!.SelectionChanged += MediaTypeComboBoxSelectionChanged;
-            DriveLetterComboBox!.SelectionChanged += DriveLetterComboBoxSelectionChanged;
-            DriveSpeedComboBox!.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
-            DumpingProgramComboBox!.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
-
-            // User Area TextChanged
-            OutputPathTextBox!.TextChanged += OutputPathTextBoxTextChanged;
-        }
 
         /// <summary>
         /// Browse for an output file path

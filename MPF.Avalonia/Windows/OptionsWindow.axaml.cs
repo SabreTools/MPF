@@ -48,31 +48,12 @@ namespace MPF.Avalonia.Windows
         {
             InitializeComponent();
             DataContext = new OptionsViewModel(options);
-            Opened += AddEventHandlers;
+
+            // Set the window title
+            OptionsViewModel.Title = Title;
         }
 
         #region UI Functionality
-
-        /// <summary>
-        /// Add all event handlers once the window has opened
-        /// </summary>
-        private void AddEventHandlers(object? sender, EventArgs e)
-        {
-            // Set the window title
-            OptionsViewModel.Title = Title;
-
-            // Add handlers
-            AaruPathButton!.Click += BrowseForAaruPathClick;
-            DiscImageCreatorPathButton!.Click += BrowseForDiscImageCreatorPathClick;
-            RedumperPathButton!.Click += BrowseForRedumperPathClick;
-            DefaultOutputPathButton!.Click += BrowseForDefaultOutputPathClick;
-
-            AcceptButton!.Click += OnAcceptClick;
-            CancelButton!.Click += OnCancelClick;
-            // RedumpLoginTestButton!.Click += OnRedumpTestClick;
-            DreamdumpNonRedumpModeCheckBox!.Click += DreamdumpNonRedumpModeClicked;
-            RedumperNonRedumpModeCheckBox!.Click += RedumperNonRedumpModeClicked;
-        }
 
         /// <summary>
         /// Browse for an executable file, filtering to *.exe on Windows
@@ -114,6 +95,16 @@ namespace MPF.Avalonia.Windows
             string? result = await BrowseForExecutableAsync("DiscImageCreator");
             if (!string.IsNullOrWhiteSpace(result))
                 OptionsViewModel.Options.Dumping.DiscImageCreatorPath = result;
+        }
+
+        /// <summary>
+        /// Handler for generic Click event
+        /// </summary>
+        private async void BrowseForDreamdumpPathClick(object? sender, RoutedEventArgs e)
+        {
+            string? result = await BrowseForExecutableAsync("Dreamdump");
+            if (!string.IsNullOrWhiteSpace(result))
+                OptionsViewModel.Options.Dumping.DreamdumpPath = result;
         }
 
         /// <summary>

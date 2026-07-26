@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -47,36 +46,9 @@ namespace MPF.Avalonia.Windows
         {
             InitializeComponent();
             DataContext = new CreateIRDViewModel();
-            Opened += AddEventHandlers;
         }
 
         #region UI Functionality
-
-        /// <summary>
-        /// Add all event handlers once the window has opened
-        /// </summary>
-        private void AddEventHandlers(object? sender, EventArgs e)
-        {
-            // Main buttons
-            CreateIRDButton!.Click += OnCreateIRDClick;
-            CancelButton!.Click += OnCancelClick;
-
-            // User Area Click
-            InputPathBrowseButton!.Click += InputPathBrowseButtonClick;
-            LogPathBrowseButton!.Click += LogPathBrowseButtonClick;
-            KeyPathBrowseButton!.Click += KeyPathBrowseButtonClick;
-            PICPathBrowseButton!.Click += PICPathBrowseButtonClick;
-
-            // User Area TextChanged
-            InputPathTextBox!.TextChanged += InputPathTextBoxTextChanged;
-            LogPathTextBox!.TextChanged += LogPathTextBoxTextChanged;
-            KeyPathTextBox!.TextChanged += KeyPathTextBoxTextChanged;
-            KeyTextBox!.TextChanged += KeyTextBoxTextChanged;
-            DiscIDTextBox!.TextChanged += DiscIDTextBoxTextChanged;
-            PICPathTextBox!.TextChanged += PICPathTextBoxTextChanged;
-            PICTextBox!.TextChanged += PICTextBoxTextChanged;
-            LayerbreakTextBox!.TextChanged += LayerbreakTextBoxTextChanged;
-        }
 
         /// <summary>
         /// Browse for a single input file matching the given patterns

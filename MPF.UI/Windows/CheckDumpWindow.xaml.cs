@@ -22,26 +22,6 @@ namespace MPF.UI.Windows
         /// </summary>
         public CheckDumpViewModel CheckDumpViewModel => DataContext as CheckDumpViewModel ?? new CheckDumpViewModel();
 
-#if NET35
-
-        #region Settings
-
-        private ComboBox? DumpingProgramComboBox => ItemHelper.FindChild<ComboBox>(this, "DumpingProgramComboBox");
-        private Button? InputPathBrowseButton => ItemHelper.FindChild<Button>(this, "InputPathBrowseButton");
-        private TextBox? InputPathTextBox => ItemHelper.FindChild<TextBox>(this, "InputPathTextBox");
-        private ComboBox? SystemTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "SystemTypeComboBox");
-
-        #endregion
-
-        #region Controls
-
-        private System.Windows.Controls.Button? CheckDumpButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CheckDumpButton");
-        private System.Windows.Controls.Button? CancelButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CancelButton");
-
-        #endregion
-
-#endif
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -61,38 +41,7 @@ namespace MPF.UI.Windows
 #endif
         }
 
-        /// <summary>
-        /// Handler for CheckDumpWindow OnContentRendered event
-        /// </summary>
-        protected override void OnContentRendered(EventArgs e)
-        {
-            base.OnContentRendered(e);
-
-            // Add the click handlers to the UI
-            AddEventHandlers();
-        }
-
         #region UI Functionality
-
-        /// <summary>
-        /// Add all event handlers
-        /// </summary>
-        public void AddEventHandlers()
-        {
-            // Main buttons
-            CheckDumpButton!.Click += OnCheckDumpClick;
-            CancelButton!.Click += OnCancelClick;
-
-            // User Area Click
-            InputPathBrowseButton!.Click += InputPathBrowseButtonClick;
-
-            // User Area SelectionChanged
-            SystemTypeComboBox!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
-            DumpingProgramComboBox!.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
-
-            // User Area TextChanged
-            InputPathTextBox!.TextChanged += InputPathTextBoxTextChanged;
-        }
 
         /// <summary>
         /// Browse for an input file path
