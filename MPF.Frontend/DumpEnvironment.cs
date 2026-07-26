@@ -607,6 +607,11 @@ namespace MPF.Frontend
                     resultProgress.Report(ResultEventArgs.Success("Media information skipped!"));
             }
 
+            // Normalize the disc title based on language
+            submissionInfo!.DiscIdentity.Title = FrontendTool.NormalizeDiscTitle(
+                submissionInfo.DiscIdentity.Title,
+                submissionInfo.RegionsAndLanguages.Languages);
+
             // Process special fields for site codes
             resultProgress.Report(ResultEventArgs.Neutral("Processing site codes..."));
             Formatter.ProcessSpecialFields(submissionInfo!);

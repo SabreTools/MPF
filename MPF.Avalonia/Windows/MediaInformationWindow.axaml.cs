@@ -46,7 +46,6 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void OnAcceptClick(object? sender, RoutedEventArgs e)
         {
-            MediaInformationViewModel.Save();
             Close(true);
         }
 

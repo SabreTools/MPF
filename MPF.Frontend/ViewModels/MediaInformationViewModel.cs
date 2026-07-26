@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using MPF.Frontend.ComboBoxItems;
-using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.ViewModels
@@ -1697,15 +1696,6 @@ namespace MPF.Frontend.ViewModels
         }
 
         #region Helpers
-
-        /// <summary>
-        /// Save the current contents of the UI to the base SubmissionInfo
-        /// </summary>
-        /// TODO: Convert or move normalization to a better place
-        public void Save()
-        {
-            SubmissionInfo.DiscIdentity.Title = FrontendTool.NormalizeDiscTitle(SubmissionInfo.DiscIdentity.Title, SubmissionInfo.RegionsAndLanguages.Languages);
-        }
 
         /// <summary>
         /// Limit regions and languages to Redump-included values only

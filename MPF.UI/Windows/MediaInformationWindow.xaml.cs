@@ -61,7 +61,6 @@ namespace MPF.UI.Windows
         /// </summary>
         private void OnAcceptClick(object sender, RoutedEventArgs e)
         {
-            MediaInformationViewModel.Save();
             DialogResult = true;
             Close();
         }
