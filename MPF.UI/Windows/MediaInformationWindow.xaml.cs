@@ -47,7 +47,6 @@ namespace MPF.UI.Windows
 #endif
 
             DataContext = new MediaInformationViewModel(options, submissionInfo);
-            MediaInformationViewModel.Load();
 
             // Add handlers
             AcceptButton!.Click += OnAcceptClick;

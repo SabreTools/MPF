@@ -1690,25 +1690,13 @@ namespace MPF.Frontend.ViewModels
 
             // Handle Redump compatibility mode
             if (_options.Processing.MediaInformation.EnableRedumpCompatibility)
-            {
-                Regions = RedumpRegions.ConvertAll(r => new RegionCodeComboBoxItem(r));
-                Languages = RedumpLanguages.ConvertAll(l => new LanguageCodeComboBoxItem(l));
-            }
+                LimitRegionsAndLanguages();
+
+            // Load regions and languages
+            LoadRegionsAndLanguages();
         }
 
         #region Helpers
-
-        /// <summary>
-        /// Load the current contents of the base SubmissionInfo to the UI
-        /// </summary>
-        /// TODO: Convert selected list item to binding
-        public void Load()
-        {
-            if (SubmissionInfo.RegionsAndLanguages.Regions is not null)
-                Regions.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Regions, l) > -1);
-            if (SubmissionInfo.RegionsAndLanguages.Languages is not null)
-                Languages.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Languages, l) > -1);
-        }
 
         /// <summary>
         /// Save the current contents of the UI to the base SubmissionInfo
@@ -1716,15 +1704,37 @@ namespace MPF.Frontend.ViewModels
         /// TODO: Convert selected list item to binding
         public void Save()
         {
-            SubmissionInfo.RegionsAndLanguages.Regions = [.. Regions.FindAll(l => l.IsChecked).ConvertAll(l => l?.Value)];
+            SubmissionInfo.RegionsAndLanguages.Regions = [.. Regions.FindAll(l => l.IsChecked).ConvertAll(l => l.Value)];
             if (SubmissionInfo.RegionsAndLanguages.Regions.Length == 0)
                 SubmissionInfo.RegionsAndLanguages.Regions = [null];
 
-            SubmissionInfo.RegionsAndLanguages.Languages = [.. Languages.FindAll(l => l.IsChecked).ConvertAll(l => l?.Value)];
+            SubmissionInfo.RegionsAndLanguages.Languages = [.. Languages.FindAll(l => l.IsChecked).ConvertAll(l => l.Value)];
             if (SubmissionInfo.RegionsAndLanguages.Languages.Length == 0)
                 SubmissionInfo.RegionsAndLanguages.Languages = [null];
 
             SubmissionInfo.DiscIdentity.Title = FrontendTool.NormalizeDiscTitle(SubmissionInfo.DiscIdentity.Title, SubmissionInfo.RegionsAndLanguages.Languages);
+        }
+
+        /// <summary>
+        /// Limit regions and languages to Redump-included values only
+        /// </summary>
+        private void LimitRegionsAndLanguages()
+        {
+            Regions = RedumpRegions.ConvertAll(r => new RegionCodeComboBoxItem(r));
+            Languages = RedumpLanguages.ConvertAll(l => new LanguageCodeComboBoxItem(l));
+        }
+
+        /// <summary>
+        /// Load the current contents of the base SubmissionInfo to the UI
+        /// </summary>
+        /// TODO: Convert selected list item to binding
+        private void LoadRegionsAndLanguages()
+        {
+            if (SubmissionInfo.RegionsAndLanguages.Regions is not null)
+                Regions.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Regions, l) > -1);
+
+            if (SubmissionInfo.RegionsAndLanguages.Languages is not null)
+                Languages.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Languages, l) > -1);
         }
 
         #endregion

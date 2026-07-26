@@ -79,6 +79,7 @@
 - Fix binding issue with read-only properties
 - Reduce number of named inputs in media info window
 - Clean up UI code inconsistencies
+- Handle media info window loading internally
 
 ### 3.8.3 (2026-07-06)
 
