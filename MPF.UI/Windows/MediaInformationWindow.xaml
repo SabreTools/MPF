@@ -17,6 +17,7 @@
                         Background="Transparent">
 
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <core:ElementConverter x:Key="ElementConverter"/>
     </Window.Resources>
 
@@ -266,8 +267,7 @@
                                       HorizontalAlignment="Stretch"
                                       VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <Grid x:Name="PCMacHybridGrid"
-                                          Visibility="Collapsed">
+                                    <Grid Visibility="{Binding Path=PCMacHybridVisible, Converter={StaticResource BoolToVis}}">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*"/>
                                             <ColumnDefinition Width="1.75*"/>
@@ -275,7 +275,6 @@
 
                                         <Label/>
                                         <CheckBox Grid.Column="1"
-                                                  x:Name="PCMacHybridCheckBox"
                                                   Content="PC/Mac Hybrid"
                                                   Margin="0,4"
                                                   IsChecked="{Binding PCMacHybrid, Mode=TwoWay}"/>
@@ -287,18 +286,15 @@
                                                         Enter="True"
                                                         TextWrapping="Wrap"
                                                         VerticalContentAlignmentValue="Top"/>
-                                    <controls:UserInput x:Name="CompatibleOSTextBox"
-                                                        Label="{DynamicResource CompatibleOSInputString}"
-                                                        Visibility="Collapsed"
-                                                        Text="{Binding CompatibleOS, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscKeyTextBox"
-                                                        Label="Disc Key"
-                                                        Visibility="Collapsed"
-                                                        Text="{Binding DiscKey, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscIDTextBox"
-                                                        Label="Disc ID"
-                                                        Visibility="Collapsed"
-                                                        Text="{Binding InternalDiscID, Mode=TwoWay}"/>
+                                    <controls:UserInput Label="{DynamicResource CompatibleOSInputString}"
+                                                        Text="{Binding CompatibleOS, Mode=TwoWay}"
+                                                        Visibility="{Binding Path=CompatibleOSVisible, Converter={StaticResource BoolToVis}}"/>
+                                    <controls:UserInput Label="Disc Key"
+                                                        Text="{Binding DiscKey, Mode=TwoWay}"
+                                                        Visibility="{Binding Path=DiscKeyVisible, Converter={StaticResource BoolToVis}}"/>
+                                    <controls:UserInput Label="Disc ID"
+                                                        Text="{Binding InternalDiscID, Mode=TwoWay}"
+                                                        Visibility="{Binding Path=InternalDiscIDVisible, Converter={StaticResource BoolToVis}}"/>
                                     <controls:UserInput x:Name="ProtectionTextBox"
                                                         Label="{DynamicResource ProtectionInputString}"
                                                         ToolTip="CAUTION: Only edit if you know what you are doing!"
@@ -505,12 +501,12 @@
                                                     Text="{Binding Games, Mode=TwoWay}"/>
                                 <controls:UserInput x:Name="NetYarozeGamesTextBox"
                                                     Label="Net Yaroze Games"
-                                                    Visibility="Collapsed"
                                                     TextHeight="50"
                                                     Enter="True"
                                                     TextWrapping="Wrap"
                                                     VerticalContentAlignmentValue="Top"
-                                                    Text="{Binding NetYarozeGames, Mode=TwoWay}"/>
+                                                    Text="{Binding NetYarozeGames, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=NetYarozeGamesVisible, Converter={StaticResource BoolToVis}}"/>
 
                                 <!-- Demos -->
                                 <controls:UserInput x:Name="PlayableDemosTextBox"
@@ -586,120 +582,139 @@
                                   VerticalAlignment="Stretch"
                                   MaxHeight="500">
                         <StackPanel Orientation="Vertical">
-                            <GroupBox x:Name="Layer0Info"
-                                      Header="{DynamicResource Layer0InfoGroupBoxString}"
+                            <GroupBox Header="{DynamicResource Layer0InfoGroupBoxString}"
                                       Margin="5"
                                       Padding="5"
                                       BorderThickness="1"
                                       BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch"
-                                      VerticalAlignment="Stretch">
+                                      VerticalAlignment="Stretch"
+                                      Visibility="{Binding Path=Layer0InfoPanelVisible, Converter={StaticResource BoolToVis}}">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="Layer0MasteringCodeTextBox"
                                                         Label="Mastering Code"
-                                                        Text="{Binding Layer0MasteringCode, Mode=TwoWay}"/>
+                                                        Text="{Binding Layer0MasteringCode, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                     <controls:UserInput x:Name="Layer0MasteringSIDTextBox"
                                                         Label="Mastering SID"
-                                                        Text="{Binding Layer0MasteringSID, Mode=TwoWay}"/>
+                                                        Text="{Binding Layer0MasteringSID, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                     <controls:UserInput x:Name="Layer0ToolstampTextBox"
                                                         Label="Toolstamps"
-                                                        Text="{Binding Layer0Toolstamps, Mode=TwoWay}"/>
+                                                        Text="{Binding Layer0Toolstamps, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                     <controls:UserInput x:Name="Layer0MouldSIDsTextBox"
                                                         Label="Mould SIDs"
-                                                        Text="{Binding Layer0MouldSIDs, Mode=TwoWay}"/>
+                                                        Text="{Binding Layer0MouldSIDs, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                     <controls:UserInput x:Name="Layer0AdditionalMouldsTextBox"
                                                         Label="Additional Moulds"
-                                                        Text="{Binding Layer0AdditionalMoulds, Mode=TwoWay}"/>
+                                                        Text="{Binding Layer0AdditionalMoulds, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox x:Name="Layer1Info"
-                                      Header="{DynamicResource Layer1InfoGroupBoxString}"
+                            <GroupBox Header="{DynamicResource Layer1InfoGroupBoxString}"
                                       Margin="5"
                                       Padding="5"
                                       BorderThickness="1"
                                       BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch"
-                                      VerticalAlignment="Stretch">
+                                      VerticalAlignment="Stretch"
+                                      Visibility="{Binding Path=Layer1InfoPanelVisible, Converter={StaticResource BoolToVis}}">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="Layer1MasteringCodeTextBox"
                                                         Label="Mastering Code"
-                                                        Text="{Binding Layer1MasteringCode, Mode=TwoWay}"/>
+                                                        Text="{Binding Layer1MasteringCode, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                     <controls:UserInput x:Name="Layer1MasteringSIDTextBox"
                                                         Label="Mastering SID"
-                                                        Text="{Binding Layer1MasteringSID, Mode=TwoWay}"/>
+                                                        Text="{Binding Layer1MasteringSID, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                     <controls:UserInput x:Name="Layer1ToolstampTextBox"
                                                         Label="Toolstamps"
-                                                        Text="{Binding Layer1Toolstamps, Mode=TwoWay}"/>
+                                                        Text="{Binding Layer1Toolstamps, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox x:Name="Layer2Info"
-                                      Header="{DynamicResource Layer2InfoGroupBoxString}"
+                            <GroupBox Header="{DynamicResource Layer2InfoGroupBoxString}"
                                       Margin="5"
                                       Padding="5"
                                       BorderThickness="1"
                                       BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch"
-                                      VerticalAlignment="Stretch">
+                                      VerticalAlignment="Stretch"
+                                      Visibility="{Binding Path=Layer2InfoPanelVisible, Converter={StaticResource BoolToVis}}">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="Layer2MasteringCodeTextBox"
                                                         Label="Mastering Code"
-                                                        Text="{Binding Layer2MasteringCode, Mode=TwoWay}"/>
+                                                        Text="{Binding Layer2MasteringCode, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                     <controls:UserInput x:Name="Layer2MasteringSIDTextBox"
                                                         Label="Mastering SID"
-                                                        Text="{Binding Layer2MasteringSID, Mode=TwoWay}"/>
+                                                        Text="{Binding Layer2MasteringSID, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                     <controls:UserInput x:Name="Layer2ToolstampTextBox"
                                                         Label="Toolstamps"
-                                                        Text="{Binding Layer2Toolstamps, Mode=TwoWay}"/>
+                                                        Text="{Binding Layer2Toolstamps, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox x:Name="Layer3Info"
-                                      Header="{DynamicResource Layer3InfoGroupBoxString}"
+                            <GroupBox Header="{DynamicResource Layer3InfoGroupBoxString}"
                                       Margin="5"
                                       Padding="5"
                                       BorderThickness="1"
                                       BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch"
-                                      VerticalAlignment="Stretch">
+                                      VerticalAlignment="Stretch"
+                                      Visibility="{Binding Path=Layer3InfoPanelVisible, Converter={StaticResource BoolToVis}}">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="Layer3MasteringCodeTextBox"
                                                         Label="Mastering Code"
-                                                        Text="{Binding Layer3MasteringCode, Mode=TwoWay}"/>
+                                                        Text="{Binding Layer3MasteringCode, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                     <controls:UserInput x:Name="Layer3MasteringSIDTextBox"
                                                         Label="Mastering SID"
-                                                        Text="{Binding Layer3MasteringSID, Mode=TwoWay}"/>
+                                                        Text="{Binding Layer3MasteringSID, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                     <controls:UserInput x:Name="Layer3ToolstampTextBox"
                                                         Label="Toolstamps"
-                                                        Text="{Binding Layer3Toolstamps, Mode=TwoWay}"/>
+                                                        Text="{Binding Layer3Toolstamps, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox x:Name="LabelSideInfo"
-                                      Header="{DynamicResource LabelSideInfoGroupBoxString}"
+                            <GroupBox Header="{DynamicResource LabelSideInfoGroupBoxString}"
                                       Margin="5"
                                       Padding="5"
                                       BorderThickness="1"
                                       BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch"
-                                      VerticalAlignment="Stretch">
+                                      VerticalAlignment="Stretch"
+                                      Visibility="{Binding Path=LabelSideInfoPanelVisible, Converter={StaticResource BoolToVis}}">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="LabelSideMasteringCodeTextBox"
                                                         Label="Mastering Code"
-                                                        Text="{Binding LabelSideMasteringCode, Mode=TwoWay}"/>
+                                                        Text="{Binding LabelSideMasteringCode, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                     <controls:UserInput x:Name="LabelSideMasteringSIDTextBox"
                                                         Label="Mastering SID"
-                                                        Text="{Binding LabelSideMasteringSID, Mode=TwoWay}"/>
+                                                        Text="{Binding LabelSideMasteringSID, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                     <controls:UserInput x:Name="LabelSideToolstampTextBox"
                                                         Label="Toolstamps"
-                                                        Text="{Binding LabelSideToolstamps, Mode=TwoWay}"/>
+                                                        Text="{Binding LabelSideToolstamps, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                     <controls:UserInput x:Name="LabelSideMouldSIDsTextBox"
                                                         Label="Mould SIDs"
-                                                        Text="{Binding LabelSideMouldSIDs, Mode=TwoWay}"/>
+                                                        Text="{Binding LabelSideMouldSIDs, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                     <controls:UserInput x:Name="LabelSideAdditionalMouldsTextBox"
                                                         Label="Additional Moulds"
-                                                        Text="{Binding LabelSideAdditionalMoulds, Mode=TwoWay}"/>
+                                                        Text="{Binding LabelSideAdditionalMoulds, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}"/>
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
@@ -731,162 +746,162 @@
                             </GroupBox.Template>
 
                             <StackPanel Orientation="Vertical">
-                                <controls:UserInput x:Name="FullyMatchedIDs"
-                                                    Label="Fully Matched IDs"
+                                <controls:UserInput Label="Fully Matched IDs"
                                                     IsReadOnly="True"
-                                                    Text="{Binding FullyMatchedIDs, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="PartiallyMatchedIDs"
-                                                    Label="Partially Matched ID(s)"
+                                                    Text="{Binding FullyMatchedIDs, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=FullyMatchedIDsVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Partially Matched ID(s)"
                                                     IsReadOnly="True"
-                                                    Text="{Binding PartiallyMatchedIDs, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="HashData"
-                                                    Label="Hash Data"
+                                                    Text="{Binding PartiallyMatchedIDs, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=PartiallyMatchedIDsVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Hash Data"
                                                     IsReadOnly="True"
                                                     Text="{Binding Dat, Mode=TwoWay}"
                                                     TextHeight="75"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
                                                     HorizontalScrollBarVisibility="Auto"
-                                                    VerticalScrollBarVisibility="Auto"/>
-                                <controls:UserInput x:Name="HashDataLayerbreak1"
-                                                    Label="Layerbreak 1"
+                                                    VerticalScrollBarVisibility="Auto"
+                                                    Visibility="{Binding Path=DatVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Layerbreak 1"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Layerbreak, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="HashDataLayerbreak2"
-                                                    Label="Layerbreak 2"
+                                                    Text="{Binding Layerbreak, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=LayerbreakVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Layerbreak 2"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Layerbreak2, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="HashDataLayerbreak3"
-                                                    Label="Layerbreak 3"
+                                                    Text="{Binding Layerbreak2, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=Layerbreak2Visible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Layerbreak 3"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Layerbreak3, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="DiscOffset"
-                                                    Label="Disc Offset"
+                                                    Text="{Binding Layerbreak3, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=Layerbreak3Visible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Disc Offset"
                                                     IsReadOnly="True"
-                                                    Text="{Binding WriteOffset, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="DMIHash"
-                                                    Label="DMI Hash"
+                                                    Text="{Binding WriteOffset, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=WriteOffsetVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="DMI Hash"
                                                     IsReadOnly="True"
-                                                    Text="{Binding DMIHash, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="EDC"
-                                                    Label="EDC"
+                                                    Text="{Binding DMIHash, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=DMIHashVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="EDC"
                                                     IsReadOnly="True"
-                                                    Text="{Binding EDC, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="ErrorsCount"
-                                                    Label="Error(s) Count"
+                                                    Text="{Binding EDC, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=EDCVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Error(s) Count"
                                                     IsReadOnly="True"
-                                                    Text="{Binding ErrorCount, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="EXEDateBuildDate"
-                                                    Label="EXE/Build Date"
+                                                    Text="{Binding ErrorCount, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=ErrorCountVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="EXE/Build Date"
                                                     IsReadOnly="True"
-                                                    Text="{Binding EXEDate, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="Filename"
-                                                    Label="Filename"
+                                                    Text="{Binding EXEDate, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=EXEDateVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Filename"
                                                     IsReadOnly="True"
+                                                    Text="{Binding Filename, Mode=TwoWay}"
                                                     TextHeight="75"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
                                                     HorizontalScrollBarVisibility="Auto"
                                                     VerticalScrollBarVisibility="Auto"
-                                                    Text="{Binding Filename, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="Header"
-                                                    Label="Header"
+                                                    Visibility="{Binding Path=FilenameVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Header"
                                                     IsReadOnly="True"
                                                     Text="{Binding Header, Mode=TwoWay}"
                                                     TextHeight="75"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
                                                     HorizontalScrollBarVisibility="Auto"
-                                                    VerticalScrollBarVisibility="Auto"/>
-                                <controls:UserInput x:Name="InternalName"
-                                                    Label="Internal Names"
+                                                    VerticalScrollBarVisibility="Auto"
+                                                    Visibility="{Binding Path=HeaderVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Internal Names"
                                                     IsReadOnly="True"
-                                                    Text="{Binding InternalName, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="InternalSerialName"
-                                                    Label="Internal Serial"
+                                                    Text="{Binding InternalName, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=InternalNameVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Internal Serial"
                                                     IsReadOnly="True"
-                                                    Text="{Binding InternalSerialName, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="Multisession"
-                                                    Label="Multisession"
+                                                    Text="{Binding InternalSerialName, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=InternalSerialNameVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Multisession"
                                                     IsReadOnly="True"
+                                                    Text="{Binding Multisession, Mode=TwoWay}"
                                                     TextHeight="75"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
                                                     HorizontalScrollBarVisibility="Auto"
                                                     VerticalScrollBarVisibility="Auto"
-                                                    Text="{Binding Multisession, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="PFIHash"
-                                                    Label="PFI Hash"
+                                                    Visibility="{Binding Path=MultisessionVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="PFI Hash"
                                                     IsReadOnly="True"
-                                                    Text="{Binding PFIHash, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="PIC"
-                                                    Label="PIC"
+                                                    Text="{Binding PFIHash, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=PFIHashVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="PIC"
                                                     IsReadOnly="True"
                                                     Text="{Binding PIC, Mode=TwoWay}"
                                                     TextHeight="125"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
                                                     HorizontalScrollBarVisibility="Auto"
-                                                    VerticalScrollBarVisibility="Auto"/>
-                                <controls:UserInput x:Name="PVD"
-                                                    Label="PVD"
+                                                    VerticalScrollBarVisibility="Auto"
+                                                    Visibility="{Binding Path=PICVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="PVD"
                                                     IsReadOnly="True"
                                                     Text="{Binding PVD, Mode=TwoWay}"
                                                     TextHeight="125"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
                                                     HorizontalScrollBarVisibility="Auto"
-                                                    VerticalScrollBarVisibility="Auto"/>
-                                <controls:UserInput x:Name="RingPerfectAudioOffset"
-                                                    Label="Ring Perfect Audio Offset"
+                                                    VerticalScrollBarVisibility="Auto"
+                                                    Visibility="{Binding Path=PVDVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Ring Perfect Audio Offset"
                                                     IsReadOnly="True"
-                                                    Text="{Binding RingPerfectAudioOffset, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="SampleStart"
-                                                    Label="Sample Start"
+                                                    Text="{Binding RingPerfectAudioOffset, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=RingPerfectAudioOffsetVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Sample Start"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Path=SampleStart, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="SecuROMData"
-                                                    Label="SecuROM Data"
+                                                    Text="{Binding Path=SampleStart, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=SampleStartVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="SecuROM Data"
                                                     IsReadOnly="True"
                                                     Text="{Binding SBI, Mode=TwoWay}"
                                                     TextHeight="75"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
                                                     HorizontalScrollBarVisibility="Auto"
-                                                    VerticalScrollBarVisibility="Auto"/>
-                                <controls:UserInput x:Name="SSHash"
-                                                    Label="Security Sector Hash"
+                                                    VerticalScrollBarVisibility="Auto"
+                                                    Visibility="{Binding Path=SBIVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Security Sector Hash"
                                                     IsReadOnly="True"
-                                                    Text="{Binding SSHash, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="SecuritySectorRanges"
-                                                    Label="Security Sector Ranges"
+                                                    Text="{Binding SSHash, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=SSHashVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Security Sector Ranges"
                                                     IsReadOnly="True"
                                                     Text="{Binding SectorRanges, Mode=TwoWay}"
                                                     TextHeight="75"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
                                                     HorizontalScrollBarVisibility="Auto"
-                                                    VerticalScrollBarVisibility="Auto"/>
-                                <controls:UserInput x:Name="SSVersion"
-                                                    Label="Security Sector Version"
+                                                    VerticalScrollBarVisibility="Auto"
+                                                    Visibility="{Binding Path=SectorRangesVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Security Sector Version"
                                                     IsReadOnly="True"
-                                                    Text="{Binding SSVersion, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="UniversalHash"
-                                                    Label="Universal Hash (SHA-1)"
+                                                    Text="{Binding SSVersion, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=SSVersionVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Universal Hash (SHA-1)"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Path=UniversalHash, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="VolumeLabel"
-                                                    Label="Volume Label"
+                                                    Text="{Binding Path=UniversalHash, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=UniversalHashVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Volume Label"
                                                     IsReadOnly="True"
-                                                    Text="{Binding VolumeLabel, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="XeMID"
-                                                    Label="XeMID"
+                                                    Text="{Binding VolumeLabel, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=VolumeLabelVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="XeMID"
                                                     IsReadOnly="True"
-                                                    Text="{Binding XeMID, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="XMID"
-                                                    Label="XMID"
+                                                    Text="{Binding XeMID, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=XeMIDVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="XMID"
                                                     IsReadOnly="True"
-                                                    Text="{Binding XMID, Mode=TwoWay}"/>
+                                                    Text="{Binding XMID, Mode=TwoWay}"
+                                                    Visibility="{Binding Path=XMIDVisible, Converter={StaticResource BoolToVis}}"/>
                             </StackPanel>
                         </GroupBox>
                     </ScrollViewer>

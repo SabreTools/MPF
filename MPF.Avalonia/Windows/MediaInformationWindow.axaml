@@ -128,9 +128,8 @@
                                                FontWeight="Bold" />
                                     <Grid x:Name="PCMacHybridGrid"
                                           ColumnDefinitions="3*,7*"
-                                          IsVisible="False">
-                                        <CheckBox x:Name="PCMacHybridCheckBox"
-                                                  IsChecked="{Binding PCMacHybrid, Mode=TwoWay}"
+                                          IsVisible="{Binding PCMacHybridVisible}">
+                                        <CheckBox IsChecked="{Binding PCMacHybrid, Mode=TwoWay}"
                                                   Grid.Column="1"
                                                   Content="PC/Mac Hybrid"
                                                   Margin="0,2" />
@@ -140,18 +139,16 @@
                                                         TextHeight="90"
                                                         Enter="True"
                                                         TextWrapping="Wrap" />
-                                    <controls:UserInput x:Name="CompatibleOSTextBox"
-                                                        Label="{DynamicResource CompatibleOSInputString}"
+                                    <controls:UserInput Label="{DynamicResource CompatibleOSInputString}"
                                                         Text="{Binding CompatibleOS, Mode=TwoWay}"
-                                                        IsVisible="False" />
+                                                        IsVisible="{Binding CompatibleOSVisible}" />
                                     <controls:UserInput x:Name="DiscKeyTextBox"
                                                         Label="Disc Key"
                                                         Text="{Binding DiscKey, Mode=TwoWay}"
-                                                        IsVisible="False" />
-                                    <controls:UserInput x:Name="DiscIDTextBox"
-                                                        Label="Disc ID"
+                                                        IsVisible="{Binding DiscKeyVisible}" />
+                                    <controls:UserInput Label="Disc ID"
                                                         Text="{Binding InternalDiscID, Mode=TwoWay}"
-                                                        IsVisible="False" />
+                                                        IsVisible="{Binding InternalDiscIDVisible}" />
                                     <controls:UserInput Label="{DynamicResource ProtectionInputString}"
                                                         Text="{Binding Protection, Mode=TwoWay}"
                                                         TextHeight="90"
@@ -344,7 +341,7 @@
                                                     TextHeight="75"
                                                     Enter="True"
                                                     TextWrapping="Wrap"
-                                                    IsVisible="False" />
+                                                    IsVisible="{Binding NetYarozeGamesVisible}" />
 
                                 <!-- Demos -->
                                 <controls:UserInput x:Name="PlayableDemosTextBox"
@@ -414,125 +411,144 @@
                     <ScrollViewer>
                         <StackPanel Spacing="6"
                                     Margin="0,0,4,0">
-                            <Border x:Name="Layer0InfoPanel"
-                                    Padding="8,5"
+                            <Border Padding="8,5"
                                     BorderThickness="1"
                                     BorderBrush="{DynamicResource PanelBorderBrush}"
                                     CornerRadius="6"
-                                    Background="{DynamicResource PanelBackgroundBrush}">
+                                    Background="{DynamicResource PanelBackgroundBrush}"
+                                    IsVisible="{Binding Layer0InfoPanelVisible}">
                                 <StackPanel Spacing="4">
                                     <TextBlock x:Name="Layer0HeaderText"
                                                Text="{DynamicResource Layer0InfoGroupBoxString}"
                                                FontWeight="Bold" />
                                     <controls:UserInput x:Name="Layer0MasteringCodeTextBox"
                                                         Label="Mastering Code"
-                                                        Text="{Binding Layer0MasteringCode, Mode=TwoWay}" />
+                                                        Text="{Binding Layer0MasteringCode, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                     <controls:UserInput x:Name="Layer0MasteringSIDTextBox"
                                                         Label="Mastering SID"
-                                                        Text="{Binding Layer0MasteringSID, Mode=TwoWay}" />
+                                                        Text="{Binding Layer0MasteringSID, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                     <controls:UserInput x:Name="Layer0ToolstampTextBox"
                                                         Label="Toolstamps"
-                                                        Text="{Binding Layer0Toolstamps, Mode=TwoWay}" />
+                                                        Text="{Binding Layer0Toolstamps, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                     <controls:UserInput x:Name="Layer0MouldSIDsTextBox"
                                                         Label="Mould SIDs"
-                                                        Text="{Binding Layer0MouldSIDs, Mode=TwoWay}" />
+                                                        Text="{Binding Layer0MouldSIDs, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                     <controls:UserInput x:Name="Layer0AdditionalMouldsTextBox"
                                                         Label="Additional Moulds"
-                                                        Text="{Binding Layer0AdditionalMoulds, Mode=TwoWay}" />
+                                                        Text="{Binding Layer0AdditionalMoulds, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                 </StackPanel>
                             </Border>
 
-                            <Border x:Name="Layer1InfoPanel"
-                                    Padding="8,5"
+                            <Border Padding="8,5"
                                     BorderThickness="1"
                                     BorderBrush="{DynamicResource PanelBorderBrush}"
                                     CornerRadius="6"
-                                    Background="{DynamicResource PanelBackgroundBrush}">
+                                    Background="{DynamicResource PanelBackgroundBrush}"
+                                    IsVisible="{Binding Layer1InfoPanelVisible}">
                                 <StackPanel Spacing="4">
                                     <TextBlock x:Name="Layer1HeaderText"
                                                Text="{DynamicResource Layer1InfoGroupBoxString}"
                                                FontWeight="Bold" />
                                     <controls:UserInput x:Name="Layer1MasteringCodeTextBox"
                                                         Label="Mastering Code"
-                                                        Text="{Binding Layer1MasteringCode, Mode=TwoWay}" />
+                                                        Text="{Binding Layer1MasteringCode, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                     <controls:UserInput x:Name="Layer1MasteringSIDTextBox"
                                                         Label="Mastering SID"
-                                                        Text="{Binding Layer1MasteringSID, Mode=TwoWay}" />
+                                                        Text="{Binding Layer1MasteringSID, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                     <controls:UserInput x:Name="Layer1ToolstampTextBox"
                                                         Label="Toolstamps"
-                                                        Text="{Binding Layer1Toolstamps, Mode=TwoWay}" />
+                                                        Text="{Binding Layer1Toolstamps, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                 </StackPanel>
                             </Border>
 
-                            <Border x:Name="Layer2InfoPanel"
-                                    Padding="8,5"
+                            <Border Padding="8,5"
                                     BorderThickness="1"
                                     BorderBrush="{DynamicResource PanelBorderBrush}"
                                     CornerRadius="6"
-                                    Background="{DynamicResource PanelBackgroundBrush}">
+                                    Background="{DynamicResource PanelBackgroundBrush}"
+                                    IsVisible="{Binding Layer2InfoPanelVisible}">
                                 <StackPanel Spacing="4">
                                     <TextBlock x:Name="Layer2HeaderText"
                                                Text="{DynamicResource Layer2InfoGroupBoxString}"
                                                FontWeight="Bold" />
                                     <controls:UserInput x:Name="Layer2MasteringCodeTextBox"
                                                         Label="Mastering Code"
-                                                        Text="{Binding Layer2MasteringCode, Mode=TwoWay}" />
+                                                        Text="{Binding Layer2MasteringCode, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                     <controls:UserInput x:Name="Layer2MasteringSIDTextBox"
                                                         Label="Mastering SID"
-                                                        Text="{Binding Layer2MasteringSID, Mode=TwoWay}" />
+                                                        Text="{Binding Layer2MasteringSID, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                     <controls:UserInput x:Name="Layer2ToolstampTextBox"
                                                         Label="Toolstamps"
-                                                        Text="{Binding Layer2Toolstamps, Mode=TwoWay}" />
+                                                        Text="{Binding Layer2Toolstamps, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                 </StackPanel>
                             </Border>
 
-                            <Border x:Name="Layer3InfoPanel"
-                                    Padding="8,5"
+                            <Border Padding="8,5"
                                     BorderThickness="1"
                                     BorderBrush="{DynamicResource PanelBorderBrush}"
                                     CornerRadius="6"
-                                    Background="{DynamicResource PanelBackgroundBrush}">
+                                    Background="{DynamicResource PanelBackgroundBrush}"
+                                    IsVisible="{Binding Layer3InfoPanelVisible}">
                                 <StackPanel Spacing="4">
                                     <TextBlock x:Name="Layer3HeaderText"
                                                Text="{DynamicResource Layer3InfoGroupBoxString}"
                                                FontWeight="Bold" />
                                     <controls:UserInput x:Name="Layer3MasteringCodeTextBox"
                                                         Label="Mastering Code"
-                                                        Text="{Binding Layer3MasteringCode, Mode=TwoWay}" />
+                                                        Text="{Binding Layer3MasteringCode, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                     <controls:UserInput x:Name="Layer3MasteringSIDTextBox"
                                                         Label="Mastering SID"
-                                                        Text="{Binding Layer3MasteringSID, Mode=TwoWay}" />
+                                                        Text="{Binding Layer3MasteringSID, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                     <controls:UserInput x:Name="Layer3ToolstampTextBox"
                                                         Label="Toolstamps"
-                                                        Text="{Binding Layer3Toolstamps, Mode=TwoWay}" />
+                                                        Text="{Binding Layer3Toolstamps, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                 </StackPanel>
                             </Border>
 
-                            <Border x:Name="LabelSideInfoPanel"
-                                    Padding="8,5"
+                            <Border Padding="8,5"
                                     BorderThickness="1"
                                     BorderBrush="{DynamicResource PanelBorderBrush}"
                                     CornerRadius="6"
-                                    Background="{DynamicResource PanelBackgroundBrush}">
+                                    Background="{DynamicResource PanelBackgroundBrush}"
+                                    IsVisible="{Binding LabelSideInfoPanelVisible}">
                                 <StackPanel Spacing="4">
                                     <TextBlock x:Name="LabelSideHeaderText"
                                                Text="{DynamicResource LabelSideInfoGroupBoxString}"
                                                FontWeight="Bold" />
                                     <controls:UserInput x:Name="LabelSideMasteringCodeTextBox"
                                                         Label="Mastering Code"
-                                                        Text="{Binding LabelSideMasteringCode, Mode=TwoWay}" />
+                                                        Text="{Binding LabelSideMasteringCode, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                     <controls:UserInput x:Name="LabelSideMasteringSIDTextBox"
                                                         Label="Mastering SID"
-                                                        Text="{Binding LabelSideMasteringSID, Mode=TwoWay}" />
+                                                        Text="{Binding LabelSideMasteringSID, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                     <controls:UserInput x:Name="LabelSideToolstampTextBox"
                                                         Label="Toolstamps"
-                                                        Text="{Binding LabelSideToolstamps, Mode=TwoWay}" />
+                                                        Text="{Binding LabelSideToolstamps, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                     <controls:UserInput x:Name="LabelSideMouldSIDsTextBox"
                                                         Label="Mould SIDs"
-                                                        Text="{Binding LabelSideMouldSIDs, Mode=TwoWay}" />
+                                                        Text="{Binding LabelSideMouldSIDs, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                     <controls:UserInput x:Name="LabelSideAdditionalMouldsTextBox"
                                                         Label="Additional Moulds"
-                                                        Text="{Binding LabelSideAdditionalMoulds, Mode=TwoWay}" />
+                                                        Text="{Binding LabelSideAdditionalMoulds, Mode=TwoWay}"
+                                                        Tab="{Binding EnableRingcodeTabs}" />
                                 </StackPanel>
                             </Border>
                         </StackPanel>
@@ -554,146 +570,146 @@
                                 Background="{DynamicResource PanelBackgroundBrush}"
                                 Margin="0,0,4,0">
                             <StackPanel Spacing="4">
-                                <controls:UserInput x:Name="FullyMatchedIDs"
-                                                    Label="Fully Matched ID"
+                                <controls:UserInput Label="Fully Matched ID"
                                                     IsReadOnly="True"
-                                                    Text="{Binding FullyMatchedIDs, Mode=TwoWay}" />
-                                <controls:UserInput x:Name="PartiallyMatchedIDs"
-                                                    Label="Partially Matched ID(s)"
+                                                    Text="{Binding FullyMatchedIDs, Mode=TwoWay}"
+                                                    IsVisible="{Binding FullyMatchedIDsVisible}" />
+                                <controls:UserInput Label="Partially Matched ID(s)"
                                                     IsReadOnly="True"
-                                                    Text="{Binding PartiallyMatchedIDs, Mode=TwoWay}" />
-                                <controls:UserInput x:Name="HashData"
-                                                    Label="Hash Data"
+                                                    Text="{Binding PartiallyMatchedIDs, Mode=TwoWay}"
+                                                    IsVisible="{Binding PartiallyMatchedIDsVisible}" />
+                                <controls:UserInput Label="Hash Data"
                                                     IsReadOnly="True"
                                                     Text="{Binding Dat, Mode=TwoWay}"
                                                     TextHeight="90"
                                                     Enter="True"
-                                                    TextWrapping="Wrap" />
-                                <controls:UserInput x:Name="HashDataLayerbreak1"
-                                                    Label="Layerbreak 1"
+                                                    TextWrapping="Wrap"
+                                                    IsVisible="{Binding DatVisible}" />
+                                <controls:UserInput Label="Layerbreak 1"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Layerbreak, Mode=TwoWay}" />
-                                <controls:UserInput x:Name="HashDataLayerbreak2"
-                                                    Label="Layerbreak 2"
+                                                    Text="{Binding Layerbreak, Mode=TwoWay}"
+                                                    IsVisible="{Binding LayerbreakVisible}" />
+                                <controls:UserInput Label="Layerbreak 2"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Layerbreak2, Mode=TwoWay}" />
-                                <controls:UserInput x:Name="HashDataLayerbreak3"
-                                                    Label="Layerbreak 3"
+                                                    Text="{Binding Layerbreak2, Mode=TwoWay}"
+                                                    IsVisible="{Binding Layerbreak2Visible}" />
+                                <controls:UserInput Label="Layerbreak 3"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Layerbreak3, Mode=TwoWay}" />
-                                <controls:UserInput x:Name="DiscOffset"
-                                                    Label="Disc Offset"
+                                                    Text="{Binding Layerbreak3, Mode=TwoWay}"
+                                                    IsVisible="{Binding Layerbreak3Visible}" />
+                                <controls:UserInput Label="Disc Offset"
                                                     IsReadOnly="True"
-                                                    Text="{Binding WriteOffset, Mode=TwoWay}" />
-                                <controls:UserInput x:Name="DMIHash"
-                                                    Label="DMI Hash"
+                                                    Text="{Binding WriteOffset, Mode=TwoWay}"
+                                                    IsVisible="{Binding WriteOffsetVisible}" />
+                                <controls:UserInput Label="DMI Hash"
+                                                    IsReadOnly="True"
                                                     Text="{Binding DMIHash, Mode=TwoWay}"
-                                                    IsReadOnly="True" />
-                                <controls:UserInput x:Name="EDC"
-                                                    Label="EDC"
+                                                    IsVisible="{Binding DMIHashVisible}" />
+                                <controls:UserInput Label="EDC"
                                                     IsReadOnly="True"
-                                                    Text="{Binding EDC, Mode=TwoWay}" />
-                                <controls:UserInput x:Name="ErrorsCount"
-                                                    Label="Error(s) Count"
+                                                    Text="{Binding EDC, Mode=TwoWay}"
+                                                    IsVisible="{Binding EDCVisible}" />
+                                <controls:UserInput Label="Error(s) Count"
                                                     IsReadOnly="True"
-                                                    Text="{Binding ErrorCount, Mode=TwoWay}" />
-                                <controls:UserInput x:Name="EXEDateBuildDate"
-                                                    Label="EXE/Build Date"
+                                                    Text="{Binding ErrorCount, Mode=TwoWay}"
+                                                    IsVisible="{Binding ErrorCountVisible}" />
+                                <controls:UserInput Label="EXE/Build Date"
                                                     IsReadOnly="True"
-                                                    Text="{Binding EXEDate, Mode=TwoWay}" />
-                                <controls:UserInput x:Name="Filename"
-                                                    Label="Filename"
+                                                    Text="{Binding EXEDate, Mode=TwoWay}"
+                                                    IsVisible="{Binding EXEDateVisible}" />
+                                <controls:UserInput Label="Filename"
+                                                    IsReadOnly="True"
                                                     Text="{Binding Filename, Mode=TwoWay}"
-                                                    IsReadOnly="True"
                                                     TextHeight="90"
                                                     Enter="True"
-                                                    TextWrapping="Wrap" />
-                                <controls:UserInput x:Name="Header"
-                                                    Label="Header"
+                                                    TextWrapping="Wrap"
+                                                    IsVisible="{Binding FilenameVisible}" />
+                                <controls:UserInput Label="Header"
                                                     IsReadOnly="True"
                                                     Text="{Binding Header, Mode=TwoWay}"
                                                     TextHeight="90"
                                                     Enter="True"
-                                                    TextWrapping="Wrap" />
-                                <controls:UserInput x:Name="InternalName"
-                                                    Label="Internal Names"
-                                                    Text="{Binding InternalName, Mode=TwoWay}"
-                                                    IsReadOnly="True" />
-                                <controls:UserInput x:Name="InternalSerialName"
-                                                    Label="Internal Serial"
-                                                    Text="{Binding InternalSerialName, Mode=TwoWay}"
-                                                    IsReadOnly="True" />
-                                <controls:UserInput x:Name="Multisession"
-                                                    Label="Multisession"
-                                                    Text="{Binding Multisession, Mode=TwoWay}"
+                                                    TextWrapping="Wrap"
+                                                    IsVisible="{Binding HeaderVisible}" />
+                                <controls:UserInput Label="Internal Names"
                                                     IsReadOnly="True"
+                                                    Text="{Binding InternalName, Mode=TwoWay}"
+                                                    IsVisible="{Binding InternalNameVisible}" />
+                                <controls:UserInput Label="Internal Serial"
+                                                    IsReadOnly="True"
+                                                    Text="{Binding InternalSerialName, Mode=TwoWay}"
+                                                    IsVisible="{Binding InternalSerialNameVisible}" />
+                                <controls:UserInput Label="Multisession"
+                                                    IsReadOnly="True"
+                                                    Text="{Binding Multisession, Mode=TwoWay}"
                                                     TextHeight="90"
                                                     Enter="True"
-                                                    TextWrapping="Wrap" />
-                                <controls:UserInput x:Name="PFIHash"
-                                                    Label="PFI Hash"
+                                                    TextWrapping="Wrap"
+                                                    IsVisible="{Binding MultisessionVisible}" />
+                                <controls:UserInput Label="PFI Hash"
+                                                    IsReadOnly="True"
                                                     Text="{Binding PFIHash, Mode=TwoWay}"
-                                                    IsReadOnly="True" />
-                                <controls:UserInput x:Name="PIC"
-                                                    Label="PIC"
+                                                    IsVisible="{Binding PFIHashVisible}" />
+                                <controls:UserInput Label="PIC"
                                                     IsReadOnly="True"
                                                     Text="{Binding PIC, Mode=TwoWay}"
                                                     TextHeight="120"
                                                     Enter="True"
-                                                    TextWrapping="Wrap" />
-                                <controls:UserInput x:Name="PVD"
-                                                    Label="PVD"
+                                                    TextWrapping="Wrap"
+                                                    IsVisible="{Binding PICVisible}" />
+                                <controls:UserInput Label="PVD"
                                                     IsReadOnly="True"
                                                     Text="{Binding PVD, Mode=TwoWay}"
                                                     TextHeight="120"
                                                     Enter="True"
-                                                    TextWrapping="Wrap" />
-                                <controls:UserInput x:Name="RingPerfectAudioOffset"
-                                                    Label="Ring Perfect Audio Offset"
+                                                    TextWrapping="Wrap"
+                                                    IsVisible="{Binding PVDVisible}" />
+                                <controls:UserInput Label="Ring Perfect Audio Offset"
+                                                    IsReadOnly="True"
                                                     Text="{Binding RingPerfectAudioOffset, Mode=TwoWay}"
-                                                    IsReadOnly="True" />
-                                <controls:UserInput x:Name="SampleStart"
-                                                    Label="Sample Start"
+                                                    IsVisible="{Binding RingPerfectAudioOffsetVisible}" />
+                                <controls:UserInput Label="Sample Start"
+                                                    IsReadOnly="True"
                                                     Text="{Binding SampleStart, Mode=TwoWay}"
-                                                    IsReadOnly="True" />
-                                <controls:UserInput x:Name="SecuROMData"
-                                                    Label="SecuROM Data"
+                                                    IsVisible="{Binding SampleStartVisible}" />
+                                <controls:UserInput Label="SecuROM Data"
                                                     IsReadOnly="True"
                                                     Text="{Binding SBI, Mode=TwoWay}"
                                                     TextHeight="90"
                                                     Enter="True"
-                                                    TextWrapping="Wrap" />
-                                <controls:UserInput x:Name="SSHash"
-                                                    Label="Security Sector Hash"
+                                                    TextWrapping="Wrap"
+                                                    IsVisible="{Binding SBIVisible}" />
+                                <controls:UserInput Label="Security Sector Hash"
+                                                    IsReadOnly="True"
                                                     Text="{Binding SSHash, Mode=TwoWay}"
-                                                    IsReadOnly="True" />
-                                <controls:UserInput x:Name="SecuritySectorRanges"
-                                                    Label="Security Sector Ranges"
+                                                    IsVisible="{Binding SSHashVisible}" />
+                                <controls:UserInput Label="Security Sector Ranges"
                                                     IsReadOnly="True"
                                                     Text="{Binding SectorRanges, Mode=TwoWay}"
                                                     TextHeight="90"
                                                     Enter="True"
-                                                    TextWrapping="Wrap" />
-                                <controls:UserInput x:Name="SSVersion"
-                                                    Label="Security Sector Version"
+                                                    TextWrapping="Wrap"
+                                                    IsVisible="{Binding SectorRangesVisible}" />
+                                <controls:UserInput Label="Security Sector Version"
+                                                    IsReadOnly="True"
                                                     Text="{Binding SSVersion, Mode=TwoWay}"
-                                                    IsReadOnly="True" />
-                                <controls:UserInput x:Name="UniversalHash"
-                                                    Label="Universal Hash (SHA-1)"
+                                                    IsVisible="{Binding SSVersionVisible}" />
+                                <controls:UserInput Label="Universal Hash (SHA-1)"
+                                                    IsReadOnly="True"
                                                     Text="{Binding UniversalHash, Mode=TwoWay}"
-                                                    IsReadOnly="True" />
-                                <controls:UserInput x:Name="VolumeLabel"
-                                                    Label="Volume Label"
+                                                    IsVisible="{Binding UniversalHashVisible}" />
+                                <controls:UserInput Label="Volume Label"
+                                                    IsReadOnly="True"
                                                     Text="{Binding VolumeLabel, Mode=TwoWay}"
-                                                    IsReadOnly="True" />
-                                <controls:UserInput x:Name="XeMID"
-                                                    Label="XeMID"
+                                                    IsVisible="{Binding VolumeLabelVisible}" />
+                                <controls:UserInput Label="XeMID"
+                                                    IsReadOnly="True"
                                                     Text="{Binding XeMID, Mode=TwoWay}"
-                                                    IsReadOnly="True" />
-                                <controls:UserInput x:Name="XMID"
-                                                    Label="XMID"
+                                                    IsVisible="{Binding XeMIDVisible}" />
+                                <controls:UserInput Label="XMID"
+                                                    IsReadOnly="True"
                                                     Text="{Binding XMID, Mode=TwoWay}"
-                                                    IsReadOnly="True" />
+                                                    IsVisible="{Binding XMIDVisible}" />
                             </StackPanel>
                         </Border>
                     </ScrollViewer>

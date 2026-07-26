@@ -139,6 +139,9 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool PCMacHybridVisible => SubmissionInfo.DiscIdentity.System == PhysicalSystem.AppleMacintosh
+            || SubmissionInfo.DiscIdentity.System == PhysicalSystem.IBMPCcompatible;
+
         public string? Comments
         {
             get => SubmissionInfo.DumpMetadata.Comments;
@@ -157,17 +160,25 @@ namespace MPF.Frontend.ViewModels
             set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.CompatibleOS] = value ?? string.Empty;
         }
 
+        public bool CompatibleOSVisible => SubmissionInfo.DiscIdentity.System == PhysicalSystem.AppleMacintosh
+           || SubmissionInfo.DiscIdentity.System == PhysicalSystem.IBMPCcompatible;
+
         public string? DiscKey
         {
             get => SubmissionInfo.DiscIdentifiers.DiscKey;
             set => SubmissionInfo.DiscIdentifiers.DiscKey = value;
         }
 
+        public bool DiscKeyVisible => SubmissionInfo.DiscIdentity.System == PhysicalSystem.NintendoWiiU
+           || SubmissionInfo.DiscIdentity.System == PhysicalSystem.SonyPlayStation3;
+
         public string? InternalDiscID
         {
             get => SubmissionInfo.DiscIdentifiers.DiscID;
             set => SubmissionInfo.DiscIdentifiers.DiscID = value;
         }
+
+        public bool InternalDiscIDVisible => SubmissionInfo.DiscIdentity.System == PhysicalSystem.SonyPlayStation3;
 
         public string? Protection
         {
@@ -697,6 +708,8 @@ namespace MPF.Frontend.ViewModels
             set => SubmissionInfo.DumpMetadata.ContentsSpecialFields[SiteCode.NetYarozeGames] = value ?? string.Empty;
         }
 
+        public bool NetYarozeGamesVisible => SubmissionInfo.DiscIdentity.System == PhysicalSystem.SonyPlayStation;
+
         public string? PlayableDemos
         {
             get
@@ -797,7 +810,55 @@ namespace MPF.Frontend.ViewModels
 
         #region Ringcodes
 
+        public bool EnableRingcodeTabs
+        {
+            get => Options.Processing.MediaInformation.EnableTabsInInputFields;
+        }
+
         #region Layer 0
+
+        public bool Layer0InfoPanelVisible
+        {
+            get
+            {
+#pragma warning disable IDE0010
+                switch (SubmissionInfo?.DiscIdentity?.Media)
+                {
+                    case MediaType.CD:
+                    case MediaType.GDROM:
+                        return true;
+
+                    case MediaType.DVD5:
+                    case MediaType.DVD9:
+                    case MediaType.HDDVDSL:
+                    case MediaType.HDDVDDL:
+                    case MediaType.BD25:
+                    case MediaType.BD33:
+                    case MediaType.BD50:
+                    case MediaType.BD66:
+                    case MediaType.BD100:
+                    case MediaType.BD128:
+                    case MediaType.NintendoGameCubeGameDisc:
+                    case MediaType.NintendoWiiOpticalDiscSL:
+                    case MediaType.NintendoWiiOpticalDiscDL:
+                    case MediaType.NintendoWiiUOpticalDiscSL:
+                        return true;
+
+                    case MediaType.UMDSL:
+                    case MediaType.UMDDL:
+                        return true;
+
+                    // Allow all possible fields for unknown media types
+                    case MediaType.NONE:
+                        return true;
+
+                    // Nothing else shows this layer
+                    default:
+                        return false;
+                }
+#pragma warning restore IDE0010
+            }
+        }
 
         public string? Layer0MasteringCode
         {
@@ -833,6 +894,63 @@ namespace MPF.Frontend.ViewModels
 
         #region Layer 1
 
+        public bool Layer1InfoPanelVisible
+        {
+            get
+            {
+#pragma warning disable IDE0010
+                switch (SubmissionInfo?.DiscIdentity?.Media)
+                {
+                    case MediaType.CD:
+                    case MediaType.GDROM:
+                        return false;
+
+                    case MediaType.DVD5:
+                    case MediaType.DVD9:
+                    case MediaType.HDDVDSL:
+                    case MediaType.HDDVDDL:
+                    case MediaType.BD25:
+                    case MediaType.BD33:
+                    case MediaType.BD50:
+                    case MediaType.BD66:
+                    case MediaType.BD100:
+                    case MediaType.BD128:
+                    case MediaType.NintendoGameCubeGameDisc:
+                    case MediaType.NintendoWiiOpticalDiscSL:
+                    case MediaType.NintendoWiiOpticalDiscDL:
+                    case MediaType.NintendoWiiUOpticalDiscSL:
+                        // Quad-layer discs
+                        if (SubmissionInfo?.DiscIdentifiers.Layerbreak3 != default(long))
+                            return true;
+
+                        // Triple-layer discs
+                        else if (SubmissionInfo?.DiscIdentifiers.Layerbreak2 != default(long))
+                            return true;
+
+                        // Double-layer discs
+                        else if (SubmissionInfo?.DiscIdentifiers.Layerbreak != default(long))
+                            return true;
+
+                        // Single-layer discs
+                        else
+                            return false;
+
+                    case MediaType.UMDSL:
+                    case MediaType.UMDDL:
+                        return true;
+
+                    // Allow all possible fields for unknown media types
+                    case MediaType.NONE:
+                        return true;
+
+                    // Nothing else shows this layer
+                    default:
+                        return false;
+                }
+#pragma warning restore IDE0010
+            }
+        }
+
         public string? Layer1MasteringCode
         {
             get => SubmissionInfo.RingCodes.Layer1MasteringCode;
@@ -854,6 +972,63 @@ namespace MPF.Frontend.ViewModels
         #endregion
 
         #region Layer 2
+
+        public bool Layer2InfoPanelVisible
+        {
+            get
+            {
+#pragma warning disable IDE0010
+                switch (SubmissionInfo?.DiscIdentity?.Media)
+                {
+                    case MediaType.CD:
+                    case MediaType.GDROM:
+                        return false;
+
+                    case MediaType.DVD5:
+                    case MediaType.DVD9:
+                    case MediaType.HDDVDSL:
+                    case MediaType.HDDVDDL:
+                    case MediaType.BD25:
+                    case MediaType.BD33:
+                    case MediaType.BD50:
+                    case MediaType.BD66:
+                    case MediaType.BD100:
+                    case MediaType.BD128:
+                    case MediaType.NintendoGameCubeGameDisc:
+                    case MediaType.NintendoWiiOpticalDiscSL:
+                    case MediaType.NintendoWiiOpticalDiscDL:
+                    case MediaType.NintendoWiiUOpticalDiscSL:
+                        // Quad-layer discs
+                        if (SubmissionInfo?.DiscIdentifiers.Layerbreak3 != default(long))
+                            return true;
+
+                        // Triple-layer discs
+                        else if (SubmissionInfo?.DiscIdentifiers.Layerbreak2 != default(long))
+                            return true;
+
+                        // Double-layer discs
+                        else if (SubmissionInfo?.DiscIdentifiers.Layerbreak != default(long))
+                            return false;
+
+                        // Single-layer discs
+                        else
+                            return false;
+
+                    case MediaType.UMDSL:
+                    case MediaType.UMDDL:
+                        return false;
+
+                    // Allow all possible fields for unknown media types
+                    case MediaType.NONE:
+                        return true;
+
+                    // Nothing else shows this layer
+                    default:
+                        return false;
+                }
+#pragma warning restore IDE0010
+            }
+        }
 
         public string? Layer2MasteringCode
         {
@@ -877,6 +1052,63 @@ namespace MPF.Frontend.ViewModels
 
         #region Layer 3
 
+        public bool Layer3InfoPanelVisible
+        {
+            get
+            {
+#pragma warning disable IDE0010
+                switch (SubmissionInfo?.DiscIdentity?.Media)
+                {
+                    case MediaType.CD:
+                    case MediaType.GDROM:
+                        return false;
+
+                    case MediaType.DVD5:
+                    case MediaType.DVD9:
+                    case MediaType.HDDVDSL:
+                    case MediaType.HDDVDDL:
+                    case MediaType.BD25:
+                    case MediaType.BD33:
+                    case MediaType.BD50:
+                    case MediaType.BD66:
+                    case MediaType.BD100:
+                    case MediaType.BD128:
+                    case MediaType.NintendoGameCubeGameDisc:
+                    case MediaType.NintendoWiiOpticalDiscSL:
+                    case MediaType.NintendoWiiOpticalDiscDL:
+                    case MediaType.NintendoWiiUOpticalDiscSL:
+                        // Quad-layer discs
+                        if (SubmissionInfo?.DiscIdentifiers.Layerbreak3 != default(long))
+                            return true;
+
+                        // Triple-layer discs
+                        else if (SubmissionInfo?.DiscIdentifiers.Layerbreak2 != default(long))
+                            return false;
+
+                        // Double-layer discs
+                        else if (SubmissionInfo?.DiscIdentifiers.Layerbreak != default(long))
+                            return false;
+
+                        // Single-layer discs
+                        else
+                            return false;
+
+                    case MediaType.UMDSL:
+                    case MediaType.UMDDL:
+                        return false;
+
+                    // Allow all possible fields for unknown media types
+                    case MediaType.NONE:
+                        return true;
+
+                    // Nothing else shows this layer
+                    default:
+                        return false;
+                }
+#pragma warning restore IDE0010
+            }
+        }
+
         public string? Layer3MasteringCode
         {
             get => SubmissionInfo.RingCodes.Layer3MasteringCode;
@@ -898,6 +1130,49 @@ namespace MPF.Frontend.ViewModels
         #endregion
 
         #region Label Side
+
+        public bool LabelSideInfoPanelVisible
+        {
+            get
+            {
+#pragma warning disable IDE0010
+                switch (SubmissionInfo?.DiscIdentity?.Media)
+                {
+                    case MediaType.CD:
+                    case MediaType.GDROM:
+                        return true;
+
+                    case MediaType.DVD5:
+                    case MediaType.DVD9:
+                    case MediaType.HDDVDSL:
+                    case MediaType.HDDVDDL:
+                    case MediaType.BD25:
+                    case MediaType.BD33:
+                    case MediaType.BD50:
+                    case MediaType.BD66:
+                    case MediaType.BD100:
+                    case MediaType.BD128:
+                    case MediaType.NintendoGameCubeGameDisc:
+                    case MediaType.NintendoWiiOpticalDiscSL:
+                    case MediaType.NintendoWiiOpticalDiscDL:
+                    case MediaType.NintendoWiiUOpticalDiscSL:
+                        return true;
+
+                    case MediaType.UMDSL:
+                    case MediaType.UMDDL:
+                        return true;
+
+                    // Allow all possible fields for unknown media types
+                    case MediaType.NONE:
+                        return true;
+
+                    // Nothing else shows this layer
+                    default:
+                        return false;
+                }
+#pragma warning restore IDE0010
+            }
+        }
 
         public string? LabelSideMasteringCode
         {
@@ -946,6 +1221,8 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool FullyMatchedIDsVisible => FullyMatchedIDs is not null;
+
         public string? PartiallyMatchedIDs
         {
             get
@@ -957,10 +1234,14 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool PartiallyMatchedIDsVisible => PartiallyMatchedIDs is not null;
+
         public string? Dat
         {
             get => SubmissionInfo.DumpMetadata.Dat;
         }
+
+        public bool DatVisible => !string.IsNullOrEmpty(Dat);
 
         public string? Layerbreak
         {
@@ -973,6 +1254,8 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool LayerbreakVisible => !string.IsNullOrEmpty(Layerbreak);
+
         public string? Layerbreak2
         {
             get
@@ -983,6 +1266,8 @@ namespace MPF.Frontend.ViewModels
                 return SubmissionInfo.DiscIdentifiers.Layerbreak2.ToString();
             }
         }
+
+        public bool Layerbreak2Visible => !string.IsNullOrEmpty(Layerbreak2);
 
         public string? Layerbreak3
         {
@@ -995,10 +1280,14 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool Layerbreak3Visible => !string.IsNullOrEmpty(Layerbreak3);
+
         public string? WriteOffset
         {
             get => SubmissionInfo.RingCodes.WriteOffset;
         }
+
+        public bool WriteOffsetVisible => WriteOffset is not null;
 
         public string? DMIHash
         {
@@ -1011,20 +1300,28 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool DMIHashVisible => DMIHash is not null;
+
         public string? EDC
         {
             get => SubmissionInfo.DiscIdentifiers.EDC.ToString();
         }
+
+        public bool EDCVisible => EDC is not null;
 
         public string? ErrorCount
         {
             get => SubmissionInfo.DiscIdentifiers.ErrorCount;
         }
 
+        public bool ErrorCountVisible => ErrorCount is not null;
+
         public string? EXEDate
         {
             get => SubmissionInfo.DiscIdentifiers.EXEDate;
         }
+
+        public bool EXEDateVisible => EXEDate is not null;
 
         public string? Filename
         {
@@ -1037,10 +1334,14 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool FilenameVisible => Filename is not null;
+
         public string? Header
         {
             get => SubmissionInfo.DumpMetadata.Header;
         }
+
+        public bool HeaderVisible => Header is not null;
 
         public string? InternalName
         {
@@ -1053,6 +1354,8 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool InternalNameVisible => InternalName is not null;
+
         public string? InternalSerialName
         {
             get
@@ -1063,6 +1366,8 @@ namespace MPF.Frontend.ViewModels
                 return null;
             }
         }
+
+        public bool InternalSerialNameVisible => InternalSerialName is not null;
 
         public string? Multisession
         {
@@ -1075,6 +1380,8 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool MultisessionVisible => Multisession is not null;
+
         public string? PFIHash
         {
             get
@@ -1086,15 +1393,21 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool PFIHashVisible => PFIHash is not null;
+
         public string? PIC
         {
             get => SubmissionInfo.DumpMetadata.PIC;
         }
 
+        public bool PICVisible => PIC is not null;
+
         public string? PVD
         {
             get => SubmissionInfo.DumpMetadata.PVD;
         }
+
+        public bool PVDVisible => PVD is not null;
 
         public string? RingPerfectAudioOffset
         {
@@ -1107,15 +1420,21 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool RingPerfectAudioOffsetVisible => RingPerfectAudioOffset is not null;
+
         public string? SampleStart
         {
             get => SubmissionInfo.RingCodes.SampleStart;
         }
 
+        public bool SampleStartVisible => SampleStart is not null;
+
         public string? SBI
         {
             get => SubmissionInfo.DumpMetadata.SBI;
         }
+
+        public bool SBIVisible => SBI is not null;
 
         public string? SSHash
         {
@@ -1128,10 +1447,14 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool SSHashVisible => SSHash is not null;
+
         public string? SectorRanges
         {
             get => SubmissionInfo.DumpMetadata.SectorRanges;
         }
+
+        public bool SectorRangesVisible => SectorRanges is not null;
 
         public string? SSVersion
         {
@@ -1144,10 +1467,14 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool SSVersionVisible => SSVersion is not null;
+
         public string? UniversalHash
         {
             get => SubmissionInfo.DiscIdentifiers.UniversalHash;
         }
+
+        public bool UniversalHashVisible => UniversalHash is not null;
 
         public string? VolumeLabel
         {
@@ -1160,6 +1487,8 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool VolumeLabelVisible => VolumeLabel is not null;
+
         public string? XeMID
         {
             get
@@ -1171,6 +1500,8 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        public bool XeMIDVisible => XeMID is not null;
+
         public string? XMID
         {
             get
@@ -1181,6 +1512,8 @@ namespace MPF.Frontend.ViewModels
                 return null;
             }
         }
+
+        public bool XMIDVisible => XMID is not null;
 
         #endregion
 
