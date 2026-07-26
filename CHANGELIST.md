@@ -82,6 +82,7 @@
 - Handle media info window loading internally
 - Better handling of regions and languages in media info model
 - Centralize title normalization
+- Update RedumpLib to 3.0.3
 
 ### 3.8.3 (2026-07-06)
 
