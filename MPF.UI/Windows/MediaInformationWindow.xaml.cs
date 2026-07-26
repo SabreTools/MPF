@@ -30,32 +30,33 @@ namespace MPF.UI.Windows
         #region Ringcodes
 
         private GroupBox? Layer0Info => ItemHelper.FindChild<GroupBox>(this, "Layer0Info");
-        private UserInput? Layer0MasteringCode => ItemHelper.FindChild<UserInput>(this, "Layer0MasteringCode");
-        private UserInput? Layer0MasteringSID => ItemHelper.FindChild<UserInput>(this, "Layer0MasteringSID");
-        private UserInput? Layer0Toolstamp => ItemHelper.FindChild<UserInput>(this, "Layer0Toolstamp");
-        private UserInput? Layer0MouldSIDs => ItemHelper.FindChild<UserInput>(this, "Layer0MouldSIDs");
-        private UserInput? Layer0AdditionalMoulds => ItemHelper.FindChild<UserInput>(this, "Layer0AdditionalMoulds");
+        private UserInput? Layer0MasteringCodeTextBox => ItemHelper.FindChild<UserInput>(this, "Layer0MasteringCodeTextBox");
+        private UserInput? Layer0MasteringSIDTextBox => ItemHelper.FindChild<UserInput>(this, "Layer0MasteringSIDTextBox");
+        private UserInput? Layer0ToolstampTextBox => ItemHelper.FindChild<UserInput>(this, "Layer0ToolstampTextBox");
+        private UserInput? Layer0MouldSIDsTextBox => ItemHelper.FindChild<UserInput>(this, "Layer0MouldSIDsTextBox");
+        private UserInput? Layer0AdditionalMouldsTextBox => ItemHelper.FindChild<UserInput>(this, "Layer0AdditionalMouldsTextBox");
 
         private GroupBox? Layer1Info => ItemHelper.FindChild<GroupBox>(this, "Layer1Info");
-        private UserInput? Layer1MasteringCode => ItemHelper.FindChild<UserInput>(this, "Layer1MasteringCode");
-        private UserInput? Layer1MasteringSID => ItemHelper.FindChild<UserInput>(this, "Layer1MasteringSID");
-        private UserInput? Layer1Toolstamp => ItemHelper.FindChild<UserInput>(this, "Layer1Toolstamp");
+        private UserInput? Layer1MasteringCodeTextBox => ItemHelper.FindChild<UserInput>(this, "Layer1MasteringCodeTextBox");
+        private UserInput? Layer1MasteringSIDTextBox => ItemHelper.FindChild<UserInput>(this, "Layer1MasteringSIDTextBox");
+        private UserInput? Layer1ToolstampTextBox => ItemHelper.FindChild<UserInput>(this, "Layer1ToolstampTextBox");
 
         private GroupBox? Layer2Info => ItemHelper.FindChild<GroupBox>(this, "Layer2Info");
-        private UserInput? Layer2MasteringCode => ItemHelper.FindChild<UserInput>(this, "Layer2MasteringCode");
-        private UserInput? Layer2MasteringSID => ItemHelper.FindChild<UserInput>(this, "Layer2MasteringSID");
-        private UserInput? Layer2Toolstamp => ItemHelper.FindChild<UserInput>(this, "Layer2Toolstamp");
+        private UserInput? Layer2MasteringCodeTextBox => ItemHelper.FindChild<UserInput>(this, "Layer2MasteringCodeTextBox");
+        private UserInput? Layer2MasteringSIDTextBox => ItemHelper.FindChild<UserInput>(this, "Layer2MasteringSIDTextBox");
+        private UserInput? Layer2ToolstampTextBox => ItemHelper.FindChild<UserInput>(this, "Layer2ToolstampTextBox");
 
         private GroupBox? Layer3Info => ItemHelper.FindChild<GroupBox>(this, "Layer3Info");
-        private UserInput? Layer3MasteringCode => ItemHelper.FindChild<UserInput>(this, "Layer3MasteringCode");
-        private UserInput? Layer3MasteringSID => ItemHelper.FindChild<UserInput>(this, "Layer3MasteringSID");
-        private UserInput? Layer3Toolstamp => ItemHelper.FindChild<UserInput>(this, "Layer3Toolstamp");
+        private UserInput? Layer3MasteringCodeTextBox => ItemHelper.FindChild<UserInput>(this, "Layer3MasteringCodeTextBox");
+        private UserInput? Layer3MasteringSIDTextBox => ItemHelper.FindChild<UserInput>(this, "Layer3MasteringSIDTextBox");
+        private UserInput? Layer3ToolstampTextBox => ItemHelper.FindChild<UserInput>(this, "Layer3ToolstampTextBox");
 
         private GroupBox? LabelSideInfo => ItemHelper.FindChild<GroupBox>(this, "LabelSideInfo");
-        private UserInput? LabelSideMasteringCode => ItemHelper.FindChild<UserInput>(this, "LabelSideMasteringCode");
-        private UserInput? LabelSideMasteringSID => ItemHelper.FindChild<UserInput>(this, "LabelSideMasteringSID");
-        private UserInput? LabelSideToolstamp => ItemHelper.FindChild<UserInput>(this, "LabelSideToolstamp");
-        private UserInput? LabelSideAdditionalMoulds => ItemHelper.FindChild<UserInput>(this, "LabelSideAdditionalMoulds");
+        private UserInput? LabelSideMasteringCodeTextBox => ItemHelper.FindChild<UserInput>(this, "LabelSideMasteringCodeTextBox");
+        private UserInput? LabelSideMasteringSIDTextBox => ItemHelper.FindChild<UserInput>(this, "LabelSideMasteringSIDTextBox");
+        private UserInput? LabelSideToolstampTextBox => ItemHelper.FindChild<UserInput>(this, "LabelSideToolstampTextBox");
+        private UserInput? LabelSideMouldSIDsTextBox => ItemHelper.FindChild<UserInput>(this, "LabelSideMouldSIDsTextBox");
+        private UserInput? LabelSideAdditionalMouldsTextBox => ItemHelper.FindChild<UserInput>(this, "LabelSideAdditionalMouldsTextBox");
 
         #endregion
 
@@ -173,29 +174,29 @@ namespace MPF.UI.Windows
         /// TODO: See if these can be done by binding
         private void EnableTabsInInputFields()
         {
-            Layer0MasteringCode!.Tab = true;
-            Layer0MasteringSID!.Tab = true;
-            Layer0Toolstamp!.Tab = true;
-            Layer0MouldSIDs!.Tab = true;
-            Layer0AdditionalMoulds!.Tab = true;
+            Layer0MasteringCodeTextBox!.Tab = true;
+            Layer0MasteringSIDTextBox!.Tab = true;
+            Layer0ToolstampTextBox!.Tab = true;
+            Layer0MouldSIDsTextBox!.Tab = true;
+            Layer0AdditionalMouldsTextBox!.Tab = true;
 
-            Layer1MasteringCode!.Tab = true;
-            Layer1MasteringSID!.Tab = true;
-            Layer1Toolstamp!.Tab = true;
+            Layer1MasteringCodeTextBox!.Tab = true;
+            Layer1MasteringSIDTextBox!.Tab = true;
+            Layer1ToolstampTextBox!.Tab = true;
 
-            Layer2MasteringCode!.Tab = true;
-            Layer2MasteringSID!.Tab = true;
-            Layer2Toolstamp!.Tab = true;
+            Layer2MasteringCodeTextBox!.Tab = true;
+            Layer2MasteringSIDTextBox!.Tab = true;
+            Layer2ToolstampTextBox!.Tab = true;
 
-            Layer3MasteringCode!.Tab = true;
-            Layer3MasteringSID!.Tab = true;
-            Layer3Toolstamp!.Tab = true;
+            Layer3MasteringCodeTextBox!.Tab = true;
+            Layer3MasteringSIDTextBox!.Tab = true;
+            Layer3ToolstampTextBox!.Tab = true;
 
-            LabelSideMasteringCode!.Tab = true;
-            LabelSideMasteringSID!.Tab = true;
-            LabelSideToolstamp!.Tab = true;
-            LabelSideMouldSIDs!.Tab = true;
-            LabelSideAdditionalMoulds!.Tab = true;
+            LabelSideMasteringCodeTextBox!.Tab = true;
+            LabelSideMasteringSIDTextBox!.Tab = true;
+            LabelSideToolstampTextBox!.Tab = true;
+            LabelSideMouldSIDsTextBox!.Tab = true;
+            LabelSideAdditionalMouldsTextBox!.Tab = true;
         }
 
         /// <summary>
@@ -211,8 +212,6 @@ namespace MPF.UI.Windows
 
             if (submissionInfo.FullyMatchedIDs is null || submissionInfo.FullyMatchedIDs.Count == 0)
                 FullyMatchedIDs!.Visibility = Visibility.Collapsed;
-            else
-                FullyMatchedIDs!.Text = string.Join(", ", [.. submissionInfo.FullyMatchedIDs.ConvertAll(i => i.ToString())]);
             if (submissionInfo.PartiallyMatchedIDs is null || submissionInfo.PartiallyMatchedIDs.Count == 0)
                 PartiallyMatchedIDs!.Visibility = Visibility.Collapsed;
             else

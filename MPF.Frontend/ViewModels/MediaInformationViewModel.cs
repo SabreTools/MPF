@@ -15,24 +15,1178 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public Options Options { get; private set; }
 
-        /// <summary>
-        /// SubmissionInfo object to fill and save
-        /// </summary>
-        public SubmissionInfo SubmissionInfo { get; private set; }
+        #region Common Media Information
 
-        /// <summary>
-        /// Translation layer for comment special fields
-        /// </summary>
-        public Dictionary<string, string> CommentsSpecialFields { get; private set; } = [];
+        public string? Title
+        {
+            get => SubmissionInfo.DiscIdentity.Title;
+            set => SubmissionInfo.DiscIdentity.Title = value;
+        }
 
-        /// <summary>
-        /// Translation layer for content special fields
-        /// </summary>
-        public Dictionary<string, string> ContentsSpecialFields { get; private set; } = [];
+        public string? AlternativeTitle
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.AlternativeTitle, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.AlternativeTitle] = value ?? string.Empty;
+        }
+
+        public string? ForeignTitle
+        {
+            get => SubmissionInfo.DiscIdentity.ForeignTitle;
+            set => SubmissionInfo.DiscIdentity.ForeignTitle = value;
+        }
+
+        public string? AlternativeForeignTitle
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.AlternativeForeignTitle, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.AlternativeForeignTitle] = value ?? string.Empty;
+        }
+
+        public string? DiscNumber
+        {
+            get => SubmissionInfo.DiscIdentity.DiscNumber;
+            set => SubmissionInfo.DiscIdentity.DiscNumber = value;
+        }
+
+        public string? DiscTitle
+        {
+            get => SubmissionInfo.DiscIdentity.DiscTitle;
+            set => SubmissionInfo.DiscIdentity.DiscTitle = value;
+        }
+
+        public string? DiscTitleNonLatin
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.DiscTitleNonLatin, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.DiscTitleNonLatin] = value ?? string.Empty;
+        }
+
+        public DiscCategory? Category
+        {
+            get => SubmissionInfo.DiscIdentity.Category;
+            set => SubmissionInfo.DiscIdentity.Category = value;
+        }
+
+        public string? DiscSerials
+        {
+            get => SubmissionInfo.DiscIdentifiers.DiscSerials;
+            set => SubmissionInfo.DiscIdentifiers.DiscSerials = value;
+        }
+
+        public string? Barcodes
+        {
+            get => SubmissionInfo.DiscIdentifiers.Barcodes;
+            set => SubmissionInfo.DiscIdentifiers.Barcodes = value;
+        }
 
         #endregion
 
-        #region Lists
+        #region Versions and Editions
+
+        public string? Version
+        {
+            get => SubmissionInfo.DiscIdentifiers.Version;
+            set => SubmissionInfo.DiscIdentifiers.Version = value;
+        }
+
+        public string? Editions
+        {
+            get => SubmissionInfo.DiscIdentifiers.Editions;
+            set => SubmissionInfo.DiscIdentifiers.Editions = value;
+        }
+
+        public string? EditionNonLatin
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.EditionNonLatin, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.EditionNonLatin] = value ?? string.Empty;
+        }
+
+        #endregion
+
+        #region Extras
+
+        public bool PCMacHybrid
+        {
+            get => SubmissionInfo.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.PCMacHybrid);
+            set
+            {
+                if (value)
+                    SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.PCMacHybrid] = true.ToString();
+                else
+                    SubmissionInfo.DumpMetadata.CommentsSpecialFields.Remove(SiteCode.PCMacHybrid);
+            }
+        }
+
+        public string? Comments
+        {
+            get => SubmissionInfo.DumpMetadata.Comments;
+            set => SubmissionInfo.DumpMetadata.Comments = value;
+        }
+
+        public string? CompatibleOS
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.CompatibleOS, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.CompatibleOS] = value ?? string.Empty;
+        }
+
+        public string? DiscKey
+        {
+            get => SubmissionInfo.DiscIdentifiers.DiscKey;
+            set => SubmissionInfo.DiscIdentifiers.DiscKey = value;
+        }
+
+        public string? InternalDiscID
+        {
+            get => SubmissionInfo.DiscIdentifiers.DiscID;
+            set => SubmissionInfo.DiscIdentifiers.DiscID = value;
+        }
+
+        public string? Protection
+        {
+            get => SubmissionInfo.DumpMetadata.Protection;
+            set => SubmissionInfo.DumpMetadata.Protection = value;
+        }
+
+        #endregion
+
+        #region Physical Identifiers
+
+        public string? BBFCRegistrationNumber
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.BBFCRegistrationNumber, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.BBFCRegistrationNumber] = value ?? string.Empty;
+        }
+
+        public string? CoverID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.CoverID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.CoverID] = value ?? string.Empty;
+        }
+
+        public string? DiscHologramID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.DiscHologramID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = value ?? string.Empty;
+        }
+
+        public string? DNASDiscID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.DNASDiscID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.DNASDiscID] = value ?? string.Empty;
+        }
+
+        public string? DiscID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.DiscID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.DiscID] = value ?? string.Empty;
+        }
+
+        public string? ISBN
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.ISBN, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.ISBN] = value ?? string.Empty;
+        }
+
+        public string? ISSN
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.ISSN, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.ISSN] = value ?? string.Empty;
+        }
+
+        public string? PPN
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.PPN, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.PPN] = value ?? string.Empty;
+        }
+
+        public string? VFCCode
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.VFCCode, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.VFCCode] = value ?? string.Empty;
+        }
+
+        #endregion
+
+        #region Publisher Identifiers
+
+        public string? TwoKGamesID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.TwoKGamesID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.TwoKGamesID] = value ?? string.Empty;
+        }
+
+        public string? AcclaimID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.AcclaimID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.AcclaimID] = value ?? string.Empty;
+        }
+
+        public string? AccoladeID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.AccoladeID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.AccoladeID] = value ?? string.Empty;
+        }
+
+        public string? ActivisionID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.ActivisionID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.ActivisionID] = value ?? string.Empty;
+        }
+
+        public string? BandaiID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.BandaiID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.BandaiID] = value ?? string.Empty;
+        }
+
+        public string? BethesdaID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.BethesdaID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.BethesdaID] = value ?? string.Empty;
+        }
+
+        public string? CDProjektID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.CDProjektID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.CDProjektID] = value ?? string.Empty;
+        }
+
+        public string? DisneyInteractiveID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.DisneyInteractiveID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.DisneyInteractiveID] = value ?? string.Empty;
+        }
+
+        public string? EidosID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.EidosID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.EidosID] = value ?? string.Empty;
+        }
+
+        public string? ElectronicArtsID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.ElectronicArtsID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.ElectronicArtsID] = value ?? string.Empty;
+        }
+
+        public string? FoxInteractiveID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.FoxInteractiveID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.FoxInteractiveID] = value ?? string.Empty;
+        }
+
+        public string? GTInteractiveID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.GTInteractiveID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.GTInteractiveID] = value ?? string.Empty;
+        }
+
+        public string? InterplayID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.InterplayID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.InterplayID] = value ?? string.Empty;
+        }
+
+        public string? JASRACID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.JASRACID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.JASRACID] = value ?? string.Empty;
+        }
+
+        public string? KingRecordsID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.KingRecordsID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.KingRecordsID] = value ?? string.Empty;
+        }
+
+        public string? KoeiID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.KoeiID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.KoeiID] = value ?? string.Empty;
+        }
+
+        public string? KonamiID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.KonamiID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.KonamiID] = value ?? string.Empty;
+        }
+
+        public string? LucasArtsID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.LucasArtsID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.LucasArtsID] = value ?? string.Empty;
+        }
+
+        public string? MicrosoftID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.MicrosoftID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.MicrosoftID] = value ?? string.Empty;
+        }
+
+        public string? NaganoID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.NaganoID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.NaganoID] = value ?? string.Empty;
+        }
+
+        public string? NamcoID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.NamcoID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.NamcoID] = value ?? string.Empty;
+        }
+
+        public string? NipponIchiSoftwareID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.NipponIchiSoftwareID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.NipponIchiSoftwareID] = value ?? string.Empty;
+        }
+
+        public string? OriginID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.OriginID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.OriginID] = value ?? string.Empty;
+        }
+
+        public string? PonyCanyonID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.PonyCanyonID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.PonyCanyonID] = value ?? string.Empty;
+        }
+
+        public string? SegaID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.SegaID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.SegaID] = value ?? string.Empty;
+        }
+
+        public string? SelenID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.SelenID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.SelenID] = value ?? string.Empty;
+        }
+
+        public string? SierraID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.SierraID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.SierraID] = value ?? string.Empty;
+        }
+
+        public string? TaitoID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.TaitoID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.TaitoID] = value ?? string.Empty;
+        }
+
+        public string? UbisoftID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.UbisoftID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.UbisoftID] = value ?? string.Empty;
+        }
+
+        public string? ValveID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.ValveID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.ValveID] = value ?? string.Empty;
+        }
+
+        #endregion
+
+        #region Contents
+
+        public string? GeneralContent
+        {
+            get => SubmissionInfo.DumpMetadata.Contents;
+            set => SubmissionInfo.DumpMetadata.Contents = value;
+        }
+
+        public string? Applications
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.ContentsSpecialFields.TryGetValue(SiteCode.Applications, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.ContentsSpecialFields[SiteCode.Applications] = value ?? string.Empty;
+        }
+
+        public string? Games
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.ContentsSpecialFields.TryGetValue(SiteCode.Games, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.ContentsSpecialFields[SiteCode.Games] = value ?? string.Empty;
+        }
+
+        public string? NetYarozeGames
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.ContentsSpecialFields.TryGetValue(SiteCode.NetYarozeGames, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.ContentsSpecialFields[SiteCode.NetYarozeGames] = value ?? string.Empty;
+        }
+
+        public string? PlayableDemos
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.ContentsSpecialFields.TryGetValue(SiteCode.PlayableDemos, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.ContentsSpecialFields[SiteCode.PlayableDemos] = value ?? string.Empty;
+        }
+
+        public string? RollingDemos
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.ContentsSpecialFields.TryGetValue(SiteCode.RollingDemos, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.ContentsSpecialFields[SiteCode.RollingDemos] = value ?? string.Empty;
+        }
+
+        public string? TechDemos
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.ContentsSpecialFields.TryGetValue(SiteCode.TechDemos, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.ContentsSpecialFields[SiteCode.TechDemos] = value ?? string.Empty;
+        }
+
+        public string? GameFootage
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.ContentsSpecialFields.TryGetValue(SiteCode.GameFootage, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.ContentsSpecialFields[SiteCode.GameFootage] = value ?? string.Empty;
+        }
+
+        public string? Videos
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.ContentsSpecialFields.TryGetValue(SiteCode.Videos, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.ContentsSpecialFields[SiteCode.Videos] = value ?? string.Empty;
+        }
+
+        public string? Patches
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.ContentsSpecialFields.TryGetValue(SiteCode.Patches, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.ContentsSpecialFields[SiteCode.Patches] = value ?? string.Empty;
+        }
+
+        public string? Savegames
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.ContentsSpecialFields.TryGetValue(SiteCode.Savegames, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.ContentsSpecialFields[SiteCode.Savegames] = value ?? string.Empty;
+        }
+
+        public string? Extras
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.ContentsSpecialFields.TryGetValue(SiteCode.Extras, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.ContentsSpecialFields[SiteCode.Extras] = value ?? string.Empty;
+        }
+
+        #endregion
+
+        #region Ringcodes
+
+        #region Layer 0
+
+        public string? Layer0MasteringCode
+        {
+            get => SubmissionInfo.RingCodes.Layer0MasteringCode;
+            set => SubmissionInfo.RingCodes.Layer0MasteringCode = value;
+        }
+
+        public string? Layer0MasteringSID
+        {
+            get => SubmissionInfo.RingCodes.Layer0MasteringSID;
+            set => SubmissionInfo.RingCodes.Layer0MasteringSID = value;
+        }
+
+        public string? Layer0Toolstamps
+        {
+            get => SubmissionInfo.RingCodes.Layer0Toolstamps;
+            set => SubmissionInfo.RingCodes.Layer0Toolstamps = value;
+        }
+
+        public string? Layer0MouldSIDs
+        {
+            get => SubmissionInfo.RingCodes.Layer0MouldSIDs;
+            set => SubmissionInfo.RingCodes.Layer0MouldSIDs = value;
+        }
+
+        public string? Layer0AdditionalMoulds
+        {
+            get => SubmissionInfo.RingCodes.Layer0AdditionalMoulds;
+            set => SubmissionInfo.RingCodes.Layer0AdditionalMoulds = value;
+        }
+
+        #endregion
+
+        #region Layer 1
+
+        public string? Layer1MasteringCode
+        {
+            get => SubmissionInfo.RingCodes.Layer1MasteringCode;
+            set => SubmissionInfo.RingCodes.Layer1MasteringCode = value;
+        }
+
+        public string? Layer1MasteringSID
+        {
+            get => SubmissionInfo.RingCodes.Layer1MasteringSID;
+            set => SubmissionInfo.RingCodes.Layer1MasteringSID = value;
+        }
+
+        public string? Layer1Toolstamps
+        {
+            get => SubmissionInfo.RingCodes.Layer1Toolstamps;
+            set => SubmissionInfo.RingCodes.Layer1Toolstamps = value;
+        }
+
+        #endregion
+
+        #region Layer 2
+
+        public string? Layer2MasteringCode
+        {
+            get => SubmissionInfo.RingCodes.Layer2MasteringCode;
+            set => SubmissionInfo.RingCodes.Layer2MasteringCode = value;
+        }
+
+        public string? Layer2MasteringSID
+        {
+            get => SubmissionInfo.RingCodes.Layer2MasteringSID;
+            set => SubmissionInfo.RingCodes.Layer2MasteringSID = value;
+        }
+
+        public string? Layer2Toolstamps
+        {
+            get => SubmissionInfo.RingCodes.Layer2Toolstamps;
+            set => SubmissionInfo.RingCodes.Layer2Toolstamps = value;
+        }
+
+        #endregion
+
+        #region Layer 3
+
+        public string? Layer3MasteringCode
+        {
+            get => SubmissionInfo.RingCodes.Layer3MasteringCode;
+            set => SubmissionInfo.RingCodes.Layer3MasteringCode = value;
+        }
+
+        public string? Layer3MasteringSID
+        {
+            get => SubmissionInfo.RingCodes.Layer3MasteringSID;
+            set => SubmissionInfo.RingCodes.Layer3MasteringSID = value;
+        }
+
+        public string? Layer3Toolstamps
+        {
+            get => SubmissionInfo.RingCodes.Layer3Toolstamps;
+            set => SubmissionInfo.RingCodes.Layer3Toolstamps = value;
+        }
+
+        #endregion
+
+        #region Label Side
+
+        public string? LabelSideMasteringCode
+        {
+            get => SubmissionInfo.RingCodes.LabelSideMasteringCode;
+            set => SubmissionInfo.RingCodes.LabelSideMasteringCode = value;
+        }
+
+        public string? LabelSideMasteringSID
+        {
+            get => SubmissionInfo.RingCodes.LabelSideMasteringSID;
+            set => SubmissionInfo.RingCodes.LabelSideMasteringSID = value;
+        }
+
+        public string? LabelSideToolstamps
+        {
+            get => SubmissionInfo.RingCodes.LabelSideToolstamps;
+            set => SubmissionInfo.RingCodes.LabelSideToolstamps = value;
+        }
+
+        public string? LabelSideMouldSIDs
+        {
+            get => SubmissionInfo.RingCodes.LabelSideMouldSIDs;
+            set => SubmissionInfo.RingCodes.LabelSideMouldSIDs = value;
+        }
+
+        public string? LabelSideAdditionalMoulds
+        {
+            get => SubmissionInfo.RingCodes.LabelSideAdditionalMoulds;
+            set => SubmissionInfo.RingCodes.LabelSideAdditionalMoulds = value;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Read-Only Info
+
+        public string? FullyMatchedIDs
+        {
+            get
+            {
+                if (SubmissionInfo.FullyMatchedIDs is null)
+                    return null;
+
+                return string.Join(", ", [.. SubmissionInfo.FullyMatchedIDs.ConvertAll(i => i.ToString())]);
+            }
+        }
+
+        public string? PartiallyMatchedIDs
+        {
+            get
+            {
+                if (SubmissionInfo.PartiallyMatchedIDs is null)
+                    return null;
+
+                return string.Join(", ", [.. SubmissionInfo.PartiallyMatchedIDs.ConvertAll(i => i.ToString())]);
+            }
+        }
+
+        public string? Dat
+        {
+            get => SubmissionInfo.DumpMetadata.Dat;
+        }
+
+        public string? Layerbreak
+        {
+            get
+            {
+                if (SubmissionInfo.DiscIdentifiers.Layerbreak == default)
+                    return null;
+
+                return SubmissionInfo.DiscIdentifiers.Layerbreak.ToString();
+            }
+        }
+
+        public string? Layerbreak2
+        {
+            get
+            {
+                if (SubmissionInfo.DiscIdentifiers.Layerbreak2 == default)
+                    return null;
+
+                return SubmissionInfo.DiscIdentifiers.Layerbreak2.ToString();
+            }
+        }
+
+        public string? Layerbreak3
+        {
+            get
+            {
+                if (SubmissionInfo.DiscIdentifiers.Layerbreak3 == default)
+                    return null;
+
+                return SubmissionInfo.DiscIdentifiers.Layerbreak3.ToString();
+            }
+        }
+
+        public string? WriteOffset
+        {
+            get => SubmissionInfo.RingCodes.WriteOffset;
+        }
+
+        public string? DMIHash
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.DMIHash, out var value))
+                    return value;
+
+                return null;
+            }
+        }
+
+        public string? EDC
+        {
+            get => SubmissionInfo.DiscIdentifiers.EDC.ToString();
+        }
+
+        public string? ErrorCount
+        {
+            get => SubmissionInfo.DiscIdentifiers.ErrorCount;
+        }
+
+        public string? EXEDate
+        {
+            get => SubmissionInfo.DiscIdentifiers.EXEDate;
+        }
+
+        public string? Filename
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.Filename, out var value))
+                    return value;
+
+                return null;
+            }
+        }
+
+        public string? Header
+        {
+            get => SubmissionInfo.DumpMetadata.Header;
+        }
+
+        public string? InternalName
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.InternalName, out var value))
+                    return value;
+
+                return null;
+            }
+        }
+
+        public string? InternalSerialName
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.InternalSerialName, out var value))
+                    return value;
+
+                return null;
+            }
+        }
+
+        public string? Multisession
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.Multisession, out var value))
+                    return value;
+
+                return null;
+            }
+        }
+
+        public string? PFIHash
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.PFIHash, out var value))
+                    return value;
+
+                return null;
+            }
+        }
+
+        public string? PIC
+        {
+            get => SubmissionInfo.DumpMetadata.PIC;
+        }
+
+        public string? PVD
+        {
+            get => SubmissionInfo.DumpMetadata.PVD;
+        }
+
+        public string? RingPerfectAudioOffset
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.RingPerfectAudioOffset, out var value))
+                    return value;
+
+                return null;
+            }
+        }
+
+        public string? SampleStart
+        {
+            get => SubmissionInfo.RingCodes.SampleStart;
+        }
+
+        public string? SBI
+        {
+            get => SubmissionInfo.DumpMetadata.SBI;
+        }
+
+        public string? SSHash
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.SSHash, out var value))
+                    return value;
+
+                return null;
+            }
+        }
+
+        public string? SectorRanges
+        {
+            get => SubmissionInfo.DumpMetadata.SectorRanges;
+        }
+
+        public string? SSVersion
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.SSVersion, out var value))
+                    return value;
+
+                return null;
+            }
+        }
+
+        public string? UniversalHash
+        {
+            get => SubmissionInfo.DiscIdentifiers.UniversalHash;
+        }
+
+        public string? VolumeLabel
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.VolumeLabel, out var value))
+                    return value;
+
+                return null;
+            }
+        }
+
+        public string? XeMID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.XeMID, out var value))
+                    return value;
+
+                return null;
+            }
+        }
+
+        public string? XMID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.XMID, out var value))
+                    return value;
+
+                return null;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Selection Lists
 
         /// <summary>
         /// List of available disc categories
@@ -44,7 +1198,13 @@ namespace MPF.Frontend.ViewModels
         /// List of available regions
         /// </summary>
         public List<RegionCodeComboBoxItem> Regions { get; private set; }
-            = RegionCodeComboBoxItem.GenerateElements();
+             = RegionCodeComboBoxItem.GenerateElements();
+
+        /// <summary>
+        /// List of available languages
+        /// </summary>
+        public List<LanguageCodeComboBoxItem> Languages { get; private set; }
+            = LanguageCodeComboBoxItem.GenerateElements();
 
         /// <summary>
         /// List of Redump-supported Regions
@@ -115,12 +1275,6 @@ namespace MPF.Frontend.ViewModels
         ];
 
         /// <summary>
-        /// List of available languages
-        /// </summary>
-        public List<LanguageCodeComboBoxItem> Languages { get; private set; }
-            = LanguageCodeComboBoxItem.GenerateElements();
-
-        /// <summary>
         /// List of Redump-supported Languages
         /// </summary>
         private static readonly List<LanguageCode> RedumpLanguages =
@@ -184,6 +1338,15 @@ namespace MPF.Frontend.ViewModels
 
         #endregion
 
+        #region Internal State
+
+        /// <summary>
+        /// SubmissionInfo object to fill and save
+        /// </summary>
+        public SubmissionInfo SubmissionInfo { get; private set; }
+
+        #endregion
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -205,22 +1368,6 @@ namespace MPF.Frontend.ViewModels
                 Regions.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Regions, l) > -1);
             if (SubmissionInfo.RegionsAndLanguages.Languages is not null)
                 Languages.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Languages, l) > -1);
-
-            // Convert comments special fields to string-based keys
-            foreach (var kvp in SubmissionInfo.DumpMetadata.CommentsSpecialFields)
-            {
-                var key = ConvertSiteCodeToString(kvp.Key);
-                if (key is not null)
-                    CommentsSpecialFields[key] = kvp.Value;
-            }
-
-            // Convert contents special fields to string-based keys
-            foreach (var kvp in SubmissionInfo.DumpMetadata.ContentsSpecialFields)
-            {
-                var key = ConvertSiteCodeToString(kvp.Key);
-                if (key is not null)
-                    ContentsSpecialFields[key] = kvp.Value;
-            }
         }
 
         /// <summary>
@@ -238,22 +1385,6 @@ namespace MPF.Frontend.ViewModels
                 SubmissionInfo.RegionsAndLanguages.Languages = [null];
 
             SubmissionInfo.DiscIdentity.Title = FrontendTool.NormalizeDiscTitle(SubmissionInfo.DiscIdentity.Title, SubmissionInfo.RegionsAndLanguages.Languages);
-
-            // Convert comments special fields from string-based keys
-            foreach (var kvp in CommentsSpecialFields)
-            {
-                var siteCode = ConvertStringToSiteCode(kvp.Key);
-                if (siteCode is not null)
-                    SubmissionInfo.DumpMetadata.CommentsSpecialFields[siteCode] = kvp.Value;
-            }
-
-            // Convert contents special fields from string-based keys
-            foreach (var kvp in ContentsSpecialFields)
-            {
-                var siteCode = ConvertStringToSiteCode(kvp.Key);
-                if (siteCode is not null)
-                    SubmissionInfo.DumpMetadata.ContentsSpecialFields[siteCode] = kvp.Value;
-            }
         }
 
         /// <summary>
@@ -270,317 +1401,6 @@ namespace MPF.Frontend.ViewModels
         public void SetRedumpRegions()
         {
             Regions = RedumpRegions.ConvertAll(r => new RegionCodeComboBoxItem(r));
-        }
-
-        /// <summary>
-        /// Convert a site code to the corresponding index string
-        /// </summary>
-        private static string? ConvertSiteCodeToString(SiteCode? siteCode)
-        {
-            if (siteCode == SiteCode.AcclaimID)
-                return "AcclaimID";
-            else if (siteCode == SiteCode.AccoladeID)
-                return "AccoladeID";
-            else if (siteCode == SiteCode.ActivisionID)
-                return "ActivisionID";
-            else if (siteCode == SiteCode.AdditionalBCAData)
-                return "AdditionalBCAData";
-            else if (siteCode == SiteCode.AlternativeTitle)
-                return "AlternativeTitle";
-            else if (siteCode == SiteCode.AlternativeForeignTitle)
-                return "AlternativeForeignTitle";
-            else if (siteCode == SiteCode.Applications)
-                return "Applications";
-
-            else if (siteCode == SiteCode.BandaiID)
-                return "BandaiID";
-            else if (siteCode == SiteCode.BBFCRegistrationNumber)
-                return "BBFCRegistrationNumber";
-            else if (siteCode == SiteCode.BethesdaID)
-                return "BethesdaID";
-
-            else if (siteCode == SiteCode.CDProjektID)
-                return "CDProjektID";
-            else if (siteCode == SiteCode.CompatibleOS)
-                return "CompatibleOS";
-            else if (siteCode == SiteCode.CoverID)
-                return "CoverID";
-
-            else if (siteCode == SiteCode.DiceMultimedia)
-                return "DiceMultimedia";
-            else if (siteCode == SiteCode.DiscHologramID)
-                return "DiscHologramID";
-            else if (siteCode == SiteCode.DiscID)
-                return "DiscID";
-            else if (siteCode == SiteCode.DiscTitleNonLatin)
-                return "DiscTitleNonLatin";
-            else if (siteCode == SiteCode.DisneyInteractiveID)
-                return "DisneyInteractiveID";
-            else if (siteCode == SiteCode.DMIHash)
-                return "DMIHash";
-            else if (siteCode == SiteCode.DNASDiscID)
-                return "DNASDiscID";
-
-            else if (siteCode == SiteCode.EditionNonLatin)
-                return "EditionNonLatin";
-            else if (siteCode == SiteCode.EidosID)
-                return "EidosID";
-            else if (siteCode == SiteCode.ElectronicArtsID)
-                return "ElectronicArtsID";
-            else if (siteCode == SiteCode.Extras)
-                return "Extras";
-
-            else if (siteCode == SiteCode.Filename)
-                return "Filename";
-            else if (siteCode == SiteCode.FocusMultimedia)
-                return "FocusMultimedia";
-            else if (siteCode == SiteCode.FoxInteractiveID)
-                return "FoxInteractiveID";
-
-            else if (siteCode == SiteCode.GameFootage)
-                return "GameFootage";
-            else if (siteCode == SiteCode.Games)
-                return "Games";
-            else if (siteCode == SiteCode.Genre)
-                return "Genre";
-            else if (siteCode == SiteCode.GSPSoftware)
-                return "GSPSoftware";
-            else if (siteCode == SiteCode.GTInteractiveID)
-                return "GTInteractiveID";
-
-            else if (siteCode == SiteCode.HighSierraVolumeDescriptor)
-                return "HighSierraVolumeDescriptor";
-
-            else if (siteCode == SiteCode.InternalName)
-                return "InternalName";
-            else if (siteCode == SiteCode.InternalSerialName)
-                return "InternalSerialName";
-            else if (siteCode == SiteCode.InterplayID)
-                return "InterplayID";
-            else if (siteCode == SiteCode.ISBN)
-                return "ISBN";
-            else if (siteCode == SiteCode.ISSN)
-                return "ISSN";
-
-            else if (siteCode == SiteCode.JASRACID)
-                return "JASRACID";
-
-            else if (siteCode == SiteCode.KingRecordsID)
-                return "KingRecordsID";
-            else if (siteCode == SiteCode.KoeiID)
-                return "KoeiID";
-            else if (siteCode == SiteCode.KonamiID)
-                return "KonamiID";
-
-            else if (siteCode == SiteCode.LucasArtsID)
-                return "LucasArtsID";
-
-            else if (siteCode == SiteCode.MicrosoftID)
-                return "MicrosoftID";
-            else if (siteCode == SiteCode.Multisession)
-                return "Multisession";
-
-            else if (siteCode == SiteCode.NaganoID)
-                return "NaganoID";
-            else if (siteCode == SiteCode.NamcoID)
-                return "NamcoID";
-            else if (siteCode == SiteCode.NetYarozeGames)
-                return "NetYarozeGames";
-
-            else if (siteCode == SiteCode.NipponIchiSoftwareID)
-                return "NipponIchiSoftwareID";
-
-            else if (siteCode == SiteCode.OriginID)
-                return "OriginID";
-
-            else if (siteCode == SiteCode.Patches)
-                return "Patches";
-            else if (siteCode == SiteCode.PCMacHybrid)
-                return "PCMacHybrid";
-            else if (siteCode == SiteCode.PFIHash)
-                return "PFIHash";
-            else if (siteCode == SiteCode.PlayableDemos)
-                return "PlayableDemos";
-            else if (siteCode == SiteCode.PonyCanyonID)
-                return "PonyCanyonID";
-            else if (siteCode == SiteCode.PostgapType)
-                return "PostgapType";
-            else if (siteCode == SiteCode.PPN)
-                return "PPN";
-            else if (siteCode == SiteCode.Protection)
-                return "Protection";
-
-            else if (siteCode == SiteCode.RingPerfectAudioOffset)
-                return "RingPerfectAudioOffset";
-            else if (siteCode == SiteCode.RollingDemos)
-                return "RollingDemos";
-
-            else if (siteCode == SiteCode.Savegames)
-                return "Savegames";
-            else if (siteCode == SiteCode.SegaID)
-                return "SegaID";
-            else if (siteCode == SiteCode.SelenID)
-                return "SelenID";
-            else if (siteCode == SiteCode.Series)
-                return "Series";
-            else if (siteCode == SiteCode.SierraID)
-                return "SierraID";
-            else if (siteCode == SiteCode.SSHash)
-                return "SSHash";
-            else if (siteCode == SiteCode.SSVersion)
-                return "SSVersion";
-            else if (siteCode == SiteCode.SteamAppID)
-                return "SteamAppID";
-            else if (siteCode == SiteCode.SteamCsmCsdDepotID)
-                return "SteamCsmCsdDepotID";
-            else if (siteCode == SiteCode.SteamSimSidDepotID)
-                return "SteamSimSidDepotID";
-
-            else if (siteCode == SiteCode.TaitoID)
-                return "TaitoID";
-            else if (siteCode == SiteCode.TechDemos)
-                return "TechDemos";
-            else if (siteCode == SiteCode.TitleID)
-                return "TitleID";
-            else if (siteCode == SiteCode.TwoKGamesID)
-                return "TwoKGamesID";
-
-            else if (siteCode == SiteCode.UbisoftID)
-                return "UbisoftID";
-
-            else if (siteCode == SiteCode.ValveID)
-                return "ValveID";
-            else if (siteCode == SiteCode.VFCCode)
-                return "VFCCode";
-            else if (siteCode == SiteCode.Videos)
-                return "Videos";
-            else if (siteCode == SiteCode.VolumeLabel)
-                return "VolumeLabel";
-            else if (siteCode == SiteCode.VCD)
-                return "VCD";
-
-            else if (siteCode == SiteCode.XeMID)
-                return "XeMID";
-            else if (siteCode == SiteCode.XMID)
-                return "XMID";
-
-            return null;
-        }
-
-        /// <summary>
-        /// Convert an index string to the corresponding site code
-        /// </summary>
-        private static SiteCode? ConvertStringToSiteCode(string? str)
-        {
-            return str switch
-            {
-                "AcclaimID" => SiteCode.AcclaimID,
-                "AccoladeID" => SiteCode.AccoladeID,
-                "ActivisionID" => SiteCode.ActivisionID,
-                "AdditionalBCAData" => SiteCode.AdditionalBCAData,
-                "AlternativeTitle" => SiteCode.AlternativeTitle,
-                "AlternativeForeignTitle" => SiteCode.AlternativeForeignTitle,
-                "Applications" => SiteCode.Applications,
-
-                "BandaiID" => SiteCode.BandaiID,
-                "BBFCRegistrationNumber" => SiteCode.BBFCRegistrationNumber,
-                "BethesdaID" => SiteCode.BethesdaID,
-
-                "CDProjektID" => SiteCode.CDProjektID,
-                "CompatibleOS" => SiteCode.CompatibleOS,
-                "CoverID" => SiteCode.CoverID,
-
-                "DiceMultimedia" => SiteCode.DiceMultimedia,
-                "DiscHologramID" => SiteCode.DiscHologramID,
-                "DiscID" => SiteCode.DiscID,
-                "DiscTitleNonLatin" => SiteCode.DiscTitleNonLatin,
-                "DisneyInteractiveID" => SiteCode.DisneyInteractiveID,
-                "DMIHash" => SiteCode.DMIHash,
-                "DNASDiscID" => SiteCode.DNASDiscID,
-
-                "EditionNonLatin" => SiteCode.EditionNonLatin,
-                "EidosID" => SiteCode.EidosID,
-                "ElectronicArtsID" => SiteCode.ElectronicArtsID,
-                "Extras" => SiteCode.Extras,
-
-                "Filename" => SiteCode.Filename,
-                "FocusMultimedia" => SiteCode.FocusMultimedia,
-                "FoxInteractiveID" => SiteCode.FoxInteractiveID,
-
-                "GameFootage" => SiteCode.GameFootage,
-                "Games" => SiteCode.Games,
-                "Genre" => SiteCode.Genre,
-                "GSPSoftware" => SiteCode.GSPSoftware,
-                "GTInteractiveID" => SiteCode.GTInteractiveID,
-
-                "HighSierraVolumeDescriptor" => SiteCode.HighSierraVolumeDescriptor,
-
-                "InternalName" => SiteCode.InternalName,
-                "InternalSerialName" => SiteCode.InternalSerialName,
-                "InterplayID" => SiteCode.InterplayID,
-                "ISBN" => SiteCode.ISBN,
-                "ISSN" => SiteCode.ISSN,
-
-                "JASRACID" => SiteCode.JASRACID,
-
-                "KingRecordsID" => SiteCode.KingRecordsID,
-                "KoeiID" => SiteCode.KoeiID,
-                "KonamiID" => SiteCode.KonamiID,
-
-                "LucasArtsID" => SiteCode.LucasArtsID,
-
-                "MicrosoftID" => SiteCode.MicrosoftID,
-                "Multisession" => SiteCode.Multisession,
-
-                "NaganoID" => SiteCode.NaganoID,
-                "NamcoID" => SiteCode.NamcoID,
-                "NetYarozeGames" => SiteCode.NetYarozeGames,
-
-                "NipponIchiSoftwareID" => SiteCode.NipponIchiSoftwareID,
-
-                "OriginID" => SiteCode.OriginID,
-
-                "Patches" => SiteCode.Patches,
-                "PCMacHybrid" => SiteCode.PCMacHybrid,
-                "PFIHash" => SiteCode.PFIHash,
-                "PlayableDemos" => SiteCode.PlayableDemos,
-                "PonyCanyonID" => SiteCode.PonyCanyonID,
-                "PostgapType" => SiteCode.PostgapType,
-                "PPN" => SiteCode.PPN,
-                "Protection" => SiteCode.Protection,
-
-                "RingPerfectAudioOffset" => SiteCode.RingPerfectAudioOffset,
-                "RollingDemos" => SiteCode.RollingDemos,
-
-                "Savegames" => SiteCode.Savegames,
-                "SegaID" => SiteCode.SegaID,
-                "SelenID" => SiteCode.SelenID,
-                "Series" => SiteCode.Series,
-                "SierraID" => SiteCode.SierraID,
-                "SSHash" => SiteCode.SSHash,
-                "SSVersion" => SiteCode.SSVersion,
-                "SteamAppID" => SiteCode.SteamAppID,
-                "SteamCsmCsdDepotID" => SiteCode.SteamCsmCsdDepotID,
-                "SteamSimSidDepotID" => SiteCode.SteamSimSidDepotID,
-
-                "TaitoID" => SiteCode.TaitoID,
-                "TechDemos" => SiteCode.TechDemos,
-                "TitleID" => SiteCode.TitleID,
-                "TwoKGamesID" => SiteCode.TwoKGamesID,
-
-                "UbisoftID" => SiteCode.UbisoftID,
-
-                "ValveID" => SiteCode.ValveID,
-                "VFCCode" => SiteCode.VFCCode,
-                "Videos" => SiteCode.Videos,
-                "VolumeLabel" => SiteCode.VolumeLabel,
-                "VCD" => SiteCode.VCD,
-
-                "XeMID" => SiteCode.XeMID,
-                "XMID" => SiteCode.XMID,
-
-                _ => null,
-            };
         }
 
         #endregion

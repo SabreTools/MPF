@@ -93,29 +93,29 @@ namespace MPF.Avalonia.Windows
         /// TODO: See if these can be done by binding
         private void EnableTabsInInputFields()
         {
-            Layer0MasteringCode!.Tab = true;
-            Layer0MasteringSID!.Tab = true;
-            Layer0Toolstamp!.Tab = true;
-            Layer0MouldSIDs!.Tab = true;
-            Layer0AdditionalMoulds!.Tab = true;
+            Layer0MasteringCodeTextBox!.Tab = true;
+            Layer0MasteringSIDTextBox!.Tab = true;
+            Layer0ToolstampTextBox!.Tab = true;
+            Layer0MouldSIDsTextBox!.Tab = true;
+            Layer0AdditionalMouldsTextBox!.Tab = true;
 
-            Layer1MasteringCode!.Tab = true;
-            Layer1MasteringSID!.Tab = true;
-            Layer1Toolstamp!.Tab = true;
+            Layer1MasteringCodeTextBox!.Tab = true;
+            Layer1MasteringSIDTextBox!.Tab = true;
+            Layer1ToolstampTextBox!.Tab = true;
 
-            Layer2MasteringCode!.Tab = true;
-            Layer2MasteringSID!.Tab = true;
-            Layer2Toolstamp!.Tab = true;
+            Layer2MasteringCodeTextBox!.Tab = true;
+            Layer2MasteringSIDTextBox!.Tab = true;
+            Layer2ToolstampTextBox!.Tab = true;
 
-            Layer3MasteringCode!.Tab = true;
-            Layer3MasteringSID!.Tab = true;
-            Layer3Toolstamp!.Tab = true;
+            Layer3MasteringCodeTextBox!.Tab = true;
+            Layer3MasteringSIDTextBox!.Tab = true;
+            Layer3ToolstampTextBox!.Tab = true;
 
-            LabelSideMasteringCode!.Tab = true;
-            LabelSideMasteringSID!.Tab = true;
-            LabelSideToolstamp!.Tab = true;
-            LabelSideMouldSIDs!.Tab = true;
-            LabelSideAdditionalMoulds!.Tab = true;
+            LabelSideMasteringCodeTextBox!.Tab = true;
+            LabelSideMasteringSIDTextBox!.Tab = true;
+            LabelSideToolstampTextBox!.Tab = true;
+            LabelSideMouldSIDsTextBox!.Tab = true;
+            LabelSideAdditionalMouldsTextBox!.Tab = true;
         }
 
         /// <summary>
@@ -131,12 +131,8 @@ namespace MPF.Avalonia.Windows
 
             if (submissionInfo.FullyMatchedIDs is null || submissionInfo.FullyMatchedIDs.Count == 0)
                 FullyMatchedIDs!.IsVisible = false;
-            else
-                FullyMatchedIDs!.Text = string.Join(", ", [.. submissionInfo.FullyMatchedIDs.ConvertAll(i => i.ToString())]);
             if (submissionInfo.PartiallyMatchedIDs is null || submissionInfo.PartiallyMatchedIDs.Count == 0)
                 PartiallyMatchedIDs!.IsVisible = false;
-            else
-                PartiallyMatchedIDs!.Text = string.Join(", ", [.. submissionInfo.PartiallyMatchedIDs.ConvertAll(i => i.ToString())]);
             if (string.IsNullOrEmpty(submissionInfo.DumpMetadata.Dat))
                 HashData!.IsVisible = false;
             if (submissionInfo.DiscIdentifiers.Layerbreak == 0)
