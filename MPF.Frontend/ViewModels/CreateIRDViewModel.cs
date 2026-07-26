@@ -16,11 +16,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Access to the current options
         /// </summary>
-        public Options Options
-        {
-            get => _options;
-        }
-        private readonly Options _options;
+        public Options Options { get; }
 
         /// <summary>
         /// Indicates if SelectionChanged events can be executed
@@ -444,7 +440,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public CreateIRDViewModel()
         {
-            _options = OptionsLoader.LoadFromConfig(out _);
+            Options = OptionsLoader.LoadFromConfig(out _);
 
             EnableEventHandlers();
         }

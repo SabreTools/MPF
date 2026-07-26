@@ -1518,7 +1518,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of available disc categories
         /// </summary>
-        public List<Element<DiscCategory>> Categories { get; private set; }
+        public List<Element<DiscCategory>> Categories { get; }
             = Element<DiscCategory>.GenerateElements();
 
         /// <summary>

@@ -89,6 +89,7 @@
 - Use auto properties in Check view model
 - Use auto properties in IRD view model
 - Minor additional property cleanup
+- More minor view model cleanup
 
 ### 3.8.3 (2026-07-06)
 
