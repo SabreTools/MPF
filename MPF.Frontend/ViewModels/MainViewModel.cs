@@ -85,56 +85,52 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public bool AskBeforeQuit
         {
-            get => _askBeforeQuit;
+            get;
             set
             {
-                _askBeforeQuit = value;
+                field = value;
                 TriggerPropertyChanged(nameof(AskBeforeQuit));
             }
-        }
-        private bool _askBeforeQuit;
+        } = false;
 
         /// <summary>
         /// Indicates the status of the check dump menu item
         /// </summary>
         public bool CheckDumpMenuItemEnabled
         {
-            get => _checkDumpMenuItemEnabled;
+            get;
             set
             {
-                _checkDumpMenuItemEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(CheckDumpMenuItemEnabled));
             }
-        }
-        private bool _checkDumpMenuItemEnabled;
+        } = true;
 
         /// <summary>
         /// Indicates the status of the create IRD menu item
         /// </summary>
         public bool CreateIRDMenuItemEnabled
         {
-            get => _createIRDMenuItemEnabled;
+            get;
             set
             {
-                _createIRDMenuItemEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(CreateIRDMenuItemEnabled));
             }
-        }
-        private bool _createIRDMenuItemEnabled;
+        } = true;
 
         /// <summary>
         /// Indicates the status of the options menu item
         /// </summary>
         public bool OptionsMenuItemEnabled
         {
-            get => _optionsMenuItemEnabled;
+            get;
             set
             {
-                _optionsMenuItemEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(OptionsMenuItemEnabled));
             }
-        }
-        private bool _optionsMenuItemEnabled;
+        } = true;
 
         /// <summary>
         /// Indicates the visibility of the debug menu item
@@ -146,56 +142,52 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public PhysicalSystem? CurrentSystem
         {
-            get => _currentSystem;
+            get;
             set
             {
-                _currentSystem = value;
+                field = value;
                 TriggerPropertyChanged(nameof(CurrentSystem));
             }
         }
-        private PhysicalSystem? _currentSystem;
 
         /// <summary>
         /// Indicates the status of the system type combo box
         /// </summary>
         public bool SystemTypeComboBoxEnabled
         {
-            get => _systemTypeComboBoxEnabled;
+            get;
             set
             {
-                _systemTypeComboBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(SystemTypeComboBoxEnabled));
             }
-        }
-        private bool _systemTypeComboBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Currently selected media type value
         /// </summary>
         public PhysicalMediaType? CurrentPhysicalMediaType
         {
-            get => _currentPhysicalMediaType;
+            get;
             set
             {
-                _currentPhysicalMediaType = value;
+                field = value;
                 TriggerPropertyChanged(nameof(CurrentPhysicalMediaType));
             }
         }
-        private PhysicalMediaType? _currentPhysicalMediaType;
 
         /// <summary>
         /// Indicates the status of the media type combo box
         /// </summary>
         public bool PhysicalMediaTypeComboBoxEnabled
         {
-            get => _physicalMediaTypeComboBoxEnabled;
+            get;
             set
             {
-                _physicalMediaTypeComboBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(PhysicalMediaTypeComboBoxEnabled));
             }
-        }
-        private bool _physicalMediaTypeComboBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Indicates the visibility of the media type combo box
@@ -223,280 +215,260 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public string OutputPath
         {
-            get => _outputPath;
+            get;
             set
             {
-                _outputPath = value;
+                field = value;
                 TriggerPropertyChanged(nameof(OutputPath));
             }
-        }
-        private string _outputPath;
+        } = string.Empty;
 
         /// <summary>
         /// Indicates the status of the output path text box
         /// </summary>
         public bool OutputPathTextBoxEnabled
         {
-            get => _outputPathTextBoxEnabled;
+            get;
             set
             {
-                _outputPathTextBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(OutputPathTextBoxEnabled));
             }
-        }
-        private bool _outputPathTextBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Indicates the status of the output path browse button
         /// </summary>
         public bool OutputPathBrowseButtonEnabled
         {
-            get => _outputPathBrowseButtonEnabled;
+            get;
             set
             {
-                _outputPathBrowseButtonEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(OutputPathBrowseButtonEnabled));
             }
-        }
-        private bool _outputPathBrowseButtonEnabled;
+        } = true;
 
         /// <summary>
         /// Currently selected drive value
         /// </summary>
         public Drive? CurrentDrive
         {
-            get => _currentDrive;
+            get;
             set
             {
-                _currentDrive = value;
+                field = value;
                 TriggerPropertyChanged(nameof(CurrentDrive));
             }
         }
-        private Drive? _currentDrive;
 
         /// <summary>
         /// Indicates the status of the drive combo box
         /// </summary>
         public bool DriveLetterComboBoxEnabled
         {
-            get => _driveLetterComboBoxEnabled;
+            get;
             set
             {
-                _driveLetterComboBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(DriveLetterComboBoxEnabled));
             }
-        }
-        private bool _driveLetterComboBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Currently selected drive speed value
         /// </summary>
         public int DriveSpeed
         {
-            get => _driveSpeed;
+            get;
             set
             {
-                _driveSpeed = value;
+                field = value;
                 TriggerPropertyChanged(nameof(DriveSpeed));
             }
         }
-        private int _driveSpeed;
 
         /// <summary>
         /// Indicates the status of the drive speed combo box
         /// </summary>
         public bool DriveSpeedComboBoxEnabled
         {
-            get => _driveSpeedComboBoxEnabled;
+            get;
             set
             {
-                _driveSpeedComboBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(DriveSpeedComboBoxEnabled));
             }
         }
-        private bool _driveSpeedComboBoxEnabled;
 
         /// <summary>
         /// Currently selected dumping program
         /// </summary>
         public InternalProgram CurrentProgram
         {
-            get => _currentProgram;
+            get;
             set
             {
-                _currentProgram = value;
+                field = value;
                 TriggerPropertyChanged(nameof(CurrentProgram));
             }
         }
-        private InternalProgram _currentProgram;
 
         /// <summary>
         /// Indicates the status of the dumping program combo box
         /// </summary>
         public bool DumpingProgramComboBoxEnabled
         {
-            get => _dumpingProgramComboBoxEnabled;
+            get;
             set
             {
-                _dumpingProgramComboBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(DumpingProgramComboBoxEnabled));
             }
-        }
-        private bool _dumpingProgramComboBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Currently provided parameters
         /// </summary>
         public string Parameters
         {
-            get => _parameters;
+            get;
             set
             {
-                _parameters = value;
+                field = value;
                 TriggerPropertyChanged(nameof(Parameters));
             }
-        }
-        private string _parameters;
+        } = string.Empty;
 
         /// <summary>
         /// Indicates the status of the parameters text box
         /// </summary>
         public bool ParametersTextBoxEnabled
         {
-            get => _parametersTextBoxEnabled;
+            get;
             set
             {
-                _parametersTextBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(ParametersTextBoxEnabled));
             }
         }
-        private bool _parametersTextBoxEnabled;
 
         /// <summary>
         /// Indicates the status of the parameters check box
         /// </summary>
         public bool ParametersCheckBoxEnabled
         {
-            get => _parametersCheckBoxEnabled;
+            get;
             set
             {
-                _parametersCheckBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(ParametersCheckBoxEnabled));
             }
-        }
-        private bool _parametersCheckBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Indicates the status of the parameters check box
         /// </summary>
         public bool EnableParametersCheckBoxEnabled
         {
-            get => _enableParametersCheckBoxEnabled;
+            get;
             set
             {
-                _enableParametersCheckBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(EnableParametersCheckBoxEnabled));
             }
-        }
-        private bool _enableParametersCheckBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Indicates the status of the start/stop button
         /// </summary>
         public bool StartStopButtonEnabled
         {
-            get => _startStopButtonEnabled;
+            get;
             set
             {
-                _startStopButtonEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(StartStopButtonEnabled));
             }
-        }
-        private bool _startStopButtonEnabled;
+        } = true;
 
         /// <summary>
         /// Current value for the start/stop dumping button
         /// </summary>
         public object StartStopButtonText
         {
-            get => _startStopButtonText;
+            get;
             set
             {
-                _startStopButtonText = (value as string) ?? string.Empty;
+                field = (value as string) ?? string.Empty;
                 TriggerPropertyChanged(nameof(StartStopButtonText));
             }
-        }
-        private string _startStopButtonText;
+        } = string.Empty;
 
         /// <summary>
         /// Indicates the status of the media scan button
         /// </summary>
         public bool MediaScanButtonEnabled
         {
-            get => _mediaScanButtonEnabled;
+            get;
             set
             {
-                _mediaScanButtonEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(MediaScanButtonEnabled));
             }
-        }
-        private bool _mediaScanButtonEnabled;
+        } = true;
 
         /// <summary>
         /// Indicates the status of the update volume label button
         /// </summary>
         public bool UpdateVolumeLabelEnabled
         {
-            get => _updateVolumeLabelEnabled;
+            get;
             set
             {
-                _updateVolumeLabelEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(UpdateVolumeLabelEnabled));
             }
         }
-        private bool _updateVolumeLabelEnabled;
 
         /// <summary>
         /// Indicates the status of the copy protect scan button
         /// </summary>
         public bool CopyProtectScanButtonEnabled
         {
-            get => _copyProtectScanButtonEnabled;
+            get;
             set
             {
-                _copyProtectScanButtonEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(CopyProtectScanButtonEnabled));
             }
         }
-        private bool _copyProtectScanButtonEnabled;
 
         /// <summary>
         /// Currently displayed status
         /// </summary>
         public string Status
         {
-            get => _status;
+            get;
             set
             {
-                _status = value;
+                field = value;
                 TriggerPropertyChanged(nameof(Status));
             }
-        }
-        private string _status;
+        } = string.Empty;
 
         /// <summary>
         /// Indicates the status of the log panel
         /// </summary>
         public bool LogPanelExpanded
         {
-            get => _logPanelExpanded;
+            get;
             set
             {
-                _logPanelExpanded = value;
+                field = value;
                 TriggerPropertyChanged(nameof(LogPanelExpanded));
             }
         }
-        private bool _logPanelExpanded;
 
         #endregion
 
@@ -507,70 +479,65 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public List<Drive> Drives
         {
-            get => _drives;
+            get;
             set
             {
-                _drives = value;
+                field = value;
                 TriggerPropertyChanged(nameof(Drives));
             }
-        }
-        private List<Drive> _drives;
+        } = [];
 
         /// <summary>
         /// Current list of drive speeds
         /// </summary>
         public List<int> DriveSpeeds
         {
-            get => _driveSpeeds;
+            get;
             set
             {
-                _driveSpeeds = value;
+                field = value;
                 TriggerPropertyChanged(nameof(DriveSpeeds));
             }
-        }
-        private List<int> _driveSpeeds;
+        } = [];
 
         /// <summary>
         /// Current list of supported media types
         /// </summary>
         public List<Element<PhysicalMediaType>>? MediaTypes
         {
-            get => _mediaTypes;
+            get;
             set
             {
-                _mediaTypes = value;
+                field = value;
                 TriggerPropertyChanged(nameof(MediaTypes));
             }
-        }
-        private List<Element<PhysicalMediaType>>? _mediaTypes;
+        } = [];
 
         /// <summary>
         /// Current list of supported system profiles
         /// </summary>
         public List<PhysicalSystemComboBoxItem> Systems
         {
-            get => _systems;
+            get;
             set
             {
-                _systems = value;
+                field = value;
                 TriggerPropertyChanged(nameof(Systems));
             }
-        }
-        private List<PhysicalSystemComboBoxItem> _systems;
+        } = PhysicalSystemComboBoxItem.GenerateElements();
 
         /// <summary>
         /// List of available internal programs
         /// </summary>
         public List<Element<InternalProgram>> AvailableInternalPrograms
         {
-            get => _availableInternalPrograms;
+            get;
             set
             {
-                _availableInternalPrograms = value;
+                field = value;
                 TriggerPropertyChanged(nameof(AvailableInternalPrograms));
             }
-        }
-        private List<Element<InternalProgram>> _availableInternalPrograms;
+        } = [];
 
         #endregion
 
@@ -604,36 +571,8 @@ namespace MPF.Frontend.ViewModels
         {
             _options = OptionsLoader.LoadFromConfig(out _);
 
-            // Added to clear warnings, all are set externally
-            _drives = [];
-            _driveSpeeds = [];
-            _availableInternalPrograms = [];
-            _outputPath = string.Empty;
-            _parameters = string.Empty;
-            _startStopButtonText = string.Empty;
-            _status = string.Empty;
-            _systems = [];
-
-            AskBeforeQuit = false;
-            OptionsMenuItemEnabled = true;
-            CheckDumpMenuItemEnabled = true;
-            CreateIRDMenuItemEnabled = true;
-            SystemTypeComboBoxEnabled = true;
-            PhysicalMediaTypeComboBoxEnabled = true;
-            OutputPathTextBoxEnabled = true;
-            OutputPathBrowseButtonEnabled = true;
-            DriveLetterComboBoxEnabled = true;
-            DumpingProgramComboBoxEnabled = true;
-            StartStopButtonEnabled = true;
             StartStopButtonText = StartDumpingValue;
-            MediaScanButtonEnabled = true;
-            ParametersCheckBoxEnabled = true;
-            EnableParametersCheckBoxEnabled = true;
             LogPanelExpanded = _options.GUI.OpenLogWindowAtStartup;
-
-            MediaTypes = [];
-            Systems = PhysicalSystemComboBoxItem.GenerateElements();
-            AvailableInternalPrograms = [];
         }
 
         /// <summary>
@@ -1490,22 +1429,22 @@ namespace MPF.Frontend.ViewModels
         /// <returns>String with %-delimited variables evaluated</returns>
         public string EvaluateOutputPath(string outputPath)
         {
-            string systemLong = _currentSystem?.Name ?? "Unknown System";
+            string systemLong = CurrentSystem?.Name ?? "Unknown System";
             if (string.IsNullOrEmpty(systemLong))
                 systemLong = "Unknown System";
-            string systemShort = _currentSystem?.Code ?? "unknown";
+            string systemShort = CurrentSystem?.Code ?? "unknown";
             if (string.IsNullOrEmpty(systemShort))
                 systemShort = "unknown";
-            string mediaLong = _currentPhysicalMediaType.LongName() ?? "Unknown Media";
+            string mediaLong = CurrentPhysicalMediaType.LongName() ?? "Unknown Media";
             if (string.IsNullOrEmpty(mediaLong))
                 mediaLong = "Unknown Media";
-            string program = _currentProgram.ToString() ?? "Unknown Program";
+            string program = CurrentProgram.ToString() ?? "Unknown Program";
             if (string.IsNullOrEmpty(program))
                 program = "Unknown Program";
             string programShort = program == "DiscImageCreator" ? "DIC" : program;
             if (string.IsNullOrEmpty(programShort))
                 programShort = "Unknown Program";
-            string label = GetFormattedVolumeLabel(_currentDrive) ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
+            string label = GetFormattedVolumeLabel(CurrentDrive) ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
             if (string.IsNullOrEmpty(label))
                 label = $"track_{DateTime.Now:yyyyMMdd-HHmm}";
             string date = DateTime.Today.ToString("yyyyMMdd");

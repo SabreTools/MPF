@@ -85,6 +85,7 @@
 - Update RedumpLib to 3.0.3
 - Stop binding events from code
 - Reduce binding visibility from code
+- Use auto properties in main view model
 
 ### 3.8.3 (2026-07-06)
 

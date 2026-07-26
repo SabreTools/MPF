@@ -30,7 +30,6 @@ namespace MPF.UI.Windows
 
         #region Settings
 
-        private ComboBox? MediaTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "MediaTypeComboBox");
         private Label? SystemMediaTypeLabel => ItemHelper.FindChild<Label>(this, "SystemMediaTypeLabel");
 
         #endregion
