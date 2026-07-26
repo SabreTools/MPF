@@ -572,7 +572,7 @@ namespace MPF.Frontend.ViewModels
             _options = OptionsLoader.LoadFromConfig(out _);
 
             StartStopButtonText = StartDumpingValue;
-            LogPanelExpanded = _options.GUI.OpenLogWindowAtStartup;
+            LogPanelExpanded = Options.GUI.OpenLogWindowAtStartup;
         }
 
         /// <summary>
@@ -1955,7 +1955,7 @@ namespace MPF.Frontend.ViewModels
 
 #if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             // If relative paths are enabled, use those
-            if (_options.Dumping.UseRelativePaths && !string.IsNullOrEmpty(OutputPath))
+            if (Options.Dumping.UseRelativePaths && !string.IsNullOrEmpty(OutputPath))
                 OutputPath = Path.GetRelativePath(Environment.CurrentDirectory, OutputPath);
 #endif
 

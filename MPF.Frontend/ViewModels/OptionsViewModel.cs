@@ -21,14 +21,13 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public string? Title
         {
-            get => _title;
+            get;
             set
             {
-                _title = value;
+                field = value;
                 TriggerPropertyChanged(nameof(Title));
             }
         }
-        private string? _title;
 
         /// <summary>
         /// Current set of options
