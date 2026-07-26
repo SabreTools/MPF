@@ -45,113 +45,105 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public PhysicalSystem? CurrentSystem
         {
-            get => _currentSystem;
+            get;
             set
             {
-                _currentSystem = value;
+                field = value;
                 TriggerPropertyChanged(nameof(CurrentSystem));
             }
         }
-        private PhysicalSystem? _currentSystem;
 
         /// <summary>
         /// Indicates the status of the system type combo box
         /// </summary>
         public bool SystemTypeComboBoxEnabled
         {
-            get => _systemTypeComboBoxEnabled;
+            get;
             set
             {
-                _systemTypeComboBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(SystemTypeComboBoxEnabled));
             }
-        }
-        private bool _systemTypeComboBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Currently provided input path
         /// </summary>
         public string? InputPath
         {
-            get => _inputPath;
+            get;
             set
             {
-                _inputPath = value;
+                field = value;
                 TriggerPropertyChanged(nameof(InputPath));
             }
-        }
-        private string? _inputPath;
+        } = string.Empty;
 
         /// <summary>
         /// Indicates the status of the input path text box
         /// </summary>
         public bool InputPathTextBoxEnabled
         {
-            get => _inputPathTextBoxEnabled;
+            get;
             set
             {
-                _inputPathTextBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(InputPathTextBoxEnabled));
             }
-        }
-        private bool _inputPathTextBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Indicates the status of the input path browse button
         /// </summary>
         public bool InputPathBrowseButtonEnabled
         {
-            get => _inputPathBrowseButtonEnabled;
+            get;
             set
             {
-                _inputPathBrowseButtonEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(InputPathBrowseButtonEnabled));
             }
-        }
-        private bool _inputPathBrowseButtonEnabled;
+        } = true;
 
         /// <summary>
         /// Currently selected dumping program
         /// </summary>
         public InternalProgram CurrentProgram
         {
-            get => _currentProgram;
+            get;
             set
             {
-                _currentProgram = value;
+                field = value;
                 TriggerPropertyChanged(nameof(CurrentProgram));
             }
         }
-        private InternalProgram _currentProgram;
 
         /// <summary>
         /// Indicates the status of the dumping program combo box
         /// </summary>
         public bool DumpingProgramComboBoxEnabled
         {
-            get => _dumpingProgramComboBoxEnabled;
+            get;
             set
             {
-                _dumpingProgramComboBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(DumpingProgramComboBoxEnabled));
             }
-        }
-        private bool _dumpingProgramComboBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Currently displayed status
         /// </summary>
         public string Status
         {
-            get => _status;
+            get;
             set
             {
-                _status = value;
+                field = value;
                 TriggerPropertyChanged(nameof(Status));
                 TriggerPropertyChanged(nameof(StatusFirstLine));
             }
-        }
-        private string _status;
+        } = string.Empty;
 
         /// <summary>
         /// Currently displayed status trimmed to one line
@@ -176,28 +168,26 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public bool CheckDumpButtonEnabled
         {
-            get => _checkDumpButtonEnabled;
+            get;
             set
             {
-                _checkDumpButtonEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(CheckDumpButtonEnabled));
             }
-        }
-        private bool _checkDumpButtonEnabled;
+        } = false;
 
         /// <summary>
         /// Indicates the status of the cancel button
         /// </summary>
         public bool CancelButtonEnabled
         {
-            get => _cancelButtonEnabled;
+            get;
             set
             {
-                _cancelButtonEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(CancelButtonEnabled));
             }
-        }
-        private bool _cancelButtonEnabled;
+        } = true;
 
         #endregion
 
@@ -208,28 +198,26 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public List<PhysicalSystemComboBoxItem> Systems
         {
-            get => _systems;
+            get;
             set
             {
-                _systems = value;
+                field = value;
                 TriggerPropertyChanged(nameof(Systems));
             }
-        }
-        private List<PhysicalSystemComboBoxItem> _systems;
+        } = PhysicalSystemComboBoxItem.GenerateElements();
 
         /// <summary>
         /// List of available internal programs
         /// </summary>
         public List<Element<InternalProgram>> AvailableInternalPrograms
         {
-            get => _availableInternalPrograms;
+            get;
             set
             {
-                _availableInternalPrograms = value;
+                field = value;
                 TriggerPropertyChanged(nameof(AvailableInternalPrograms));
             }
-        }
-        private List<Element<InternalProgram>> _availableInternalPrograms;
+        } = [];
 
         #endregion
 
@@ -259,20 +247,6 @@ namespace MPF.Frontend.ViewModels
         public CheckDumpViewModel()
         {
             _options = OptionsLoader.LoadFromConfig(out _);
-            _availableInternalPrograms = [];
-            _inputPath = string.Empty;
-            _systems = [];
-            _status = string.Empty;
-
-            SystemTypeComboBoxEnabled = true;
-            InputPathTextBoxEnabled = true;
-            InputPathBrowseButtonEnabled = true;
-            DumpingProgramComboBoxEnabled = true;
-            CheckDumpButtonEnabled = false;
-            CancelButtonEnabled = true;
-
-            Systems = PhysicalSystemComboBoxItem.GenerateElements();
-            AvailableInternalPrograms = [];
 
             PopulateInternalPrograms();
             EnableEventHandlers();
@@ -293,7 +267,8 @@ namespace MPF.Frontend.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
             // Reenable event handlers, if necessary
-            if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
+            if (cachedCanExecuteSelectionChanged)
+                EnableEventHandlers();
         }
 
         #endregion
@@ -378,7 +353,8 @@ namespace MPF.Frontend.ViewModels
             CurrentProgram = currentIndex > -1 ? AvailableInternalPrograms[currentIndex].Value : AvailableInternalPrograms[0].Value;
 
             // Reenable event handlers, if necessary
-            if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
+            if (cachedCanExecuteSelectionChanged)
+                EnableEventHandlers();
         }
 
         #endregion
