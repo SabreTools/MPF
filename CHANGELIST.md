@@ -78,6 +78,7 @@
 - Bind visibility directly from view models
 - Fix binding issue with read-only properties
 - Reduce number of named inputs in media info window
+- Clean up UI code inconsistencies
 
 ### 3.8.3 (2026-07-06)
 

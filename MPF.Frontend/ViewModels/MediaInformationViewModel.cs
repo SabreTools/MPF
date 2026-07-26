@@ -10,11 +10,6 @@ namespace MPF.Frontend.ViewModels
     {
         #region Fields
 
-        /// <summary>
-        /// Application-level Options object
-        /// </summary>
-        public Options Options { get; private set; }
-
         #region Common Media Information
 
         public string? Title
@@ -812,7 +807,7 @@ namespace MPF.Frontend.ViewModels
 
         public bool EnableRingcodeTabs
         {
-            get => Options.Processing.MediaInformation.EnableTabsInInputFields;
+            get => _options.Processing.MediaInformation.EnableTabsInInputFields;
         }
 
         #region Layer 0
@@ -1678,6 +1673,11 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public SubmissionInfo SubmissionInfo { get; private set; }
 
+        /// <summary>
+        /// Application-level Options object
+        /// </summary>
+        private readonly Options _options;
+
         #endregion
 
         /// <summary>
@@ -1685,8 +1685,15 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public MediaInformationViewModel(Options options, SubmissionInfo? submissionInfo)
         {
-            Options = options;
+            _options = options;
             SubmissionInfo = submissionInfo?.Clone() as SubmissionInfo ?? new SubmissionInfo();
+
+            // Handle Redump compatibility mode
+            if (_options.Processing.MediaInformation.EnableRedumpCompatibility)
+            {
+                Regions = RedumpRegions.ConvertAll(r => new RegionCodeComboBoxItem(r));
+                Languages = RedumpLanguages.ConvertAll(l => new LanguageCodeComboBoxItem(l));
+            }
         }
 
         #region Helpers
@@ -1718,22 +1725,6 @@ namespace MPF.Frontend.ViewModels
                 SubmissionInfo.RegionsAndLanguages.Languages = [null];
 
             SubmissionInfo.DiscIdentity.Title = FrontendTool.NormalizeDiscTitle(SubmissionInfo.DiscIdentity.Title, SubmissionInfo.RegionsAndLanguages.Languages);
-        }
-
-        /// <summary>
-        /// Repopulate the list of Languages based on Redump support
-        /// </summary>
-        public void SetRedumpLanguages()
-        {
-            Languages = RedumpLanguages.ConvertAll(l => new LanguageCodeComboBoxItem(l));
-        }
-
-        /// <summary>
-        /// Repopulate the list of Regions based on Redump support
-        /// </summary>
-        public void SetRedumpRegions()
-        {
-            Regions = RedumpRegions.ConvertAll(r => new RegionCodeComboBoxItem(r));
         }
 
         #endregion

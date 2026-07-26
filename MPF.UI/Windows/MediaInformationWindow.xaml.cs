@@ -25,7 +25,8 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Read-only access to the current media information view model
         /// </summary>
-        public MediaInformationViewModel MediaInformationViewModel => DataContext as MediaInformationViewModel ?? new MediaInformationViewModel(new Options(), new SubmissionInfo());
+        public MediaInformationViewModel MediaInformationViewModel
+            => DataContext as MediaInformationViewModel ?? new MediaInformationViewModel(new Options(), new SubmissionInfo());
 
         /// <summary>
         /// Constructor
@@ -47,13 +48,6 @@ namespace MPF.UI.Windows
 
             DataContext = new MediaInformationViewModel(options, submissionInfo);
             MediaInformationViewModel.Load();
-
-            // Limit lists, if necessary
-            if (options.Processing.MediaInformation.EnableRedumpCompatibility)
-            {
-                MediaInformationViewModel.SetRedumpRegions();
-                MediaInformationViewModel.SetRedumpLanguages();
-            }
 
             // Add handlers
             AcceptButton!.Click += OnAcceptClick;

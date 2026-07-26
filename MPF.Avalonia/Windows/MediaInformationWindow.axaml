@@ -60,6 +60,7 @@
                                         <ComboBox x:Name="CategoryComboBox"
                                                   Grid.Column="1"
                                                   HorizontalAlignment="Stretch"
+                                                  ItemsSource="{Binding Categories}"
                                                   SelectedItem="{Binding Category, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
                                     </Grid>
 
@@ -71,11 +72,13 @@
                                                    VerticalAlignment="Center" />
                                         <controls:MultiSelectDropDown x:Name="RegionDropDown"
                                                                       Grid.Column="1"
-                                                                      HorizontalAlignment="Stretch" />
+                                                                      HorizontalAlignment="Stretch"
+                                                                      ItemsSource="{Binding Regions}" />
                                     </Grid>
 
                                     <controls:MultiSelectDropDown x:Name="LanguagesDropDown"
-                                                                  Label="{DynamicResource LanguagesLabelString}" />
+                                                                  Label="{DynamicResource LanguagesLabelString}"
+                                                                  ItemsSource="{Binding Languages}" />
 
                                     <controls:UserInput Label="{DynamicResource SerialInputString}"
                                                         Text="{Binding DiscSerials, Mode=TwoWay}" />

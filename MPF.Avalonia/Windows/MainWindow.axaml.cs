@@ -436,7 +436,7 @@ namespace MPF.Avalonia.Windows
 
                 bool? result = dialogTask.GetAwaiter().GetResult();
                 if (result == true)
-                    submissionInfo = (window.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
+                    submissionInfo = window.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo;
 
                 return result;
             }
@@ -457,7 +457,7 @@ namespace MPF.Avalonia.Windows
 
                     bool? result = await window.ShowDialog<bool?>(this);
                     if (result == true)
-                        updatedSubmissionInfo = (window.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
+                        updatedSubmissionInfo = window.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo;
 
                     return result;
                 });

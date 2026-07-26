@@ -103,7 +103,7 @@ namespace MPF.Avalonia.Windows
 
                 bool? result = await window.ShowDialog<bool?>(owner);
                 if (result == true)
-                    updatedSubmissionInfo = window.MediaInformationViewModel.SubmissionInfo;
+                    updatedSubmissionInfo = window.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo;
 
                 return result;
             });

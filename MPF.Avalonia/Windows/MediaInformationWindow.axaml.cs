@@ -11,66 +11,34 @@ namespace MPF.Avalonia.Windows
     public partial class MediaInformationWindow : WindowBase
     {
         /// <summary>
-        /// Whether the PC/Mac hybrid grid should always be shown regardless of media type
-        /// </summary>
-        private readonly bool _showPcMacHybridAlways;
-
-        /// <summary>
         /// Read-only access to the current media information view model
         /// </summary>
         public MediaInformationViewModel MediaInformationViewModel
             => DataContext as MediaInformationViewModel ?? new MediaInformationViewModel(new Options(), new SubmissionInfo());
 
+        /// <summary>
+        /// Constructor required for runtime loader
+        /// </summary>
         public MediaInformationWindow()
-            : this(new Options(), new SubmissionInfo(), showPcMacHybridAlways: true)
+            : this(new Options(), new SubmissionInfo())
         {
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public MediaInformationWindow(Options options, SubmissionInfo? submissionInfo, bool showPcMacHybridAlways = false)
+        public MediaInformationWindow(Options options, SubmissionInfo? submissionInfo)
         {
-            _showPcMacHybridAlways = showPcMacHybridAlways;
             InitializeComponent();
 
             DataContext = new MediaInformationViewModel(options, submissionInfo);
             MediaInformationViewModel.Load();
 
-            if (options.Processing.MediaInformation.EnableRedumpCompatibility)
-            {
-                MediaInformationViewModel.SetRedumpRegions();
-                MediaInformationViewModel.SetRedumpLanguages();
-            }
-
-            // TODO: Determine why these need to be here
-            PopulateCollections();
-
             // Add handlers
             AcceptButton!.Click += OnAcceptClick;
             CancelButton!.Click += OnCancelClick;
             RingCodeGuideButton!.Click += OnRingCodeGuideClick;
-
-            // Handle an Avalonia-specific case
-            // TODO: Do these need to be explicitly set if they're in the AXAML?
-            PCMacHybridGrid!.IsVisible = _showPcMacHybridAlways
-                || submissionInfo?.DiscIdentity?.Media == MediaType.CD;
         }
-
-        #region Helpers
-
-        /// <summary>
-        /// Assign the view model collections as the data sources for the dropdown controls
-        /// </summary>
-        /// TODO: Can this be avoided by binding?
-        private void PopulateCollections()
-        {
-            CategoryComboBox!.ItemsSource = MediaInformationViewModel.Categories;
-            RegionDropDown!.ItemsSource = MediaInformationViewModel.Regions;
-            LanguagesDropDown!.ItemsSource = MediaInformationViewModel.Languages;
-        }
-
-        #endregion
 
         #region Event Handlers
 

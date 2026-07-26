@@ -440,7 +440,7 @@ namespace MPF.UI.Windows
 
             // Copy back the submission info changes, if necessary
             if (result == true)
-                submissionInfo = (window.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
+                submissionInfo = window.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo;
 
             return result;
         }
