@@ -87,6 +87,7 @@
 - Reduce binding visibility from code
 - Use auto properties in main view model
 - Use auto properties in Check view model
+- Use auto properties in IRD view model
 
 ### 3.8.3 (2026-07-06)
 

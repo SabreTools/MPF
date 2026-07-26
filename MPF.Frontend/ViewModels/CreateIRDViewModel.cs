@@ -39,434 +39,403 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public bool CancelButtonEnabled
         {
-            get => _cancelButtonEnabled;
+            get;
             set
             {
-                _cancelButtonEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(CancelButtonEnabled));
             }
-        }
-        private bool _cancelButtonEnabled;
+        } = true;
 
         /// <summary>
         /// Indicates the status of the check dump button
         /// </summary>
         public bool CreateIRDButtonEnabled
         {
-            get => _createIRDButtonEnabled;
+            get;
             set
             {
-                _createIRDButtonEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(CreateIRDButtonEnabled));
             }
-        }
-        private bool _createIRDButtonEnabled;
+        } = false;
 
         /// <summary>
         /// Current Create IRD status message
         /// </summary>
         public string CreateIRDStatus
         {
-            get => _createIRDStatus;
+            get;
             set
             {
-                _createIRDStatus = value;
+                field = value;
                 TriggerPropertyChanged(nameof(CreateIRDStatus));
             }
-        }
-        private string _createIRDStatus;
+        } = "Please provide an ISO";
 
         /// <summary>
         /// Currently provided Disc ID
         /// </summary>
         public byte[]? DiscID
         {
-            get => _discID;
+            get;
             set
             {
-                _discID = value;
+                field = value;
                 TriggerPropertyChanged(nameof(DiscID));
             }
-        }
-        private byte[]? _discID;
+        } = null;
 
         /// <summary>
         /// Current disc ID status message
         /// </summary>
         public string DiscIDStatus
         {
-            get => _discIDStatus;
+            get;
             set
             {
-                _discIDStatus = value;
+                field = value;
                 TriggerPropertyChanged(nameof(DiscIDStatus));
             }
-        }
-        private string _discIDStatus;
+        } = "Unknown Disc ID, generating ID using Region: NONE";
 
         /// <summary>
         /// Currently provided Disc ID string
         /// </summary>
         public string? DiscIDString
         {
-            get => _discIDString;
+            get;
             set
             {
-                _discIDString = value;
+                field = value;
                 TriggerPropertyChanged(nameof(DiscIDString));
             }
-        }
-        private string? _discIDString;
+        } = string.Empty;
 
         /// <summary>
         /// Indicates the status of the disc ID text box
         /// </summary>
         public bool DiscIDTextBoxEnabled
         {
-            get => _discIDTextBoxEnabled;
+            get;
             set
             {
-                _discIDTextBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(DiscIDTextBoxEnabled));
             }
-        }
-        private bool _discIDTextBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Currently provided hexadecimal key
         /// </summary>
         public string? HexKey
         {
-            get => _hexKey;
+            get;
             set
             {
-                _hexKey = value;
+                field = value;
                 TriggerPropertyChanged(nameof(HexKey));
             }
-        }
-        private string? _hexKey;
+        } = string.Empty;
 
         /// <summary>
         /// Indicates the status of the hex key text box
         /// </summary>
         public bool HexKeyTextBoxEnabled
         {
-            get => _hexKeyTextBoxEnabled;
+            get;
             set
             {
-                _hexKeyTextBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(HexKeyTextBoxEnabled));
             }
-        }
-        private bool _hexKeyTextBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Currently provided input path
         /// </summary>
         public string? InputPath
         {
-            get => _inputPath;
+            get;
             set
             {
-                _inputPath = value;
+                field = value;
                 TriggerPropertyChanged(nameof(InputPath));
             }
-        }
-        private string? _inputPath;
+        } = string.Empty;
 
         /// <summary>
         /// Indicates the status of the input path browse button
         /// </summary>
         public bool InputPathBrowseButtonEnabled
         {
-            get => _inputPathBrowseButtonEnabled;
+            get;
             set
             {
-                _inputPathBrowseButtonEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(InputPathBrowseButtonEnabled));
             }
-        }
-        private bool _inputPathBrowseButtonEnabled;
+        } = true;
 
         /// <summary>
         /// Indicates the status of the input path text box
         /// </summary>
         public bool InputPathTextBoxEnabled
         {
-            get => _inputPathTextBoxEnabled;
+            get;
             set
             {
-                _inputPathTextBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(InputPathTextBoxEnabled));
             }
-        }
-        private bool _inputPathTextBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Currently provided key
         /// </summary>
         public byte[]? Key
         {
-            get => _key;
+            get;
             set
             {
-                _key = value;
+                field = value;
                 TriggerPropertyChanged(nameof(Key));
             }
-        }
-        private byte[]? _key;
+        } = null;
 
         /// <summary>
         /// Currently provided key path
         /// </summary>
         public string? KeyPath
         {
-            get => _keyPath;
+            get;
             set
             {
-                _keyPath = value;
+                field = value;
                 TriggerPropertyChanged(nameof(KeyPath));
             }
-        }
-        private string? _keyPath;
+        } = string.Empty;
 
         /// <summary>
         /// Indicates the status of the key path browse button
         /// </summary>
         public bool KeyPathBrowseButtonEnabled
         {
-            get => _keyPathBrowseButtonEnabled;
+            get;
             set
             {
-                _keyPathBrowseButtonEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(KeyPathBrowseButtonEnabled));
             }
-        }
-        private bool _keyPathBrowseButtonEnabled;
+        } = true;
 
         /// <summary>
         /// Indicates the status of the key path text box
         /// </summary>
         public bool KeyPathTextBoxEnabled
         {
-            get => _keyPathTextBoxEnabled;
+            get;
             set
             {
-                _keyPathTextBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(KeyPathTextBoxEnabled));
             }
-        }
-        private bool _keyPathTextBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Current key status message
         /// </summary>
         public string KeyStatus
         {
-            get => _keyStatus;
+            get;
             set
             {
-                _keyStatus = value;
+                field = value;
                 TriggerPropertyChanged(nameof(KeyStatus));
             }
-        }
-        private string _keyStatus;
+        } = "Cannot create an IRD without a key"; // "Will attempt to pull Encryption Key from redump.info"
 
         /// <summary>
         /// Currently provided layerbreak
         /// </summary>
         public long? Layerbreak
         {
-            get => _layerbreak;
+            get;
             set
             {
-                _layerbreak = value;
+                field = value;
                 TriggerPropertyChanged(nameof(Layerbreak));
             }
         }
-        private long? _layerbreak;
 
         /// <summary>
         /// Currently provided layerbreak string
         /// </summary>
         public string? LayerbreakString
         {
-            get => _layerbreakString;
+            get;
             set
             {
-                _layerbreakString = value;
+                field = value;
                 TriggerPropertyChanged(nameof(LayerbreakString));
             }
-        }
-        private string? _layerbreakString;
+        } = string.Empty;
 
         /// <summary>
         /// Indicates the status of the layerbreak text box
         /// </summary>
         public bool LayerbreakTextBoxEnabled
         {
-            get => _layerbreakTextBoxEnabled;
+            get;
             set
             {
-                _layerbreakTextBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(LayerbreakTextBoxEnabled));
             }
-        }
-        private bool _layerbreakTextBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Currently provided .getkey.log path
         /// </summary>
         public string? LogPath
         {
-            get => _logPath;
+            get;
             set
             {
-                _logPath = value;
+                field = value;
                 TriggerPropertyChanged(nameof(LogPath));
             }
-        }
-        private string? _logPath;
+        } = string.Empty;
 
         /// <summary>
         /// Indicates the status of the .getkey.log path browse button
         /// </summary>
         public bool LogPathBrowseButtonEnabled
         {
-            get => _logPathBrowseButtonEnabled;
+            get;
             set
             {
-                _logPathBrowseButtonEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(LogPathBrowseButtonEnabled));
             }
-        }
-        private bool _logPathBrowseButtonEnabled;
+        } = true;
 
         /// <summary>
         /// Indicates whether a .getkey.log path is not provided
         /// </summary>
         public bool LogPathNotProvided
         {
-            get => _logPathNotProvided;
+            get;
             set
             {
-                _logPathNotProvided = value;
+                field = value;
                 TriggerPropertyChanged(nameof(LogPathNotProvided));
             }
-        }
-        private bool _logPathNotProvided;
+        } = true;
 
         /// <summary>
         /// Indicates the status of the .getkey.log path text box
         /// </summary>
         public bool LogPathTextBoxEnabled
         {
-            get => _logPathTextBoxEnabled;
+            get;
             set
             {
-                _logPathTextBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(LogPathTextBoxEnabled));
             }
-        }
-        private bool _logPathTextBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Currently provided PIC file path
         /// </summary>
         public string? PICPath
         {
-            get => _picPath;
+            get;
             set
             {
-                _picPath = value;
+                field = value;
                 TriggerPropertyChanged(nameof(PICPath));
             }
-        }
-        private string? _picPath;
+        } = string.Empty;
 
         /// <summary>
         /// Indicates the status of the PIC file path browse button
         /// </summary>
         public bool PICPathBrowseButtonEnabled
         {
-            get => _picPathBrowseButtonEnabled;
+            get;
             set
             {
-                _picPathBrowseButtonEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(PICPathBrowseButtonEnabled));
             }
-        }
-        private bool _picPathBrowseButtonEnabled;
+        } = true;
 
         /// <summary>
         /// Indicates the status of the PIC file path text box
         /// </summary>
         public bool PICPathTextBoxEnabled
         {
-            get => _picPathTextBoxEnabled;
+            get;
             set
             {
-                _picPathTextBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(PICPathTextBoxEnabled));
             }
-        }
-        private bool _picPathTextBoxEnabled;
+        } = true;
 
         /// <summary>
         /// Currently provided PIC
         /// </summary>
         public byte[]? PIC
         {
-            get => _pic;
+            get;
             set
             {
-                _pic = value;
+                field = value;
                 TriggerPropertyChanged(nameof(PIC));
             }
-        }
-        private byte[]? _pic;
+        } = null;
 
         /// <summary>
         /// Current PIC status message
         /// </summary>
         public string PICStatus
         {
-            get => _picStatus;
+            get;
             set
             {
-                _picStatus = value;
+                field = value;
                 TriggerPropertyChanged(nameof(PICStatus));
             }
-        }
-        private string _picStatus;
+        } = "Will generate a PIC assuming a Layerbreak of 12219392";
 
         /// <summary>
         /// Currently provided PIC string
         /// </summary>
         public string? PICString
         {
-            get => _picString;
+            get;
             set
             {
-                _picString = value;
+                field = value;
                 TriggerPropertyChanged(nameof(PICString));
             }
-        }
-        private string? _picString;
+        } = string.Empty;
 
         /// <summary>
         /// Indicates the status of the PIC text box
         /// </summary>
         public bool PICTextBoxEnabled
         {
-            get => _picTextBoxEnabled;
+            get;
             set
             {
-                _picTextBoxEnabled = value;
+                field = value;
                 TriggerPropertyChanged(nameof(PICTextBoxEnabled));
             }
-        }
-        private bool _picTextBoxEnabled;
+        } = true;
 
         #endregion
 
@@ -476,43 +445,6 @@ namespace MPF.Frontend.ViewModels
         public CreateIRDViewModel()
         {
             _options = OptionsLoader.LoadFromConfig(out _);
-
-            _inputPath = string.Empty;
-            _logPath = string.Empty;
-
-            _keyPath = string.Empty;
-            _hexKey = string.Empty;
-            _key = null;
-            //_keyStatus = "Will attempt to pull Encryption Key from redump.info";
-            _keyStatus = "Cannot create an IRD without a key";
-
-            _discID = null;
-            _discIDString = string.Empty;
-            _discIDStatus = "Unknown Disc ID, generating ID using Region: NONE";
-
-            _picPath = string.Empty;
-            _layerbreakString = string.Empty;
-            _picString = string.Empty;
-            _pic = null;
-            _picStatus = "Will generate a PIC assuming a Layerbreak of 12219392";
-
-            _createIRDStatus = "Please provide an ISO";
-
-            _inputPathTextBoxEnabled = true;
-            _inputPathBrowseButtonEnabled = true;
-            _logPathTextBoxEnabled = true;
-            _logPathNotProvided = true;
-            _logPathBrowseButtonEnabled = true;
-            _discIDTextBoxEnabled = true;
-            _keyPathTextBoxEnabled = true;
-            _keyPathBrowseButtonEnabled = true;
-            _hexKeyTextBoxEnabled = true;
-            _picPathTextBoxEnabled = true;
-            _picPathBrowseButtonEnabled = true;
-            _picTextBoxEnabled = true;
-            _layerbreakTextBoxEnabled = true;
-            _createIRDButtonEnabled = false;
-            _cancelButtonEnabled = true;
 
             EnableEventHandlers();
         }
