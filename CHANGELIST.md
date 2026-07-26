@@ -76,6 +76,7 @@
 - Add translation layer for site codes, Avalonia
 - Reduce direct UI reliance on submission info
 - Bind visibility directly from view models
+- Fix binding issue with read-only properties
 
 ### 3.8.3 (2026-07-06)
 

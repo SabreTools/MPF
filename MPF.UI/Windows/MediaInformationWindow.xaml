@@ -748,15 +748,15 @@
                             <StackPanel Orientation="Vertical">
                                 <controls:UserInput Label="Fully Matched IDs"
                                                     IsReadOnly="True"
-                                                    Text="{Binding FullyMatchedIDs, Mode=TwoWay}"
+                                                    Text="{Binding FullyMatchedIDs, Mode=OneWay}"
                                                     Visibility="{Binding Path=FullyMatchedIDsVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Partially Matched ID(s)"
                                                     IsReadOnly="True"
-                                                    Text="{Binding PartiallyMatchedIDs, Mode=TwoWay}"
+                                                    Text="{Binding PartiallyMatchedIDs, Mode=OneWay}"
                                                     Visibility="{Binding Path=PartiallyMatchedIDsVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Hash Data"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Dat, Mode=TwoWay}"
+                                                    Text="{Binding Dat, Mode=OneWay}"
                                                     TextHeight="75"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
@@ -765,39 +765,39 @@
                                                     Visibility="{Binding Path=DatVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Layerbreak 1"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Layerbreak, Mode=TwoWay}"
+                                                    Text="{Binding Layerbreak, Mode=OneWay}"
                                                     Visibility="{Binding Path=LayerbreakVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Layerbreak 2"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Layerbreak2, Mode=TwoWay}"
+                                                    Text="{Binding Layerbreak2, Mode=OneWay}"
                                                     Visibility="{Binding Path=Layerbreak2Visible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Layerbreak 3"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Layerbreak3, Mode=TwoWay}"
+                                                    Text="{Binding Layerbreak3, Mode=OneWay}"
                                                     Visibility="{Binding Path=Layerbreak3Visible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Disc Offset"
                                                     IsReadOnly="True"
-                                                    Text="{Binding WriteOffset, Mode=TwoWay}"
+                                                    Text="{Binding WriteOffset, Mode=OneWay}"
                                                     Visibility="{Binding Path=WriteOffsetVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="DMI Hash"
                                                     IsReadOnly="True"
-                                                    Text="{Binding DMIHash, Mode=TwoWay}"
+                                                    Text="{Binding DMIHash, Mode=OneWay}"
                                                     Visibility="{Binding Path=DMIHashVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="EDC"
                                                     IsReadOnly="True"
-                                                    Text="{Binding EDC, Mode=TwoWay}"
+                                                    Text="{Binding EDC, Mode=OneWay}"
                                                     Visibility="{Binding Path=EDCVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Error(s) Count"
                                                     IsReadOnly="True"
-                                                    Text="{Binding ErrorCount, Mode=TwoWay}"
+                                                    Text="{Binding ErrorCount, Mode=OneWay}"
                                                     Visibility="{Binding Path=ErrorCountVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="EXE/Build Date"
                                                     IsReadOnly="True"
-                                                    Text="{Binding EXEDate, Mode=TwoWay}"
+                                                    Text="{Binding EXEDate, Mode=OneWay}"
                                                     Visibility="{Binding Path=EXEDateVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Filename"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Filename, Mode=TwoWay}"
+                                                    Text="{Binding Filename, Mode=OneWay}"
                                                     TextHeight="75"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
@@ -806,7 +806,7 @@
                                                     Visibility="{Binding Path=FilenameVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Header"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Header, Mode=TwoWay}"
+                                                    Text="{Binding Header, Mode=OneWay}"
                                                     TextHeight="75"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
@@ -815,15 +815,15 @@
                                                     Visibility="{Binding Path=HeaderVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Internal Names"
                                                     IsReadOnly="True"
-                                                    Text="{Binding InternalName, Mode=TwoWay}"
+                                                    Text="{Binding InternalName, Mode=OneWay}"
                                                     Visibility="{Binding Path=InternalNameVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Internal Serial"
                                                     IsReadOnly="True"
-                                                    Text="{Binding InternalSerialName, Mode=TwoWay}"
+                                                    Text="{Binding InternalSerialName, Mode=OneWay}"
                                                     Visibility="{Binding Path=InternalSerialNameVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Multisession"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Multisession, Mode=TwoWay}"
+                                                    Text="{Binding Multisession, Mode=OneWay}"
                                                     TextHeight="75"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
@@ -832,11 +832,11 @@
                                                     Visibility="{Binding Path=MultisessionVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="PFI Hash"
                                                     IsReadOnly="True"
-                                                    Text="{Binding PFIHash, Mode=TwoWay}"
+                                                    Text="{Binding PFIHash, Mode=OneWay}"
                                                     Visibility="{Binding Path=PFIHashVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="PIC"
                                                     IsReadOnly="True"
-                                                    Text="{Binding PIC, Mode=TwoWay}"
+                                                    Text="{Binding PIC, Mode=OneWay}"
                                                     TextHeight="125"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
@@ -845,7 +845,7 @@
                                                     Visibility="{Binding Path=PICVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="PVD"
                                                     IsReadOnly="True"
-                                                    Text="{Binding PVD, Mode=TwoWay}"
+                                                    Text="{Binding PVD, Mode=OneWay}"
                                                     TextHeight="125"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
@@ -854,15 +854,15 @@
                                                     Visibility="{Binding Path=PVDVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Ring Perfect Audio Offset"
                                                     IsReadOnly="True"
-                                                    Text="{Binding RingPerfectAudioOffset, Mode=TwoWay}"
+                                                    Text="{Binding RingPerfectAudioOffset, Mode=OneWay}"
                                                     Visibility="{Binding Path=RingPerfectAudioOffsetVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Sample Start"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Path=SampleStart, Mode=TwoWay}"
+                                                    Text="{Binding Path=SampleStart, Mode=OneWay}"
                                                     Visibility="{Binding Path=SampleStartVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="SecuROM Data"
                                                     IsReadOnly="True"
-                                                    Text="{Binding SBI, Mode=TwoWay}"
+                                                    Text="{Binding SBI, Mode=OneWay}"
                                                     TextHeight="75"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
@@ -871,11 +871,11 @@
                                                     Visibility="{Binding Path=SBIVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Security Sector Hash"
                                                     IsReadOnly="True"
-                                                    Text="{Binding SSHash, Mode=TwoWay}"
+                                                    Text="{Binding SSHash, Mode=OneWay}"
                                                     Visibility="{Binding Path=SSHashVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Security Sector Ranges"
                                                     IsReadOnly="True"
-                                                    Text="{Binding SectorRanges, Mode=TwoWay}"
+                                                    Text="{Binding SectorRanges, Mode=OneWay}"
                                                     TextHeight="75"
                                                     TextWrapping="NoWrap"
                                                     VerticalContentAlignmentValue="Top"
@@ -884,23 +884,23 @@
                                                     Visibility="{Binding Path=SectorRangesVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Security Sector Version"
                                                     IsReadOnly="True"
-                                                    Text="{Binding SSVersion, Mode=TwoWay}"
+                                                    Text="{Binding SSVersion, Mode=OneWay}"
                                                     Visibility="{Binding Path=SSVersionVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Universal Hash (SHA-1)"
                                                     IsReadOnly="True"
-                                                    Text="{Binding Path=UniversalHash, Mode=TwoWay}"
+                                                    Text="{Binding Path=UniversalHash, Mode=OneWay}"
                                                     Visibility="{Binding Path=UniversalHashVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Volume Label"
                                                     IsReadOnly="True"
-                                                    Text="{Binding VolumeLabel, Mode=TwoWay}"
+                                                    Text="{Binding VolumeLabel, Mode=OneWay}"
                                                     Visibility="{Binding Path=VolumeLabelVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="XeMID"
                                                     IsReadOnly="True"
-                                                    Text="{Binding XeMID, Mode=TwoWay}"
+                                                    Text="{Binding XeMID, Mode=OneWay}"
                                                     Visibility="{Binding Path=XeMIDVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="XMID"
                                                     IsReadOnly="True"
-                                                    Text="{Binding XMID, Mode=TwoWay}"
+                                                    Text="{Binding XMID, Mode=OneWay}"
                                                     Visibility="{Binding Path=XMIDVisible, Converter={StaticResource BoolToVis}}"/>
                             </StackPanel>
                         </GroupBox>
