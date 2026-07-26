@@ -423,13 +423,13 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Set media type combo box visibility based on current program
         /// </summary>
+        /// TODO: Figure out how to bind the label
         public void SetPhysicalMediaTypeVisibility()
         {
             // Only DiscImageCreator uses the media type box
             if (MainViewModel.CurrentProgram != InternalProgram.DiscImageCreator)
             {
                 SystemMediaTypeLabel!.Content = (string)Application.Current.FindResource("SystemLabelString");
-                MediaTypeComboBox!.Visibility = Visibility.Hidden;
                 return;
             }
 
@@ -437,18 +437,13 @@ namespace MPF.UI.Windows
             if (MainViewModel.MediaTypes is null)
             {
                 SystemMediaTypeLabel!.Content = (string)Application.Current.FindResource("SystemLabelString");
-                MediaTypeComboBox!.Visibility = Visibility.Hidden;
                 return;
             }
 
             // Only systems with more than one media type should show the box
-            bool visible = MainViewModel.MediaTypes.Count > 1;
-            SystemMediaTypeLabel!.Content = visible
+            SystemMediaTypeLabel!.Content = MainViewModel.MediaTypes.Count > 1
                 ? (string)Application.Current.FindResource("SystemMediaTypeLabelString")
                 : (string)Application.Current.FindResource("SystemLabelString");
-            MediaTypeComboBox!.Visibility = visible
-                ? Visibility.Visible
-                : Visibility.Hidden;
         }
 
         /// <summary>

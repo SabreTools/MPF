@@ -86,7 +86,8 @@
                                   Click="OptionsMenuItemClick" />
                         <MenuItem x:Name="DebugViewMenuItem"
                                   Header="{DynamicResource DebugInfoWindowMenuItemString}"
-                                  Click="DebugViewClick" />
+                                  Click="DebugViewClick"
+                                  IsVisible="{Binding DebugViewMenuItemVisible}" />
                     </MenuItem>
                     <MenuItem x:Name="HelpMenuItem"
                               Header="Help">
@@ -229,7 +230,8 @@
                                       ItemsSource="{Binding MediaTypes}"
                                       SelectedItem="{Binding CurrentPhysicalMediaType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                       IsEnabled="{Binding PhysicalMediaTypeComboBoxEnabled}"
-                                      SelectionChanged="MediaTypeComboBoxSelectionChanged" />
+                                      SelectionChanged="MediaTypeComboBoxSelectionChanged"
+                                      IsVisible="{Binding PhysicalMediaTypeComboBoxVisible}" />
                         </Grid>
 
                         <TextBlock Grid.Row="1"

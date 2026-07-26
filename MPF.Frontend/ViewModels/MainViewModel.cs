@@ -137,6 +137,11 @@ namespace MPF.Frontend.ViewModels
         private bool _optionsMenuItemEnabled;
 
         /// <summary>
+        /// Indicates the visibility of the debug menu item
+        /// </summary>
+        public bool DebugViewMenuItemVisible => Options.GUI.ShowDebugViewMenuItem;
+
+        /// <summary>
         /// Currently selected system value
         /// </summary>
         public PhysicalSystem? CurrentSystem
@@ -183,14 +188,34 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public bool PhysicalMediaTypeComboBoxEnabled
         {
-            get => _mediaTypeComboBoxEnabled;
+            get => _physicalMediaTypeComboBoxEnabled;
             set
             {
-                _mediaTypeComboBoxEnabled = value;
+                _physicalMediaTypeComboBoxEnabled = value;
                 TriggerPropertyChanged(nameof(PhysicalMediaTypeComboBoxEnabled));
             }
         }
-        private bool _mediaTypeComboBoxEnabled;
+        private bool _physicalMediaTypeComboBoxEnabled;
+
+        /// <summary>
+        /// Indicates the visibility of the media type combo box
+        /// </summary>
+        public bool PhysicalMediaTypeComboBoxVisible
+        {
+            get
+            {
+                // Only DiscImageCreator uses the media type box
+                if (CurrentProgram != InternalProgram.DiscImageCreator)
+                    return false;
+
+                // If there are no media types defined
+                if (MediaTypes is null)
+                    return false;
+
+                // Only systems with more than one media type should show the box
+                return MediaTypes.Count > 1;
+            }
+        }
 
         /// <summary>
         /// Currently provided output path

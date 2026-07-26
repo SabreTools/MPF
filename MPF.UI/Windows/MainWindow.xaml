@@ -113,7 +113,7 @@
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}"
-                                      Visibility="{Binding Path=Options.GUI.ShowDebugViewMenuItem, Converter={StaticResource BoolToVis}}"/>
+                                      Visibility="{Binding Path=DebugViewMenuItemVisible, Converter={StaticResource BoolToVis}}"/>
                         </MenuItem>
                         <MenuItem x:Name="HelpMenuItem"
                                   Header="{DynamicResource HelpMenuString}"
@@ -381,7 +381,7 @@
                               Width="140"
                               HorizontalAlignment="Right"
                               Style="{DynamicResource CustomComboBoxStyle}"
-                              Visibility="Hidden"/>
+                              Visibility="{Binding Path=PhysicalMediaTypeComboBoxVisible, Converter={StaticResource BoolToVis}}"/>
 
                     <Label x:Name="OutputPathLabel"
                            Grid.Row="1"

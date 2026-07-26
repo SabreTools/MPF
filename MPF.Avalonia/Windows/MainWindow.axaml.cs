@@ -109,10 +109,6 @@ namespace MPF.Avalonia.Windows
             MainViewModel.UpdateVolumeLabelEnabled = false;
             MainViewModel.CopyProtectScanButtonEnabled = false;
 
-            // Display the debug option in the menu, if necessary
-            if (MainViewModel.Options.GUI.ShowDebugViewMenuItem)
-                DebugViewMenuItem!.IsVisible = true;
-
             // On Linux and macOS the dumping tool has no console window of its own, so stream
             // its live output into a separate MPF window. Windows keeps the tool's own console
             // (leave this null), preserving the original behavior.
@@ -492,13 +488,13 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Set media type combo box visibility based on current program
         /// </summary>
+        /// TODO: Figure out how to bind the label
         public void SetMediaTypeVisibility()
         {
             // Only DiscImageCreator uses the media type box
             if (MainViewModel.CurrentProgram != InternalProgram.DiscImageCreator)
             {
                 SystemMediaTypeLabel!.Text = StringResource("SystemLabelString", "System Type");
-                MediaTypeComboBox!.IsVisible = false;
                 return;
             }
 
@@ -506,16 +502,13 @@ namespace MPF.Avalonia.Windows
             if (MainViewModel.MediaTypes is null)
             {
                 SystemMediaTypeLabel!.Text = StringResource("SystemLabelString", "System Type");
-                MediaTypeComboBox!.IsVisible = false;
                 return;
             }
 
             // Only systems with more than one media type should show the box
-            bool visible = MainViewModel.MediaTypes.Count > 1;
-            SystemMediaTypeLabel!.Text = visible
+            SystemMediaTypeLabel!.Text = MainViewModel.MediaTypes.Count > 1
                 ? StringResource("SystemMediaTypeLabelString", "System/Media Type")
                 : StringResource("SystemLabelString", "System Type");
-            MediaTypeComboBox!.IsVisible = visible;
         }
 
         /// <summary>
