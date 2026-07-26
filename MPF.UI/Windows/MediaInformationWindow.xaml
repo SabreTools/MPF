@@ -106,8 +106,7 @@
             <TabControl Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                         Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                         Style="{DynamicResource CustomTabControlStyle}">
-                <TabItem x:Name="CommonInfo"
-                         Header="{DynamicResource CommonInfoTabString}"
+                <TabItem Header="{DynamicResource CommonInfoTabString}"
                          Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False"
                                   VerticalScrollBarVisibility="Auto"
@@ -125,21 +124,17 @@
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput Label="{DynamicResource TitleInputString}"
                                                         Text="{Binding Title, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="AlternativeTitleTextBox"
-                                                        Label="{DynamicResource AlternativeTitleInputString}"
+                                    <controls:UserInput Label="{DynamicResource AlternativeTitleInputString}"
                                                         Text="{Binding AlternativeTitle, Mode=TwoWay}"/>
                                     <controls:UserInput Label="{DynamicResource ForeignTitleNonLatinInputString}"
                                                         Text="{Binding ForeignTitle, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="AlternativeForeignTitleTextBox"
-                                                        Label="{DynamicResource AlternativeForeignTitleInputString}"
+                                    <controls:UserInput Label="{DynamicResource AlternativeForeignTitleInputString}"
                                                         Text="{Binding AlternativeForeignTitle, Mode=TwoWay}"/>
                                     <controls:UserInput Label="{DynamicResource DiscNumberLetterInputString}"
                                                         Text="{Binding DiscNumber, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscTitleTextBox"
-                                                        Label="{DynamicResource DiscTitleInputString}"
+                                    <controls:UserInput Label="{DynamicResource DiscTitleInputString}"
                                                         Text="{Binding DiscTitle, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscTitleNonLatinTextBox"
-                                                        Label="{DynamicResource DiscTitleNonLatinInputString}"
+                                    <controls:UserInput Label="{DynamicResource DiscTitleNonLatinInputString}"
                                                         Text="{Binding DiscTitleNonLatin, Mode=TwoWay}"/>
 
                                     <Grid>
@@ -148,8 +143,7 @@
                                             <ColumnDefinition Width="1.75*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Label x:Name="CategoryLabel"
-                                               Grid.Row="0"
+                                        <Label Grid.Row="0"
                                                Grid.Column="0"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Right"
@@ -170,8 +164,7 @@
                                             <ColumnDefinition Width="1.75*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Label x:Name="RegionsLabel"
-                                               Grid.Row="0"
+                                        <Label Grid.Row="0"
                                                Grid.Column="0"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Right"
@@ -199,8 +192,7 @@
                                             <ColumnDefinition Width="1.75*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Label x:Name="LanguagesLabel"
-                                               Grid.Row="0"
+                                        <Label Grid.Row="0"
                                                Grid.Column="0"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Right"
@@ -239,11 +231,9 @@
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput Label="{DynamicResource VersionInputString}"
                                                         Text="{Binding Version, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="EditionTextBox"
-                                                        Label="{DynamicResource EditionInputString}"
+                                    <controls:UserInput Label="{DynamicResource EditionInputString}"
                                                         Text="{Binding Editions, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="EditionNonLatinTextBox"
-                                                        Label="{DynamicResource EditionNonLatinInputString}"
+                                    <controls:UserInput Label="{DynamicResource EditionNonLatinInputString}"
                                                         Text="{Binding EditionNonLatin, Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
@@ -279,8 +269,7 @@
                                                   Margin="0,4"
                                                   IsChecked="{Binding PCMacHybrid, Mode=TwoWay}"/>
                                     </Grid>
-                                    <controls:UserInput x:Name="CommentsTextBox"
-                                                        Label="{DynamicResource CommentsInputString}"
+                                    <controls:UserInput Label="{DynamicResource CommentsInputString}"
                                                         Text="{Binding Comments, Mode=TwoWay}"
                                                         TextHeight="50"
                                                         Enter="True"
@@ -295,8 +284,7 @@
                                     <controls:UserInput Label="Disc ID"
                                                         Text="{Binding InternalDiscID, Mode=TwoWay}"
                                                         Visibility="{Binding Path=InternalDiscIDVisible, Converter={StaticResource BoolToVis}}"/>
-                                    <controls:UserInput x:Name="ProtectionTextBox"
-                                                        Label="{DynamicResource ProtectionInputString}"
+                                    <controls:UserInput Label="{DynamicResource ProtectionInputString}"
                                                         ToolTip="CAUTION: Only edit if you know what you are doing!"
                                                         Text="{Binding Protection, Mode=TwoWay}"
                                                         TextHeight="75"
@@ -315,32 +303,23 @@
                                       HorizontalAlignment="Stretch"
                                       VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="BBFCRegistrationNumberTextBox"
-                                                        Label="BBFC Reg. No."
+                                    <controls:UserInput Label="BBFC Reg. No."
                                                         Text="{Binding BBFCRegistrationNumber, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="CoverIDTextBox"
-                                                        Label="Cover ID"
+                                    <controls:UserInput Label="Cover ID"
                                                         Text="{Binding CoverID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscHologramIDTextBox"
-                                                        Label="Disc Hologram ID"
+                                    <controls:UserInput Label="Disc Hologram ID"
                                                         Text="{Binding DiscHologramID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DNASDiscIDTextBox"
-                                                        Label="DNAS Disc ID"
+                                    <controls:UserInput Label="DNAS Disc ID"
                                                         Text="{Binding DNASDiscID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="CommentDiscIDTextBox"
-                                                        Label="Disc ID"
+                                    <controls:UserInput Label="Disc ID"
                                                         Text="{Binding DiscID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="ISBNTextBox"
-                                                        Label="ISBN"
+                                    <controls:UserInput Label="ISBN"
                                                         Text="{Binding ISBN, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="ISSNTextBox"
-                                                        Label="ISSN"
+                                    <controls:UserInput Label="ISSN"
                                                         Text="{Binding ISSN, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="PPNTextBox"
-                                                        Label="PPN"
+                                    <controls:UserInput Label="PPN"
                                                         Text="{Binding PPN, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="VFCCodeTextBox"
-                                                        Label="VFC code"
+                                    <controls:UserInput Label="VFC code"
                                                         Text="{Binding VFCCode, Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
@@ -353,95 +332,65 @@
                                       HorizontalAlignment="Stretch"
                                       VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="TwoKGamesIDTextBox"
-                                                        Label="2K Games ID"
+                                    <controls:UserInput Label="2K Games ID"
                                                         Text="{Binding TwoKGamesID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="AcclaimIDTextBox"
-                                                        Label="Acclaim ID"
+                                    <controls:UserInput Label="Acclaim ID"
                                                         Text="{Binding AcclaimID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="AccoladeIDTextBox"
-                                                        Label="Accolade ID"
+                                    <controls:UserInput Label="Accolade ID"
                                                         Text="{Binding AccoladeID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="ActivisionIDTextBox"
-                                                        Label="Activision ID"
+                                    <controls:UserInput Label="Activision ID"
                                                         Text="{Binding ActivisionID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="BandaiIDTextBox"
-                                                        Label="Bandai ID"
+                                    <controls:UserInput Label="Bandai ID"
                                                         Text="{Binding BandaiID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="BethesdaIDTextBox"
-                                                        Label="Bethesda ID"
+                                    <controls:UserInput Label="Bethesda ID"
                                                         Text="{Binding BethesdaID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="CDProjektIDTextBox"
-                                                        Label="CD Projekt ID"
+                                    <controls:UserInput Label="CD Projekt ID"
                                                         Text="{Binding CDProjektID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DisneyInteractiveIDTextBox"
-                                                        Label="Disney Interactive ID"
+                                    <controls:UserInput Label="Disney Interactive ID"
                                                         Text="{Binding DisneyInteractiveID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="EidosIDTextBox"
-                                                        Label="Eidos ID"
+                                    <controls:UserInput Label="Eidos ID"
                                                         Text="{Binding EidosID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="ElectronicArtsIDTextBox"
-                                                        Label="Electronic Arts ID"
+                                    <controls:UserInput Label="Electronic Arts ID"
                                                         Text="{Binding ElectronicArtsID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="FoxInteractiveIDTextBox"
-                                                        Label="Fox Interactive ID"
+                                    <controls:UserInput Label="Fox Interactive ID"
                                                         Text="{Binding FoxInteractiveID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="GTInteractiveIDTextBox"
-                                                        Label="GT Interactive ID"
+                                    <controls:UserInput Label="GT Interactive ID"
                                                         Text="{Binding GTInteractiveID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="InterplayIDTextBox"
-                                                        Label="Interplay ID"
+                                    <controls:UserInput Label="Interplay ID"
                                                         Text="{Binding InterplayID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="JASRACIDTextBox"
-                                                        Label="JASRAC ID"
+                                    <controls:UserInput Label="JASRAC ID"
                                                         Text="{Binding JASRACID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="KingRecordsIDTextBox"
-                                                        Label="King Records ID"
+                                    <controls:UserInput Label="King Records ID"
                                                         Text="{Binding KingRecordsID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="KoeiIDTextBox"
-                                                        Label="Koei ID"
+                                    <controls:UserInput Label="Koei ID"
                                                         Text="{Binding KoeiID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="KonamiIDTextBox"
-                                                        Label="Konami ID"
+                                    <controls:UserInput Label="Konami ID"
                                                         Text="{Binding KonamiID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="LucasArtsIDTextBox"
-                                                        Label="LucasArts ID"
+                                    <controls:UserInput Label="LucasArts ID"
                                                         Text="{Binding LucasArtsID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="MicrosoftIDTextBox"
-                                                        Label="Microsoft ID"
+                                    <controls:UserInput Label="Microsoft ID"
                                                         Text="{Binding MicrosoftID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="NaganoIDTextBox"
-                                                        Label="Nagano ID"
+                                    <controls:UserInput Label="Nagano ID"
                                                         Text="{Binding NaganoID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="NamcoIDTextBox"
-                                                        Label="Namco ID"
+                                    <controls:UserInput Label="Namco ID"
                                                         Text="{Binding NamcoID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="NipponIchiSoftwareIDTextBox"
-                                                        Label="Nippon Ichi Software ID"
+                                    <controls:UserInput Label="Nippon Ichi Software ID"
                                                         Text="{Binding NipponIchiSoftwareID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="OriginIDTextBox"
-                                                        Label="Origin ID"
+                                    <controls:UserInput Label="Origin ID"
                                                         Text="{Binding OriginID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="PonyCanyonIDTextBox"
-                                                        Label="Pony Canyon ID"
+                                    <controls:UserInput Label="Pony Canyon ID"
                                                         Text="{Binding PonyCanyonID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="SegaIDTextBox"
-                                                        Label="Sega ID"
+                                    <controls:UserInput Label="Sega ID"
                                                         Text="{Binding SegaID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="SelenIDTextBox"
-                                                        Label="Selen ID"
+                                    <controls:UserInput Label="Selen ID"
                                                         Text="{Binding SelenID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="SierraIDTextBox"
-                                                        Label="Sierra ID"
+                                    <controls:UserInput Label="Sierra ID"
                                                         Text="{Binding SierraID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="TaitoIDTextBox"
-                                                        Label="Taito ID"
+                                    <controls:UserInput Label="Taito ID"
                                                         Text="{Binding TaitoID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="UbisoftIDTextBox"
-                                                        Label="Ubisoft ID"
+                                    <controls:UserInput Label="Ubisoft ID"
                                                         Text="{Binding UbisoftID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="ValveIDTextBox"
-                                                        Label="Valve ID"
+                                    <controls:UserInput Label="Valve ID"
                                                         Text="{Binding ValveID, Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
@@ -474,8 +423,7 @@
                             </GroupBox.Template>
 
                             <StackPanel Orientation="Vertical">
-                                <controls:UserInput x:Name="GeneralContentTextBoxt"
-                                                    Label="General"
+                                <controls:UserInput Label="General"
                                                     Text="{Binding GeneralContent, Mode=TwoWay}"
                                                     TextHeight="50"
                                                     Enter="True"
@@ -483,8 +431,7 @@
                                                     VerticalContentAlignmentValue="Top"/>
 
                                 <!-- Applications -->
-                                <controls:UserInput x:Name="ApplicationsTextBox"
-                                                    Label="Applications"
+                                <controls:UserInput Label="Applications"
                                                     TextHeight="50"
                                                     Enter="True"
                                                     TextWrapping="Wrap"
@@ -492,15 +439,13 @@
                                                     Text="{Binding Applications, Mode=TwoWay}"/>
 
                                 <!-- Games -->
-                                <controls:UserInput x:Name="GamesTextBox"
-                                                    Label="Games"
+                                <controls:UserInput Label="Games"
                                                     TextHeight="50"
                                                     Enter="True"
                                                     TextWrapping="Wrap"
                                                     VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Games, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="NetYarozeGamesTextBox"
-                                                    Label="Net Yaroze Games"
+                                <controls:UserInput Label="Net Yaroze Games"
                                                     TextHeight="50"
                                                     Enter="True"
                                                     TextWrapping="Wrap"
@@ -509,22 +454,19 @@
                                                     Visibility="{Binding Path=NetYarozeGamesVisible, Converter={StaticResource BoolToVis}}"/>
 
                                 <!-- Demos -->
-                                <controls:UserInput x:Name="PlayableDemosTextBox"
-                                                    Label="Playable Demos"
+                                <controls:UserInput Label="Playable Demos"
                                                     TextHeight="50"
                                                     Enter="True"
                                                     TextWrapping="Wrap"
                                                     VerticalContentAlignmentValue="Top"
                                                     Text="{Binding PlayableDemos, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="RollingDemosTextBox"
-                                                    Label="Rolling Demos"
+                                <controls:UserInput Label="Rolling Demos"
                                                     TextHeight="50"
                                                     Enter="True"
                                                     TextWrapping="Wrap"
                                                     VerticalContentAlignmentValue="Top"
                                                     Text="{Binding RollingDemos, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="TechDemosTextBox"
-                                                    Label="Tech Demos"
+                                <controls:UserInput Label="Tech Demos"
                                                     TextHeight="50"
                                                     Enter="True"
                                                     TextWrapping="Wrap"
@@ -532,15 +474,13 @@
                                                     Text="{Binding TechDemos, Mode=TwoWay}"/>
 
                                 <!-- Video -->
-                                <controls:UserInput x:Name="GameFootageTextBox"
-                                                    Label="Game Footage"
+                                <controls:UserInput Label="Game Footage"
                                                     TextHeight="50"
                                                     Enter="True"
                                                     TextWrapping="Wrap"
                                                     VerticalContentAlignmentValue="Top"
                                                     Text="{Binding GameFootage, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="VideosTextBox"
-                                                    Label="Videos"
+                                <controls:UserInput Label="Videos"
                                                     TextHeight="50"
                                                     Enter="True"
                                                     TextWrapping="Wrap"
@@ -548,22 +488,19 @@
                                                     Text="{Binding Videos, Mode=TwoWay}"/>
 
                                 <!-- Miscellaneous -->
-                                <controls:UserInput x:Name="PatchesTextBox"
-                                                    Label="Patches"
+                                <controls:UserInput Label="Patches"
                                                     TextHeight="50"
                                                     Enter="True"
                                                     TextWrapping="Wrap"
                                                     VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Patches, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="SavegamesTextBox"
-                                                    Label="Savegames"
+                                <controls:UserInput Label="Savegames"
                                                     TextHeight="50"
                                                     Enter="True"
                                                     TextWrapping="Wrap"
                                                     VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Savegames, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="ExtrasTextBox"
-                                                    Label="Extras"
+                                <controls:UserInput Label="Extras"
                                                     TextHeight="50"
                                                     Enter="True"
                                                     TextWrapping="Wrap"
@@ -591,24 +528,19 @@
                                       VerticalAlignment="Stretch"
                                       Visibility="{Binding Path=Layer0InfoPanelVisible, Converter={StaticResource BoolToVis}}">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="Layer0MasteringCodeTextBox"
-                                                        Label="Mastering Code"
+                                    <controls:UserInput Label="Mastering Code"
                                                         Text="{Binding Layer0MasteringCode, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
-                                    <controls:UserInput x:Name="Layer0MasteringSIDTextBox"
-                                                        Label="Mastering SID"
+                                    <controls:UserInput Label="Mastering SID"
                                                         Text="{Binding Layer0MasteringSID, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
-                                    <controls:UserInput x:Name="Layer0ToolstampTextBox"
-                                                        Label="Toolstamps"
+                                    <controls:UserInput Label="Toolstamps"
                                                         Text="{Binding Layer0Toolstamps, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
-                                    <controls:UserInput x:Name="Layer0MouldSIDsTextBox"
-                                                        Label="Mould SIDs"
+                                    <controls:UserInput Label="Mould SIDs"
                                                         Text="{Binding Layer0MouldSIDs, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
-                                    <controls:UserInput x:Name="Layer0AdditionalMouldsTextBox"
-                                                        Label="Additional Moulds"
+                                    <controls:UserInput Label="Additional Moulds"
                                                         Text="{Binding Layer0AdditionalMoulds, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
                                 </StackPanel>
@@ -623,16 +555,13 @@
                                       VerticalAlignment="Stretch"
                                       Visibility="{Binding Path=Layer1InfoPanelVisible, Converter={StaticResource BoolToVis}}">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="Layer1MasteringCodeTextBox"
-                                                        Label="Mastering Code"
+                                    <controls:UserInput Label="Mastering Code"
                                                         Text="{Binding Layer1MasteringCode, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
-                                    <controls:UserInput x:Name="Layer1MasteringSIDTextBox"
-                                                        Label="Mastering SID"
+                                    <controls:UserInput Label="Mastering SID"
                                                         Text="{Binding Layer1MasteringSID, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
-                                    <controls:UserInput x:Name="Layer1ToolstampTextBox"
-                                                        Label="Toolstamps"
+                                    <controls:UserInput Label="Toolstamps"
                                                         Text="{Binding Layer1Toolstamps, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
                                 </StackPanel>
@@ -647,16 +576,13 @@
                                       VerticalAlignment="Stretch"
                                       Visibility="{Binding Path=Layer2InfoPanelVisible, Converter={StaticResource BoolToVis}}">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="Layer2MasteringCodeTextBox"
-                                                        Label="Mastering Code"
+                                    <controls:UserInput Label="Mastering Code"
                                                         Text="{Binding Layer2MasteringCode, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
-                                    <controls:UserInput x:Name="Layer2MasteringSIDTextBox"
-                                                        Label="Mastering SID"
+                                    <controls:UserInput Label="Mastering SID"
                                                         Text="{Binding Layer2MasteringSID, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
-                                    <controls:UserInput x:Name="Layer2ToolstampTextBox"
-                                                        Label="Toolstamps"
+                                    <controls:UserInput Label="Toolstamps"
                                                         Text="{Binding Layer2Toolstamps, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
                                 </StackPanel>
@@ -671,16 +597,13 @@
                                       VerticalAlignment="Stretch"
                                       Visibility="{Binding Path=Layer3InfoPanelVisible, Converter={StaticResource BoolToVis}}">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="Layer3MasteringCodeTextBox"
-                                                        Label="Mastering Code"
+                                    <controls:UserInput Label="Mastering Code"
                                                         Text="{Binding Layer3MasteringCode, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
-                                    <controls:UserInput x:Name="Layer3MasteringSIDTextBox"
-                                                        Label="Mastering SID"
+                                    <controls:UserInput Label="Mastering SID"
                                                         Text="{Binding Layer3MasteringSID, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
-                                    <controls:UserInput x:Name="Layer3ToolstampTextBox"
-                                                        Label="Toolstamps"
+                                    <controls:UserInput Label="Toolstamps"
                                                         Text="{Binding Layer3Toolstamps, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
                                 </StackPanel>
@@ -695,24 +618,19 @@
                                       VerticalAlignment="Stretch"
                                       Visibility="{Binding Path=LabelSideInfoPanelVisible, Converter={StaticResource BoolToVis}}">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="LabelSideMasteringCodeTextBox"
-                                                        Label="Mastering Code"
+                                    <controls:UserInput Label="Mastering Code"
                                                         Text="{Binding LabelSideMasteringCode, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
-                                    <controls:UserInput x:Name="LabelSideMasteringSIDTextBox"
-                                                        Label="Mastering SID"
+                                    <controls:UserInput Label="Mastering SID"
                                                         Text="{Binding LabelSideMasteringSID, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
-                                    <controls:UserInput x:Name="LabelSideToolstampTextBox"
-                                                        Label="Toolstamps"
+                                    <controls:UserInput Label="Toolstamps"
                                                         Text="{Binding LabelSideToolstamps, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
-                                    <controls:UserInput x:Name="LabelSideMouldSIDsTextBox"
-                                                        Label="Mould SIDs"
+                                    <controls:UserInput Label="Mould SIDs"
                                                         Text="{Binding LabelSideMouldSIDs, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
-                                    <controls:UserInput x:Name="LabelSideAdditionalMouldsTextBox"
-                                                        Label="Additional Moulds"
+                                    <controls:UserInput Label="Additional Moulds"
                                                         Text="{Binding LabelSideAdditionalMoulds, Mode=TwoWay}"
                                                         Tab="{Binding EnableRingcodeTabs}"/>
                                 </StackPanel>
