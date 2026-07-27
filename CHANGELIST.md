@@ -91,6 +91,7 @@
 - Minor additional property cleanup
 - More minor view model cleanup
 - Sync with recent region and language additions
+- Update RedumpLib to 3.1.0
 
 ### 3.8.3 (2026-07-06)
 
