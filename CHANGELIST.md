@@ -90,6 +90,7 @@
 - Use auto properties in IRD view model
 - Minor additional property cleanup
 - More minor view model cleanup
+- Sync with recent region and language additions
 
 ### 3.8.3 (2026-07-06)
 
