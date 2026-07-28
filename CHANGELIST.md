@@ -94,6 +94,7 @@
 - Update RedumpLib to 3.1.0
 - Update LibIRD to 1.1.0
 - Pass auto-detect flag for Redumper by default
+- Reenable anti-modchip and LibCrypt outputs
 
 ### 3.8.3 (2026-07-06)
 

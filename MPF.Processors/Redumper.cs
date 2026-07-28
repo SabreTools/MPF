@@ -455,12 +455,17 @@ namespace MPF.Processors
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = psxSerial ?? string.Empty;
                 }
 
-                // TODO: Reenable when anti-modchip documentation is updated
-                // info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}.log").ToYesNo();
                 info.DiscIdentifiers.EDC = GetPlayStationEDCStatus($"{basePath}.log").ToYesNo();
-                // TODO: Reenable when LibCrypt documentation is updated
-                // info.CopyProtection.LibCrypt = GetPlayStationLibCryptStatus($"{basePath}.log").ToYesNo();
+                YesNo antiModchipDetected = GetPlayStationAntiModchipDetected($"{basePath}.log").ToYesNo() ?? YesNo.NULL;
+                YesNo libCryptDetected = GetPlayStationLibCryptStatus($"{basePath}.log").ToYesNo() ?? YesNo.NULL;
                 info.DumpMetadata.SBI = GetPlayStationLibCryptData($"{basePath}.log");
+
+                if (antiModchipDetected == YesNo.Yes && libCryptDetected == YesNo.Yes)
+                    info.DumpMetadata.Protection = "Anti-modchip, LibCrypt";
+                else if (antiModchipDetected == YesNo.Yes && libCryptDetected != YesNo.Yes)
+                    info.DumpMetadata.Protection = "Anti-modchip";
+                else if (antiModchipDetected != YesNo.Yes && libCryptDetected == YesNo.Yes)
+                    info.DumpMetadata.Protection = "LibCrypt";
             }
             else if (System == PhysicalSystem.SonyPlayStation2)
             {

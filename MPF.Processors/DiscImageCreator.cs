@@ -591,12 +591,16 @@ namespace MPF.Processors
                     psEdcStatus = GetPlayStationEDCStatus($"{basePath}.img_EccEdc.txt");
 
                 info.DiscIdentifiers.EDC = psEdcStatus.ToYesNo();
-                // TODO: Reenable when anti-modchip documentation is updated
-                // info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}_disc.txt").ToYesNo();
-                GetLibCryptDetected(basePath, out YesNo libCryptDetected, out string? libCryptData);
-                // TODO: Reenable when LibCrypt documentation is updated
-                // info.CopyProtection.LibCrypt = libCryptDetected;
+                YesNo antiModchipDetected = GetPlayStationAntiModchipDetected($"{basePath}_disc.txt").ToYesNo() ?? YesNo.NULL;
+                YesNo libCryptDetected = GetLibCryptDetected(basePath, out string? libCryptData);
                 info.DumpMetadata.SBI = libCryptData;
+
+                if (antiModchipDetected == YesNo.Yes && libCryptDetected == YesNo.Yes)
+                    info.DumpMetadata.Protection = "Anti-modchip, LibCrypt";
+                else if (antiModchipDetected == YesNo.Yes && libCryptDetected != YesNo.Yes)
+                    info.DumpMetadata.Protection = "Anti-modchip";
+                else if (antiModchipDetected != YesNo.Yes && libCryptDetected == YesNo.Yes)
+                    info.DumpMetadata.Protection = "LibCrypt";
             }
             else if (System == PhysicalSystem.SonyPlayStation3)
             {
@@ -1516,21 +1520,19 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <returns>Status of the LibCrypt data, if possible</returns>
-        private static void GetLibCryptDetected(string basePath, out YesNo detected, out string? data)
+        private static YesNo GetLibCryptDetected(string basePath, out string? data)
         {
             string subPath = $"{basePath}.sub";
             if (!File.Exists(subPath))
             {
-                detected = YesNo.NULL;
                 data = "LibCrypt could not be detected because subchannel file is missing";
-                return;
+                return YesNo.NULL;
             }
 
             if (!ProcessingTool.DetectLibCrypt(subPath))
             {
-                detected = YesNo.No;
                 data = null;
-                return;
+                return YesNo.No;
             }
 
             // Guard against false positives
@@ -1539,19 +1541,19 @@ namespace MPF.Processors
                 string libCryptData = ProcessingTool.GetFullFile($"{basePath}_subIntention.txt") ?? "";
                 if (string.IsNullOrEmpty(libCryptData))
                 {
-                    detected = YesNo.No;
                     data = null;
+                    return YesNo.No;
                 }
                 else
                 {
-                    detected = YesNo.Yes;
                     data = libCryptData;
+                    return YesNo.Yes;
                 }
             }
             else
             {
-                detected = YesNo.No;
                 data = null;
+                return YesNo.No;
             }
         }
 
