@@ -325,6 +325,9 @@ namespace MPF.ExecutionContexts.Redumper
                 (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(null);
             }
 
+            // Always pass in auto-detect flag to improve drive detection
+            this[FlagStrings.AutoDetect] = true;
+
             // Set user-defined options
             if (dumpSettings.EnableVerbose)
             {
