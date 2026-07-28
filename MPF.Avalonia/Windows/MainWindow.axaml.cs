@@ -138,7 +138,7 @@ namespace MPF.Avalonia.Windows
             ThemeService.Apply(Application.Current!.Resources, MainViewModel.Options);
 
             // Hide or show the media type box based on program
-            SetMediaTypeVisibility();
+            SetPhysicalMediaTypeVisibility();
             WireLogPanelResizing();
 
             // Check for updates, if necessary
@@ -489,7 +489,7 @@ namespace MPF.Avalonia.Windows
         /// Set media type combo box visibility based on current program
         /// </summary>
         /// TODO: Figure out how to bind the label
-        public void SetMediaTypeVisibility()
+        public void SetPhysicalMediaTypeVisibility()
         {
             // Only DiscImageCreator uses the media type box
             if (MainViewModel.CurrentProgram != InternalProgram.DiscImageCreator)
@@ -682,7 +682,7 @@ namespace MPF.Avalonia.Windows
             ThemeService.Apply(Resources, options);
 
             // Hide or show the media type box based on program
-            SetMediaTypeVisibility();
+            SetPhysicalMediaTypeVisibility();
         }
 
         #region Menu Bar
@@ -772,7 +772,7 @@ namespace MPF.Avalonia.Windows
             SetInterfaceLanguage(EnumExtensions.ToInterfaceLanguage(lang), rebuildNativeMenus: true);
 
             // Update the labels that don't get updated automatically
-            SetMediaTypeVisibility();
+            SetPhysicalMediaTypeVisibility();
         }
 
         #endregion
@@ -815,7 +815,7 @@ namespace MPF.Avalonia.Windows
             if (MainViewModel.CanExecuteSelectionChanged)
             {
                 MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: false);
-                SetMediaTypeVisibility();
+                SetPhysicalMediaTypeVisibility();
             }
         }
 
@@ -836,7 +836,7 @@ namespace MPF.Avalonia.Windows
             if (MainViewModel.CanExecuteSelectionChanged)
             {
                 MainViewModel.ChangeDumpingProgram();
-                SetMediaTypeVisibility();
+                SetPhysicalMediaTypeVisibility();
             }
         }
 
@@ -855,7 +855,7 @@ namespace MPF.Avalonia.Windows
         public void MediaScanButtonClick(object? sender, RoutedEventArgs e)
         {
             MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: true);
-            SetMediaTypeVisibility();
+            SetPhysicalMediaTypeVisibility();
         }
 
         /// <summary>
@@ -906,7 +906,7 @@ namespace MPF.Avalonia.Windows
             if (MainViewModel.CanExecuteSelectionChanged)
             {
                 MainViewModel.ChangeSystem();
-                SetMediaTypeVisibility();
+                SetPhysicalMediaTypeVisibility();
             }
         }
 
