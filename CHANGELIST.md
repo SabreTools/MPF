@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.9.0 (2026-07-31)
 
 - Pre-compress subcode files with Zstd
 - Make environment determination more performant
