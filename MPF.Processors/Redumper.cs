@@ -267,7 +267,7 @@ namespace MPF.Processors
             }
             else if (System == PhysicalSystem.KonamiPython2)
             {
-                if (GetPlayStationInfo($"{basePath}.log", out string? kp2EXEDate, out string? kp2Serial, out string? kp2Version))
+                if (GetPlayStation123Info($"{basePath}.log", out string? kp2EXEDate, out string? kp2Serial, out string? kp2Version))
                 {
                     info.DiscIdentifiers.EXEDate = kp2EXEDate;
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = kp2Serial ?? string.Empty;
@@ -449,7 +449,7 @@ namespace MPF.Processors
             }
             else if (System == PhysicalSystem.SonyPlayStation)
             {
-                if (GetPlayStationInfo($"{basePath}.log", out string? psxEXEDate, out string? psxSerial, out var _))
+                if (GetPlayStation123Info($"{basePath}.log", out string? psxEXEDate, out string? psxSerial, out var _))
                 {
                     info.DiscIdentifiers.EXEDate = psxEXEDate;
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = psxSerial ?? string.Empty;
@@ -469,7 +469,7 @@ namespace MPF.Processors
             }
             else if (System == PhysicalSystem.SonyPlayStation2)
             {
-                if (GetPlayStationInfo($"{basePath}.log", out string? ps2EXEDate, out string? ps2Serial, out var ps2Version))
+                if (GetPlayStation123Info($"{basePath}.log", out string? ps2EXEDate, out string? ps2Serial, out var ps2Version))
                 {
                     info.DiscIdentifiers.EXEDate = ps2EXEDate;
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps2Serial ?? string.Empty;
@@ -482,7 +482,7 @@ namespace MPF.Processors
             }
             else if (System == PhysicalSystem.SonyPlayStation3)
             {
-                if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps3Serial, out var ps3Version))
+                if (GetPlayStation123Info($"{basePath}.log", out var _, out string? ps3Serial, out var ps3Version))
                 {
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
                     info.DiscIdentifiers.Version = ps3Version ?? string.Empty;
@@ -490,18 +490,20 @@ namespace MPF.Processors
             }
             else if (System == PhysicalSystem.SonyPlayStation4)
             {
-                if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps4Serial, out var ps4Version))
+                if (GetPlayStation45Info($"{basePath}.log", out string? ps4Serial, out var ps4Version, out var ps4ContentIds))
                 {
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps4Serial ?? string.Empty;
                     info.DiscIdentifiers.Version = ps4Version ?? string.Empty;
+                    info.DumpMetadata.ContentsSpecialFields[SiteCode.Games] = ps4ContentIds ?? string.Empty;
                 }
             }
             else if (System == PhysicalSystem.SonyPlayStation5)
             {
-                if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps5Serial, out var ps5Version))
+                if (GetPlayStation45Info($"{basePath}.log", out string? ps5Serial, out var ps5Version, out var ps5ContentIds))
                 {
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps5Serial ?? string.Empty;
                     info.DiscIdentifiers.Version = ps5Version ?? string.Empty;
+                    info.DumpMetadata.ContentsSpecialFields[SiteCode.Games] = ps5ContentIds ?? string.Empty;
                 }
             }
         }
@@ -2061,11 +2063,11 @@ namespace MPF.Processors
         }
 
         /// <summary>
-        /// Get the info from a PlayStation disc, if possible
+        /// Get the info from a PlayStation 1/2/3 disc, if possible
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>True if section found, null on error</returns>
-        internal static bool GetPlayStationInfo(string log, out string? exeDate, out string? serial, out string? version)
+        internal static bool GetPlayStation123Info(string log, out string? exeDate, out string? serial, out string? version)
         {
             // Set the default values
             exeDate = null; serial = null; version = null;
@@ -2084,12 +2086,12 @@ namespace MPF.Processors
                 while (!sr.EndOfStream)
                 {
                     line = sr.ReadLine()?.TrimStart();
-                    if (line?.StartsWith("PSX [") == true ||
-                        line?.StartsWith("PS2 [") == true ||
-                        line?.StartsWith("PS3 [") == true ||
-                        line?.StartsWith("PS4 [") == true ||
-                        line?.StartsWith("PS5 [") == true)
+                    if (line?.StartsWith("PSX [") == true
+                        || line?.StartsWith("PS2 [") == true
+                        || line?.StartsWith("PS3 [") == true)
+                    {
                         break;
+                    }
                 }
 
                 if (sr.EndOfStream)
@@ -2124,6 +2126,85 @@ namespace MPF.Processors
                     else if (line.StartsWith("region:"))
                     {
                         // Valid but skip
+                    }
+                    else if (line.StartsWith("serial:"))
+                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        serial = line["serial: ".Length..].Trim();
+#else
+                        serial = line.Substring("serial: ".Length).Trim();
+#endif
+                    }
+                    else if (line.StartsWith("version:"))
+                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        version = line["version: ".Length..].Trim();
+#else
+                        version = line.Substring("version: ".Length).Trim();
+#endif
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                // Absorb the exception
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the info from a PlayStation 4/5 disc, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>True if section found, null on error</returns>
+        internal static bool GetPlayStation45Info(string log, out string? serial, out string? version, out string? contentIds)
+        {
+            // Set the default values
+            serial = null; version = null; contentIds = null;
+
+            // If the file doesn't exist, we can't get info from it
+            if (string.IsNullOrEmpty(log))
+                return false;
+            if (!File.Exists(log))
+                return false;
+
+            try
+            {
+                // Fast forward to the PS info line
+                using var sr = File.OpenText(log);
+                string? line;
+                while (!sr.EndOfStream)
+                {
+                    line = sr.ReadLine()?.TrimStart();
+                    if (line?.StartsWith("PS4 [") == true
+                        || line?.StartsWith("PS5 [") == true)
+                    {
+                        break;
+                    }
+                }
+
+                if (sr.EndOfStream)
+                    return false;
+
+                while (!sr.EndOfStream)
+                {
+                    line = sr.ReadLine()?.TrimStart();
+                    if (line is null)
+                        break;
+
+                    if (line.StartsWith("content ID(s):"))
+                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        contentIds = line["content ID(s): ".Length..].Trim();
+#else
+                        contentIds = line.Substring("content ID(s): ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("serial:"))
                     {

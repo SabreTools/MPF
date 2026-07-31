@@ -102,14 +102,14 @@ function Download-Programs {
         "Dreamdump_win-x64"      = "https://github.com/MoriGM/dreamdump/releases/download/0.5.0/dreamdump-_win_64.zip"
 
         # Redumper
-        "Redumper_linux-arm64" = "https://github.com/superg/redumper/releases/download/b735/redumper-b735-linux-arm64.zip"
-        "Redumper_linux-x64"   = "https://github.com/superg/redumper/releases/download/b735/redumper-b735-linux-x64.zip"
-        #"Redumper_linux-x86"   = "https://github.com/superg/redumper/releases/download/b735/redumper-b735-linux-x86.zip"
-        "Redumper_osx-arm64"   = "https://github.com/superg/redumper/releases/download/b735/redumper-b735-macos-arm64.zip"
-        "Redumper_osx-x64"     = "https://github.com/superg/redumper/releases/download/b735/redumper-b735-macos-x64.zip"
-        "Redumper_win-arm64"   = "https://github.com/superg/redumper/releases/download/b735/redumper-b735-windows-arm64.zip"
-        "Redumper_win-x86"     = "https://github.com/superg/redumper/releases/download/b735/redumper-b735-windows-x86.zip"
-        "Redumper_win-x64"     = "https://github.com/superg/redumper/releases/download/b735/redumper-b735-windows-x64.zip"
+        "Redumper_linux-arm64" = "https://github.com/superg/redumper/releases/download/b737/redumper-b737-linux-arm64.zip"
+        "Redumper_linux-x64"   = "https://github.com/superg/redumper/releases/download/b737/redumper-b737-linux-x64.zip"
+        #"Redumper_linux-x86"   = "https://github.com/superg/redumper/releases/download/b737/redumper-b737-linux-x86.zip"
+        "Redumper_osx-arm64"   = "https://github.com/superg/redumper/releases/download/b737/redumper-b737-macos-arm64.zip"
+        "Redumper_osx-x64"     = "https://github.com/superg/redumper/releases/download/b737/redumper-b737-macos-x64.zip"
+        "Redumper_win-arm64"   = "https://github.com/superg/redumper/releases/download/b737/redumper-b737-windows-arm64.zip"
+        "Redumper_win-x86"     = "https://github.com/superg/redumper/releases/download/b737/redumper-b737-windows-x86.zip"
+        "Redumper_win-x64"     = "https://github.com/superg/redumper/releases/download/b737/redumper-b737-windows-x64.zip"
     }
 
     # Download and extract files

@@ -968,13 +968,13 @@ namespace MPF.Processors.Test
 
         #endregion
 
-        #region GetPlayStationInfo
+        #region GetPlayStation123Info
 
         [Fact]
-        public void GetPlayStationInfo_Empty_Null()
+        public void GetPlayStation123Info_Empty_Null()
         {
             string log = string.Empty;
-            bool actual = Redumper.GetPlayStationInfo(log,
+            bool actual = Redumper.GetPlayStation123Info(log,
                 out string? exeDate,
                 out string? serial,
                 out string? version);
@@ -986,10 +986,10 @@ namespace MPF.Processors.Test
         }
 
         [Fact]
-        public void GetPlayStationInfo_Invalid_Null()
+        public void GetPlayStation123Info_Invalid_Null()
         {
             string log = "INVALID";
-            bool actual = Redumper.GetPlayStationInfo(log,
+            bool actual = Redumper.GetPlayStation123Info(log,
                 out string? exeDate,
                 out string? serial,
                 out string? version);
@@ -1001,14 +1001,14 @@ namespace MPF.Processors.Test
         }
 
         [Fact]
-        public void GetPlayStationInfo_Valid_Filled()
+        public void GetPlayStation123Info_Valid_Filled()
         {
             string? expectedExeDate = "date";
             string? expectedSerial = "serial";
             string? expectedVersion = "version";
 
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
-            bool actual = Redumper.GetPlayStationInfo(log,
+            bool actual = Redumper.GetPlayStation123Info(log,
                 out string? exeDate,
                 out string? serial,
                 out string? version);
@@ -1020,6 +1020,8 @@ namespace MPF.Processors.Test
         }
 
         #endregion
+
+        // TODO: Write GetPlayStation45Info tests
 
         #region GetPlayStationLibCryptData
 

@@ -96,6 +96,7 @@
 - Pass auto-detect flag for Redumper by default
 - Reenable anti-modchip and LibCrypt outputs
 - Slight consistency updates between UI frameworks
+- Update Redumper to build 737
 
 ### 3.8.3 (2026-07-06)
 
