@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Fix default system option
+- Ensure that EDC has proper visibility
 
 ### 3.9.0 (2026-07-31)
 

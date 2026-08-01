@@ -1298,7 +1298,9 @@ namespace MPF.Frontend.ViewModels
 
         public string? EDC
         {
-            get => SubmissionInfo.DiscIdentifiers.EDC.ToString();
+            get => SubmissionInfo.DiscIdentifiers.EDC is null || SubmissionInfo.DiscIdentifiers.EDC == YesNo.NULL
+                ? null
+                : SubmissionInfo.DiscIdentifiers.EDC.LongName();
         }
 
         public bool EDCVisible => EDC is not null;
