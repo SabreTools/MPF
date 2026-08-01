@@ -323,7 +323,7 @@ namespace MPF.Frontend.Tools
             options.Dumping.RedumperPath = GetStringSetting(source, "RedumperPath", DumpSettings.DefaultRedumperPath) ?? DumpSettings.DefaultRedumperPath;
 
             options.Dumping.DefaultOutputPath = GetStringSetting(source, "DefaultOutputPath", "ISO");
-            valueString = GetStringSetting(source, "DefaultSystem", PhysicalSystem.IBMPCcompatible.ToString());
+            valueString = GetStringSetting(source, "DefaultSystem", PhysicalSystem.IBMPCcompatible.Code);
             options.Dumping.DefaultSystem = (valueString ?? string.Empty).ToPhysicalSystem();
             options.Dumping.DumpSpeeds.CD = GetInt32Setting(source, "PreferredDumpSpeedCD", 24);
             options.Dumping.DumpSpeeds.DVD = GetInt32Setting(source, "PreferredDumpSpeedDVD", 16);
@@ -417,7 +417,7 @@ namespace MPF.Frontend.Tools
                 { "FastUpdateLabel", options.GUI.FastUpdateLabel.ToString() },
                 { "DefaultInterfaceLanguage", options.GUI.DefaultInterfaceLanguage.ShortName() },
                 { "DefaultOutputPath", options.Dumping.DefaultOutputPath },
-                { "DefaultSystem", options.Dumping.DefaultSystem?.ToString() },
+                { "DefaultSystem", options.Dumping.DefaultSystem?.Code ?? options.Dumping.DefaultSystem?.Name },
                 { "ShowDebugViewMenuItem", options.GUI.ShowDebugViewMenuItem.ToString() },
 
                 { "PreferredDumpSpeedCD", options.Dumping.DumpSpeeds.CD.ToString() },

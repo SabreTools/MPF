@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Fix default system option
+
 ### 3.9.0 (2026-07-31)
 
 - Pre-compress subcode files with Zstd
