@@ -755,6 +755,12 @@ namespace MPF.Frontend.Tools
                         info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
 
+                    info.RingCodes.LabelSideMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideMasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideToolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideMouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.LabelSideAdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+
                     info.DumpMetadata.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
 
                     break;

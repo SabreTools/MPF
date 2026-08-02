@@ -2,6 +2,7 @@
 
 - Fix default system option
 - Ensure that EDC has proper visibility
+- Ensure label side placeholders for Wii
 
 ### 3.9.0 (2026-07-31)
 
