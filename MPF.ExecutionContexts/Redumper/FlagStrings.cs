@@ -47,6 +47,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string KreonPartialSS = "--kreon-partial-ss";
         public const string DvdRaw = "--dvd-raw";
         public const string BdRaw = "--bd-raw";
+        public const string ForceOmnidrive = "--force-omnidrive";
         public const string DisableCDText = "--disable-cdtext";
 
         #endregion

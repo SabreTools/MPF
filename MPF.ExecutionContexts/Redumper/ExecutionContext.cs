@@ -89,6 +89,7 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.KreonPartialSS] = new FlagInput(FlagStrings.KreonPartialSS),
             [FlagStrings.DvdRaw] = new FlagInput(FlagStrings.DvdRaw),
             [FlagStrings.BdRaw] = new FlagInput(FlagStrings.BdRaw),
+            [FlagStrings.ForceOmnidrive] = new FlagInput(FlagStrings.ForceOmnidrive),
             [FlagStrings.DisableCDText] = new FlagInput(FlagStrings.DisableCDText),
 
             // Offset
@@ -195,6 +196,7 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.KreonPartialSS,
                     FlagStrings.DvdRaw,
                     FlagStrings.BdRaw,
+                    FlagStrings.ForceOmnidrive,
                     FlagStrings.DisableCDText,
 
                     // Offset

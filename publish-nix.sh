@@ -113,14 +113,14 @@ function download_programs() {
     DL_MAP["Dreamdump_win-x86"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_win7_386.exe"
 
     # Redumper
-    DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b746/redumper-b746-linux-arm64.zip"
-    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/b746/redumper-b746-linux-x64.zip"
-    #DL_MAP["Redumper_linux-x86"]="https://github.com/superg/redumper/releases/download/b746/redumper-b746-linux-x86.zip"
-    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/b746/redumper-b746-macos-arm64.zip"
-    DL_MAP["Redumper_osx-x64"]="https://github.com/superg/redumper/releases/download/b746/redumper-b746-macos-x64.zip"
-    DL_MAP["Redumper_win-arm64"]="https://github.com/superg/redumper/releases/download/b746/redumper-b746-windows-arm64.zip"
-    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/b746/redumper-b746-windows-x64.zip"
-    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/b746/redumper-b746-windows-x86.zip"
+    DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b749/redumper-b749-linux-arm64.zip"
+    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/b749/redumper-b749-linux-x64.zip"
+    #DL_MAP["Redumper_linux-x86"]="https://github.com/superg/redumper/releases/download/b749/redumper-b749-linux-x86.zip"
+    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/b749/redumper-b749-macos-arm64.zip"
+    DL_MAP["Redumper_osx-x64"]="https://github.com/superg/redumper/releases/download/b749/redumper-b749-macos-x64.zip"
+    DL_MAP["Redumper_win-arm64"]="https://github.com/superg/redumper/releases/download/b749/redumper-b749-windows-arm64.zip"
+    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/b749/redumper-b749-windows-x64.zip"
+    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/b749/redumper-b749-windows-x86.zip"
 
     # Download and extract files
     echo "===== Downloading Required Programs ====="

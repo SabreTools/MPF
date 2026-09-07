@@ -13,6 +13,7 @@
 - Update Redumper to build 746
 - Fix Redumper tests broken in last commit
 - Update Dreamdump to 0.6.0
+- Update Redumper to build 749
 
 ### 3.9.0 (2026-07-31)
 
