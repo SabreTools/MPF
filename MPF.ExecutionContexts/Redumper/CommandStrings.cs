@@ -20,12 +20,14 @@ namespace MPF.ExecutionContexts.Redumper
         public const string Info = "info";
         public const string Skeleton = "skeleton";
         public const string FlashMT1339 = "flash::mt1339";
-        public const string FlashMT1959 = "flash::mt1959";
         public const string FlashSD616 = "flash::sd616";
         public const string FlashPlextor = "flash::plextor";
+        public const string FlashMT1959 = "flash::mt1959";
         public const string Subchannel = "subchannel";
         public const string Debug = "debug";
-        public const string FixMSF = "fixmsf";
+        public const string ToolsFixMSF = "tools::fixmsf";
+        public const string ToolsFixMSFShift = "tools::fixmsf::shift";
+        public const string ToolsTrim = "tools::trim";
         public const string DebugFlip = "debug::flip";
         public const string DriveTest = "drive::test";
         public const string DriveDetect = "drive::detect";

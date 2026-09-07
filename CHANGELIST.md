@@ -10,6 +10,7 @@
 - Handle overridden disc types for Redumper
 - Fix including test log for previous change
 - Update packages
+- Update Redumper to build 746
 
 ### 3.9.0 (2026-07-31)
 
