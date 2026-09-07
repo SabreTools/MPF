@@ -103,14 +103,14 @@ function download_programs() {
     DL_MAP["Creator_win-x86"]="https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
 
     # Dreamdump
-    DL_MAP["Dreamdump_linux-arm64"]=""
-    DL_MAP["Dreamdump_linux-x64"]="https://github.com/MoriGM/dreamdump/releases/download/0.5.0/dreamdump-_linux_64.zip"
-    #DL_MAP["Dreamdump_linux-x86"]="https://github.com/MoriGM/dreamdump/releases/download/0.5.0/dreamdump-_linux_86.zip"
+    DL_MAP["Dreamdump_linux-arm64"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_linux_arm64"
+    DL_MAP["Dreamdump_linux-x64"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_linux_amd64"
+    #DL_MAP["Dreamdump_linux-x86"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_linux_386"
     DL_MAP["Dreamdump_osx-arm64"]=""
     DL_MAP["Dreamdump_osx-x64"]=""
     DL_MAP["Dreamdump_win-arm64"]=""
-    DL_MAP["Dreamdump_win-x64"]="https://github.com/MoriGM/dreamdump/releases/download/0.5.0/dreamdump-_win_64.zip"
-    DL_MAP["Dreamdump_win-x86"]="https://github.com/MoriGM/dreamdump/releases/download/0.5.0/dreamdump-_win7_86.zip"
+    DL_MAP["Dreamdump_win-x64"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_win_amd64.exe"
+    DL_MAP["Dreamdump_win-x86"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_win7_386.exe"
 
     # Redumper
     DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b746/redumper-b746-linux-arm64.zip"
@@ -135,18 +135,32 @@ function download_programs() {
 
             # Download the file to a predictable local file
             EXT=${URL##*.}
-            OUTNAME=$PREFIX"_"$RUNTIME.$EXT
+            if [[ -z "$EXT" || $EXT =~ / ]]; then
+                OUTNAME=$PREFIX"_"$RUNTIME
+            else
+                OUTNAME=$PREFIX"_"$RUNTIME.$EXT
+            fi
+            echo "Downloading $URL to $OUTNAME"
             wget $URL -O $OUTNAME
 
             TEMPDIR=$PREFIX"_"$RUNTIME-temp
             OUTDIR=$PREFIX"_"$RUNTIME-dir
 
-            # Handle gzipped files separately
+            # Handle gzipped files
             if [[ $URL =~ \.tar\.gz$ || $URL =~ \.tar\.xz$ ]]; then
                 mkdir $TEMPDIR
                 tar -xvf $OUTNAME -C $TEMPDIR
-            else
+            # Handle zipped files
+            elif [[ $URL =~ \.zip$ ]]; then
                 unzip -u $OUTNAME -d $TEMPDIR
+            # Handle Dreamdump bare binaries
+            elif [[ $PREFIX = "Dreamdump" ]]; then
+                mkdir $TEMPDIR
+            if [[ -z "$EXT" || $EXT =~ / ]]; then
+                    mv "$OUTNAME" "$TEMPDIR/dreamdump"
+                else
+                    mv "$OUTNAME" "$TEMPDIR/dreamdump.$EXT"
+                fi
             fi
 
             # Create the proper structure

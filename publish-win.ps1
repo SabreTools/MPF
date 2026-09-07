@@ -73,43 +73,43 @@ function Download-Programs {
     $DL_PREFIXES = ("Aaru", "Creator", "Dreamdump", "Redumper")
     $DL_MAP = @{
         # Aaru
-        "Aaru_linux-arm64"     = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_arm64.tar.xz"
+        "Aaru_linux-arm64"      = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_arm64.tar.xz"
         #"Aaru_linux-armhf"     = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_armhf.tar.xz"
-        "Aaru_linux-x64"       = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_amd64.tar.xz"
-        "Aaru_osx-arm64"       = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_macos-aarch64.zip"
-        "Aaru_osx-x64"         = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_macos.zip"
-        "Aaru_win-arm64"       = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_windows_aarch64.zip"
-        "Aaru_win-x86"         = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_windows_x64.zip"
-        "Aaru_win-x64"         = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_windows_x86.zip"
+        "Aaru_linux-x64"        = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_amd64.tar.xz"
+        "Aaru_osx-arm64"        = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_macos-aarch64.zip"
+        "Aaru_osx-x64"          = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_macos.zip"
+        "Aaru_win-arm64"        = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_windows_aarch64.zip"
+        "Aaru_win-x86"          = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_windows_x64.zip"
+        "Aaru_win-x64"          = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_windows_x86.zip"
 
         # DiscImageCreator
-        "Creator_linux-arm64"  = ""
-        "Creator_linux-x64"    = "https://github.com/user-attachments/files/24401509/DiscImageCreator_20260101.tar.gz"
-        "Creator_osx-arm64"    = "https://github.com/user-attachments/files/24401512/DiscImageCreator_20260101.zip"
-        "Creator_osx-x64"      = "https://github.com/user-attachments/files/24401512/DiscImageCreator_20260101.zip"
-        "Creator_win-arm64"    = ""
-        "Creator_win-x86"      = "https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
-        "Creator_win-x64"      = "https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
+        "Creator_linux-arm64"   = ""
+        "Creator_linux-x64"     = "https://github.com/user-attachments/files/24401509/DiscImageCreator_20260101.tar.gz"
+        "Creator_osx-arm64"     = "https://github.com/user-attachments/files/24401512/DiscImageCreator_20260101.zip"
+        "Creator_osx-x64"       = "https://github.com/user-attachments/files/24401512/DiscImageCreator_20260101.zip"
+        "Creator_win-arm64"     = ""
+        "Creator_win-x86"       = "https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
+        "Creator_win-x64"       = "https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
 
         # Dreamdump
-        "Dreamdump_linux-arm64"  = ""
-        "Dreamdump_linux-x64"    = "https://github.com/MoriGM/dreamdump/releases/download/0.5.0/dreamdump-_linux_64.zip"
-        #"Dreamdump_linux-x86"    = "https://github.com/MoriGM/dreamdump/releases/download/0.5.0/dreamdump-_linux_86.zip"
-        "Dreamdump_osx-arm64"    = ""
-        "Dreamdump_osx-x64"      = ""
-        "Dreamdump_win-arm64"    = ""
-        "Dreamdump_win-x86"      = "https://github.com/MoriGM/dreamdump/releases/download/0.5.0/dreamdump-_win7_86.zip"
-        "Dreamdump_win-x64"      = "https://github.com/MoriGM/dreamdump/releases/download/0.5.0/dreamdump-_win_64.zip"
+        "Dreamdump_linux-arm64" = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_linux_arm64"
+        "Dreamdump_linux-x64"   = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_linux_amd64"
+        #"Dreamdump_linux-x86"    = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_linux_386"
+        "Dreamdump_osx-arm64"   = ""
+        "Dreamdump_osx-x64"     = ""
+        "Dreamdump_win-arm64"   = ""
+        "Dreamdump_win-x86"     = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_win7_386.exe"
+        "Dreamdump_win-x64"     = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_win_amd64.exe"
 
         # Redumper
-        "Redumper_linux-arm64" = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-linux-arm64.zip"
-        "Redumper_linux-x64"   = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-linux-x64.zip"
+        "Redumper_linux-arm64"  = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-linux-arm64.zip"
+        "Redumper_linux-x64"    = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-linux-x64.zip"
         #"Redumper_linux-x86"   = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-linux-x86.zip"
-        "Redumper_osx-arm64"   = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-macos-arm64.zip"
-        "Redumper_osx-x64"     = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-macos-x64.zip"
-        "Redumper_win-arm64"   = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-windows-arm64.zip"
-        "Redumper_win-x86"     = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-windows-x86.zip"
-        "Redumper_win-x64"     = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-windows-x64.zip"
+        "Redumper_osx-arm64"    = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-macos-arm64.zip"
+        "Redumper_osx-x64"      = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-macos-x64.zip"
+        "Redumper_win-arm64"    = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-windows-arm64.zip"
+        "Redumper_win-x86"      = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-windows-x86.zip"
+        "Redumper_win-x64"      = "https://github.com/superg/redumper/releases/download/b746/redumper-b746-windows-x64.zip"
     }
 
     # Download and extract files
@@ -125,19 +125,36 @@ function Download-Programs {
 
             # Download the file to a predictable local file
             $EXT = [System.IO.Path]::GetExtension($URL)
-            $OUTNAME = $PREFIX + "_" + $RUNTIME + $EXT
+
+            if ( [string]::IsNullOrEmpty($EXT) ) {
+                $OUTNAME = $PREFIX + "_" + $RUNTIME
+            }
+            else {
+                $OUTNAME = $PREFIX + "_" + $RUNTIME + $EXT
+            }
             Invoke-WebRequest -Uri $URL -OutFile $OUTNAME
 
             $TEMPDIR = $PREFIX + "_" + $RUNTIME + "-temp"
             $OUTDIR = $PREFIX + "_" + $RUNTIME + "-dir"
 
-            # Handle gzipped files separately
+            # Handle gzipped files
             if ($EXT -eq ".gz" -or $EXT -eq ".xz") {
                 mkdir $TEMPDIR
                 tar -xvf $OUTNAME -C $TEMPDIR
             }
-            else {
+            # Handle zipped files
+            elseif ($EXT -eq ".zip") {
                 Expand-Archive -LiteralPath $OUTNAME -DestinationPath "$TEMPDIR"
+            }
+            # Handle Dreamdump bare binaries
+            elseif ($PREFIX -eq "Dreamdump") {
+                mkdir $TEMPDIR
+                if ( [string]::IsNullOrEmpty($EXT) ) {
+                    Move-Item -Path $OUTNAME -Destination "$TEMPDIR/dreamdump"
+                }
+                else {
+                    Move-Item -Path $OUTNAME -Destination "$TEMPDIR/dreamdump.$EXT"
+                }
             }
 
             # Create the proper structure
