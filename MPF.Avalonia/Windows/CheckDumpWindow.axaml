@@ -24,7 +24,7 @@
                     <TextBlock Text="{DynamicResource SettingsGroupBoxString}"
                                FontWeight="Bold" />
                     <Grid ColumnDefinitions="160,*,Auto"
-                          RowDefinitions="Auto,Auto,Auto"
+                          RowDefinitions="Auto,Auto,Auto,Auto"
                           ColumnSpacing="6"
                           RowSpacing="4">
                         <TextBlock Grid.Row="0"
@@ -61,10 +61,22 @@
                                   VerticalAlignment="Center" />
 
                         <TextBlock Grid.Row="2"
+                                   Text="{DynamicResource DriveLetterLabelString}"
+                                   VerticalAlignment="Center" />
+                        <ComboBox x:Name="DriveLetterComboBox"
+                                  Grid.Row="2"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding Drives}"
+                                  SelectedItem="{Binding CurrentDrive, Mode=TwoWay}"
+                                  IsEnabled="{Binding DriveLetterComboBoxEnabled}"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Center" />
+
+                        <TextBlock Grid.Row="3"
                                    Text="{DynamicResource DumpingProgramLabelString}"
                                    VerticalAlignment="Center" />
                         <ComboBox x:Name="DumpingProgramComboBox"
-                                  Grid.Row="2"
+                                  Grid.Row="3"
                                   Grid.Column="1"
                                   ItemsSource="{Binding AvailableInternalPrograms}"
                                   SelectedItem="{Binding CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
