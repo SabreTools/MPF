@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Disable copying update URL to clipboard
+- Check UI drive dropdown
 
 ### 3.10.0 (2026-09-08)
 
