@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Disable copying update URL to clipboard
+
 ### 3.10.0 (2026-09-08)
 
 - Fix default system option

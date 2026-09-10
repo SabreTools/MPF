@@ -71,8 +71,8 @@
                                                   IsChecked="{Binding Options.GUI.Theming.EnableDarkMode}" />
                                         <CheckBox Grid.Column="1" Content="{DynamicResource CheckForUpdatesCheckBoxString}"
                                                   IsChecked="{Binding Options.CheckForUpdatesOnStartup}" />
-                                        <CheckBox Grid.Row="1" Content="{DynamicResource CopyURLToClipboardCheckBoxString}"
-                                                  IsChecked="{Binding Options.GUI.CopyUpdateUrlToClipboard}" />
+                                        <!-- <CheckBox Grid.Row="1" Content="{DynamicResource CopyURLToClipboardCheckBoxString}"
+                                                  IsChecked="{Binding Options.GUI.CopyUpdateUrlToClipboard}" /> -->
                                         <CheckBox Grid.Row="1" Grid.Column="1" Content="{DynamicResource FastUpdateLabelCheckBoxString}"
                                                   IsChecked="{Binding Options.GUI.FastUpdateLabel}" />
                                         <TextBlock Grid.Row="2"

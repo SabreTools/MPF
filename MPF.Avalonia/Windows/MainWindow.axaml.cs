@@ -286,23 +286,23 @@ namespace MPF.Avalonia.Windows
         /// <param name="showIfSame">True to show the box even if it's the same, false to only show if it's different</param>
         public void CheckForUpdates(bool showIfSame)
         {
-            MainViewModel.CheckForUpdates(out bool different, out string message, out var url);
-            if (different && MainViewModel.Options.GUI.CopyUpdateUrlToClipboard)
-                message += $"{Environment.NewLine}The update URL has been added copied to your clipboard";
-            else if (different && !MainViewModel.Options.GUI.CopyUpdateUrlToClipboard)
+            MainViewModel.CheckForUpdates(out bool different, out string message, out _);
+            // if (different && MainViewModel.Options.GUI.CopyUpdateUrlToClipboard)
+            //     message += $"{Environment.NewLine}The update URL has been added copied to your clipboard";
+            if (different)
                 message += $"{Environment.NewLine}You are out of date!";
             else
                 message += $"{Environment.NewLine}You have the newest version!";
 
             // If we have a new version, put it in the clipboard
-            if (MainViewModel.Options.GUI.CopyUpdateUrlToClipboard && different && !string.IsNullOrEmpty(url))
-            {
-                try
-                {
-                    Clipboard?.SetTextAsync(url);
-                }
-                catch { }
-            }
+            // if (MainViewModel.Options.GUI.CopyUpdateUrlToClipboard && different && !string.IsNullOrEmpty(url))
+            // {
+            //     try
+            //     {
+            //         Clipboard?.SetTextAsync(url);
+            //     }
+            //     catch { }
+            // }
 
             if (showIfSame || different)
                 MessageBoxWindow.ShowAsync(this, StringResource("CheckForUpdatesTitleString", "Check for Updates"), message, 1, different);

@@ -128,11 +128,12 @@
                                           ToolTip="Check for updates when the application starts"
                                           Margin="0,4"/>
 
-                                <CheckBox VerticalAlignment="Center"
+                                <Label/>
+                                <!-- <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource CopyURLToClipboardCheckBoxString}"
                                           IsChecked="{Binding Options.GUI.CopyUpdateUrlToClipboard}"
                                           ToolTip="If an update is found, try to copy the update URL to the clipboard"
-                                          Margin="0,4"/>
+                                          Margin="0,4"/> -->
 
                                 <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource FastUpdateLabelCheckBoxString}"
