@@ -106,6 +106,32 @@ namespace MPF.Frontend.ViewModels
         } = true;
 
         /// <summary>
+        /// Currently selected drive
+        /// </summary>
+        public Drive? CurrentDrive
+        {
+            get;
+            set
+            {
+                field = value;
+                TriggerPropertyChanged(nameof(CurrentDrive));
+            }
+        }
+
+        /// <summary>
+        /// Indicates the status of the drive letter combo box
+        /// </summary>
+        public bool DriveLetterComboBoxEnabled
+        {
+            get;
+            set
+            {
+                field = value;
+                TriggerPropertyChanged(nameof(DriveLetterComboBoxEnabled));
+            }
+        } = true;
+
+        /// <summary>
         /// Currently selected dumping program
         /// </summary>
         public InternalProgram CurrentProgram
@@ -207,6 +233,19 @@ namespace MPF.Frontend.ViewModels
         } = PhysicalSystemComboBoxItem.GenerateElements();
 
         /// <summary>
+        /// Current list of drives
+        /// </summary>
+        public List<Drive> Drives
+        {
+            get;
+            set
+            {
+                field = value;
+                TriggerPropertyChanged(nameof(Drives));
+            }
+        } = [];
+
+        /// <summary>
         /// List of available internal programs
         /// </summary>
         public List<Element<InternalProgram>> AvailableInternalPrograms
@@ -248,6 +287,7 @@ namespace MPF.Frontend.ViewModels
         {
             _options = OptionsLoader.LoadFromConfig(out _);
 
+            PopulateDrives();
             PopulateInternalPrograms();
             EnableEventHandlers();
         }
@@ -311,6 +351,7 @@ namespace MPF.Frontend.ViewModels
             SystemTypeComboBoxEnabled = true;
             InputPathTextBoxEnabled = true;
             InputPathBrowseButtonEnabled = true;
+            DriveLetterComboBoxEnabled = true;
             DumpingProgramComboBoxEnabled = true;
             CheckDumpButtonEnabled = ShouldEnableCheckDumpButton();
             CancelButtonEnabled = true;
@@ -324,6 +365,7 @@ namespace MPF.Frontend.ViewModels
             SystemTypeComboBoxEnabled = false;
             InputPathTextBoxEnabled = false;
             InputPathBrowseButtonEnabled = false;
+            DriveLetterComboBoxEnabled = false;
             DumpingProgramComboBoxEnabled = false;
             CheckDumpButtonEnabled = false;
             CancelButtonEnabled = false;
@@ -332,6 +374,22 @@ namespace MPF.Frontend.ViewModels
         #endregion
 
         #region Population
+
+        /// <summary>
+        /// Populate the list of drives
+        /// </summary>
+        private void PopulateDrives()
+        {
+            bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
+            DisableEventHandlers();
+
+            Drives = Drive.CreateListOfDrives(Options.GUI.IgnoreFixedDrives);
+            // Default to "None" drive (don't scan)
+            CurrentDrive = null;
+
+            if (cachedCanExecuteSelectionChanged)
+                EnableEventHandlers();
+        }
 
         /// <summary>
         /// Populate media type according to system type
@@ -412,7 +470,7 @@ namespace MPF.Frontend.ViewModels
             // Populate an environment
             var env = new DumpEnvironment(Options,
                 Path.GetFullPath(InputPath.Trim('"')),
-                null,
+                CurrentDrive,
                 CurrentSystem,
                 CurrentProgram);
             env.SetProcessor();
