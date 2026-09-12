@@ -1563,6 +1563,7 @@ namespace MPF.Frontend.ViewModels
             RegionCode.Germany,
             RegionCode.Greece,
             RegionCode.Greenland,
+            RegionCode.HongKong,
             RegionCode.Hungary,
             RegionCode.Iceland,
             RegionCode.India,

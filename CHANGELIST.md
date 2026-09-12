@@ -2,6 +2,7 @@
 
 - Disable copying update URL to clipboard
 - Check UI drive dropdown
+- Add Hong Kong to supported regions
 
 ### 3.10.0 (2026-09-08)
 
