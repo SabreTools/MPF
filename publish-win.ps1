@@ -28,7 +28,11 @@ param(
 
     [Parameter(Mandatory = $false)]
     [Alias("NoArchive")]
-    [switch]$NO_ARCHIVE
+    [switch]$NO_ARCHIVE,
+
+    [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+    [Alias("BuildVersion")]
+    [string]$BUILD_VERSION
 )
 
 # Set the current directory as a variable
@@ -44,6 +48,7 @@ Write-Host "  Include debug builds (-IncludeDebug)  $INCLUDE_DEBUG"
 Write-Host "  Include programs (-IncludePrograms)   $INCLUDE_PROGRAMS"
 Write-Host "  No build (-NoBuild)                   $NO_BUILD"
 Write-Host "  No archive (-NoArchive)               $NO_ARCHIVE"
+Write-Host "  Version (-BuildVersion)               $BUILD_VERSION"
 Write-Host " "
 
 # Create the build matrix arrays
@@ -437,19 +442,39 @@ if (!$NO_ARCHIVE.IsPresent) {
             if ($INCLUDE_DEBUG.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.Avalonia/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if ($INCLUDE_PROGRAMS.IsPresent) {
-                    7z a -tzip $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    if ($BUILD_VERSION -ne $null) {
+                        7z a -tzip $BUILD_FOLDER/MPF.Avalonia_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    }
+                    else {
+                        7z a -tzip $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    }
                 }
                 else {
-                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    if ($BUILD_VERSION -ne $null) {
+                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    }
+                    else {
+                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    }
                 }
             }
             
             Set-Location -Path $BUILD_FOLDER/MPF.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
             if ($INCLUDE_PROGRAMS.IsPresent) {
-                7z a -tzip $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip *
+                if ($BUILD_VERSION -ne $null) {
+                    7z a -tzip $BUILD_FOLDER/MPF.Avalonia_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
+                else {
+                    7z a -tzip $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
             }
             else {
-                7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip *
+                if ($BUILD_VERSION -ne $null) {
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
+                else {
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
             }
         }
     }
@@ -476,19 +501,39 @@ if (!$NO_ARCHIVE.IsPresent) {
             if ($INCLUDE_DEBUG.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if ($INCLUDE_PROGRAMS.IsPresent) {
-                    7z a -tzip $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    if ($BUILD_VERSION -ne $null) {
+                        7z a -tzip $BUILD_FOLDER/MPF.UI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    }
+                    else {
+                        7z a -tzip $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    }
                 }
                 else {
-                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    if ($BUILD_VERSION -ne $null) {
+                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    }
+                    else {
+                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    }
                 }
             }
             
             Set-Location -Path $BUILD_FOLDER/MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
             if ($INCLUDE_PROGRAMS.IsPresent) {
-                7z a -tzip $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                if ($BUILD_VERSION -ne $null) {
+                    7z a -tzip $BUILD_FOLDER/MPF.UI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
+                else {
+                    7z a -tzip $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
             }
             else {
-                7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                if ($BUILD_VERSION -ne $null) {
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
+                else {
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
             }
         }
     }
@@ -515,19 +560,39 @@ if (!$NO_ARCHIVE.IsPresent) {
             if ($INCLUDE_DEBUG.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if ($INCLUDE_PROGRAMS.IsPresent) {
-                    7z a -tzip $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    if ($BUILD_VERSION -ne $null) {
+                        7z a -tzip $BUILD_FOLDER/MPF.CLI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    }
+                    else {
+                        7z a -tzip $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    }
                 }
                 else {
-                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    if ($BUILD_VERSION -ne $null) {
+                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    }
+                    else {
+                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    }
                 }
             }
             
             Set-Location -Path $BUILD_FOLDER/MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
             if ($INCLUDE_PROGRAMS.IsPresent) {
-                7z a -tzip $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                if ($BUILD_VERSION -ne $null) {
+                    7z a -tzip $BUILD_FOLDER/MPF.CLI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
+                else {
+                    7z a -tzip $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
             }
             else {
-                7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                if ($BUILD_VERSION -ne $null) {
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
+                else {
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
             }
         }
     }
@@ -553,10 +618,20 @@ if (!$NO_ARCHIVE.IsPresent) {
             # Only include Debug if set
             if ($INCLUDE_DEBUG.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.Check/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
-                7z a -tzip $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                if ($BUILD_VERSION -ne $null) {
+                    7z a -tzip $BUILD_FOLDER/MPF.Check_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                }
+                else {
+                    7z a -tzip $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                }
             }
             Set-Location -Path $BUILD_FOLDER/MPF.Check/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
-            7z a -tzip $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_release.zip *
+            if ($BUILD_VERSION -ne $null) {
+                7z a -tzip $BUILD_FOLDER/MPF.Check_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+            }
+            else {
+                7z a -tzip $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_release.zip *
+            }
         }
     }
 

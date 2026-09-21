@@ -17,7 +17,9 @@ INCLUDE_DEBUG=false
 INCLUDE_PROGRAMS=false
 NO_BUILD=false
 NO_ARCHIVE=false
-while getopts "udpba" OPTION; do
+HAS_VERSION=false
+VERSION="NONE"
+while getopts "udpbav:" OPTION; do
     case $OPTION in
     u)
         USE_ALL=true
@@ -33,6 +35,10 @@ while getopts "udpba" OPTION; do
         ;;
     a)
         NO_ARCHIVE=true
+        ;;
+    v)
+        HAS_VERSION=true
+        VERSION=${OPTARG}
         ;;
     *)
         echo "Invalid option provided"
@@ -54,6 +60,7 @@ echo "  Include debug builds (-d)             $INCLUDE_DEBUG"
 echo "  Include programs (-p)                 $INCLUDE_PROGRAMS"
 echo "  No build (-b)                         $NO_BUILD"
 echo "  No archive (-a)                       $NO_ARCHIVE"
+echo "  Version (-v)                          $HAS_VERSION ($VERSION)"
 echo " "
 
 # Create the build matrix arrays
@@ -457,16 +464,32 @@ if [ $NO_ARCHIVE = false ]; then
             if [ $INCLUDE_DEBUG = true ]; then
                 cd $BUILD_FOLDER/MPF.Avalonia/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if [ $INCLUDE_PROGRAMS = true ]; then
-                    zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                    if [ $HAS_VERSION = true ]; then
+                        zip -r $BUILD_FOLDER/MPF.Avalonia_${VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                    else
+                        zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                    fi
                 else
-                    zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
+                    if [ $HAS_VERSION = true ]; then
+                        zip -r $BUILD_FOLDER/MPF.Avalonia_${VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
+                    else
+                        zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
+                    fi
                 fi
             fi
             cd $BUILD_FOLDER/MPF.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
             if [ $INCLUDE_PROGRAMS = true ]; then
-                zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip .
+                if [ $HAS_VERSION = true ]; then
+                    zip -r $BUILD_FOLDER/MPF.Avalonia_${VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip .
+                else
+                    zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip .
+                fi
             else
-                zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
+                if [ $HAS_VERSION = true ]; then
+                    zip -r $BUILD_FOLDER/MPF.Avalonia_${VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
+                else
+                    zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
+                fi
             fi
         done
     done
@@ -497,16 +520,32 @@ if [ $NO_ARCHIVE = false ]; then
             if [ $INCLUDE_DEBUG = true ]; then
                 cd $BUILD_FOLDER/MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if [ $INCLUDE_PROGRAMS = true ]; then
-                    zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                    if [ $HAS_VERSION = true ]; then
+                        zip -r $BUILD_FOLDER/MPF.UI_${VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                    else
+                        zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                    fi
                 else
-                    zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
+                    if [ $HAS_VERSION = true ]; then
+                        zip -r $BUILD_FOLDER/MPF.UI_${VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
+                    else
+                        zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
+                    fi
                 fi
             fi
             cd $BUILD_FOLDER/MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
             if [ $INCLUDE_PROGRAMS = true ]; then
-                zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip .
+                if [ $HAS_VERSION = true ]; then
+                    zip -r $BUILD_FOLDER/MPF.UI_${VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip .
+                else
+                    zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip .
+                fi
             else
-                zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
+                if [ $HAS_VERSION = true ]; then
+                    zip -r $BUILD_FOLDER/MPF.UI_${VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
+                else
+                    zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
+                fi
             fi
         done
     done
@@ -537,16 +576,32 @@ if [ $NO_ARCHIVE = false ]; then
             if [ $INCLUDE_DEBUG = true ]; then
                 cd $BUILD_FOLDER/MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if [ $INCLUDE_PROGRAMS = true ]; then
-                    zip -r $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                    if [ $HAS_VERSION = true ]; then
+                        zip -r $BUILD_FOLDER/MPF.CLI_${VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                    else
+                        zip -r $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                    fi
                 else
-                    zip -r $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
+                    if [ $HAS_VERSION = true ]; then
+                        zip -r $BUILD_FOLDER/MPF.CLI_${VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
+                    else
+                        zip -r $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
+                    fi
                 fi
             fi
             cd $BUILD_FOLDER/MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
             if [ $INCLUDE_PROGRAMS = true ]; then
-                zip -r $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip .
+                if [ $HAS_VERSION = true ]; then
+                    zip -r $BUILD_FOLDER/MPF.CLI_${VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip .
+                else
+                    zip -r $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip .
+                fi
             else
-                zip -r $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
+                if [ $HAS_VERSION = true ]; then
+                    zip -r $BUILD_FOLDER/MPF.CLI_${VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
+                else
+                    zip -r $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
+                fi
             fi
         done
     done
@@ -576,10 +631,18 @@ if [ $NO_ARCHIVE = false ]; then
             # Only include Debug if set
             if [ $INCLUDE_DEBUG = true ]; then
                 cd $BUILD_FOLDER/MPF.Check/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
-                zip -r $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                if [ $HAS_VERSION = true ]; then
+                    zip -r $BUILD_FOLDER/MPF.Check_${VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                else
+                    zip -r $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                fi
             fi
             cd $BUILD_FOLDER/MPF.Check/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
-            zip -r $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_release.zip .
+            if [ $HAS_VERSION = true ]; then
+                zip -r $BUILD_FOLDER/MPF.Check_${VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip .
+            else
+                zip -r $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_release.zip .
+            fi
         done
     done
 
