@@ -177,10 +177,12 @@
                                                         Text="{Binding ISBN, Mode=TwoWay}" />
                                     <controls:UserInput Label="ISSN"
                                                         Text="{Binding ISSN, Mode=TwoWay}" />
+                                    <controls:UserInput Label="PEGI ID"
+                                                        Text="{Binding PEGIID, Mode=TwoWay}" />
                                     <controls:UserInput Label="PPN"
                                                         Text="{Binding PPN, Mode=TwoWay}" />
-                                    <controls:UserInput Label="VFC code"
-                                                        Text="{Binding VFCCode, Mode=TwoWay}" />
+                                    <controls:UserInput Label="VET/SFB ID"
+                                                        Text="{Binding VETSFBID, Mode=TwoWay}" />
                                 </StackPanel>
                             </Border>
 

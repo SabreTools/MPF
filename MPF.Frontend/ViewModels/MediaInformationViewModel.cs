@@ -268,6 +268,18 @@ namespace MPF.Frontend.ViewModels
             set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.ISSN] = value ?? string.Empty;
         }
 
+        public string? PEGIID
+        {
+            get
+            {
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.PEGIID, out var value))
+                    return value;
+
+                return null;
+            }
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.PEGIID] = value ?? string.Empty;
+        }
+
         public string? PPN
         {
             get
@@ -280,16 +292,16 @@ namespace MPF.Frontend.ViewModels
             set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.PPN] = value ?? string.Empty;
         }
 
-        public string? VFCCode
+        public string? VETSFBID
         {
             get
             {
-                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.VFCCode, out var value))
+                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.VETSFBID, out var value))
                     return value;
 
                 return null;
             }
-            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.VFCCode] = value ?? string.Empty;
+            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.VETSFBID] = value ?? string.Empty;
         }
 
         #endregion

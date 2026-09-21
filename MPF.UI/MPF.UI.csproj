@@ -71,7 +71,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SabreTools.RedumpLib" Version="3.2.0" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="3.2.1" />
     </ItemGroup>
 
     <ItemGroup>
