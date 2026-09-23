@@ -310,10 +310,20 @@ namespace MPF.ExecutionContexts.Redumper
 
             BaseCommand = CommandStrings.Disc;
 
-            if (drivePath is not null)
+            if (drivePath is not null && drivePath.Length > 0)
             {
                 this[FlagStrings.Drive] = true;
-                (_inputs[FlagStrings.Drive] as StringInput)?.SetValue(drivePath);
+
+                // Windows requires either "D" or "D:"
+                if (Environment.OSVersion.Platform != PlatformID.MacOSX
+                    && Environment.OSVersion.Platform != PlatformID.Unix)
+                {
+                    (_inputs[FlagStrings.Drive] as StringInput)?.SetValue(drivePath[0].ToString());
+                }
+                else
+                {
+                    (_inputs[FlagStrings.Drive] as StringInput)?.SetValue(drivePath);
+                }
             }
 
             if (driveSpeed is not null && driveSpeed > 0)
@@ -531,6 +541,15 @@ namespace MPF.ExecutionContexts.Redumper
             // If the image name was not set, set it with a default value
             if (string.IsNullOrEmpty((_inputs[FlagStrings.ImageName] as StringInput)?.Value))
                 (_inputs[FlagStrings.ImageName] as StringInput)?.SetValue($"track_{DateTime.Now:yyyyMMdd-HHmm}");
+
+            // Windows requires either "D" or "D:"
+            if (Environment.OSVersion.Platform != PlatformID.MacOSX
+                && Environment.OSVersion.Platform != PlatformID.Unix
+                && _inputs[FlagStrings.Drive] is StringInput driveInput)
+            {
+                if (driveInput.Value is not null && driveInput.Value.Length > 0)
+                    driveInput.SetValue(driveInput.Value[0].ToString());
+            }
 
             return true;
         }
