@@ -6,6 +6,7 @@
 - Update RedumpLib to 3.2.1
 - Enable versions in publish script
 - Sanitize drive path for Redumper
+- Surface protection scan option in main UI
 
 ### 3.10.0 (2026-09-08)
 

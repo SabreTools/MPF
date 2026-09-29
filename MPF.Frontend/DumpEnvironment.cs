@@ -72,8 +72,15 @@ namespace MPF.Frontend
         /// <inheritdoc cref="BaseExecutionContext.OutputPath"/>
         public string? ContextOutputPath => _executionContext?.OutputPath;
 
-        /// <inheritdoc cref="Drive.MarkedActive/>
+        /// <inheritdoc cref="Drive.MarkedActive"/>
         public bool DriveMarkedActive => _drive?.MarkedActive ?? false;
+
+        /// <inheritdoc cref="ProtectionScanningSettings.ScanForProtection"/>
+        public bool ScanForProtection
+        {
+            get => _options.Processing.ProtectionScanning.ScanForProtection;
+            set => _options.Processing.ProtectionScanning.ScanForProtection = value;
+        }
 
         /// <inheritdoc cref="BaseExecutionContext.Speed"/>
         public int? Speed

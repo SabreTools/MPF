@@ -328,6 +328,32 @@ namespace MPF.Frontend.ViewModels
         } = true;
 
         /// <summary>
+        /// Scan the disc for protection after dumping
+        /// </summary>
+        public bool ScanForProtection
+        {
+            get;
+            set
+            {
+                field = value;
+                TriggerPropertyChanged(nameof(ScanForProtection));
+            }
+        }
+
+        /// <summary>
+        /// Indicates the status of the scan for protection checkbox
+        /// </summary>
+        public bool ScanForProtectionCheckBoxEnabled
+        {
+            get;
+            set
+            {
+                field = value;
+                TriggerPropertyChanged(nameof(ScanForProtectionCheckBoxEnabled));
+            }
+        }
+
+        /// <summary>
         /// Currently provided parameters
         /// </summary>
         public string Parameters
@@ -953,7 +979,7 @@ namespace MPF.Frontend.ViewModels
         /// <param name="newOptions">Options representing the new, saved values</param>
         public void UpdateOptions(bool savedSettings, Options? newOptions)
         {
-             // Get which options to save
+            // Get which options to save
             var optionsToSave = savedSettings ? newOptions : Options;
 
             // Save the settings to disk if set to or on first run
@@ -1019,6 +1045,7 @@ namespace MPF.Frontend.ViewModels
 
             // Set the initial environment and UI values
             SetSupportedDriveSpeed();
+            ScanForProtection = _options.Processing.ProtectionScanning.ScanForProtection;
             _environment = DetermineEnvironment(resolveProgramPaths: true);
             GetOutputNames(true);
             EnsureMediaInformation(resolveProgramPaths: false);
@@ -1295,6 +1322,7 @@ namespace MPF.Frontend.ViewModels
                 CurrentProgram);
             env.SetExecutionContext(CurrentPhysicalMediaType, Parameters);
             env.SetProcessor();
+            env.ScanForProtection = ScanForProtection;
 
             // Reset the dumping program paths, just in case
             Options.Dumping.AaruPath = aaruPath;
@@ -1373,6 +1401,7 @@ namespace MPF.Frontend.ViewModels
             DriveLetterComboBoxEnabled = false;
             DriveSpeedComboBoxEnabled = false;
             DumpingProgramComboBoxEnabled = false;
+            ScanForProtectionCheckBoxEnabled = false;
             EnableParametersCheckBoxEnabled = false;
             StartStopButtonText = StopDumpingValue;
             MediaScanButtonEnabled = false;
@@ -1395,6 +1424,7 @@ namespace MPF.Frontend.ViewModels
             DriveLetterComboBoxEnabled = true;
             DriveSpeedComboBoxEnabled = true;
             DumpingProgramComboBoxEnabled = true;
+            ScanForProtectionCheckBoxEnabled = true;
             EnableParametersCheckBoxEnabled = true;
             StartStopButtonText = StartDumpingValue;
             MediaScanButtonEnabled = true;
@@ -2019,6 +2049,7 @@ namespace MPF.Frontend.ViewModels
             DriveLetterComboBoxEnabled = false;
             DriveSpeedComboBoxEnabled = false;
             DumpingProgramComboBoxEnabled = false;
+            ScanForProtectionCheckBoxEnabled = false;
             EnableParametersCheckBoxEnabled = false;
 
             StartStopButtonEnabled = false;
@@ -2058,6 +2089,7 @@ namespace MPF.Frontend.ViewModels
                 DriveLetterComboBoxEnabled = true;
                 DriveSpeedComboBoxEnabled = true;
                 DumpingProgramComboBoxEnabled = true;
+                ScanForProtectionCheckBoxEnabled = true;
                 EnableParametersCheckBoxEnabled = true;
 
                 StartStopButtonEnabled = ShouldEnableDumpingButton();
@@ -2370,6 +2402,7 @@ namespace MPF.Frontend.ViewModels
                 DriveLetterComboBoxEnabled = false;
                 DriveSpeedComboBoxEnabled = false;
                 DumpingProgramComboBoxEnabled = false;
+                ScanForProtectionCheckBoxEnabled = false;
                 ParametersTextBoxEnabled = true;
 
                 MediaScanButtonEnabled = false;
@@ -2391,6 +2424,7 @@ namespace MPF.Frontend.ViewModels
                 DriveLetterComboBoxEnabled = true;
                 DriveSpeedComboBoxEnabled = true;
                 DumpingProgramComboBoxEnabled = true;
+                ScanForProtectionCheckBoxEnabled = true;
                 ParametersTextBoxEnabled = false;
 
                 MediaScanButtonEnabled = true;

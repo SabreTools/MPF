@@ -208,7 +208,7 @@
                     <TextBlock Text="{DynamicResource SettingsGroupBoxString}"
                                FontWeight="Bold" />
                     <Grid ColumnDefinitions="120,*"
-                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                           RowSpacing="4"
                           ColumnSpacing="18">
                         <TextBlock x:Name="SystemMediaTypeLabel"
@@ -295,10 +295,23 @@
                                   IsEnabled="{Binding DumpingProgramComboBoxEnabled}"
                                   SelectionChanged="DumpingProgramComboBoxSelectionChanged" />
 
+                        <!-- TODO: Replace text with resources like others -->
                         <TextBlock Grid.Row="5"
+                                   Text="Protection"
+                                   VerticalAlignment="Center" />
+                        <CheckBox x:Name="ScanForProtectionCheckBox"
+                                  Grid.Row="5"
+                                  Grid.Column="1"
+                                  IsChecked="{Binding ScanForProtection, Mode=TwoWay}"
+                                  IsEnabled="{Binding ScanForProtectionCheckBoxEnabled}"
+                                  Width="230"
+                                  HorizontalAlignment="Left"
+                                  Content="Scan for protection after dump" />
+
+                        <TextBlock Grid.Row="6"
                                    Text="{DynamicResource ParametersLabelString}"
                                    VerticalAlignment="Center" />
-                        <Grid Grid.Row="5"
+                        <Grid Grid.Row="6"
                               Grid.Column="1"
                               ColumnDefinitions="*,Auto"
                               ColumnSpacing="8">

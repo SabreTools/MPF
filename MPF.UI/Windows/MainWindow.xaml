@@ -338,6 +338,7 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
 
                     <Label x:Name="SystemMediaTypeLabel"
@@ -469,13 +470,28 @@
                               HorizontalAlignment="Left"
                               Style="{DynamicResource CustomComboBoxStyle}"/>
 
-                    <Label x:Name="ParametersLabel"
+                    <!-- TODO: Replace text with resource like others -->
+                    <Label x:Name="ScanForProtectionLabel"
                            Grid.Row="5"
+                           Grid.Column="0"
+                           VerticalAlignment="Center"
+                           Content="Protection"/>
+                    <CheckBox x:Name="ScanForProtectionCheckBox"
+                              Grid.Row="5"
+                              Grid.Column="1"
+                              IsChecked="{Binding ScanForProtection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              IsEnabled="{Binding ScanForProtectionCheckBoxEnabled}"
+                              Height="22"
+                              HorizontalAlignment="Center"
+                              Content="Scan for protection after dump"/>
+
+                    <Label x:Name="ParametersLabel"
+                           Grid.Row="6"
                            Grid.Column="0"
                            VerticalAlignment="Center"
                            Content="{DynamicResource ParametersLabelString}"/>
                     <TextBox x:Name="ParametersTextBox"
-                             Grid.Row="5"
+                             Grid.Row="6"
                              Grid.Column="1"
                              Height="22"
                              MinWidth="370"
@@ -484,7 +500,7 @@
                              Text="{Binding Parameters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{Binding ParametersTextBoxEnabled}"/>
                     <CheckBox x:Name="EnableParametersCheckBox"
-                              Grid.Row="5"
+                              Grid.Row="6"
                               Grid.Column="2"
                               IsChecked="{Binding ParametersCheckBoxEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding EnableParametersCheckBoxEnabled}"
