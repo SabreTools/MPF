@@ -8,6 +8,7 @@
 - Sanitize drive path for Redumper
 - Surface protection scan option in main UI
 - Update RedumpLib to 3.3.0
+- Fix Avalonia options window
 
 ### 3.10.0 (2026-09-08)
 
