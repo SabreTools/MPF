@@ -42,6 +42,10 @@ namespace MPF.Avalonia.Services
             if (value is null)
                 return false;
 
+            // Known exact dark themes
+            if (string.Equals(value, "BlackMATE"))
+                return true;
+
             // Search for "dark" or "prefer-dark"
             return value.Contains("dark", StringComparison.OrdinalIgnoreCase);
         }

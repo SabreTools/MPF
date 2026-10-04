@@ -9,6 +9,7 @@
 - Surface protection scan option in main UI
 - Update RedumpLib to 3.3.0
 - Fix Avalonia options window
+- Make tweaks to Avalonia dark theme handling
 
 ### 3.10.0 (2026-09-08)
 

@@ -18,7 +18,11 @@ namespace MPF.Avalonia.Services
         /// Update the options' dark mode flag to match the detected system theme
         /// </summary>
         public static void SyncWithSystemTheme(Options options)
-            => options.GUI.Theming.EnableDarkMode = IsSystemDarkMode();
+        {
+            // Set dark mode automatically unless already specified
+            if (!options.GUI.Theming.EnableDarkMode)
+                options.GUI.Theming.EnableDarkMode = IsSystemDarkMode();
+        }
 
         /// <summary>
         /// Sync the dark mode flag with the system theme, then apply the resolved theme
