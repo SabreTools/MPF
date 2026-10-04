@@ -10,6 +10,7 @@
 - Update RedumpLib to 3.3.0
 - Fix Avalonia options window
 - Make tweaks to Avalonia dark theme handling
+- Fix Avalonia formatting issue for region selection
 
 ### 3.10.0 (2026-09-08)
 

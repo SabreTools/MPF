@@ -54,7 +54,7 @@
                                     <Grid ColumnDefinitions="3*,7*"
                                           ColumnSpacing="4"
                                           HorizontalAlignment="Stretch">
-                                        <TextBlock Text="{DynamicResource CategoryLabelString}"
+                                        <TextBlock
                                                    HorizontalAlignment="Right"
                                                    VerticalAlignment="Center" />
                                         <ComboBox x:Name="CategoryComboBox"
@@ -64,17 +64,9 @@
                                                   SelectedItem="{Binding Category, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
                                     </Grid>
 
-                                    <Grid ColumnDefinitions="3*,7*"
-                                          ColumnSpacing="4"
-                                          HorizontalAlignment="Stretch">
-                                        <TextBlock Text="{DynamicResource RegionsLabelString}"
-                                                   HorizontalAlignment="Right"
-                                                   VerticalAlignment="Center" />
-                                        <controls:MultiSelectDropDown x:Name="RegionDropDown"
-                                                                      Grid.Column="1"
-                                                                      HorizontalAlignment="Stretch"
+                                    <controls:MultiSelectDropDown x:Name="RegionDropDown"
+                                                                      Label="{DynamicResource RegionsLabelString}"
                                                                       ItemsSource="{Binding Regions}" />
-                                    </Grid>
 
                                     <controls:MultiSelectDropDown x:Name="LanguagesDropDown"
                                                                   Label="{DynamicResource LanguagesLabelString}"
