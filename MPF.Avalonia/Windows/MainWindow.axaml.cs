@@ -443,7 +443,7 @@ namespace MPF.Avalonia.Windows
                 Activate();
             };
 
-            _ = window.ShowDialog(this);
+            window.Show();
         }
 
         /// <summary>
@@ -469,7 +469,7 @@ namespace MPF.Avalonia.Windows
                 Activate();
             };
 
-            _ = window.ShowDialog(this);
+            window.Show();
         }
 
         /// <summary>

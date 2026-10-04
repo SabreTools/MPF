@@ -29,7 +29,9 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Parent window used as the dialog owner, if any
         /// </summary>
+#pragma warning disable IDE0052 // Remove unread private members
         private MainWindow? _parent;
+#pragma warning restore IDE0052 // Remove unread private members
 
         /// <summary>
         /// Read-only access to the current check dump view model
@@ -69,26 +71,65 @@ namespace MPF.Avalonia.Windows
         /// <returns>Dialog open result</returns>
         private bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
         {
-            var dialogOptions = options ?? CheckDumpViewModel.Options;
-            SubmissionInfo? updatedSubmissionInfo = submissionInfo;
-            Window owner = _parent ?? (Window)this;
-            var dialogTask = Dispatcher.UIThread.InvokeAsync(async () =>
+            if (options?.Processing?.ShowDiscEjectReminder == true)
             {
-                var window = new MediaInformationWindow(dialogOptions, updatedSubmissionInfo)
+                MessageBoxWindow.ShowAsync(this,
+                    StringResource("EjectTitleString", "Eject"),
+                    StringResource("EjectMessageString", "It is now safe to eject the disc"),
+                    1,
+                    true);
+            }
+
+            // TODO: Determine the real difference between these paths
+            if (Dispatcher.UIThread.CheckAccess())
+            {
+                var window = new MediaInformationWindow(options ?? CheckDumpViewModel.Options, submissionInfo)
                 {
+                    Focusable = true,
+                    ShowActivated = true,
+                    ShowInTaskbar = true,
                     WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 };
 
-                bool? result = await window.ShowDialog<bool?>(owner);
+                window.Closed += delegate { Activate(); };
+
+                Task<bool?> dialogTask = window.ShowDialog<bool?>(this);
+                var frame = new DispatcherFrame();
+                dialogTask.ContinueWith(_ => Dispatcher.UIThread.Post(() => frame.Continue = false));
+                Dispatcher.UIThread.PushFrame(frame);
+
+                bool? result = dialogTask.GetAwaiter().GetResult();
                 if (result == true)
-                    updatedSubmissionInfo = window.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo;
+                    submissionInfo = window.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo;
 
                 return result;
-            });
+            }
+            else
+            {
+                SubmissionInfo? updatedSubmissionInfo = submissionInfo;
+                var dispatcherTask = Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    var window = new MediaInformationWindow(options ?? CheckDumpViewModel.Options, updatedSubmissionInfo)
+                    {
+                        Focusable = true,
+                        ShowActivated = true,
+                        ShowInTaskbar = true,
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                    };
 
-            bool? result = dialogTask.GetAwaiter().GetResult();
-            submissionInfo = updatedSubmissionInfo;
-            return result;
+                    window.Closed += delegate { Activate(); };
+
+                    bool? result = await window.ShowDialog<bool?>(this);
+                    if (result == true)
+                        updatedSubmissionInfo = window.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo;
+
+                    return result;
+                });
+
+                bool? result = dispatcherTask.GetAwaiter().GetResult();
+                submissionInfo = updatedSubmissionInfo;
+                return result;
+            }
         }
 
         /// <summary>
