@@ -11,6 +11,7 @@
 - Fix Avalonia options window
 - Make tweaks to Avalonia dark theme handling
 - Fix Avalonia formatting issue for region selection
+- Make show disc reminder float to top in Avalonia
 
 ### 3.10.0 (2026-09-08)
 

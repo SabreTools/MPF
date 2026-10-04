@@ -305,7 +305,13 @@ namespace MPF.Avalonia.Windows
             // }
 
             if (showIfSame || different)
-                MessageBoxWindow.ShowAsync(this, StringResource("CheckForUpdatesTitleString", "Check for Updates"), message, 1, different);
+            {
+                MessageBoxWindow.ShowAsync(this,
+                    StringResource("CheckForUpdatesTitleString", "Check for Updates"),
+                    message,
+                    1,
+                    different);
+            }
         }
 
         /// <summary>

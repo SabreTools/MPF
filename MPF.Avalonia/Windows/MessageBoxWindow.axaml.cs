@@ -43,7 +43,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         public static Task ShowAsync(Window owner, string title, string message, int optionCount, bool flag)
         {
-            var window = new MessageBoxWindow();
+            var window = new MessageBoxWindow { Topmost = true };
             window.Configure(title, message, optionCount);
             return window.ShowDialog(owner);
         }
@@ -54,7 +54,7 @@ namespace MPF.Avalonia.Windows
         /// <returns>true for positive, false for negative, null for neutral</returns>
         public static Task<bool?> ShowAsyncResult(Window owner, string title, string message, int optionCount, bool flag)
         {
-            var window = new MessageBoxWindow();
+            var window = new MessageBoxWindow { Topmost = true };
             window.Configure(title, message, optionCount);
             return window.ShowDialog<bool?>(owner);
         }
