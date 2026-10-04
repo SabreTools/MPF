@@ -351,7 +351,7 @@ namespace MPF.Frontend.ViewModels
                 field = value;
                 TriggerPropertyChanged(nameof(ScanForProtectionCheckBoxEnabled));
             }
-        }
+        } = true;
 
         /// <summary>
         /// Currently provided parameters

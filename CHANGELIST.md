@@ -13,6 +13,7 @@
 - Fix Avalonia formatting issue for region selection
 - Make show disc reminder float to top in Avalonia
 - Fix Avalonia check dump window operation
+- Enable protection scan main window option by default
 
 ### 3.10.0 (2026-09-08)
 
