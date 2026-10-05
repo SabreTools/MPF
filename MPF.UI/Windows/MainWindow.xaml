@@ -338,7 +338,6 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
-                        <RowDefinition/>
                     </Grid.RowDefinitions>
 
                     <Label x:Name="SystemMediaTypeLabel"
@@ -470,21 +469,6 @@
                               HorizontalAlignment="Left"
                               Style="{DynamicResource CustomComboBoxStyle}"/>
 
-                    <!-- TODO: Replace text with resource like others -->
-                    <Label x:Name="ScanForProtectionLabel"
-                           Grid.Row="5"
-                           Grid.Column="0"
-                           VerticalAlignment="Center"
-                           Content="Protection"/>
-                    <CheckBox x:Name="ScanForProtectionCheckBox"
-                              Grid.Row="5"
-                              Grid.Column="1"
-                              IsChecked="{Binding ScanForProtection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              IsEnabled="{Binding ScanForProtectionCheckBoxEnabled}"
-                              Height="22"
-                              HorizontalAlignment="Center"
-                              Content="Scan for protection after dump"/>
-
                     <Label x:Name="ParametersLabel"
                            Grid.Row="6"
                            Grid.Column="0"
@@ -508,6 +492,20 @@
                               Height="22"
                               HorizontalAlignment="Center"/>
                 </Grid>
+            </GroupBox>
+
+            <GroupBox Margin="5,5,5,5"
+                      HorizontalAlignment="Stretch"
+                      Header="{DynamicResource ProcessingGroupBoxString}">
+                <UniformGrid Columns="2"
+                             Margin="5,5,5,5">
+                    <CheckBox x:Name="ScanForProtectionCheckBox"
+                              IsChecked="{Binding ScanForProtection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              IsEnabled="{Binding ScanForProtectionCheckBoxEnabled}"
+                              Height="22"
+                              HorizontalAlignment="Center"
+                              Content="{DynamicResource ScanForProtectionCheckBoxString}"/>
+                </UniformGrid>
             </GroupBox>
 
             <GroupBox Margin="5,5,5,5"

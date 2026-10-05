@@ -40,6 +40,9 @@
     <x:String x:Key="DriveSpeedLabelString">Drive Speed</x:String>
     <x:String x:Key="DumpingProgramLabelString">Dumping Program</x:String>
     <x:String x:Key="ParametersLabelString">Parameters</x:String>
+    <!-- Processing Group Box -->
+    <x:String x:Key="ProcessingGroupBoxString">Processing</x:String>
+    <x:String x:Key="ScanForProtectionCheckBoxString">Scan for protection after dump</x:String>
     <!-- Controls Group Box-->
     <x:String x:Key="ControlsGroupBoxString">Controls</x:String>
     <x:String x:Key="StartDumpingButtonString">Start Dumping</x:String>
