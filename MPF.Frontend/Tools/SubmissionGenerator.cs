@@ -144,7 +144,9 @@ namespace MPF.Frontend.Tools
 
                     info.DumpMetadata.Protection += protectionString;
                     info.DumpMetadata.FullProtections = ReformatProtectionDictionary(protections);
-                    resultProgress?.Report(ResultEventArgs.Success("Copy protection scan complete!"));
+
+                    if (options.Processing.ProtectionScanning.ScanForProtection)
+                        resultProgress?.Report(ResultEventArgs.Success("Copy protection scan complete!"));
                 }
                 catch (Exception ex)
                 {

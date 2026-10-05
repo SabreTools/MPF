@@ -18,6 +18,7 @@
 - Fix paths option tab in Avalonia
 - Separate out Processing group in main UI
 - Fix protection-related UI inconsistencies
+- Fix lingering protection-related UI inconsistency
 
 ### 3.10.0 (2026-09-08)
 
