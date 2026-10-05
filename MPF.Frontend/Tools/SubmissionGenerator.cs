@@ -126,13 +126,13 @@ namespace MPF.Frontend.Tools
             // Run copy protection, if possible or necessary
             if (system.SupportsCopyProtectionScans())
             {
-                resultProgress?.Report(ResultEventArgs.Neutral("Running copy protection scan... this might take a while!"));
-
                 try
                 {
                     Dictionary<string, List<string>>? protections = null;
                     if (options.Processing.ProtectionScanning.ScanForProtection)
                     {
+                        resultProgress?.Report(ResultEventArgs.Neutral("Running copy protection scan... this might take a while!"));
+
                         // Explicitly note missing/invalid device paths
                         if (drive?.DevicePath is null)
                             resultProgress?.Report(ResultEventArgs.Success("No mounted device path found, protection outputs may be incomplete!"));

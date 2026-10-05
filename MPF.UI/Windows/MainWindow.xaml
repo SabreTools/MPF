@@ -503,8 +503,9 @@
                               IsChecked="{Binding ScanForProtection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding ScanForProtectionCheckBoxEnabled}"
                               Height="22"
-                              HorizontalAlignment="Center"
-                              Content="{DynamicResource ScanForProtectionCheckBoxString}"/>
+                              VerticalAlignment="Center"
+                              Content="{DynamicResource ScanForProtectionCheckBoxString}"
+                              Margin="0,4"/>
                 </UniformGrid>
             </GroupBox>
 

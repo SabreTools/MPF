@@ -340,8 +340,6 @@
                                   Grid.Column="0"
                                   IsChecked="{Binding ScanForProtection, Mode=TwoWay}"
                                   IsEnabled="{Binding ScanForProtectionCheckBoxEnabled}"
-                                  Width="230"
-                                  HorizontalAlignment="Left"
                                   Content="{DynamicResource ScanForProtectionCheckBoxString}" />
                     </Grid>
                 </StackPanel>

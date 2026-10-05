@@ -17,6 +17,7 @@
 - Add Avalonia to rolling release automatic links
 - Fix paths option tab in Avalonia
 - Separate out Processing group in main UI
+- Fix protection-related UI inconsistencies
 
 ### 3.10.0 (2026-09-08)
 
