@@ -1562,6 +1562,7 @@ namespace MPF.Frontend.ViewModels
             RegionCode.Brazil,
             RegionCode.Bulgaria,
             RegionCode.Canada,
+            RegionCode.Chile,
             RegionCode.China,
             RegionCode.Croatia,
             RegionCode.Cyprus,
