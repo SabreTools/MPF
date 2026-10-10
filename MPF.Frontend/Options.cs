@@ -415,7 +415,7 @@ namespace MPF.Frontend
         /// Default CD dumping speed
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public int CD { get; set; } = 24;
+        public int CD { get; set; } = 16;
 
         /// <summary>
         /// Default DVD dumping speed
