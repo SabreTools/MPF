@@ -317,7 +317,6 @@ namespace MPF.Frontend.Tools
             var tempInternalProgram = valueString.ToInternalProgram();
             options.InternalProgram = tempInternalProgram == InternalProgram.NONE ? InternalProgram.Redumper : tempInternalProgram;
 
-            options.GUI.CopyUpdateUrlToClipboard = GetBooleanSetting(source, "CopyUpdateUrlToClipboard", true);
             options.GUI.OpenLogWindowAtStartup = GetBooleanSetting(source, "OpenLogWindowAtStartup", true);
             options.GUI.ToolConsoleAutoClose = GetBooleanSetting(source, "ToolConsoleAutoClose", true);
 
@@ -429,7 +428,6 @@ namespace MPF.Frontend.Tools
                 { "CustomBackgroundColor", options.GUI.Theming.CustomBackgroundColor },
                 { "CustomTextColor", options.GUI.Theming.CustomTextColor },
                 { "CheckForUpdatesOnStartup", options.CheckForUpdatesOnStartup.ToString() },
-                { "CopyUpdateUrlToClipboard", options.GUI.CopyUpdateUrlToClipboard.ToString() },
                 { "FastUpdateLabel", options.GUI.FastUpdateLabel.ToString() },
                 { "DefaultInterfaceLanguage", options.GUI.DefaultInterfaceLanguage.ShortName() },
                 { "DefaultOutputPath", options.Dumping.DefaultOutputPath },

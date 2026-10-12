@@ -277,22 +277,10 @@ namespace MPF.Avalonia.Windows
         public void CheckForUpdates(bool showIfSame)
         {
             MainViewModel.CheckForUpdates(out bool different, out string message, out _);
-            // if (different && MainViewModel.Options.GUI.CopyUpdateUrlToClipboard)
-            //     message += $"{Environment.NewLine}The update URL has been added copied to your clipboard";
             if (different)
                 message += $"{Environment.NewLine}You are out of date!";
             else
                 message += $"{Environment.NewLine}You have the newest version!";
-
-            // If we have a new version, put it in the clipboard
-            // if (MainViewModel.Options.GUI.CopyUpdateUrlToClipboard && different && !string.IsNullOrEmpty(url))
-            // {
-            //     try
-            //     {
-            //         Clipboard?.SetTextAsync(url);
-            //     }
-            //     catch { }
-            // }
 
             if (showIfSame || different)
             {
