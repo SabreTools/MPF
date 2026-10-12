@@ -19,6 +19,7 @@
 - Consolidate ToolOutputWindow constructors
 - Slight cleanup to ToolOutputConsole
 - Always use Avalonia ToolOutputConsole
+- Clean up MainViewModel around ToolOutputConsole
 
 ### 3.11.0 (2026-10-12)
 

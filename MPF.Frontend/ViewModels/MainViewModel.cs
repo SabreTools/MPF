@@ -2325,8 +2325,7 @@ namespace MPF.Frontend.ViewModels
                 protectionProgress.ProgressChanged += ProgressUpdated;
                 _environment.ReportStatus += ProgressUpdated;
 
-                // Stream live tool output to the separate console window, if the frontend
-                // provides one (Linux GUI). Harmless no-op for frontends that do not.
+                // Stream live tool output to the separate console window, if defined
                 if (_toolConsole is not null)
                 {
                     _toolConsole.Open();
@@ -2336,7 +2335,7 @@ namespace MPF.Frontend.ViewModels
                 // Run the program with the parameters
                 ResultEventArgs result = await _environment.Run(CurrentPhysicalMediaType, resultProgress);
 
-                // The tool has exited; let the console close itself per the user's preference
+                // Notify the tool that the environment ran to completion
                 _toolConsole?.NotifyToolExited();
 
                 // If we didn't execute a dumping command we cannot get submission output
