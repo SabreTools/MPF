@@ -43,6 +43,11 @@ namespace MPF.Frontend
         private BaseExecutionContext? _executionContext;
 
         /// <summary>
+        /// Indicates if the internal program was stopped through <see cref="CancelDumping"/>
+        /// </summary>
+        private volatile bool _dumpingCanceled;
+
+        /// <summary>
         /// Currently selected dumping program
         /// </summary>
         private readonly InternalProgram _internalProgram;
@@ -478,7 +483,11 @@ namespace MPF.Frontend
         /// <summary>
         /// Cancel an in-progress dumping process
         /// </summary>
-        public void CancelDumping() => _executionContext?.KillInternalProgram();
+        public void CancelDumping()
+        {
+            _dumpingCanceled = true;
+            _executionContext?.KillInternalProgram();
+        }
 
         /// <summary>
         /// Execute the initial invocation of the dumping programs
@@ -515,16 +524,24 @@ namespace MPF.Frontend
             // Null leaves the execution context on its legacy, non-redirected path.
             _executionContext.OutputReceived = ToolOutputReceived;
 
+            // Forget a cancellation from any previous run
+            _dumpingCanceled = false;
+
 #if NET40
             await Task.Factory.StartNew(() => { _executionContext.ExecuteInternalProgram(); return true; });
 #else
             await Task.Run(_executionContext.ExecuteInternalProgram);
 #endif
 
-            // A non-zero exit code means the program reported a failure
+            // A non-zero exit code means the program was stopped or reported a failure
             int? exitCode = _executionContext.ExitCode;
             if (exitCode is not null && exitCode != 0)
+            {
+                if (_dumpingCanceled)
+                    return ResultEventArgs.Failure($"{_internalProgram} was stopped before it finished!");
+
                 return ResultEventArgs.Failure($"Error! {_internalProgram} exited with code {exitCode}!");
+            }
 
             progress?.Report(ResultEventArgs.Success($"{_internalProgram} has finished!"));
 
