@@ -8,10 +8,6 @@ using System.Runtime.InteropServices;
 
 namespace MPF.Frontend
 {
-    // macOS-specific drive enumeration helpers for the Drive class. Kept in a platform partial
-    // alongside Drive.Linux.cs. Where Linux reads per-category sysfs trees, macOS exposes all
-    // storage through the diskutil command-line tool, so a single sweep classifies fixed,
-    // removable, floppy, and optical devices from one query.
     public partial class Drive
     {
         #region Fields
@@ -177,7 +173,7 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="devRoot">Root directory to scan (typically "/dev")</param>
         /// <returns>Device node paths, or an empty list when the directory is unreadable</returns>
-        internal static List<string> EnumerateMacOSWholeDiskNodes(string devRoot)
+        internal static List<string> EnumerateMacOSWholeDiskNodes(string? devRoot)
         {
             var result = new List<string>();
             if (string.IsNullOrEmpty(devRoot) || !Directory.Exists(devRoot))
@@ -234,12 +230,12 @@ namespace MPF.Frontend
         /// <param name="diskutilInfoOutput">Raw "diskutil info" output for a single device</param>
         /// <param name="devicePath">Fallback device node path when the output omits one</param>
         /// <returns>The classified device, or null when it should not be surfaced</returns>
-        internal static Drive? ParseMacOSDiskutilInfo(string diskutilInfoOutput, string devicePath)
+        internal static Drive? ParseMacOSDiskutilInfo(string? diskutilInfoOutput, string devicePath)
         {
             if (string.IsNullOrEmpty(diskutilInfoOutput))
                 return null;
 
-            var fields = ParseDiskutilFields(diskutilInfoOutput);
+            var fields = ParseDiskutilFields(diskutilInfoOutput!);
 
             // Only physical devices are dump targets; drop synthesized volumes and disk images
             if (fields.TryGetValue("Virtual", out var virtualFlag)
@@ -378,7 +374,7 @@ namespace MPF.Frontend
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = "diskutil",
-                    Arguments = "info " + deviceName,
+                    Arguments = $"info {deviceName}",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,

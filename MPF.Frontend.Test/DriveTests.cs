@@ -61,23 +61,23 @@ namespace MPF.Frontend.Test
         [Fact]
         public void EnumerateUnixFixedDevices_NullOrEmpty_ReturnsEmpty()
         {
-            Assert.Empty(Drive.EnumerateUnixFixedDevices(null!, "/dev"));
+            Assert.Empty(Drive.EnumerateUnixFixedDevices(null, "/dev"));
             Assert.Empty(Drive.EnumerateUnixFixedDevices(string.Empty, "/dev"));
-            Assert.Empty(Drive.EnumerateUnixFixedDevices("/sys/block", null!));
+            Assert.Empty(Drive.EnumerateUnixFixedDevices("/sys/block", null));
             Assert.Empty(Drive.EnumerateUnixFixedDevices("/sys/block", string.Empty));
         }
 
         [Fact]
         public void EnumerateUnixFixedDevices_MissingDirectory_ReturnsEmpty()
         {
-            string missing = Path.Combine(Path.GetTempPath(), "mpf-test-missing-" + Guid.NewGuid().ToString("N"));
+            string missing = Path.Combine(Path.GetTempPath(), $"mpf-test-missing-{Guid.NewGuid():N}");
             Assert.Empty(Drive.EnumerateUnixFixedDevices(missing, "/dev"));
         }
 
         [Fact]
         public void EnumerateUnixFixedDevices_SkipsVirtualDevices()
         {
-            string sysfs = Path.Combine(Path.GetTempPath(), "mpf-test-sysblock-" + Guid.NewGuid().ToString("N"));
+            string sysfs = Path.Combine(Path.GetTempPath(), $"mpf-test-sysblock-{Guid.NewGuid():N}");
             Directory.CreateDirectory(sysfs);
             try
             {
@@ -116,7 +116,7 @@ namespace MPF.Frontend.Test
         [Fact]
         public void EnumerateUnixFixedDevices_ClassifiesRemovableAndSize()
         {
-            string sysfs = Path.Combine(Path.GetTempPath(), "mpf-test-sysblock-" + Guid.NewGuid().ToString("N"));
+            string sysfs = Path.Combine(Path.GetTempPath(), $"mpf-test-sysblock-{Guid.NewGuid():N}");
             Directory.CreateDirectory(sysfs);
             try
             {
@@ -148,7 +148,7 @@ namespace MPF.Frontend.Test
         [Fact]
         public void EnumerateUnixFixedDevices_MissingMetadata_DefaultsToFixedWithUnknownSize()
         {
-            string sysfs = Path.Combine(Path.GetTempPath(), "mpf-test-sysblock-" + Guid.NewGuid().ToString("N"));
+            string sysfs = Path.Combine(Path.GetTempPath(), $"mpf-test-sysblock-{Guid.NewGuid():N}");
             Directory.CreateDirectory(sysfs);
             try
             {
@@ -186,14 +186,14 @@ namespace MPF.Frontend.Test
         [Fact]
         public void EnumerateMacOSWholeDiskNodes_NullOrEmpty_ReturnsEmpty()
         {
-            Assert.Empty(Drive.EnumerateMacOSWholeDiskNodes(null!));
+            Assert.Empty(Drive.EnumerateMacOSWholeDiskNodes(null));
             Assert.Empty(Drive.EnumerateMacOSWholeDiskNodes(string.Empty));
         }
 
         [Fact]
         public void EnumerateMacOSWholeDiskNodes_MissingDirectory_ReturnsEmpty()
         {
-            string missing = Path.Combine(Path.GetTempPath(), "mpf-test-missing-" + Guid.NewGuid().ToString("N"));
+            string missing = Path.Combine(Path.GetTempPath(), $"mpf-test-missing-{Guid.NewGuid():N}");
             Assert.Empty(Drive.EnumerateMacOSWholeDiskNodes(missing));
         }
 
@@ -213,6 +213,7 @@ namespace MPF.Frontend.Test
             {
                 actualNames.Add(Path.GetFileName(p));
             }
+
             actualNames.Sort(StringComparer.Ordinal);
 
             Assert.Equal(new[] { "disk0", "disk1", "disk10" }, actualNames);
@@ -225,7 +226,7 @@ namespace MPF.Frontend.Test
         [Fact]
         public void ParseMacOSDiskutilInfo_NullOrEmpty_ReturnsNull()
         {
-            Assert.Null(Drive.ParseMacOSDiskutilInfo(null!, "/dev/disk0"));
+            Assert.Null(Drive.ParseMacOSDiskutilInfo(null, "/dev/disk0"));
             Assert.Null(Drive.ParseMacOSDiskutilInfo(string.Empty, "/dev/disk0"));
         }
 

@@ -2,6 +2,7 @@
 
 - Clean up unnecessary array copies
 - Separate out Windows drive code, cleanup
+- Clean up more drive-related code
 
 ### 3.11.0 (2026-10-12)
 

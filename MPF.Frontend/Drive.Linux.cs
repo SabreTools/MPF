@@ -5,8 +5,6 @@ using SabreTools.IO.Extensions;
 
 namespace MPF.Frontend
 {
-    // Linux-specific drive enumeration helpers for the Drive class. Kept in a platform
-    // partial so macOS (and any future OS) can add its own counterpart (e.g. Drive.MacOS.cs).
     public partial class Drive
     {
         #region Fields
@@ -215,12 +213,12 @@ namespace MPF.Frontend
         /// <param name="sysBlockRoot">sysfs block directory (typically "/sys/block")</param>
         /// <param name="devRoot">Root directory device nodes live under (typically "/dev")</param>
         /// <returns>Discovered devices, or an empty list when the directory is unreadable</returns>
-        internal static List<Drive> EnumerateUnixFixedDevices(string sysBlockRoot, string devRoot)
+        internal static List<Drive> EnumerateUnixFixedDevices(string? sysBlockRoot, string? devRoot)
         {
             var result = new List<Drive>();
             if (string.IsNullOrEmpty(sysBlockRoot) || string.IsNullOrEmpty(devRoot))
                 return result;
-            if (!Directory.Exists(sysBlockRoot))
+            if (!Directory.Exists(sysBlockRoot!))
                 return result;
 
             string[] entries;
@@ -248,7 +246,7 @@ namespace MPF.Frontend
                 result.Add(new Drive()
                 {
                     InternalDriveType = driveType,
-                    DevicePath = Path.Combine(devRoot, name),
+                    DevicePath = Path.Combine(devRoot!, name),
                     TotalSize = totalSize,
                 });
             }
@@ -262,6 +260,7 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="name">Block-device name (e.g. "sda", "loop0")</param>
         /// <returns>True when the device should be skipped</returns>
+        /// TODO: Remove when IO is updated
         private static bool IsExcludedUnixBlockDevice(string name)
         {
             if (string.IsNullOrEmpty(name))
