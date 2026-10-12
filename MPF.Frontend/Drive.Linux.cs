@@ -88,13 +88,7 @@ namespace MPF.Frontend
                 }
             }
 
-            if (extra.Count == 0)
-                return drives;
-
-            var combined = new Drive[drives.Length + extra.Count];
-            Array.Copy(drives, combined, drives.Length);
-            extra.CopyTo(combined, drives.Length);
-            return combined;
+            return [.. drives, .. extra];
         }
 
         /// <summary>
@@ -153,13 +147,7 @@ namespace MPF.Frontend
                 }
             }
 
-            if (extra.Count == 0)
-                return drives;
-
-            var combined = new Drive[drives.Length + extra.Count];
-            Array.Copy(drives, combined, drives.Length);
-            extra.CopyTo(combined, drives.Length);
-            return combined;
+            return [.. drives, .. extra];
         }
 
         /// <summary>
@@ -213,13 +201,7 @@ namespace MPF.Frontend
                 }
             }
 
-            if (extra.Count == 0)
-                return drives;
-
-            var combined = new Drive[drives.Length + extra.Count];
-            Array.Copy(drives, combined, drives.Length);
-            extra.CopyTo(combined, drives.Length);
-            return combined;
+            return [.. drives, .. extra];
         }
 
         /// <summary>

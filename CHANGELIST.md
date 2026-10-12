@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Clean up unnecessary array copies
+
 ### 3.11.0 (2026-10-12)
 
 - Disable copying update URL to clipboard
