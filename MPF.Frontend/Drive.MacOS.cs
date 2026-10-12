@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 #if NETCOREAPP
 using System.Runtime.InteropServices;
+using SabreTools.IO.Extensions;
 #endif
 
 namespace MPF.Frontend
@@ -70,22 +71,16 @@ namespace MPF.Frontend
             if (!IsMacOS())
                 return drives;
 
-            // macOS mounts every readable disc on insertion, so DriveInfo reports the mounted
-            // volume (e.g. "/Volumes/LABEL") as a CD-ROM drive. That is a mount point rather
-            // than a dumpable device, and diskutil surfaces the drive holding the disc below,
-            // so the mount point would only sit next to the real drive as a second, unusable
-            // entry. Drop it here rather than in the shared DriveInfo query, which is unchanged.
             var kept = new List<Drive>();
+            var existingPaths = new HashSet<string>();
             foreach (var drive in drives)
             {
-                if (!IsMacOSMountPoint(drive?.DevicePath))
-                    kept.Add(drive!);
-            }
+                // Ignore MacOS mount points
+                if (IsMacOSMountPoint(drive.DevicePath))
+                    continue;
 
-            var existingPaths = new HashSet<string>();
-            foreach (var drive in kept)
-            {
-                if (drive?.DevicePath is not null)
+                kept.Add(drive);
+                if (drive.DevicePath is not null)
                     existingPaths.Add(drive.DevicePath);
             }
 
@@ -99,24 +94,14 @@ namespace MPF.Frontend
                 if (!existingPaths.Add(device.DevicePath!))
                     continue;
 
-                try
+                // Force marking the drive as active if it's removable or has a non-zero size
+                var d = Create(device.InternalDriveType, device.DevicePath!);
+                if (d is not null)
                 {
-                    var d = Create(device.InternalDriveType, device.DevicePath!);
-                    if (d is null)
-                        continue;
-
-                    // A BSD name is never a mount point, so DriveInfo reports it as not-ready
-                    // with no size. Mirror how Windows and the Linux enumerator surface these:
-                    // optical, floppy, and fixed drives are always ready, while a removable
-                    // drive is only ready when media is present (a non-zero size).
                     d.TotalSize = device.TotalSize;
                     d.MarkedActive = device.InternalDriveType != Frontend.InternalDriveType.Removable
                         || device.TotalSize > 0;
                     kept.Add(d);
-                }
-                catch
-                {
-                    // Skip devices that can't be opened
                 }
             }
 
@@ -179,16 +164,7 @@ namespace MPF.Frontend
             if (string.IsNullOrEmpty(devRoot) || !Directory.Exists(devRoot))
                 return result;
 
-            string[] candidates;
-            try
-            {
-                candidates = Directory.GetFiles(devRoot, "disk*");
-            }
-            catch
-            {
-                return result;
-            }
-
+            string[] candidates = IOExtensions.SafeGetFileSystemEntries(devRoot, "disk*");
             foreach (var path in candidates)
             {
                 if (IsMacOSWholeDiskNode(Path.GetFileName(path)))
@@ -367,6 +343,7 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="deviceName">Whole-disk identifier (e.g. "disk0")</param>
         /// <returns>The command's standard output, or an empty string on failure</returns>
+        /// TODO: Figure out if invoking diskutil is the only way of listing all drives
         private static string RunDiskutilInfo(string deviceName)
         {
             try
