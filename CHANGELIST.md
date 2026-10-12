@@ -23,6 +23,7 @@
 - Invert AutoClose property assignment in ToolOutputWindow
 - Unify some interface language logic
 - Make WPF version of StringResourceLoader
+- Migrate FromCurrentCulture to common Frontend location
 
 ### 3.11.0 (2026-10-12)
 

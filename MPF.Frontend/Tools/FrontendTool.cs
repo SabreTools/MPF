@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 using SabreTools.RedumpLib.Data;
@@ -102,6 +103,49 @@ namespace MPF.Frontend.Tools
                 return PhysicalSystem.SonyPlayStation5;
 
             return null;
+        }
+
+        #endregion
+
+        #region Localization
+
+        /// <summary>
+        /// Map the current UI culture's two-letter ISO language name to a supported interface language
+        /// </summary>
+        public static InterfaceLanguage FromCurrentCulture()
+        {
+            // Get current region code to distinguish regional variants of languages
+            string region = string.Empty;
+            try
+            {
+                // Can throw exception depending on current locale
+                region = new RegionInfo(CultureInfo.CurrentUICulture.Name).TwoLetterISORegionName;
+            }
+            catch { }
+
+            return CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
+            {
+                "en" => InterfaceLanguage.English,
+                "fr" => InterfaceLanguage.French,
+                "de" => InterfaceLanguage.German,
+                "it" => InterfaceLanguage.Italian,
+                "ja" => InterfaceLanguage.Japanese,
+                "ko" => InterfaceLanguage.Korean,
+                "pl" => InterfaceLanguage.Polish,
+                "pt" => InterfaceLanguage.Portuguese,
+                "ru" => InterfaceLanguage.Russian,
+                "es" => InterfaceLanguage.Spanish,
+                "sv" => InterfaceLanguage.Swedish,
+                "uk" => InterfaceLanguage.Ukrainian,
+
+                // TODO: Translate UI elements to Traditional Chinese
+                "zh" when Array.Exists(["TW", "HK", "MO"], s => s == region) => InterfaceLanguage.English,
+
+                // TODO: Translate UI elements to Simplified Chinese
+                "zh" => InterfaceLanguage.English,
+
+                _ => InterfaceLanguage.English,
+            };
         }
 
         #endregion
