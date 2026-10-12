@@ -58,7 +58,7 @@ namespace MPF.Avalonia.Helpers
                     {
                         foreach (string chunk in batch)
                         {
-                            buffer.Feed(chunk);
+                            buffer.Process(chunk);
                         }
 
                         onBatch(batch.Count);
@@ -77,7 +77,7 @@ namespace MPF.Avalonia.Helpers
             List<string> tail = DrainAvailable();
             foreach (string chunk in tail)
             {
-                buffer.Feed(chunk);
+                buffer.Process(chunk);
             }
 
             buffer.Flush();

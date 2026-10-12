@@ -5,19 +5,7 @@ using System.Text;
 namespace MPF.Avalonia.Helpers
 {
     /// <summary>
-    /// Minimal terminal line-discipline for redirected child-process output.
-    ///
-    /// The point: read RAW characters from stdout (never <c>ReadLine</c>) and
-    /// interpret carriage returns the way a real terminal does. Dump tools
-    /// (redumper, DiscImageCreator, Aaru) update their progress with a bare
-    /// <c>\r</c> (no <c>\n</c>) so the same physical line is redrawn in place.
-    /// <c>ReadLine</c>/<c>OutputDataReceived</c> treat <c>\r</c> as a line break,
-    /// which explodes one updating line into thousands of separate lines -- the
-    /// spam + lag the maintainer saw when output was redirected years ago.
-    ///
-    /// Here, <c>\r</c> moves the write cursor to column 0 of the live line
-    /// (overwrite, not new line); <c>\n</c> commits the live line. Progress
-    /// updates therefore mutate a single live line and never grow the log.
+    /// Minimal terminal output processor
     /// </summary>
     public sealed class TerminalBuffer
     {
@@ -49,7 +37,7 @@ namespace MPF.Avalonia.Helpers
         #region Private Fields
 
         /// <summary>
-        ///
+        /// Current internal state
         /// </summary>
         private readonly StringBuilder _current = new();
 
@@ -96,10 +84,19 @@ namespace MPF.Avalonia.Helpers
         #endregion
 
         /// <summary>
-        /// Feed a raw chunk of output. Chunk boundaries are arbitrary: a <c>\r\n</c>
-        /// or an escape sequence may be split across two calls and is handled.
+        /// Force-commit whatever is in the live line (e.g. on process exit)
         /// </summary>
-        public void Feed(string? chunk)
+        public void Flush()
+        {
+            if (_current.Length > 0)
+                CommitLine();
+        }
+
+        /// <summary>
+        /// Process the next chunk of input, saving internal state
+        /// </summary>
+        /// <param name="chunk">Chunk of input to process</param>
+        public void Process(string? chunk)
         {
             if (string.IsNullOrEmpty(chunk))
                 return;
@@ -159,80 +156,14 @@ namespace MPF.Avalonia.Helpers
                 CurrentLineChanged?.Invoke(CurrentLine);
         }
 
-        /// <summary>
-        /// Force-commit whatever is in the live line (e.g. on process exit).
-        /// </summary>
-        public void Flush()
-        {
-            if (_current.Length > 0)
-                CommitLine();
-        }
+        #region Helpers
 
         /// <summary>
-        /// Write a single character to the current output
+        /// Apply a CSI sequence given its parameter string and final byte
         /// </summary>
-        private void WriteChar(char c)
-        {
-            if (_cursor < _current.Length)
-                _current[_cursor] = c;
-            else
-                _current.Append(c);
-
-            _cursor++;
-        }
-
-        /// <summary>
-        /// Commit a complete line to the output
-        /// </summary>
-        private void CommitLine()
-        {
-            string line = _current.ToString();
-            CommittedLines.Add(line);
-            LineCommitted?.Invoke(line);
-
-            _current.Clear();
-            _cursor = 0;
-        }
-
-        /// <summary>
-        /// Consume one character of an in-progress escape sequence. We only model
-        /// the few CSI sequences progress writers actually use; everything else
-        /// (colors, cursor moves) is recognized and stripped so it never shows as
-        /// literal garbage. Returns whether the live line changed.
-        /// </summary>
-        private bool FeedEscape(char c)
-        {
-            // First char after ESC decides the family.
-            if (_escape.Length == 0)
-            {
-                if (c == '[')
-                {
-                    _escape.Append(c); // CSI -- keep collecting until a final byte
-                    return false;
-                }
-
-                // Not a CSI (e.g. ESC( charset, ESC] OSC). We don't model these;
-                // drop ESC + this byte and resume. Good enough for tool output.
-                _inEscape = false;
-                return false;
-            }
-
-            // Inside CSI: parameters/intermediates until a final byte 0x40-0x7E.
-            if (c >= '@' && c <= '~')
-            {
-                bool changed = ApplyCSISequence(_escape.ToString(1, _escape.Length - 1), c);
-                _inEscape = false;
-                _escape.Clear();
-                return changed;
-            }
-
-            _escape.Append(c);
-            return false;
-        }
-
-        /// <summary>
-        /// Apply a CSI sequence given its parameter string and final byte.
-        /// </summary>
+        /// <param name="parameters">Parameter string representing the sequence</param>
+        /// <param name="final">Final byte of the sequence</param>
+        /// <returns>Whether the CSI sequence was applied</returns>
         private bool ApplyCSISequence(string parameters, char final)
         {
             switch (final)
@@ -256,6 +187,19 @@ namespace MPF.Avalonia.Helpers
                 default:
                     return false;
             }
+        }
+
+        /// <summary>
+        /// Commit a complete line to the output
+        /// </summary>
+        private void CommitLine()
+        {
+            string line = _current.ToString();
+            CommittedLines.Add(line);
+            LineCommitted?.Invoke(line);
+
+            _current.Clear();
+            _cursor = 0;
         }
 
         /// <summary>
@@ -293,9 +237,63 @@ namespace MPF.Avalonia.Helpers
         }
 
         /// <summary>
+        /// Consume one character of an in-progress escape sequence
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>Whether the live line changed</returns>
+        private bool FeedEscape(char value)
+        {
+            // First char after ESC decides the family.
+            if (_escape.Length == 0)
+            {
+                if (value == '[')
+                {
+                    _escape.Append(value); // CSI -- keep collecting until a final byte
+                    return false;
+                }
+
+                // Not a CSI (e.g. ESC( charset, ESC] OSC). We don't model these;
+                // drop ESC + this byte and resume. Good enough for tool output.
+                _inEscape = false;
+                return false;
+            }
+
+            // Inside CSI: parameters/intermediates until a final byte 0x40-0x7E.
+            if (value >= '@' && value <= '~')
+            {
+                bool changed = ApplyCSISequence(_escape.ToString(1, _escape.Length - 1), value);
+                _inEscape = false;
+                _escape.Clear();
+                return changed;
+            }
+
+            _escape.Append(value);
+            return false;
+        }
+
+        /// <summary>
         /// Try to parse an integer value, including a fallback if it fails
         /// </summary>
-        private static int ParseIntWithFallback(string s, int fallback)
-            => int.TryParse(s, out int v) ? v : fallback;
+        /// <param name="value">Value to try to parse</param>
+        /// <param name="fallback">Fallback value if parsing fails</param>
+        /// <returns>The parsed value on success, the fallback value on error</returns>
+        private static int ParseIntWithFallback(string value, int fallback)
+            => int.TryParse(value, out int v) ? v : fallback;
+
+        /// <summary>
+        /// Write a single character to the current output
+        /// </summary>
+        /// <param name="value">Character to write to the output</param>
+        private void WriteChar(char value)
+        {
+            if (_cursor < _current.Length)
+                _current[_cursor] = value;
+            else
+                _current.Append(value);
+
+            _cursor++;
+        }
+
+        #endregion
     }
 }

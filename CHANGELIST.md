@@ -12,6 +12,7 @@
 - Make Linux theme helpers easier to follow
 - Slight cleanup to TerminalBuffer
 - Slight cleanup to OutputPump
+- More cleanup to TerminalBuffer
 
 ### 3.11.0 (2026-10-12)
 
