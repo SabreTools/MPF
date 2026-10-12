@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Styling;
@@ -21,10 +22,10 @@ namespace MPF.Avalonia.Services
         /// </summary>
         public static void ApplyWindowTitleBarTheme(Window window)
         {
-            if (global::Avalonia.Application.Current is null)
+            if (Application.Current is null)
                 return;
 
-            ApplyWindowTitleBarTheme(window, global::Avalonia.Application.Current.RequestedThemeVariant == ThemeVariant.Dark);
+            ApplyWindowTitleBarTheme(window, Application.Current.RequestedThemeVariant == ThemeVariant.Dark);
         }
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace MPF.Avalonia.Services
             if (!OperatingSystem.IsWindows())
                 return;
 
-            if (global::Avalonia.Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+            if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
                 return;
 
             foreach (Window window in desktop.Windows)

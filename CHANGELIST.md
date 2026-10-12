@@ -8,6 +8,7 @@
 - Fix framework-specific issues from previous commits
 - Remove need for DialogService in Avalonia
 - Reduce unnecessary code in ThemeService in Avalonia
+- Remove all uses of 'global:' prefix
 
 ### 3.11.0 (2026-10-12)
 

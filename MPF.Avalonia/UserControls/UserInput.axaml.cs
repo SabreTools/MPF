@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 
@@ -16,7 +17,7 @@ namespace MPF.Avalonia.UserControls
             AvaloniaProperty.Register<UserInput, string?>(nameof(Label));
 
         public static readonly StyledProperty<string?> TextProperty =
-            AvaloniaProperty.Register<UserInput, string?>(nameof(Text), defaultBindingMode: global::Avalonia.Data.BindingMode.TwoWay);
+            AvaloniaProperty.Register<UserInput, string?>(nameof(Text), defaultBindingMode: BindingMode.TwoWay);
 
         public static readonly StyledProperty<double> TextHeightProperty =
             AvaloniaProperty.Register<UserInput, double>(nameof(TextHeight), 28.0);

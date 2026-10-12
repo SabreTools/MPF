@@ -1,7 +1,9 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.Styling;
@@ -79,7 +81,7 @@ namespace MPF.Avalonia.UserControls
         /// <returns>Brush representing the color</returns>
         private static IBrush GetBrush(LogLevel logLevel)
         {
-            bool darkMode = global::Avalonia.Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
+            bool darkMode = Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
 
             return logLevel switch
             {
@@ -98,10 +100,10 @@ namespace MPF.Avalonia.UserControls
 
         #region EventHandlers
 
-        private void OnClearButton(object? sender, global::Avalonia.Interactivity.RoutedEventArgs e)
+        private void OnClearButton(object? sender, RoutedEventArgs e)
             => Entries.Clear();
 
-        private async void OnSaveButton(object? sender, global::Avalonia.Interactivity.RoutedEventArgs e)
+        private async void OnSaveButton(object? sender, RoutedEventArgs e)
         {
             try
             {
