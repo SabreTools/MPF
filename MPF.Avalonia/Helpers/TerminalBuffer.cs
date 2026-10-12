@@ -18,12 +18,39 @@ namespace MPF.Avalonia.Helpers
     /// Here, <c>\r</c> moves the write cursor to column 0 of the live line
     /// (overwrite, not new line); <c>\n</c> commits the live line. Progress
     /// updates therefore mutate a single live line and never grow the log.
-    ///
-    /// No UI dependency: pure and unit-testable. The UI binds the committed lines
-    /// to a virtualized list and the live line to one trailing row.
     /// </summary>
     public sealed class TerminalBuffer
     {
+        #region Properties
+
+        /// <summary>
+        /// Lines committed so far
+        /// </summary>
+        /// <remarks>Each line was terminated by <c>\n</c>)</remarks>
+        public readonly List<string> CommittedLines = [];
+
+        /// <summary>
+        /// The live line being assembled after the last <c>\n</c>
+        /// </summary>
+        public string CurrentLine => _current.ToString();
+
+        /// <summary>
+        /// Raised once per committed line
+        /// </summary>
+        public event Action<string>? LineCommitted;
+
+        /// <summary>
+        /// Raised when the live line changes (printable char, <c>\r</c> overwrite, erase)
+        /// </summary>
+        public event Action<string>? CurrentLineChanged;
+
+        #endregion
+
+        #region Private Fields
+
+        /// <summary>
+        ///
+        /// </summary>
         private readonly StringBuilder _current = new();
 
         /// <summary>
@@ -36,27 +63,37 @@ namespace MPF.Avalonia.Helpers
         /// </summary>
         private bool _inEscape;
 
+        /// <summary>
+        /// Reusable current escape sequence
+        /// </summary>
         private readonly StringBuilder _escape = new();
 
-        /// <summary>
-        /// Lines committed so far (each was terminated by <c>\n</c>).
-        /// </summary>
-        public List<string> CommittedLines { get; } = [];
+        #endregion
+
+        #region Private Enumerations
 
         /// <summary>
-        /// The live line being assembled after the last <c>\n</c>.
+        /// Erase mode for inline edits
         /// </summary>
-        public string CurrentLine => _current.ToString();
+        private enum EraseMode
+        {
+            /// <summary>
+            /// Cursor to end of line
+            /// </summary>
+            EndOfLine = 0,
 
-        /// <summary>
-        /// Raised once per committed line.
-        /// </summary>
-        public event Action<string>? LineCommitted;
+            /// <summary>
+            /// Start of line to cursor (blank them, keep length)
+            /// </summary>
+            StartToCursor = 1,
 
-        /// <summary>
-        /// Raised when the live line changes (printable char, <c>\r</c> overwrite, erase).
-        /// </summary>
-        public event Action<string>? CurrentLineChanged;
+            /// <summary>
+            /// Entire line
+            /// </summary>
+            EntireLine = 2,
+        }
+
+        #endregion
 
         /// <summary>
         /// Feed a raw chunk of output. Chunk boundaries are arbitrary: a <c>\r\n</c>
@@ -112,6 +149,7 @@ namespace MPF.Avalonia.Helpers
                             WriteChar(c);
                             liveChanged = true;
                         }
+
                         // other control chars (bell, etc.) are dropped
                         break;
                 }
@@ -201,7 +239,7 @@ namespace MPF.Avalonia.Helpers
             {
                 // EL -- erase in line
                 case 'K':
-                    EraseInLine(ParseIntWithFallback(parameters, 0));
+                    EraseInLine((EraseMode)ParseIntWithFallback(parameters, 0));
                     return true;
 
                 // CHA -- cursor to absolute column (1-based)
@@ -224,20 +262,17 @@ namespace MPF.Avalonia.Helpers
         /// Erase characters inside the current line
         /// </summary>
         /// <param name="mode">Mode determining how to erase characters</param>
-        /// TODO: Determine if mode could be an enum to bound this better
-        private void EraseInLine(int mode)
+        private void EraseInLine(EraseMode mode)
         {
             switch (mode)
             {
-                // Cursor to end of line
-                case 0:
+                case EraseMode.EndOfLine:
                     if (_cursor < _current.Length)
                         _current.Length = _cursor;
 
                     break;
 
-                // Start of line to cursor (blank them, keep length)
-                case 1:
+                case EraseMode.StartToCursor:
                     for (int i = 0; i < _cursor && i < _current.Length; i++)
                     {
                         _current[i] = ' ';
@@ -246,7 +281,7 @@ namespace MPF.Avalonia.Helpers
                     break;
 
                 // Entire line
-                case 2:
+                case EraseMode.EntireLine:
                     _current.Clear();
                     _cursor = 0;
                     break;

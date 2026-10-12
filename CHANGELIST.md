@@ -10,6 +10,7 @@
 - Reduce unnecessary code in ThemeService in Avalonia
 - Remove all uses of 'global:' prefix
 - Make Linux theme helpers easier to follow
+- Slight cleanup to TerminalBuffer
 
 ### 3.11.0 (2026-10-12)
 
