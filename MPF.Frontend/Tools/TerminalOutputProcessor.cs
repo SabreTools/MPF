@@ -54,7 +54,11 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Reusable current escape sequence
         /// </summary>
+#if NET20 || NET35
         private StringBuilder _escape = new();
+#else
+        private readonly StringBuilder _escape = new();
+#endif
 
         #endregion
 
