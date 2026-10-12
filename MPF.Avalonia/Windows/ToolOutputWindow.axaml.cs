@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -29,6 +30,8 @@ namespace MPF.Avalonia.Windows
     /// </remarks>
     public partial class ToolOutputWindow : Window
     {
+        #region Constants
+
         /// <summary>
         /// CMD-style fixed scrollback: oldest lines are trimmed past this cap
         /// </summary>
@@ -38,6 +41,32 @@ namespace MPF.Avalonia.Windows
         /// One batched UI dispatch per ~60 fps frame
         /// </summary>
         private const int FlushIntervalMs = 16;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Whether the window should close itself when the tool exits
+        /// </summary>
+        public bool AutoClose
+        {
+            get => AutoCloseCheck.IsChecked == true;
+            set => AutoCloseCheck.IsChecked = value;
+        }
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Raised when the user toggles the auto-close checkbox, so the host can persist it
+        /// </summary>
+        public event Action<bool>? AutoCloseChanged;
+
+        #endregion
+
+        #region Private Fields
 
         /// <summary>
         ///
@@ -89,10 +118,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private ScrollViewer? _scroller;
 
-        /// <summary>
-        /// Raised when the user toggles the auto-close checkbox, so the host can persist it
-        /// </summary>
-        public event Action<bool>? AutoCloseChanged;
+        #endregion
 
         public ToolOutputWindow() : this(autoClose: true) { }
 
@@ -101,27 +127,10 @@ namespace MPF.Avalonia.Windows
             InitializeComponent();
 
             LinesList.ItemsSource = _lines;
-
-            CopyMenuItem.Click += (_, _) => CopySelectionToClipboard();
-            SelectAllMenuItem.Click += (_, _) => LinesList.SelectAll();
-            // Window-level so Ctrl+C / Ctrl+A work without giving the (deliberately
-            // non-focusable) log rows keyboard focus.
-            KeyDown += OnKeyDown;
-
             AutoCloseCheck.IsChecked = autoClose;
-            AutoCloseCheck.IsCheckedChanged += (_, _) => AutoCloseChanged?.Invoke(AutoCloseCheck.IsChecked == true);
 
-            // The pump runs for the lifetime of the window, draining whatever Append posts.
-            _pumpTask = _pump.RunAsync(_buffer, OnBatch, FlushIntervalMs, _cts.Token);
-        }
-
-        /// <summary>
-        /// Whether the window should close itself when the tool exits
-        /// </summary>
-        public bool AutoClose
-        {
-            get => AutoCloseCheck.IsChecked == true;
-            set => AutoCloseCheck.IsChecked = value;
+            // The pump runs for the lifetime of the window
+            _pumpTask = RunPumpAsync(_cts.Token);
         }
 
         /// <summary>
@@ -151,6 +160,82 @@ namespace MPF.Avalonia.Windows
                 Close();
         }
 
+        #region Event Handlers
+
+        /// <summary>
+        /// Changed handler for AutoCloseCheck
+        /// </summary>
+        private void AutoCloseCheckChanged(object? sender, RoutedEventArgs e)
+            => AutoCloseChanged?.Invoke(AutoCloseCheck.IsChecked == true);
+
+        /// <summary>
+        /// Click handler for CopyMenuItem
+        /// </summary>
+        private void CopyMenuItemClick(object? sender, RoutedEventArgs e)
+            => CopySelectionToClipboard();
+
+        /// <summary>
+        /// Runs on the consumer thread after a batch was fed to the buffer. Snapshot the
+        /// new committed lines + the current live line, then do exactly ONE dispatch to
+        /// the UI thread for the whole batch.
+        /// </summary>
+        private void OnBatch()
+        {
+            List<string> newLines = [];
+            List<string> committed = _buffer.CommittedLines;
+            if (_committedIndex < committed.Count)
+            {
+                newLines = new List<string>(committed.Count - _committedIndex);
+                for (; _committedIndex < committed.Count; _committedIndex++)
+                {
+                    newLines.Add(committed[_committedIndex]);
+                }
+            }
+
+            string live = _buffer.CurrentLine;
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                EnsureScroller();
+
+                foreach (string line in newLines)
+                {
+                    _lines.Add(line);
+                }
+
+                // CMD-style fixed scrollback: always drop the oldest lines past the cap.
+                while (_lines.Count > MaxLines)
+                {
+                    _lines.RemoveAt(0);
+                }
+
+                LiveLine.Text = live;
+
+                if (_autoScroll && _scroller is not null && !_scrollQueued)
+                {
+                    _scrollQueued = true;
+                    // Defer past the layout pass so the extent is fresh and we land on the bottom.
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        _scrollQueued = false;
+                        if (_autoScroll)
+                            _scroller!.ScrollToEnd();
+                    }, DispatcherPriority.Background);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Best-effort shutdown; if the tool is still running its output is simply
+        /// dropped from here on (Post on a completed channel is a no-op)
+        /// </summary>
+        protected override void OnClosed(EventArgs e)
+        {
+            _cts.Cancel();
+            _pump.TryComplete();
+            base.OnClosed(e);
+        }
+
         /// <summary>
         /// Ctrl+C / context-menu Copy: copy the selected log lines as plain text.
         /// Ctrl+A selects every committed line.
@@ -168,6 +253,34 @@ namespace MPF.Avalonia.Windows
                 e.Handled = true;
             }
         }
+
+        /// <summary>
+        /// Tail-follow is toggled ONLY by genuine user input: the scrollbar's Scroll event
+        /// (thumb drag / track / page) and the mouse wheel. Neither fires for the
+        /// programmatic ScrollToEnd or for the ring-buffer trim -- so following never drops
+        /// on its own under fast output. Position then decides direction: at/near the
+        /// bottom = follow, else not.
+        /// </summary>
+        private void OnUserScroll(object? sender, ScrollEventArgs e)
+            => SyncFollowToPosition();
+
+        /// <summary>
+        ///The wheel scroll is applied after this event fires; check once it has
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnWheel(object? sender, PointerWheelEventArgs e)
+            => Dispatcher.UIThread.Post(SyncFollowToPosition, DispatcherPriority.Background);
+
+        /// <summary>
+        /// Click handler for SelectAllMenuItem
+        /// </summary>
+        private void SelectAllMenuItemClick(object? sender, RoutedEventArgs e)
+            => LinesList.SelectAll();
+
+        #endregion
+
+        #region Helpers
 
         /// <summary>
         /// Copies the selected rows to the clipboard, newline-joined and in top-to-bottom
@@ -194,60 +307,6 @@ namespace MPF.Avalonia.Windows
             IClipboard? clipboard = GetTopLevel(this)?.Clipboard;
             if (clipboard is not null)
                 await clipboard.SetTextAsync(sb.ToString());
-        }
-
-        /// <summary>
-        /// Runs on the consumer thread after a batch was fed to the buffer. Snapshot the
-        /// new committed lines + the current live line, then do exactly ONE dispatch to
-        /// the UI thread for the whole batch.
-        /// </summary>
-        private void OnBatch(int consumed)
-        {
-            List<string>? newLines = null;
-            List<string> committed = _buffer.CommittedLines;
-            if (_committedIndex < committed.Count)
-            {
-                newLines = new List<string>(committed.Count - _committedIndex);
-                for (; _committedIndex < committed.Count; _committedIndex++)
-                {
-                    newLines.Add(committed[_committedIndex]);
-                }
-            }
-
-            string live = _buffer.CurrentLine;
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                EnsureScroller();
-
-                if (newLines is not null)
-                {
-                    foreach (string line in newLines)
-                    {
-                        _lines.Add(line);
-                    }
-                }
-
-                // CMD-style fixed scrollback: always drop the oldest lines past the cap.
-                while (_lines.Count > MaxLines)
-                {
-                    _lines.RemoveAt(0);
-                }
-
-                LiveLine.Text = live;
-
-                if (_autoScroll && _scroller is not null && !_scrollQueued)
-                {
-                    _scrollQueued = true;
-                    // Defer past the layout pass so the extent is fresh and we land on the bottom.
-                    Dispatcher.UIThread.Post(() =>
-                    {
-                        _scrollQueued = false;
-                        if (_autoScroll)
-                            _scroller!.ScrollToEnd();
-                    }, DispatcherPriority.Background);
-                }
-            });
         }
 
         /// <summary>
@@ -278,23 +337,44 @@ namespace MPF.Avalonia.Windows
         }
 
         /// <summary>
-        /// Tail-follow is toggled ONLY by genuine user input: the scrollbar's Scroll event
-        /// (thumb drag / track / page) and the mouse wheel. Neither fires for the
-        /// programmatic ScrollToEnd or for the ring-buffer trim -- so following never drops
-        /// on its own under fast output. Position then decides direction: at/near the
-        /// bottom = follow, else not.
+        /// Run message pump async until cancelled
         /// </summary>
-        private void OnUserScroll(object? sender, ScrollEventArgs e)
-            => SyncFollowToPosition();
+        private async Task RunPumpAsync(CancellationToken ct)
+        {
+            try
+            {
+                while (await _pump.WaitToReadAsync(ct).ConfigureAwait(false))
+                {
+                    List<string> batch = _pump.DrainAvailable();
+                    if (batch.Count > 0)
+                    {
+                        foreach (string chunk in batch)
+                        {
+                            _buffer.Process(chunk);
+                        }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnWheel(object? sender, PointerWheelEventArgs e)
-            // The wheel scroll is applied after this event fires; check once it has.
-            => Dispatcher.UIThread.Post(SyncFollowToPosition, DispatcherPriority.Background);
+                        OnBatch();
+                    }
+
+                    if (FlushIntervalMs > 0)
+                        await Task.Delay(FlushIntervalMs, ct).ConfigureAwait(false);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected on shutdown
+            }
+
+            // Final drain after completion so the tail is not lost.
+            List<string> tail = _pump.DrainAvailable();
+            foreach (string chunk in tail)
+            {
+                _buffer.Process(chunk);
+            }
+
+            _buffer.Flush();
+            OnBatch();
+        }
 
         /// <summary>
         ///
@@ -308,17 +388,6 @@ namespace MPF.Avalonia.Windows
             _autoScroll = distanceFromBottom <= 4;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnClosed(EventArgs e)
-        {
-            // Best-effort shutdown; if the tool is still running its output is simply
-            // dropped from here on (Post on a completed channel is a no-op).
-            _cts.Cancel();
-            _pump.TryComplete();
-            base.OnClosed(e);
-        }
+        #endregion
     }
 }

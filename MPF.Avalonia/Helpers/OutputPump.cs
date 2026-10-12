@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Channels;
@@ -40,48 +39,6 @@ namespace MPF.Avalonia.Helpers
             }
 
             return batch;
-        }
-
-        /// <summary>
-        /// Reference flush loop: wait, drain a batch, feed the buffer, raise one
-        /// onBatch callback (with the number of chunks consumed in the batch), then
-        /// throttle. Throttling is what bounds the dispatch rate.
-        /// </summary>
-        public async Task RunAsync(TerminalBuffer buffer, Action<int> onBatch, int flushIntervalMs = 75, CancellationToken ct = default)
-        {
-            try
-            {
-                while (await WaitToReadAsync(ct).ConfigureAwait(false))
-                {
-                    List<string> batch = DrainAvailable();
-                    if (batch.Count > 0)
-                    {
-                        foreach (string chunk in batch)
-                        {
-                            buffer.Process(chunk);
-                        }
-
-                        onBatch(batch.Count);
-                    }
-
-                    if (flushIntervalMs > 0)
-                        await Task.Delay(flushIntervalMs, ct).ConfigureAwait(false);
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                // expected on shutdown
-            }
-
-            // Final drain after completion so the tail is not lost.
-            List<string> tail = DrainAvailable();
-            foreach (string chunk in tail)
-            {
-                buffer.Process(chunk);
-            }
-
-            buffer.Flush();
-            onBatch(tail.Count);
         }
 
         #region Passthrough Functionality

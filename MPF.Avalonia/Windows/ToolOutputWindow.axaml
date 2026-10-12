@@ -5,7 +5,8 @@
         Height="600"
         MinWidth="480"
         MinHeight="240"
-        Title="{DynamicResource ToolOutputTitleString}">
+        Title="{DynamicResource ToolOutputTitleString}"
+        KeyDown="OnKeyDown">
 
     <!-- Fixed default size. Width fits redumper's longest *regular* output line - the
     drive "configuration:" line (~122 chars), which has no user-controllable parts
@@ -33,10 +34,12 @@
                     <ContextMenu>
                         <MenuItem x:Name="CopyMenuItem"
                                   Header="{DynamicResource CopyMenuItemString}"
-                                  InputGesture="Ctrl+C" />
+                                  InputGesture="Ctrl+C"
+                                  Click="CopyMenuItemClick" />
                         <MenuItem x:Name="SelectAllMenuItem"
                                   Header="{DynamicResource SelectAllMenuItemString}"
-                                  InputGesture="Ctrl+A" />
+                                  InputGesture="Ctrl+A"
+                                  Click="SelectAllMenuItemClick" />
                     </ContextMenu>
                 </ListBox.ContextMenu>
                 <ListBox.Styles>
@@ -97,6 +100,7 @@
             <CheckBox x:Name="AutoCloseCheck"
                       Content="{DynamicResource ToolOutputCloseOnExitCheckBoxString}"
                       IsChecked="True"
+                      IsCheckedChanged="AutoCloseCheckChanged"
                       VerticalAlignment="Center" />
         </StackPanel>
     </Grid>
