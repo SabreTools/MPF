@@ -1,76 +1,67 @@
 using System;
 using System.Globalization;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml.Styling;
+using System.Windows;
 using MPF.Frontend;
 
-namespace MPF.Avalonia.Services
+namespace MPF.UI
 {
     /// <summary>
     /// Loads localized string resource dictionaries into the application based on interface language
     /// </summary>
-    /// TODO: See if this can translate to WPF
     internal static class StringResourceLoader
     {
         /// <summary>
         /// Reset the merged dictionaries to the default English strings, then overlay the
         /// requested language (auto-detecting from the current culture when set to AutoDetect)
         /// </summary>
-        public static void SetInterfaceLanguage(IResourceDictionary resources, InterfaceLanguage lang)
+        public static void SetInterfaceLanguage(InterfaceLanguage lang)
         {
             // Reset the resources dictionary
-            resources.MergedDictionaries.Clear();
+            Application.Current.Resources.MergedDictionaries.Clear();
 
             // Auto detect language
             if (lang == InterfaceLanguage.AutoDetect)
                 lang = FromCurrentCulture();
 
-            // Get the executing assembly name for loading
-            string assemblyName = typeof(StringResourceLoader).Assembly.GetName().Name ?? "MPF";
-
             // Set baseline language (English), required as some translations may not translate all strings
             if (lang != InterfaceLanguage.English)
             {
-                var engUri = new Uri($"avares://{assemblyName}/Assets/Strings.xaml");
-                var baselineDictionary = new ResourceInclude(engUri)
+                var baselineDictionary = new ResourceDictionary
                 {
-                    Source = engUri
+                    Source = new Uri("../Resources/Strings.xaml", UriKind.Relative)
                 };
-                resources.MergedDictionaries.Add(baselineDictionary);
+                Application.Current.Resources.MergedDictionaries.Add(baselineDictionary);
             }
 
+            var dictionary = new ResourceDictionary
+            {
 #pragma warning disable IDE0072
-            var uri = lang switch
-            {
-                InterfaceLanguage.English => new Uri($"avares://{assemblyName}/Assets/Strings.xaml"),
-                InterfaceLanguage.French => new Uri($"avares://{assemblyName}/Assets/Strings.fr.xaml"),
-                InterfaceLanguage.German => new Uri($"avares://{assemblyName}/Assets/Strings.de.xaml"),
-                InterfaceLanguage.Italian => new Uri($"avares://{assemblyName}/Assets/Strings.it.xaml"),
-                InterfaceLanguage.Japanese => new Uri($"avares://{assemblyName}/Assets/Strings.ja.xaml"),
-                InterfaceLanguage.Korean => new Uri($"avares://{assemblyName}/Assets/Strings.ko.xaml"),
-                InterfaceLanguage.Polish => new Uri($"avares://{assemblyName}/Assets/Strings.pl.xaml"),
-                InterfaceLanguage.Portuguese => new Uri($"avares://{assemblyName}/Assets/Strings.pt.xaml"),
-                InterfaceLanguage.Russian => new Uri($"avares://{assemblyName}/Assets/Strings.ru.xaml"),
-                InterfaceLanguage.Spanish => new Uri($"avares://{assemblyName}/Assets/Strings.es.xaml"),
-                InterfaceLanguage.Swedish => new Uri($"avares://{assemblyName}/Assets/Strings.sv.xaml"),
-                InterfaceLanguage.Ukrainian => new Uri($"avares://{assemblyName}/Assets/Strings.uk.xaml"),
-                InterfaceLanguage.L337 => new Uri($"avares://{assemblyName}/Assets/Strings.37.xaml"),
-                _ => new Uri($"avares://{assemblyName}/Assets/Strings.xaml"),
-            };
+                Source = lang switch
+                {
+                    InterfaceLanguage.English => new Uri("../Resources/Strings.xaml", UriKind.Relative),
+                    InterfaceLanguage.French => new Uri("../Resources/Strings.fr.xaml", UriKind.Relative),
+                    InterfaceLanguage.German => new Uri("../Resources/Strings.de.xaml", UriKind.Relative),
+                    InterfaceLanguage.Italian => new Uri("../Resources/Strings.it.xaml", UriKind.Relative),
+                    InterfaceLanguage.Japanese => new Uri("../Resources/Strings.ja.xaml", UriKind.Relative),
+                    InterfaceLanguage.Korean => new Uri("../Resources/Strings.ko.xaml", UriKind.Relative),
+                    InterfaceLanguage.Polish => new Uri("../Resources/Strings.pl.xaml", UriKind.Relative),
+                    InterfaceLanguage.Portuguese => new Uri("../Resources/Strings.pt.xaml", UriKind.Relative),
+                    InterfaceLanguage.Russian => new Uri("../Resources/Strings.ru.xaml", UriKind.Relative),
+                    InterfaceLanguage.Spanish => new Uri("../Resources/Strings.es.xaml", UriKind.Relative),
+                    InterfaceLanguage.Swedish => new Uri("../Resources/Strings.sv.xaml", UriKind.Relative),
+                    InterfaceLanguage.Ukrainian => new Uri("../Resources/Strings.uk.xaml", UriKind.Relative),
+                    InterfaceLanguage.L337 => new Uri("../Resources/Strings.37.xaml", UriKind.Relative),
+                    _ => new Uri("../Resources/Strings.xaml", UriKind.Relative),
+                }
 #pragma warning restore IDE0072
-
-            var dictionary = new ResourceInclude(uri)
-            {
-                Source = uri
             };
-
-            resources.MergedDictionaries.Add(dictionary);
+            Application.Current.Resources.MergedDictionaries.Add(dictionary);
         }
 
         /// <summary>
         /// Map the current UI culture's two-letter ISO language name to a supported interface language
         /// </summary>
-        /// TODO: Merge with WPF version in Frontend
+        /// TODO: Merge with Avalonia version in Frontend
         private static InterfaceLanguage FromCurrentCulture()
         {
             // Get current region code to distinguish regional variants of languages
