@@ -18,6 +18,7 @@
 - Move TerminalOutputProcessor to Frontend
 - Consolidate ToolOutputWindow constructors
 - Slight cleanup to ToolOutputConsole
+- Always use Avalonia ToolOutputConsole
 
 ### 3.11.0 (2026-10-12)
 

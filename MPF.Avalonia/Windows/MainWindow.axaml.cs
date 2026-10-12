@@ -109,12 +109,8 @@ namespace MPF.Avalonia.Windows
             MainViewModel.UpdateVolumeLabelEnabled = false;
             MainViewModel.CopyProtectScanButtonEnabled = false;
 
-            // On Linux and macOS the dumping tool has no console window of its own, so stream
-            // its live output into a separate MPF window. Windows keeps the tool's own console
-            // (leave this null), preserving the original behavior.
-            IToolOutputConsole? toolConsole = OperatingSystem.IsLinux() || OperatingSystem.IsMacOS()
-                ? new ToolOutputConsole(this, MainViewModel.Options)
-                : null;
+            // Create a tool console window for output
+            var toolConsole = new ToolOutputConsole(this, MainViewModel.Options);
 
             MainViewModel.Init(
                 LogOutput!.EnqueueLog,
