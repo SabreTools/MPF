@@ -28,6 +28,7 @@
 - Move OutputPump to base Avalonia namespace
 - Move more logic into SyncWithSystemTheme
 - Wrap ThemeService into Avalonia Theme
+- Move ToolOutputConsole to base Avalonia namespace
 
 ### 3.11.0 (2026-10-12)
 

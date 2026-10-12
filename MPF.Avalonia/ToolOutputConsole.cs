@@ -6,7 +6,7 @@ using MPF.Avalonia.Windows;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
 
-namespace MPF.Avalonia.Services
+namespace MPF.Avalonia
 {
     /// <summary>
     /// Bridges the frontend's <see cref="IToolOutputConsole"/> seam to an Avalonia

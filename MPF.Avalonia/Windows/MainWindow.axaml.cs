@@ -11,7 +11,6 @@ using Avalonia.Platform;
 using Avalonia.Platform.Storage;
 using Avalonia.Styling;
 using Avalonia.Threading;
-using MPF.Avalonia.Services;
 using MPF.Avalonia.Themes;
 using MPF.Avalonia.UserControls;
 using MPF.Frontend;
