@@ -21,6 +21,7 @@
 - Fix lingering protection-related UI inconsistency
 - Enable Chile
 - Change default CD dumping speed from 24 to 16
+- Update Redumper to build 761
 
 ### 3.10.0 (2026-09-08)
 
