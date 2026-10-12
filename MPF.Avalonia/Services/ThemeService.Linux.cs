@@ -4,8 +4,7 @@ using System.Diagnostics;
 namespace MPF.Avalonia.Services
 {
     /// <summary>
-    /// Linux-specific functionality: detecting a dark system theme through common
-    /// desktop environment settings
+    /// Linux-specific functionality
     /// </summary>
     internal static partial class ThemeService
     {
@@ -15,22 +14,37 @@ namespace MPF.Avalonia.Services
         /// </summary>
         private static bool IsLinuxDarkMode()
         {
-            return IsDarkThemeName(Environment.GetEnvironmentVariable("GTK_THEME"))
-                || IsDarkThemeName(Environment.GetEnvironmentVariable("QT_STYLE_OVERRIDE"))
-                || IsDarkThemeName(RunCommand("gsettings", "get org.gnome.desktop.interface color-scheme"))
-                || IsDarkThemeName(RunCommand("gsettings", "get org.gnome.desktop.interface gtk-theme"))
-                || IsKdeColorSchemeDark();
-        }
+            // GTK theme
+            string? colorScheme = Environment.GetEnvironmentVariable("GTK_THEME");
+            if (IsDarkThemeName(colorScheme))
+                return true;
 
-        /// <summary>
-        /// Read the active KDE color scheme (Plasma 6, then Plasma 5) and test it for a dark name
-        /// </summary>
-        private static bool IsKdeColorSchemeDark()
-        {
-            string? colorScheme = RunCommand("kreadconfig6", "--group General --key ColorScheme")
-                ?? RunCommand("kreadconfig5", "--group General --key ColorScheme");
+            // QT style
+            colorScheme = Environment.GetEnvironmentVariable("QT_STYLE_OVERRIDE");
+            if (IsDarkThemeName(colorScheme))
+                return true;
 
-            return IsDarkThemeName(colorScheme);
+            // GNOME color scheme
+            colorScheme = RunCommand("gsettings", "get org.gnome.desktop.interface color-scheme");
+            if (IsDarkThemeName(colorScheme))
+                return true;
+
+            // GNOME GTK theme
+            colorScheme = RunCommand("gsettings", "get org.gnome.desktop.interface gtk-theme");
+            if (IsDarkThemeName(colorScheme))
+                return true;
+
+            // Plasma 6
+            colorScheme = RunCommand("kreadconfig6", "--group General --key ColorScheme");
+            if (colorScheme is not null)
+                return IsDarkThemeName(colorScheme);
+
+            // Plasma 5
+            colorScheme = RunCommand("kreadconfig5", "--group General --key ColorScheme");
+            if (colorScheme is not null)
+                return IsDarkThemeName(colorScheme);
+
+            return false;
         }
 
         /// <summary>
@@ -58,7 +72,7 @@ namespace MPF.Avalonia.Services
         {
             try
             {
-                using Process process = Process.Start(new ProcessStartInfo
+                using var process = Process.Start(new ProcessStartInfo
                 {
                     FileName = fileName,
                     Arguments = arguments,
@@ -66,7 +80,9 @@ namespace MPF.Avalonia.Services
                     RedirectStandardError = true,
                     UseShellExecute = false,
                     CreateNoWindow = true,
-                })!;
+                });
+                if (process is null)
+                    return null;
 
                 if (!process.WaitForExit(1000))
                 {

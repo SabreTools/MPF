@@ -8,8 +8,7 @@ using Avalonia.Styling;
 namespace MPF.Avalonia.Services
 {
     /// <summary>
-    /// Windows-specific functionality: theming the native title bar through the
-    /// DWM immersive dark mode attribute
+    /// Windows-specific functionality
     /// </summary>
     internal static partial class ThemeService
     {
