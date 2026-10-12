@@ -49,16 +49,18 @@ namespace MPF.Frontend
                 return drives;
 
             var existingNames = new HashSet<string>();
-            foreach (var d in drives)
+            foreach (var drive in drives)
             {
-                if (d?.DevicePath is not null)
-                    existingNames.Add(d.DevicePath);
+                if (drive.DevicePath is not null)
+                    existingNames.Add(drive.DevicePath);
             }
 
             // Block nodes first, then their generic SCSI counterparts
-            var devicePaths = new List<string>();
-            devicePaths.AddRange(IOExtensions.EnumerateUnixOpticalBlockPaths("/dev"));
-            devicePaths.AddRange(IOExtensions.EnumerateUnixOpticalGenericPaths("/dev", "/sys/class/scsi_generic"));
+            List<string> devicePaths =
+            [
+                .. IOExtensions.EnumerateUnixOpticalBlockPaths("/dev"),
+                .. IOExtensions.EnumerateUnixOpticalGenericPaths("/dev", "/sys/class/scsi_generic"),
+            ];
 
             var extra = new List<Drive>();
             foreach (var devicePath in devicePaths)
@@ -67,22 +69,12 @@ namespace MPF.Frontend
                 if (!existingNames.Add(devicePath))
                     continue;
 
-                try
+                // Force marking the drive as active if it's found
+                var drive = Create(Frontend.InternalDriveType.Optical, devicePath);
+                if (drive is not null)
                 {
-                    var d = Create(Frontend.InternalDriveType.Optical, devicePath);
-                    if (d is not null)
-                    {
-                        // A Linux optical /dev node is never a mount point, so DriveInfo always
-                        // reports it as not-ready. Mark it active so it matches how Windows
-                        // surfaces optical drives; whether a disc is actually loaded is left to
-                        // the dumping program rather than probing the device here.
-                        d.MarkedActive = true;
-                        extra.Add(d);
-                    }
-                }
-                catch
-                {
-                    // Skip devices that can't be opened
+                    drive.MarkedActive = true;
+                    extra.Add(drive);
                 }
             }
 
@@ -107,16 +99,18 @@ namespace MPF.Frontend
                 return drives;
 
             var existingNames = new HashSet<string>();
-            foreach (var d in drives)
+            foreach (var drive in drives)
             {
-                if (d?.DevicePath is not null)
-                    existingNames.Add(d.DevicePath);
+                if (drive.DevicePath is not null)
+                    existingNames.Add(drive.DevicePath);
             }
 
             // Legacy /dev/fd* nodes plus USB floppy drives exposed as SCSI disks (/dev/sd*)
-            var devicePaths = new List<string>();
-            devicePaths.AddRange(IOExtensions.EnumerateUnixFloppyBlockPaths("/dev"));
-            devicePaths.AddRange(IOExtensions.EnumerateUnixUsbFloppyBlockPaths("/sys/block", "/dev"));
+            List<string>? devicePaths =
+            [
+                .. IOExtensions.EnumerateUnixFloppyBlockPaths("/dev"),
+                .. IOExtensions.EnumerateUnixUsbFloppyBlockPaths("/sys/block", "/dev"),
+            ];
 
             var extra = new List<Drive>();
             foreach (var devicePath in devicePaths)
@@ -125,23 +119,12 @@ namespace MPF.Frontend
                 if (!existingNames.Add(devicePath))
                     continue;
 
-                try
+                // Force marking the drive as active if it's found
+                var drive = Create(Frontend.InternalDriveType.Floppy, devicePath);
+                if (drive != null)
                 {
-                    var d = Create(Frontend.InternalDriveType.Floppy, devicePath);
-                    if (d != null)
-                    {
-                        // A Linux floppy /dev node is never a mount point, so DriveInfo always
-                        // reports it as not-ready. Mark it active like optical drives; whether a
-                        // disk is actually inserted is left to the dumping program rather than
-                        // probing the device here, since floppy media state is not reliably
-                        // exposed through sysfs.
-                        d.MarkedActive = true;
-                        extra.Add(d);
-                    }
-                }
-                catch
-                {
-                    // Skip devices that can't be opened
+                    drive.MarkedActive = true;
+                    extra.Add(drive);
                 }
             }
 
@@ -165,10 +148,10 @@ namespace MPF.Frontend
                 return drives;
 
             var existingNames = new HashSet<string>();
-            foreach (var d in drives)
+            foreach (var drive in drives)
             {
-                if (d?.DevicePath is not null)
-                    existingNames.Add(d.DevicePath);
+                if (drive.DevicePath is not null)
+                    existingNames.Add(drive.DevicePath);
             }
 
             var extra = new List<Drive>();
@@ -178,24 +161,14 @@ namespace MPF.Frontend
                 if (!existingNames.Add(device.DevicePath!))
                     continue;
 
-                try
+                // Force marking the drive as active if it's HDD or has a non-zero size
+                var drive = Create(device.InternalDriveType, device.DevicePath!);
+                if (drive is not null)
                 {
-                    var d = Create(device.InternalDriveType, device.DevicePath!);
-                    if (d is not null)
-                    {
-                        // A raw /dev block node is never a mount point, so DriveInfo reports
-                        // it as not-ready with no size. Mirror how Windows surfaces these: a
-                        // fixed disk is always ready, while a removable drive is only ready
-                        // when media is present (sysfs reports a non-zero size).
-                        d.TotalSize = device.TotalSize;
-                        d.MarkedActive = device.InternalDriveType == Frontend.InternalDriveType.HardDisk
-                            || device.TotalSize > 0;
-                        extra.Add(d);
-                    }
-                }
-                catch
-                {
-                    // Skip devices that can't be opened
+                    drive.TotalSize = device.TotalSize;
+                    drive.MarkedActive = device.InternalDriveType == Frontend.InternalDriveType.HardDisk
+                        || device.TotalSize > 0;
+                    extra.Add(drive);
                 }
             }
 
@@ -221,16 +194,7 @@ namespace MPF.Frontend
             if (!Directory.Exists(sysBlockRoot!))
                 return result;
 
-            string[] entries;
-            try
-            {
-                entries = Directory.GetFileSystemEntries(sysBlockRoot);
-            }
-            catch
-            {
-                return result;
-            }
-
+            string[] entries = IOExtensions.SafeGetFileSystemEntries(sysBlockRoot);
             foreach (var entry in entries)
             {
                 string name = Path.GetFileName(entry);
@@ -243,7 +207,7 @@ namespace MPF.Frontend
 
                 long totalSize = ReadUnixBlockDeviceSize(entry);
 
-                result.Add(new Drive()
+                result.Add(new Drive
                 {
                     InternalDriveType = driveType,
                     DevicePath = Path.Combine(devRoot!, name),
