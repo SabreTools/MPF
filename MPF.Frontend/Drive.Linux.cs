@@ -194,7 +194,7 @@ namespace MPF.Frontend
             if (!Directory.Exists(sysBlockRoot!))
                 return result;
 
-            string[] entries = IOExtensions.SafeGetFileSystemEntries(sysBlockRoot);
+            string[] entries = IOExtensions.SafeGetFileSystemEntries(sysBlockRoot!);
             foreach (var entry in entries)
             {
                 string name = Path.GetFileName(entry);

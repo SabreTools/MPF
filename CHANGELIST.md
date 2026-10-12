@@ -5,6 +5,7 @@
 - Clean up more drive-related code
 - Clean up some unnecessary safety in Linux drive code
 - Clean up some unnecessary safety in MacOS drive code
+- Fix framework-specific issues from previous commits
 
 ### 3.11.0 (2026-10-12)
 

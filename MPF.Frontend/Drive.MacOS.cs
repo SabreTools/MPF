@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.IO;
 #if NETCOREAPP
 using System.Runtime.InteropServices;
-using SabreTools.IO.Extensions;
 #endif
+using SabreTools.IO.Extensions;
 
 namespace MPF.Frontend
 {
@@ -161,10 +161,10 @@ namespace MPF.Frontend
         internal static List<string> EnumerateMacOSWholeDiskNodes(string? devRoot)
         {
             var result = new List<string>();
-            if (string.IsNullOrEmpty(devRoot) || !Directory.Exists(devRoot))
+            if (string.IsNullOrEmpty(devRoot) || !Directory.Exists(devRoot!))
                 return result;
 
-            string[] candidates = IOExtensions.SafeGetFileSystemEntries(devRoot, "disk*");
+            string[] candidates = IOExtensions.SafeGetFileSystemEntries(devRoot!, "disk*");
             foreach (var path in candidates)
             {
                 if (IsMacOSWholeDiskNode(Path.GetFileName(path)))
