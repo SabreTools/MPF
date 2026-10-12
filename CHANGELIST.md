@@ -30,6 +30,7 @@
 - Wrap ThemeService into Avalonia Theme
 - Move ToolOutputConsole to base Avalonia namespace
 - Sync implementations of ElementConverter
+- Separate out GetLanguageXamlFilename, set resources
 
 ### 3.11.0 (2026-10-12)
 

@@ -31,38 +31,16 @@ namespace MPF.Avalonia
             if (lang != InterfaceLanguage.English)
             {
                 var engUri = new Uri($"avares://{assemblyName}/Assets/Strings.xaml");
-                var baselineDictionary = new ResourceInclude(engUri)
-                {
-                    Source = engUri
-                };
+                var baselineDictionary = new ResourceInclude(engUri) { Source = engUri };
                 resources.MergedDictionaries.Add(baselineDictionary);
             }
 
-#pragma warning disable IDE0072
-            var uri = lang switch
-            {
-                InterfaceLanguage.English => new Uri($"avares://{assemblyName}/Assets/Strings.xaml"),
-                InterfaceLanguage.French => new Uri($"avares://{assemblyName}/Assets/Strings.fr.xaml"),
-                InterfaceLanguage.German => new Uri($"avares://{assemblyName}/Assets/Strings.de.xaml"),
-                InterfaceLanguage.Italian => new Uri($"avares://{assemblyName}/Assets/Strings.it.xaml"),
-                InterfaceLanguage.Japanese => new Uri($"avares://{assemblyName}/Assets/Strings.ja.xaml"),
-                InterfaceLanguage.Korean => new Uri($"avares://{assemblyName}/Assets/Strings.ko.xaml"),
-                InterfaceLanguage.Polish => new Uri($"avares://{assemblyName}/Assets/Strings.pl.xaml"),
-                InterfaceLanguage.Portuguese => new Uri($"avares://{assemblyName}/Assets/Strings.pt.xaml"),
-                InterfaceLanguage.Russian => new Uri($"avares://{assemblyName}/Assets/Strings.ru.xaml"),
-                InterfaceLanguage.Spanish => new Uri($"avares://{assemblyName}/Assets/Strings.es.xaml"),
-                InterfaceLanguage.Swedish => new Uri($"avares://{assemblyName}/Assets/Strings.sv.xaml"),
-                InterfaceLanguage.Ukrainian => new Uri($"avares://{assemblyName}/Assets/Strings.uk.xaml"),
-                InterfaceLanguage.L337 => new Uri($"avares://{assemblyName}/Assets/Strings.37.xaml"),
-                _ => new Uri($"avares://{assemblyName}/Assets/Strings.xaml"),
-            };
-#pragma warning restore IDE0072
+            // Determine the XAML path and load
+            string xamlPath = FrontendTool.GetLanguageXamlFilename(lang);
+            var uri = new Uri($"avares://{assemblyName}/Assets/{xamlPath}");
+            var dictionary = new ResourceInclude(uri) { Source = uri };
 
-            var dictionary = new ResourceInclude(uri)
-            {
-                Source = uri
-            };
-
+            // Merge the new language dictionary
             resources.MergedDictionaries.Add(dictionary);
         }
     }

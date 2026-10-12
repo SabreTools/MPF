@@ -148,6 +148,34 @@ namespace MPF.Frontend.Tools
             };
         }
 
+        /// <summary>
+        /// Get the XAML filename for a given interface language, if possible
+        /// </summary>
+        /// <param name="lang">Interface language to get the filename for</param>
+        /// <returns>Filename associated with the interface language, the path for English on error</returns>
+        public static string GetLanguageXamlFilename(InterfaceLanguage lang)
+        {
+#pragma warning disable IDE0072 // Add missing cases
+            return lang switch
+            {
+                InterfaceLanguage.English => "Strings.xaml",
+                InterfaceLanguage.French => "Strings.fr.xaml",
+                InterfaceLanguage.German => "Strings.de.xaml",
+                InterfaceLanguage.Italian => "Strings.it.xaml",
+                InterfaceLanguage.Japanese => "Strings.ja.xaml",
+                InterfaceLanguage.Korean => "Strings.ko.xaml",
+                InterfaceLanguage.Polish => "Strings.pl.xaml",
+                InterfaceLanguage.Portuguese => "Strings.pt.xaml",
+                InterfaceLanguage.Russian => "Strings.ru.xaml",
+                InterfaceLanguage.Spanish => "Strings.es.xaml",
+                InterfaceLanguage.Swedish => "Strings.sv.xaml",
+                InterfaceLanguage.Ukrainian => "Strings.uk.xaml",
+                InterfaceLanguage.L337 => "Strings.37.xaml",
+                _ => "Strings.xaml",
+            };
+#pragma warning restore IDE0072 // Add missing cases
+        }
+
         #endregion
 
         #region Normalization

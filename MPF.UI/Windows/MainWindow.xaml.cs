@@ -61,7 +61,7 @@ namespace MPF.UI.Windows
 #endif
 
             // Set all resources before window loads (Must set English here)
-            StringResourceLoader.SetInterfaceLanguage(InterfaceLanguage.English);
+            StringResourceLoader.SetInterfaceLanguage(Application.Current.Resources, InterfaceLanguage.English);
             UpdateMainViewModelLabels();
         }
 
@@ -91,7 +91,7 @@ namespace MPF.UI.Windows
             MainViewModel.TranslateStrings(translationStrings);
 
             // Set interface language according to the options
-            StringResourceLoader.SetInterfaceLanguage(MainViewModel.Options.GUI.DefaultInterfaceLanguage);
+            StringResourceLoader.SetInterfaceLanguage(Application.Current.Resources, MainViewModel.Options.GUI.DefaultInterfaceLanguage);
             UpdateMainViewModelLabels();
 
             // Set the UI color scheme according to the options
@@ -474,7 +474,7 @@ namespace MPF.UI.Windows
                 var newDefaultLang = options.GUI.DefaultInterfaceLanguage;
                 if (oldDefaultLang != newDefaultLang)
                 {
-                    StringResourceLoader.SetInterfaceLanguage(newDefaultLang);
+                    StringResourceLoader.SetInterfaceLanguage(Application.Current.Resources, newDefaultLang);
                     UpdateMainViewModelLabels();
 
                     // Uncheck all language menu items
@@ -566,7 +566,7 @@ namespace MPF.UI.Windows
 
             // Change UI language to selected item
             string lang = clickedItem.Header.ToString() ?? string.Empty;
-            StringResourceLoader.SetInterfaceLanguage(EnumExtensions.ToInterfaceLanguage(lang));
+            StringResourceLoader.SetInterfaceLanguage(Application.Current.Resources, EnumExtensions.ToInterfaceLanguage(lang));
             UpdateMainViewModelLabels();
 
             // Update the labels that don't get updated automatically
