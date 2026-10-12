@@ -1,10 +1,8 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using MPF.Avalonia.Services;
 using MPF.Avalonia.Windows;
 using MPF.Frontend;
-using MPF.Frontend.Tools;
 
 namespace MPF.Avalonia
 {
@@ -28,10 +26,6 @@ namespace MPF.Avalonia
         /// </summary>
         public override void OnFrameworkInitializationCompleted()
         {
-            var options = OptionsLoader.LoadFromConfig(out _);
-            ThemeService.SyncWithSystemTheme(options);
-            ThemeService.Apply(Resources, options);
-
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                 desktop.MainWindow = new MainWindow();
 

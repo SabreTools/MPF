@@ -7,9 +7,12 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Platform;
 using Avalonia.Platform.Storage;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using MPF.Avalonia.Services;
+using MPF.Avalonia.Themes;
 using MPF.Avalonia.UserControls;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
@@ -88,7 +91,7 @@ namespace MPF.Avalonia.Windows
 
             DataContext = new MainViewModel();
             MainViewModel.PropertyChanged += OnMainViewModelPropertyChanged;
-            ThemeService.SyncWithSystemTheme(MainViewModel.Options);
+            SyncWithSystemTheme(MainViewModel.Options);
 
             // Set all resources before window loads (Must set English here)
             SetInterfaceLanguage(InterfaceLanguage.English, rebuildNativeMenus: false);
@@ -131,7 +134,7 @@ namespace MPF.Avalonia.Windows
             ConfigurePlatformMenus();
 
             // Set the UI color scheme according to the options
-            ThemeService.Apply(Application.Current!.Resources, MainViewModel.Options);
+            ApplyTheme(Application.Current!.Resources, MainViewModel.Options);
 
             // Hide or show the media type box based on program
             SetPhysicalMediaTypeVisibility();
@@ -517,6 +520,46 @@ namespace MPF.Avalonia.Windows
         }
 
         /// <summary>
+        /// Update the options' dark mode flag to match the detected system theme
+        /// </summary>
+        private static void SyncWithSystemTheme(Options options)
+        {
+            // Ignore if dark mode is already set
+            if (options.GUI.Theming.EnableDarkMode)
+                return;
+
+            // If the Avalonia theme variant is Dark
+            PlatformThemeVariant? themeVariant = Application.Current?
+                .PlatformSettings?
+                .GetColorValues()
+                .ThemeVariant;
+            if (themeVariant == PlatformThemeVariant.Dark)
+                options.GUI.Theming.EnableDarkMode = true;
+
+            // Check Linux dark mode variants
+            else if (OperatingSystem.IsLinux())
+                options.GUI.Theming.EnableDarkMode = Avalonia.Theme.IsLinuxDarkMode();
+        }
+
+        /// <summary>
+        /// Set the UI color scheme according to the options
+        /// </summary>
+        private void ApplyTheme(IResourceDictionary resources, Options options)
+        {
+            bool darkMode = options.GUI.Theming.EnableDarkMode;
+
+            Theme theme = darkMode ? new DarkModeTheme() : new LightModeTheme();
+            theme.ApplyCustomColors(options.GUI.Theming.CustomBackgroundColor, options.GUI.Theming.CustomTextColor);
+            theme.Apply(resources);
+
+            if (Application.Current is Application application)
+            {
+                application.RequestedThemeVariant = darkMode ? ThemeVariant.Dark : ThemeVariant.Light;
+                Avalonia.Theme.ApplyWindowsTitleBarTheme(darkMode);
+            }
+        }
+
+        /// <summary>
         /// Update the log console height based on the current log panel state
         /// </summary>
         public void UpdateLogConsoleHeight()
@@ -684,7 +727,7 @@ namespace MPF.Avalonia.Windows
             MainViewModel.UpdateOptions(savedSettings, options);
 
             // Set the UI color scheme according to the options
-            ThemeService.Apply(Resources, options);
+            ApplyTheme(Resources, options);
 
             // Hide or show the media type box based on program
             SetPhysicalMediaTypeVisibility();

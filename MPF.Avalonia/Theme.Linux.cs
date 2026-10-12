@@ -1,18 +1,18 @@
 using System;
 using System.Diagnostics;
 
-namespace MPF.Avalonia.Services
+namespace MPF.Avalonia
 {
     /// <summary>
     /// Linux-specific functionality
     /// </summary>
-    internal static partial class ThemeService
+    internal abstract partial class Theme
     {
         /// <summary>
         /// Detect a dark theme on Linux by inspecting common GTK/Qt environment variables,
         /// GNOME color-scheme settings, and the KDE color scheme
         /// </summary>
-        private static bool IsLinuxDarkMode()
+        public static bool IsLinuxDarkMode()
         {
             // GTK theme
             string? colorScheme = Environment.GetEnvironmentVariable("GTK_THEME");

@@ -6,7 +6,7 @@ namespace MPF.Avalonia
     /// <summary>
     /// Represents all required brush mapping values for the UI
     /// </summary>
-    internal abstract class Theme
+    internal abstract partial class Theme
     {
         #region Application-Wide
 

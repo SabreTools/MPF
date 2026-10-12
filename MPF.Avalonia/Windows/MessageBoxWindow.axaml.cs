@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Layout;
-using MPF.Avalonia.Services;
 
 namespace MPF.Avalonia.Windows
 {
@@ -15,8 +14,8 @@ namespace MPF.Avalonia.Windows
             InitializeComponent();
             Opened += (_, _) =>
             {
-                MacOSWindowChromeService.Apply(this, hideMinimizeButton: true);
-                ThemeService.ApplyWindowTitleBarTheme(this);
+                Avalonia.Theme.ApplyMacOSChrome(this, hideMinimizeButton: true);
+                Avalonia.Theme.ApplyWindowTitleBarTheme(this);
             };
         }
 

@@ -3,13 +3,12 @@ using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Threading;
 
-namespace MPF.Avalonia.Services
+namespace MPF.Avalonia
 {
     /// <summary>
-    /// Applies macOS-specific window chrome adjustments, hiding the title bar buttons
-    /// that are unavailable for the given window
+    /// MacOS-specific functionality
     /// </summary>
-    internal static class MacOSWindowChromeService
+    internal abstract partial class Theme
     {
         private const ulong NSWindowStyleMaskMiniaturizable = 1UL << 2;
 
@@ -23,7 +22,7 @@ namespace MPF.Avalonia.Services
         /// Apply window chrome to the given window, both immediately and once again after the
         /// window has loaded (since the native handle may not be ready on the first pass)
         /// </summary>
-        public static void Apply(Window window, bool hideMinimizeButton = false)
+        public static void ApplyMacOSChrome(Window window, bool hideMinimizeButton = false)
         {
             HideMacOSUnavailableWindowButtons(window, hideMinimizeButton);
             Dispatcher.UIThread.Post(() => HideMacOSUnavailableWindowButtons(window, hideMinimizeButton), DispatcherPriority.Loaded);

@@ -5,7 +5,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
-using MPF.Avalonia.Services;
 
 namespace MPF.Avalonia.Windows
 {
@@ -18,8 +17,8 @@ namespace MPF.Avalonia.Windows
         {
             Opened += (_, _) =>
             {
-                MacOSWindowChromeService.Apply(this);
-                ThemeService.ApplyWindowTitleBarTheme(this);
+                Avalonia.Theme.ApplyMacOSChrome(this);
+                Avalonia.Theme.ApplyWindowTitleBarTheme(this);
                 ApplyPlatformLayout();
             };
         }

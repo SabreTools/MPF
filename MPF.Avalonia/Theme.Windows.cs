@@ -5,12 +5,12 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Styling;
 
-namespace MPF.Avalonia.Services
+namespace MPF.Avalonia
 {
     /// <summary>
     /// Windows-specific functionality
     /// </summary>
-    internal static partial class ThemeService
+    internal abstract partial class Theme
     {
         private const int DwmWindowAttributeUseImmersiveDarkModeBefore20H1 = 19;
 
@@ -30,7 +30,7 @@ namespace MPF.Avalonia.Services
         /// <summary>
         /// Apply the given dark/light mode to the title bar of every open desktop window
         /// </summary>
-        private static void ApplyWindowsTitleBarTheme(bool darkMode)
+        public static void ApplyWindowsTitleBarTheme(bool darkMode)
         {
             if (!OperatingSystem.IsWindows())
                 return;

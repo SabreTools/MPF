@@ -27,6 +27,7 @@
 - Fix some broken behavior in Avalonia options window
 - Move OutputPump to base Avalonia namespace
 - Move more logic into SyncWithSystemTheme
+- Wrap ThemeService into Avalonia Theme
 
 ### 3.11.0 (2026-10-12)
 

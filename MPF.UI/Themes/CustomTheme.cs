@@ -4,7 +4,7 @@ using System.Windows.Media;
 namespace MPF.UI.Themes
 {
     /// <summary>
-    /// Custom colour theme
+    /// Custom color theme
     /// </summary>
     public sealed class CustomTheme : Theme
     {
