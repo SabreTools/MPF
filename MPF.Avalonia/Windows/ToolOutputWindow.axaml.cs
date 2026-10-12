@@ -14,6 +14,7 @@ using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using MPF.Avalonia.Helpers;
+using MPF.Frontend.Tools;
 
 namespace MPF.Avalonia.Windows
 {

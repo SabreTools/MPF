@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MPF.Avalonia.Helpers
+namespace MPF.Frontend.Tools
 {
     /// <summary>
     /// Minimal terminal output processor
@@ -54,7 +54,7 @@ namespace MPF.Avalonia.Helpers
         /// <summary>
         /// Reusable current escape sequence
         /// </summary>
-        private readonly StringBuilder _escape = new();
+        private StringBuilder _escape = new();
 
         #endregion
 
@@ -102,7 +102,7 @@ namespace MPF.Avalonia.Helpers
                 return;
 
             bool liveChanged = false;
-            for (int i = 0; i < chunk.Length; i++)
+            for (int i = 0; i < chunk!.Length; i++)
             {
                 char c = chunk[i];
 
@@ -117,7 +117,11 @@ namespace MPF.Avalonia.Helpers
                     // ESC: start of an ANSI sequence
                     case '\x1b':
                         _inEscape = true;
+#if NET20 || NET35
+                        _escape = new StringBuilder();
+#else
                         _escape.Clear();
+#endif
                         break;
 
                     case '\n':
@@ -198,7 +202,11 @@ namespace MPF.Avalonia.Helpers
             CommittedLines.Add(line);
             LineCommitted?.Invoke(line);
 
-            _current.Clear();
+#if NET20 || NET35
+            _escape = new StringBuilder();
+#else
+            _escape.Clear();
+#endif
             _cursor = 0;
         }
 
@@ -226,7 +234,11 @@ namespace MPF.Avalonia.Helpers
 
                 // Entire line
                 case EraseMode.EntireLine:
-                    _current.Clear();
+#if NET20 || NET35
+                    _escape = new StringBuilder();
+#else
+                    _escape.Clear();
+#endif
                     _cursor = 0;
                     break;
 
@@ -263,7 +275,11 @@ namespace MPF.Avalonia.Helpers
             {
                 bool changed = ApplyCSISequence(_escape.ToString(1, _escape.Length - 1), value);
                 _inEscape = false;
+#if NET20 || NET35
+                _escape = new StringBuilder();
+#else
                 _escape.Clear();
+#endif
                 return changed;
             }
 
