@@ -1,4 +1,3 @@
-using System;
 #if NET462_OR_GREATER || NETCOREAPP
 using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Generic;
@@ -27,7 +26,7 @@ namespace MPF.Frontend
                     if (mediaType is not null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
                         char devId = (properties["Caption"].Value as string ?? string.Empty)[0];
-                        Array.ForEach(drives, d =>
+                        System.Array.ForEach(drives, d =>
                         {
                             if (d?.DevicePath is not null && d.DevicePath[0] == devId)
                                 d.InternalDriveType = Frontend.InternalDriveType.Floppy;

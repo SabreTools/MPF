@@ -35,6 +35,7 @@
 - Directly integrate OutputPump into ToolOutputWindow
 - Add missing summaries in ToolOutputWindow
 - DrainAvailable doesn't need to be public anymore
+- Fix warning in MarkWindowsFloppyDrives
 
 ### 3.11.0 (2026-10-12)
 
