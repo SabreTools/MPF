@@ -59,6 +59,11 @@ namespace MPF.ExecutionContexts
         /// </remarks>
         public Action<string>? OutputReceived { get; set; }
 
+        /// <summary>
+        /// Exit code of the last run of the external program, if it ran to completion
+        /// </summary>
+        public int? ExitCode { get; private set; }
+
         #endregion
 
         #region Virtual Dumping Information
@@ -214,6 +219,9 @@ namespace MPF.ExecutionContexts
             // When a sink is attached, redirect output and stream it to the caller.
             bool redirect = OutputReceived is not null;
 
+            // Forget the result of any previous run
+            ExitCode = null;
+
             // Create the start info
             var startInfo = new ProcessStartInfo()
             {
@@ -272,6 +280,7 @@ namespace MPF.ExecutionContexts
                 process.WaitForExit();
             }
 
+            ExitCode = process.ExitCode;
             process.Close();
         }
 

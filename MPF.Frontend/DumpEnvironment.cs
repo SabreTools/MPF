@@ -520,6 +520,12 @@ namespace MPF.Frontend
 #else
             await Task.Run(_executionContext.ExecuteInternalProgram);
 #endif
+
+            // A non-zero exit code means the program reported a failure
+            int? exitCode = _executionContext.ExitCode;
+            if (exitCode is not null && exitCode != 0)
+                return ResultEventArgs.Failure($"Error! {_internalProgram} exited with code {exitCode}!");
+
             progress?.Report(ResultEventArgs.Success($"{_internalProgram} has finished!"));
 
             return result;

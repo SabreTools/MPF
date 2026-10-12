@@ -37,6 +37,7 @@
 - DrainAvailable doesn't need to be public anymore
 - Fix warning in MarkWindowsFloppyDrives
 - Make StringBuilder readonly for all but oldest .NET
+- Report a failure when the dumping program exits with an error
 
 ### 3.11.0 (2026-10-12)
 
