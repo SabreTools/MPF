@@ -11,6 +11,7 @@
 - Remove all uses of 'global:' prefix
 - Make Linux theme helpers easier to follow
 - Slight cleanup to TerminalBuffer
+- Slight cleanup to OutputPump
 
 ### 3.11.0 (2026-10-12)
 

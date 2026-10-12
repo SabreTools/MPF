@@ -127,7 +127,7 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Push a raw chunk of tool output. Thread-safe: called from reader threads.
         /// </summary>
-        public void Append(string chunk) => _pump.Post(chunk);
+        public void Append(string chunk) => _pump.TryWrite(chunk);
 
         /// <summary>
         /// The tool process exited: flush the remaining output, then close if the user
@@ -137,7 +137,7 @@ namespace MPF.Avalonia.Windows
         {
             // Complete the pump so its final drain flushes the tail to the UI, then wait
             // for that drain to finish before deciding whether to close.
-            _pump.Complete();
+            _pump.TryComplete();
             try
             {
                 await _pumpTask;
@@ -175,7 +175,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private async void CopySelectionToClipboard()
         {
-            IReadOnlyList<int> selected = LinesList.Selection?.SelectedIndexes ?? Array.Empty<int>();
+            IReadOnlyList<int> selected = LinesList.Selection?.SelectedIndexes ?? [];
             if (selected.Count == 0)
                 return;
 
@@ -317,7 +317,7 @@ namespace MPF.Avalonia.Windows
             // Best-effort shutdown; if the tool is still running its output is simply
             // dropped from here on (Post on a completed channel is a no-op).
             _cts.Cancel();
-            _pump.Complete();
+            _pump.TryComplete();
             base.OnClosed(e);
         }
     }

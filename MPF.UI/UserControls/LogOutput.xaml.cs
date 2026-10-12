@@ -61,10 +61,6 @@ namespace MPF.UI.UserControls
         /// <param name="text">Text to write to the log</param>
         public void EnqueueLog(LogLevel logLevel, string text)
         {
-            // Null text gets ignored
-            if (text is null)
-                return;
-
             // Create a new log line
             var logLine = new LogLine(text, logLevel);
 
