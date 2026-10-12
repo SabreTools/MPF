@@ -121,14 +121,11 @@ namespace MPF.Avalonia.Windows
 
         #endregion
 
-        public ToolOutputWindow() : this(autoClose: true) { }
-
-        public ToolOutputWindow(bool autoClose)
+        public ToolOutputWindow()
         {
             InitializeComponent();
 
             LinesList.ItemsSource = _lines;
-            AutoCloseCheck.IsChecked = autoClose;
 
             // The pump runs for the lifetime of the window
             _pumpTask = RunPumpAsync(_cts.Token);

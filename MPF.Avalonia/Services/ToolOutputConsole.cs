@@ -53,7 +53,7 @@ namespace MPF.Avalonia.Services
             _window?.Close();
             _window = null;
 
-            var window = new ToolOutputWindow(_options.GUI.ToolConsoleAutoClose);
+            var window = new ToolOutputWindow { AutoClose = _options.GUI.ToolConsoleAutoClose };
             window.AutoCloseChanged += OnAutoCloseChanged;
             window.Closed += (_, _) =>
             {

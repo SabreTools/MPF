@@ -16,6 +16,7 @@
 - Major cleanup for ToolOutputWindow
 - Rename TerminalBuffer to TerminalOutputProcessor
 - Move TerminalOutputProcessor to Frontend
+- Consolidate ToolOutputWindow constructors
 
 ### 3.11.0 (2026-10-12)
 
