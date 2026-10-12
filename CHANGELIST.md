@@ -20,6 +20,7 @@
 - Slight cleanup to ToolOutputConsole
 - Always use Avalonia ToolOutputConsole
 - Clean up MainViewModel around ToolOutputConsole
+- Invert AutoClose property assignment in ToolOutputWindow
 
 ### 3.11.0 (2026-10-12)
 

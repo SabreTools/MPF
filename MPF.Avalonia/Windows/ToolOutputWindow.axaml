@@ -99,8 +99,7 @@
                     VerticalAlignment="Center">
             <CheckBox x:Name="AutoCloseCheck"
                       Content="{DynamicResource ToolOutputCloseOnExitCheckBoxString}"
-                      IsChecked="True"
-                      IsCheckedChanged="AutoCloseCheckChanged"
+                      IsChecked="{Binding AutoClose}"
                       VerticalAlignment="Center" />
         </StackPanel>
     </Grid>

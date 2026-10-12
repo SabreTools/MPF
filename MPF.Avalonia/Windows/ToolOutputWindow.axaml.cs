@@ -52,8 +52,12 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         public bool AutoClose
         {
-            get => AutoCloseCheck.IsChecked == true;
-            set => AutoCloseCheck.IsChecked = value;
+            get;
+            set
+            {
+                field = value;
+                AutoCloseChanged?.Invoke(field);
+            }
         }
 
         #endregion
@@ -132,13 +136,13 @@ namespace MPF.Avalonia.Windows
         }
 
         /// <summary>
-        /// Push a raw chunk of tool output. Thread-safe: called from reader threads.
+        /// Push a raw chunk of tool output
         /// </summary>
-        public void Append(string chunk) => _pump.TryWrite(chunk);
+        public void Append(string item) => _pump.TryWrite(item);
 
         /// <summary>
         /// The tool process exited: flush the remaining output, then close if the user
-        /// opted in. Safe to call on the UI thread.
+        /// opted in
         /// </summary>
         public async void NotifyToolExited()
         {
@@ -154,17 +158,11 @@ namespace MPF.Avalonia.Windows
                 // shutdown races are fine
             }
 
-            if (AutoCloseCheck.IsChecked == true)
+            if (AutoClose)
                 Close();
         }
 
         #region Event Handlers
-
-        /// <summary>
-        /// Changed handler for AutoCloseCheck
-        /// </summary>
-        private void AutoCloseCheckChanged(object? sender, RoutedEventArgs e)
-            => AutoCloseChanged?.Invoke(AutoCloseCheck.IsChecked == true);
 
         /// <summary>
         /// Click handler for CopyMenuItem
@@ -173,9 +171,8 @@ namespace MPF.Avalonia.Windows
             => CopySelectionToClipboard();
 
         /// <summary>
-        /// Runs on the consumer thread after a batch was fed to the buffer. Snapshot the
-        /// new committed lines + the current live line, then do exactly ONE dispatch to
-        /// the UI thread for the whole batch.
+        /// Snapshot the new committed lines + the current live line, then do
+        /// exactly ONE dispatch to the UI thread for the whole batch
         /// </summary>
         private void OnBatch()
         {
