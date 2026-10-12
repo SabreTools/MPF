@@ -14,10 +14,16 @@ namespace MPF.Avalonia
     /// </summary>
     public sealed class ToolOutputConsole : IToolOutputConsole
     {
+        #region Constants
+
         /// <summary>
         /// Gap between the main window and the tool-output window, in device-independent pixels
         /// </summary>
         private const double PlacementGap = 8;
+
+        #endregion
+
+        #region Private Fields
 
         /// <summary>
         /// Console window parent
@@ -33,6 +39,8 @@ namespace MPF.Avalonia
         /// Generated tool window, if available
         /// </summary>
         private ToolOutputWindow? _window;
+
+        #endregion
 
         public ToolOutputConsole(Window owner, Options options)
         {
@@ -67,6 +75,8 @@ namespace MPF.Avalonia
         /// <inheritdoc/>
         public void NotifyToolExited() => _window?.NotifyToolExited();
 
+        #region Event Handlers
+
         /// <summary>
         /// Persist the user's auto-close preference whenever the checkbox is toggled
         /// </summary>
@@ -75,6 +85,10 @@ namespace MPF.Avalonia
             _options.GUI.ToolConsoleAutoClose = autoClose;
             OptionsLoader.SaveToConfig(_options);
         }
+
+        #endregion
+
+        #region Helpers
 
         /// <summary>
         /// Place the console beside the main window on whichever side has room, falling back
@@ -136,5 +150,7 @@ namespace MPF.Avalonia
                 window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             }
         }
+
+        #endregion
     }
 }

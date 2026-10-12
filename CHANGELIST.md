@@ -31,6 +31,7 @@
 - Move ToolOutputConsole to base Avalonia namespace
 - Sync implementations of ElementConverter
 - Separate out GetLanguageXamlFilename, set resources
+- Adjust formatting of ToolOutputConsole code
 
 ### 3.11.0 (2026-10-12)
 
