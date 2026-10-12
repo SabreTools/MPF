@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Clean up unnecessary array copies
+- Separate out Windows drive code, cleanup
 
 ### 3.11.0 (2026-10-12)
 

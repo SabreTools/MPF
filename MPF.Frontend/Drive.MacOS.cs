@@ -139,8 +139,8 @@ namespace MPF.Frontend
             if (string.IsNullOrEmpty(devicePath))
                 return false;
 
-            return devicePath!.IndexOf(Path.DirectorySeparatorChar) >= 0
-                || devicePath.IndexOf(Path.AltDirectorySeparatorChar) >= 0;
+            return devicePath!.Contains(Path.DirectorySeparatorChar.ToString())
+                || devicePath.Contains(Path.AltDirectorySeparatorChar.ToString());
         }
 
         /// <summary>
@@ -247,6 +247,7 @@ namespace MPF.Frontend
             {
                 return null;
             }
+
             if (fields.TryGetValue("Protocol", out var protocol)
                 && string.Equals(protocol, "Disk Image", StringComparison.OrdinalIgnoreCase))
             {
