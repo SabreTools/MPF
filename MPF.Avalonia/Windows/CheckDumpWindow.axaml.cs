@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -16,27 +15,13 @@ namespace MPF.Avalonia.Windows
     public partial class CheckDumpWindow : WindowBase
     {
         /// <summary>
-        /// File picker types for browsing dump input files
-        /// </summary>
-        private static readonly List<FilePickerFileType> InputFileTypes =
-        [
-            new("Disc Images") { Patterns = ["*.iso", "*.cue", "*.aaruf", "*.bca"] },
-            new("Log Archives") { Patterns = ["*_logs.zip"] },
-            FilePickerFileTypes.All,
-        ];
-
-        /// <summary>
-        /// Parent window used as the dialog owner, if any
-        /// </summary>
-#pragma warning disable IDE0052 // Remove unread private members
-        private MainWindow? _parent;
-#pragma warning restore IDE0052 // Remove unread private members
-
-        /// <summary>
         /// Read-only access to the current check dump view model
         /// </summary>
         public CheckDumpViewModel CheckDumpViewModel => DataContext as CheckDumpViewModel ?? new CheckDumpViewModel();
 
+        /// <summary>
+        /// Constructor required for runtime loader
+        /// </summary>
         public CheckDumpWindow()
         {
             InitializeWindow(null);
@@ -56,7 +41,7 @@ namespace MPF.Avalonia.Windows
         private void InitializeWindow(MainWindow? parent)
         {
             InitializeComponent();
-            _parent = parent;
+            Owner = parent;
             DataContext = new CheckDumpViewModel();
         }
 
@@ -140,7 +125,11 @@ namespace MPF.Avalonia.Windows
             {
                 Title = StringResource("InputPathLabelString", "Input Path"),
                 AllowMultiple = false,
-                FileTypeFilter = InputFileTypes,
+                FileTypeFilter = [
+                    new FilePickerFileType("Disc Images") { Patterns = ["*.iso", "*.cue", "*.aaruf", "*.bca"] },
+                    new FilePickerFileType("Log Archives") { Patterns = ["*_logs.zip"] },
+                    FilePickerFileTypes.All,
+                ],
             });
 
             return files.Count > 0 ? files[0].TryGetLocalPath() : null;

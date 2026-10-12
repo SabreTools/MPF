@@ -66,7 +66,7 @@ namespace MPF.Avalonia.Windows
             nativeMenu.Add(_nativeHelpMenuGroup);
 
             _nativeLanguageMenuGroup = CreateNativeMenuGroup(
-                NativeLanguageMenuHeader(),
+                StringResource("LanguageMenuString", "ENG"),
                 CreateNativeMenuItem("English", LanguageMenuItemClick, EnglishMenuItem),
                 CreateNativeMenuItem("Deutsch", LanguageMenuItemClick, GermanMenuItem),
                 CreateNativeMenuItem("Español", LanguageMenuItemClick, SpanishMenuItem),
@@ -120,17 +120,11 @@ namespace MPF.Avalonia.Windows
             => header.Replace("_", string.Empty);
 
         /// <summary>
-        /// Get the localized header for the native language menu group
-        /// </summary>
-        private static string NativeLanguageMenuHeader()
-            => StringResource("LanguageMenuString", "ENG");
-
-        /// <summary>
         /// Refresh the native language menu group header
         /// </summary>
         private void UpdateNativeLanguageMenuHeader()
         {
-            var nativeLanguageMenuHeader = NativeLanguageMenuHeader();
+            var nativeLanguageMenuHeader = StringResource("LanguageMenuString", "ENG");
             _nativeLanguageMenuGroup?.Header = CleanMenuHeader(nativeLanguageMenuHeader);
         }
 

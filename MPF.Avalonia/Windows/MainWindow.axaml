@@ -65,13 +65,13 @@
                       Background="Transparent"
                       FontSize="12">
                     <MenuItem x:Name="FileMenuItem"
-                              Header="File">
+                              Header="{DynamicResource FileMenuString}">
                         <MenuItem x:Name="AppExitMenuItem"
                                   Header="{DynamicResource ExitMenuItemString}"
                                   Click="AppExitClick" />
                     </MenuItem>
                     <MenuItem x:Name="ToolsMenuItem"
-                              Header="Tools">
+                              Header="{DynamicResource ToolsMenuString}">
                         <MenuItem x:Name="CheckDumpMenuItem"
                                   Header="{DynamicResource CheckDumpMenuItemString}"
                                   IsEnabled="{Binding CheckDumpMenuItemEnabled}"
@@ -90,7 +90,7 @@
                                   IsVisible="{Binding DebugViewMenuItemVisible}" />
                     </MenuItem>
                     <MenuItem x:Name="HelpMenuItem"
-                              Header="Help">
+                              Header="{DynamicResource HelpMenuString}">
                         <MenuItem x:Name="AboutMenuItem"
                                   Header="{DynamicResource AboutMenuItemString}"
                                   Click="AboutClick" />
@@ -114,7 +114,7 @@
                           Background="Transparent"
                           FontSize="12">
                         <MenuItem x:Name="LanguagesMenuItem"
-                                  Header="ENG">
+                                  Header="{DynamicResource LanguageMenuString}">
                             <!-- ToggleType="CheckBox" mirrors the WPF GUI's IsCheckable="True" on these
                             items. Without it an Avalonia MenuItem never toggles IsChecked on click,
                             so the shared LanguageMenuItemClick handler (which reads IsChecked to tell
