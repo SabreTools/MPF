@@ -32,6 +32,7 @@
 - Sync implementations of ElementConverter
 - Separate out GetLanguageXamlFilename, set resources
 - Adjust formatting of ToolOutputConsole code
+- Directly integrate OutputPump into ToolOutputWindow
 
 ### 3.11.0 (2026-10-12)
 

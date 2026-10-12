@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -18,16 +19,8 @@ using MPF.Frontend.Tools;
 namespace MPF.Avalonia.Windows
 {
     /// <summary>
-    /// Separate window that streams a dumping tool's live standard output and error.
+    /// Separate window that streams a dumping tool's live standard output and error
     /// </summary>
-    /// <remarks>
-    /// Shown modeless (via <c>Show(owner)</c>) so the MPF main window never freezes and
-    /// its Stop button stays reachable. Raw output chunks arrive on <see cref="Append"/>
-    /// from background reader threads; a bounded <see cref="OutputPump"/> batches them and
-    /// a <see cref="TerminalOutputProcessor"/> applies terminal line-discipline so a tool's bare
-    /// <c>\r</c> progress redraws collapse onto a single live line instead of flooding the
-    /// scrollback. Committed lines feed a virtualized list with a CMD-style fixed cap.
-    /// </remarks>
     public partial class ToolOutputWindow : Window
     {
         #region Constants
@@ -83,9 +76,14 @@ namespace MPF.Avalonia.Windows
         private readonly TerminalOutputProcessor _buffer = new();
 
         /// <summary>
-        ///
+        /// Bounded channel for reading and writing
         /// </summary>
-        private readonly OutputPump _pump = new(capacity: 8192);
+        private readonly Channel<string> _channel = Channel.CreateBounded<string>(new BoundedChannelOptions(8192)
+        {
+            FullMode = BoundedChannelFullMode.DropOldest,
+            SingleReader = true,
+            SingleWriter = false,
+        });
 
         /// <summary>
         ///
@@ -95,7 +93,7 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         ///
         /// </summary>
-        private readonly Task _pumpTask;
+        private readonly Task _channelTask;
 
         /// <summary>
         /// Committed lines already pushed to the UI
@@ -131,13 +129,13 @@ namespace MPF.Avalonia.Windows
             LinesList.ItemsSource = _lines;
 
             // The pump runs for the lifetime of the window
-            _pumpTask = RunPumpAsync(_cts.Token);
+            _channelTask = RunPumpAsync(_cts.Token);
         }
 
         /// <summary>
         /// Push a raw chunk of tool output
         /// </summary>
-        public void Append(string item) => _pump.TryWrite(item);
+        public void Append(string item) => _channel.Writer.TryWrite(item);
 
         /// <summary>
         /// The tool process exited: flush the remaining output, then close if the user
@@ -147,10 +145,10 @@ namespace MPF.Avalonia.Windows
         {
             // Complete the pump so its final drain flushes the tail to the UI, then wait
             // for that drain to finish before deciding whether to close.
-            _pump.TryComplete();
+            _channel.Writer.TryComplete();
             try
             {
-                await _pumpTask;
+                await _channelTask;
             }
             catch
             {
@@ -226,7 +224,7 @@ namespace MPF.Avalonia.Windows
         protected override void OnClosed(EventArgs e)
         {
             _cts.Cancel();
-            _pump.TryComplete();
+            _channel.Writer.TryComplete();
             base.OnClosed(e);
         }
 
@@ -337,9 +335,9 @@ namespace MPF.Avalonia.Windows
         {
             try
             {
-                while (await _pump.WaitToReadAsync(ct).ConfigureAwait(false))
+                while (await _channel.Reader.WaitToReadAsync(ct).ConfigureAwait(false))
                 {
-                    List<string> batch = _pump.DrainAvailable();
+                    List<string> batch = DrainAvailable();
                     if (batch.Count > 0)
                     {
                         foreach (string chunk in batch)
@@ -360,7 +358,7 @@ namespace MPF.Avalonia.Windows
             }
 
             // Final drain after completion so the tail is not lost.
-            List<string> tail = _pump.DrainAvailable();
+            List<string> tail = DrainAvailable();
             foreach (string chunk in tail)
             {
                 _buffer.Process(chunk);
@@ -368,6 +366,21 @@ namespace MPF.Avalonia.Windows
 
             _buffer.Flush();
             OnBatch();
+        }
+
+        /// <summary>
+        /// Drain every chunk currently queued into one list, without waiting
+        /// </summary>
+        /// <param name="max">Maximum number of items to red from the channel</remarks>
+        public List<string> DrainAvailable(int max = 4096)
+        {
+            var batch = new List<string>();
+            while (batch.Count < max && _channel.Reader.TryRead(out string? chunk))
+            {
+                batch.Add(chunk);
+            }
+
+            return batch;
         }
 
         /// <summary>
