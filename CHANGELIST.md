@@ -7,6 +7,7 @@
 - Clean up some unnecessary safety in MacOS drive code
 - Fix framework-specific issues from previous commits
 - Remove need for DialogService in Avalonia
+- Reduce unnecessary code in ThemeService in Avalonia
 
 ### 3.11.0 (2026-10-12)
 

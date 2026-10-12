@@ -1,4 +1,5 @@
 using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
 using Avalonia.Styling;
@@ -25,15 +26,6 @@ namespace MPF.Avalonia.Services
         }
 
         /// <summary>
-        /// Sync the dark mode flag with the system theme, then apply the resolved theme
-        /// </summary>
-        public static void ApplySystemTheme(IResourceDictionary resources, Options options)
-        {
-            SyncWithSystemTheme(options);
-            Apply(resources, options);
-        }
-
-        /// <summary>
         /// Apply the mapped theme for the current options to the resource dictionary, honoring any
         /// custom background and text color overrides, and apply the matching window theme variant
         /// </summary>
@@ -45,7 +37,7 @@ namespace MPF.Avalonia.Services
             theme.ApplyCustomColors(options.GUI.Theming.CustomBackgroundColor, options.GUI.Theming.CustomTextColor);
             theme.Apply(resources);
 
-            if (global::Avalonia.Application.Current is { } application)
+            if (Application.Current is Application application)
             {
                 application.RequestedThemeVariant = darkMode ? ThemeVariant.Dark : ThemeVariant.Light;
                 ApplyWindowsTitleBarTheme(darkMode);
@@ -57,7 +49,7 @@ namespace MPF.Avalonia.Services
         /// </summary>
         private static bool IsSystemDarkMode()
         {
-            PlatformThemeVariant? themeVariant = global::Avalonia.Application.Current?
+            PlatformThemeVariant? themeVariant = Application.Current?
                 .PlatformSettings?
                 .GetColorValues()
                 .ThemeVariant;

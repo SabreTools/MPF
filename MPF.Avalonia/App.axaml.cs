@@ -28,7 +28,9 @@ namespace MPF.Avalonia
         /// </summary>
         public override void OnFrameworkInitializationCompleted()
         {
-            ThemeService.ApplySystemTheme(Resources, OptionsLoader.LoadFromConfig(out _));
+            var options = OptionsLoader.LoadFromConfig(out _);
+            ThemeService.SyncWithSystemTheme(options);
+            ThemeService.Apply(Resources, options);
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                 desktop.MainWindow = new MainWindow();
