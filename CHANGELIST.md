@@ -34,6 +34,7 @@
 - Adjust formatting of ToolOutputConsole code
 - Directly integrate OutputPump into ToolOutputWindow
 - Add missing summaries in ToolOutputWindow
+- DrainAvailable doesn't need to be public anymore
 
 ### 3.11.0 (2026-10-12)
 

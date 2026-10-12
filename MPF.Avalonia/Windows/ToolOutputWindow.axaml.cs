@@ -257,10 +257,8 @@ namespace MPF.Avalonia.Windows
             => SyncFollowToPosition();
 
         /// <summary>
-        ///The wheel scroll is applied after this event fires; check once it has
+        /// The wheel scroll is applied after this event fires; check once it has
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void OnWheel(object? sender, PointerWheelEventArgs e)
             => Dispatcher.UIThread.Post(SyncFollowToPosition, DispatcherPriority.Background);
 
@@ -299,6 +297,21 @@ namespace MPF.Avalonia.Windows
             IClipboard? clipboard = GetTopLevel(this)?.Clipboard;
             if (clipboard is not null)
                 await clipboard.SetTextAsync(sb.ToString());
+        }
+
+        /// <summary>
+        /// Drain every chunk currently queued into one list, without waiting
+        /// </summary>
+        /// <param name="max">Maximum number of items to red from the channel</remarks>
+        private List<string> DrainAvailable(int max = 4096)
+        {
+            var batch = new List<string>();
+            while (batch.Count < max && _channel.Reader.TryRead(out string? chunk))
+            {
+                batch.Add(chunk);
+            }
+
+            return batch;
         }
 
         /// <summary>
@@ -369,22 +382,7 @@ namespace MPF.Avalonia.Windows
         }
 
         /// <summary>
-        /// Drain every chunk currently queued into one list, without waiting
-        /// </summary>
-        /// <param name="max">Maximum number of items to red from the channel</remarks>
-        public List<string> DrainAvailable(int max = 4096)
-        {
-            var batch = new List<string>();
-            while (batch.Count < max && _channel.Reader.TryRead(out string? chunk))
-            {
-                batch.Add(chunk);
-            }
-
-            return batch;
-        }
-
-        /// <summary>
-        ///
+        /// Handle setting autmatic scroll based on current position
         /// </summary>
         private void SyncFollowToPosition()
         {
