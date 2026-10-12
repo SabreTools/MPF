@@ -25,17 +25,17 @@ namespace MPF.Avalonia.Services
         private const double PlacementGap = 8;
 
         /// <summary>
-        ///
+        /// Console window parent
         /// </summary>
         private readonly Window _owner;
 
         /// <summary>
-        ///
+        /// Frontend options for output
         /// </summary>
         private readonly Options _options;
 
         /// <summary>
-        ///
+        /// Generated tool window, if available
         /// </summary>
         private ToolOutputWindow? _window;
 
@@ -96,29 +96,35 @@ namespace MPF.Avalonia.Services
                     return;
                 }
 
-                double scale = screen.Scaling;
                 PixelRect area = screen.WorkingArea;
 
                 // Owner frame and the new window, converted to physical pixels.
                 Size ownerSize = _owner.FrameSize ?? _owner.Bounds.Size;
                 PixelPoint ownerPos = _owner.Position;
-                int ownerW = (int)Math.Round(ownerSize.Width * scale);
-                int winW = (int)Math.Round(window.Width * scale);
-                int winH = (int)Math.Round(window.Height * scale);
-                int gap = (int)Math.Round(PlacementGap * scale);
+                int ownerW = (int)Math.Round(ownerSize.Width * screen.Scaling);
+                int winW = (int)Math.Round(window.Width * screen.Scaling);
+                int winH = (int)Math.Round(window.Height * screen.Scaling);
+                int gap = (int)Math.Round(PlacementGap * screen.Scaling);
 
                 int rightRoom = area.X + area.Width - (ownerPos.X + ownerW);
                 int leftRoom = ownerPos.X - area.X;
 
                 int x;
-                if (rightRoom >= winW + gap)
-                    x = ownerPos.X + ownerW + gap;              // beside, to the right
-                else if (leftRoom >= winW + gap)
-                    x = ownerPos.X - gap - winW;                // beside, to the left
-                else
-                    x = ownerPos.X + ((ownerW - winW) / 2);     // overlay, centered on the owner
 
-                int y = ownerPos.Y;                             // align tops
+                // Beside, to the right
+                if (rightRoom >= winW + gap)
+                    x = ownerPos.X + ownerW + gap;
+
+                // Beside, to the left
+                else if (leftRoom >= winW + gap)
+                    x = ownerPos.X - gap - winW;
+
+                // Overlay, centered on the owner
+                else
+                    x = ownerPos.X + ((ownerW - winW) / 2);
+
+                // Align tops
+                int y = ownerPos.Y;
 
                 // Clamp the whole window inside the work area so it never lands off-screen.
                 int maxX = area.X + area.Width - winW;
