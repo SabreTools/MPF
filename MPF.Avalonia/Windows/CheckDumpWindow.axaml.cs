@@ -4,7 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
-using MPF.Avalonia.Services;
 using MPF.Frontend;
 using MPF.Frontend.ViewModels;
 using SabreTools.RedumpLib.Data;
@@ -137,7 +136,14 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private async Task<string?> BrowseFileAsync()
         {
-            return await DialogService.OpenFileAsync(this, StringResource("InputPathLabelString", "Input Path"), InputFileTypes);
+            var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = StringResource("InputPathLabelString", "Input Path"),
+                AllowMultiple = false,
+                FileTypeFilter = InputFileTypes,
+            });
+
+            return files.Count > 0 ? files[0].TryGetLocalPath() : null;
         }
 
         #endregion

@@ -273,11 +273,14 @@ namespace MPF.Avalonia.Windows
             if (string.IsNullOrEmpty(filename))
                 filename = $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin";
 
-            return await DialogService.SaveFileAsync(
-                this,
-                StringResource("OutputPathLabelString", "Output Path"),
-                filename,
-                OutputFileTypes);
+            var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            {
+                Title = StringResource("OutputPathLabelString", "Output Path"),
+                SuggestedFileName = filename,
+                FileTypeChoices = OutputFileTypes,
+            });
+
+            return file?.TryGetLocalPath();
         }
 
         /// <summary>

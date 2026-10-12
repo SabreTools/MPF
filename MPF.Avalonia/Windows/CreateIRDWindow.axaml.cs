@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using MPF.Avalonia.Services;
 using MPF.Frontend.ViewModels;
 
 namespace MPF.Avalonia.Windows
@@ -60,7 +59,14 @@ namespace MPF.Avalonia.Windows
                 FilePickerFileTypes.All,
             ];
 
-            return await DialogService.OpenFileAsync(this, title, fileTypes);
+            var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = title,
+                AllowMultiple = false,
+                FileTypeFilter = fileTypes,
+            });
+
+            return files.Count > 0 ? files[0].TryGetLocalPath() : null;
         }
 
         #endregion
@@ -72,8 +78,14 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private async void OnCreateIRDClick(object? sender, RoutedEventArgs e)
         {
-            string? outputPath = await DialogService.SaveFileAsync(this, "Save IRD", "game.ird", IrdFileTypes);
+            var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            {
+                Title = "Save IRD",
+                SuggestedFileName = "game.ird",
+                FileTypeChoices = IrdFileTypes,
+            });
 
+            string? outputPath =  file?.TryGetLocalPath();
             if (string.IsNullOrWhiteSpace(outputPath))
                 return;
 

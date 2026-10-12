@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using MPF.Avalonia.Services;
 using MPF.Frontend;
 using MPF.Frontend.ViewModels;
 
@@ -64,14 +63,29 @@ namespace MPF.Avalonia.Windows
                 ? WindowsExecutableFileTypes
                 : AllFilesFileTypes;
 
-            return await DialogService.OpenFileAsync(this, title, fileTypes);
+            var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = title,
+                AllowMultiple = false,
+                FileTypeFilter = fileTypes,
+            });
+
+            return files.Count > 0 ? files[0].TryGetLocalPath() : null;
         }
 
         /// <summary>
         /// Browse for a folder path
         /// </summary>
         private async Task<string?> BrowseForFolderAsync(string title)
-            => await DialogService.OpenFolderAsync(this, title);
+        {
+            var folders = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+            {
+                Title = title,
+                AllowMultiple = false,
+            });
+
+            return folders.Count > 0 ? folders[0].TryGetLocalPath() : null;
+        }
 
         #endregion
 

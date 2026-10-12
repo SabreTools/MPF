@@ -3,10 +3,10 @@ using System.Collections.ObjectModel;
 using System.IO;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
-using MPF.Avalonia.Services;
 using MPF.Frontend;
 
 namespace MPF.Avalonia.UserControls
@@ -108,7 +108,13 @@ namespace MPF.Avalonia.UserControls
                 string logPath = "console.log";
                 if (!OperatingSystem.IsWindows() && this.GetVisualRoot() is Window owner)
                 {
-                    string? directory = await DialogService.OpenFolderAsync(owner, "Save Log");
+                    var folders = await owner.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+                    {
+                        Title = "Save Log",
+                        AllowMultiple = false,
+                    });
+
+                    string? directory = folders.Count > 0 ? folders[0].TryGetLocalPath() : null;
                     if (string.IsNullOrWhiteSpace(directory))
                         return;
 
