@@ -1,5 +1,6 @@
 <local:WindowBase xmlns="https://github.com/avaloniaui"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:core="clr-namespace:MPF.Avalonia"
                   xmlns:local="using:MPF.Avalonia.Windows"
                   xmlns:converters="using:MPF.Avalonia"
                   x:Class="MPF.Avalonia.Windows.OptionsWindow"
@@ -72,7 +73,7 @@
                                         <CheckBox Grid.Column="1" Content="{DynamicResource CheckForUpdatesCheckBoxString}"
                                                   IsChecked="{Binding Options.CheckForUpdatesOnStartup}" />
                                         <!-- <CheckBox Grid.Row="1" Content="{DynamicResource CopyURLToClipboardCheckBoxString}"
-                                                  IsChecked="{Binding Options.GUI.CopyUpdateUrlToClipboard}" /> -->
+                                        IsChecked="{Binding Options.GUI.CopyUpdateUrlToClipboard}" /> -->
                                         <CheckBox Grid.Row="1" Grid.Column="1" Content="{DynamicResource FastUpdateLabelCheckBoxString}"
                                                   IsChecked="{Binding Options.GUI.FastUpdateLabel}" />
                                         <TextBlock Grid.Row="2"
@@ -339,7 +340,7 @@
                                                   Content="{DynamicResource CompressLogFilesCheckBoxString}"
                                                   IsChecked="{Binding Options.Processing.CompressLogFiles}" />
                                         <TextBlock Grid.Row="6"
-                                                  Grid.Column="0"
+                                                   Grid.Column="0"
                                                    Text="{DynamicResource LogCompressionLabelString}"
                                                    HorizontalAlignment="Right"
                                                    VerticalAlignment="Center" />
@@ -408,6 +409,9 @@
                                                 Grid.Column="1"
                                                 Minimum="0"
                                                 Maximum="72"
+                                                IsSnapToTickEnabled="True"
+                                                TickPlacement="BottomRight"
+                                                Ticks="{Binding Source={x:Static core:Constants.SpeedsForCDAsCollection}}"
                                                 Value="{Binding Options.Dumping.DumpSpeeds.CD, Mode=TwoWay}"
                                                 TickFrequency="2" />
                                         <TextBox Grid.Column="2"
@@ -418,7 +422,7 @@
                                                  MinHeight="23"
                                                  Padding="0"
                                                  IsReadOnly="True"
-                                                 Text="{Binding Options.Dumping.DumpSpeeds.CD}"
+                                                 Text="{Binding ElementName=DumpSpeedCDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}"
                                                  HorizontalContentAlignment="Center"
                                                  VerticalAlignment="Center" />
                                     </Grid>
@@ -432,6 +436,9 @@
                                                 Grid.Column="1"
                                                 Minimum="0"
                                                 Maximum="24"
+                                                IsSnapToTickEnabled="True"
+                                                TickPlacement="BottomRight"
+                                                Ticks="{Binding Source={x:Static core:Constants.SpeedsForDVDAsCollection}}"
                                                 Value="{Binding Options.Dumping.DumpSpeeds.DVD, Mode=TwoWay}"
                                                 TickFrequency="2" />
                                         <TextBox Grid.Column="2"
@@ -442,7 +449,7 @@
                                                  MinHeight="23"
                                                  Padding="0"
                                                  IsReadOnly="True"
-                                                 Text="{Binding Options.Dumping.DumpSpeeds.DVD}"
+                                                 Text="{Binding ElementName=DumpSpeedDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}"
                                                  HorizontalContentAlignment="Center"
                                                  VerticalAlignment="Center" />
                                     </Grid>
@@ -456,6 +463,9 @@
                                                 Grid.Column="1"
                                                 Minimum="0"
                                                 Maximum="24"
+                                                IsSnapToTickEnabled="True"
+                                                TickPlacement="BottomRight"
+                                                Ticks="{Binding Source={x:Static core:Constants.SpeedsForHDDVDAsCollection}}"
                                                 Value="{Binding Options.Dumping.DumpSpeeds.HDDVD, Mode=TwoWay}"
                                                 TickFrequency="2" />
                                         <TextBox Grid.Column="2"
@@ -466,7 +476,7 @@
                                                  MinHeight="23"
                                                  Padding="0"
                                                  IsReadOnly="True"
-                                                 Text="{Binding Options.Dumping.DumpSpeeds.HDDVD}"
+                                                 Text="{Binding ElementName=DumpSpeedHDDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}"
                                                  HorizontalContentAlignment="Center"
                                                  VerticalAlignment="Center" />
                                     </Grid>
@@ -480,6 +490,9 @@
                                                 Grid.Column="1"
                                                 Minimum="0"
                                                 Maximum="16"
+                                                IsSnapToTickEnabled="True"
+                                                TickPlacement="BottomRight"
+                                                Ticks="{Binding Source={x:Static core:Constants.SpeedsForBDAsCollection}}"
                                                 Value="{Binding Options.Dumping.DumpSpeeds.Bluray, Mode=TwoWay}"
                                                 TickFrequency="1" />
                                         <TextBox Grid.Column="2"
@@ -490,7 +503,7 @@
                                                  MinHeight="23"
                                                  Padding="0"
                                                  IsReadOnly="True"
-                                                 Text="{Binding Options.Dumping.DumpSpeeds.Bluray}"
+                                                 Text="{Binding ElementName=DumpSpeedBDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}"
                                                  HorizontalContentAlignment="Center"
                                                  VerticalAlignment="Center" />
                                     </Grid>

@@ -24,6 +24,7 @@
 - Unify some interface language logic
 - Make WPF version of StringResourceLoader
 - Migrate FromCurrentCulture to common Frontend location
+- Fix some broken behavior in Avalonia options window
 
 ### 3.11.0 (2026-10-12)
 
