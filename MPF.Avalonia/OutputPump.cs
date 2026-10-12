@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace MPF.Avalonia.Helpers
+namespace MPF.Avalonia
 {
     /// <summary>
     /// Decouples the process-output producer from the consumer with
