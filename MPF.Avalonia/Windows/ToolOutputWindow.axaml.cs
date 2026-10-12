@@ -66,12 +66,12 @@ namespace MPF.Avalonia.Windows
         #region Private Fields
 
         /// <summary>
-        ///
+        /// Line buffer for the current output
         /// </summary>
         private readonly ObservableCollection<string> _lines = [];
 
         /// <summary>
-        ///
+        /// Processing buffer for the terminal outputs
         /// </summary>
         private readonly TerminalOutputProcessor _buffer = new();
 
@@ -86,14 +86,14 @@ namespace MPF.Avalonia.Windows
         });
 
         /// <summary>
-        ///
+        /// Cancellation source to control the channel
         /// </summary>
         private readonly CancellationTokenSource _cts = new();
 
         /// <summary>
-        ///
+        /// Task representing the running pump that uses the channel
         /// </summary>
-        private readonly Task _channelTask;
+        private readonly Task _pumpTask;
 
         /// <summary>
         /// Committed lines already pushed to the UI
@@ -129,7 +129,7 @@ namespace MPF.Avalonia.Windows
             LinesList.ItemsSource = _lines;
 
             // The pump runs for the lifetime of the window
-            _channelTask = RunPumpAsync(_cts.Token);
+            _pumpTask = RunPumpAsync(_cts.Token);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace MPF.Avalonia.Windows
             _channel.Writer.TryComplete();
             try
             {
-                await _channelTask;
+                await _pumpTask;
             }
             catch
             {
