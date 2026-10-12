@@ -24,7 +24,7 @@ namespace MPF.Avalonia.Windows
     /// Shown modeless (via <c>Show(owner)</c>) so the MPF main window never freezes and
     /// its Stop button stays reachable. Raw output chunks arrive on <see cref="Append"/>
     /// from background reader threads; a bounded <see cref="OutputPump"/> batches them and
-    /// a <see cref="TerminalBuffer"/> applies terminal line-discipline so a tool's bare
+    /// a <see cref="TerminalOutputProcessor"/> applies terminal line-discipline so a tool's bare
     /// <c>\r</c> progress redraws collapse onto a single live line instead of flooding the
     /// scrollback. Committed lines feed a virtualized list with a CMD-style fixed cap.
     /// </remarks>
@@ -76,7 +76,7 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         ///
         /// </summary>
-        private readonly TerminalBuffer _buffer = new();
+        private readonly TerminalOutputProcessor _buffer = new();
 
         /// <summary>
         ///

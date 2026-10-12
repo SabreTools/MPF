@@ -14,6 +14,7 @@
 - Slight cleanup to OutputPump
 - More cleanup to TerminalBuffer
 - Major cleanup for ToolOutputWindow
+- Rename TerminalBuffer to TerminalOutputProcessor
 
 ### 3.11.0 (2026-10-12)
 

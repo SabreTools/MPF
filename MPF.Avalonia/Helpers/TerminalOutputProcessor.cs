@@ -7,7 +7,7 @@ namespace MPF.Avalonia.Helpers
     /// <summary>
     /// Minimal terminal output processor
     /// </summary>
-    public sealed class TerminalBuffer
+    public sealed class TerminalOutputProcessor
     {
         #region Properties
 
