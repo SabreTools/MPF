@@ -20,9 +20,21 @@ namespace MPF.Avalonia.Services
         /// </summary>
         public static void SyncWithSystemTheme(Options options)
         {
-            // Set dark mode automatically unless already specified
-            if (!options.GUI.Theming.EnableDarkMode)
-                options.GUI.Theming.EnableDarkMode = IsSystemDarkMode();
+            // Ignore if dark mode is already set
+            if (options.GUI.Theming.EnableDarkMode)
+                return;
+
+            // If the Avalonia theme variant is Dark
+            PlatformThemeVariant? themeVariant = Application.Current?
+                .PlatformSettings?
+                .GetColorValues()
+                .ThemeVariant;
+            if (themeVariant == PlatformThemeVariant.Dark)
+                options.GUI.Theming.EnableDarkMode = true;
+
+            // Check Linux dark mode variants
+            else if (OperatingSystem.IsLinux())
+                options.GUI.Theming.EnableDarkMode = IsLinuxDarkMode();
         }
 
         /// <summary>
@@ -42,25 +54,6 @@ namespace MPF.Avalonia.Services
                 application.RequestedThemeVariant = darkMode ? ThemeVariant.Dark : ThemeVariant.Light;
                 ApplyWindowsTitleBarTheme(darkMode);
             }
-        }
-
-        /// <summary>
-        /// Determine whether the system is currently using a dark theme
-        /// </summary>
-        private static bool IsSystemDarkMode()
-        {
-            PlatformThemeVariant? themeVariant = Application.Current?
-                .PlatformSettings?
-                .GetColorValues()
-                .ThemeVariant;
-
-            if (themeVariant == PlatformThemeVariant.Dark)
-                return true;
-
-            if (!OperatingSystem.IsLinux())
-                return false;
-
-            return IsLinuxDarkMode();
         }
     }
 }

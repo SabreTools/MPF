@@ -26,6 +26,7 @@
 - Migrate FromCurrentCulture to common Frontend location
 - Fix some broken behavior in Avalonia options window
 - Move OutputPump to base Avalonia namespace
+- Move more logic into SyncWithSystemTheme
 
 ### 3.11.0 (2026-10-12)
 
