@@ -20,7 +20,7 @@ namespace MPF.Avalonia
         {
             Name = "MPF";
             AvaloniaXamlLoader.Load(this);
-            StringResourceLoader.Load(Resources, InterfaceLanguage.English);
+            StringResourceLoader.SetInterfaceLanguage(Resources, InterfaceLanguage.English);
         }
 
         /// <summary>

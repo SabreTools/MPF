@@ -196,8 +196,8 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void SetInterfaceLanguage(InterfaceLanguage lang, bool rebuildNativeMenus)
         {
-            StringResourceLoader.Load(Application.Current!.Resources, lang);
-            StringResourceLoader.Load(Resources, lang);
+            StringResourceLoader.SetInterfaceLanguage(Application.Current!.Resources, lang);
+            StringResourceLoader.SetInterfaceLanguage(Resources, lang);
 
             // Update the labels in MainViewModel
             var translationStrings = new Dictionary<string, string>

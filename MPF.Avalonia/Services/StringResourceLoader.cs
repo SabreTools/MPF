@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml.Styling;
 using MPF.Frontend;
@@ -13,64 +13,76 @@ namespace MPF.Avalonia.Services
     internal static class StringResourceLoader
     {
         /// <summary>
-        /// Maps each supported interface language to its resource dictionary file name
-        /// </summary>
-        private static readonly Dictionary<InterfaceLanguage, string> LanguageFiles = new()
-        {
-            [InterfaceLanguage.English] = "Strings.xaml",
-            [InterfaceLanguage.French] = "Strings.fr.xaml",
-            [InterfaceLanguage.German] = "Strings.de.xaml",
-            [InterfaceLanguage.Italian] = "Strings.it.xaml",
-            [InterfaceLanguage.Japanese] = "Strings.ja.xaml",
-            [InterfaceLanguage.Korean] = "Strings.ko.xaml",
-            [InterfaceLanguage.Polish] = "Strings.pl.xaml",
-            [InterfaceLanguage.Portuguese] = "Strings.pt.xaml",
-            [InterfaceLanguage.Russian] = "Strings.ru.xaml",
-            [InterfaceLanguage.Spanish] = "Strings.es.xaml",
-            [InterfaceLanguage.Swedish] = "Strings.sv.xaml",
-            [InterfaceLanguage.Ukrainian] = "Strings.uk.xaml",
-            [InterfaceLanguage.L337] = "Strings.37.xaml",
-        };
-
-        /// <summary>
         /// Reset the merged dictionaries to the default English strings, then overlay the
         /// requested language (auto-detecting from the current culture when set to AutoDetect)
         /// </summary>
-        public static void Load(IResourceDictionary resources, InterfaceLanguage language)
+        public static void SetInterfaceLanguage(IResourceDictionary resources, InterfaceLanguage lang)
         {
+            // Reset the resources dictionary
             resources.MergedDictionaries.Clear();
 
-            AddResource(resources, "Strings.xaml");
+            // Auto detect language
+            if (lang == InterfaceLanguage.AutoDetect)
+                lang = FromCurrentCulture();
 
-            if (language == InterfaceLanguage.AutoDetect)
-                language = FromCurrentCulture();
-
-            if (language != InterfaceLanguage.English && LanguageFiles.TryGetValue(language, out string? fileName))
-                AddResource(resources, fileName);
-        }
-
-        /// <summary>
-        /// Build the embedded resource URI for the given file and merge it into the dictionary
-        /// </summary>
-        private static void AddResource(IResourceDictionary resources, string fileName)
-        {
+            // Get the executing assembly name for loading
             string assemblyName = typeof(StringResourceLoader).Assembly.GetName().Name ?? "MPF";
-            var uri = new Uri($"avares://{assemblyName}/Assets/{fileName}");
 
-            var resourceInclude = new ResourceInclude(uri)
+            // Set baseline language (English), required as some translations may not translate all strings
+            if (lang != InterfaceLanguage.English)
+            {
+                var engUri = new Uri($"avares://{assemblyName}/Assets/Strings.xaml");
+                var baselineDictionary = new ResourceInclude(engUri)
+                {
+                    Source = engUri
+                };
+                resources.MergedDictionaries.Add(baselineDictionary);
+            }
+
+#pragma warning disable IDE0072
+            var uri = lang switch
+            {
+                InterfaceLanguage.English => new Uri($"avares://{assemblyName}/Assets/Strings.xaml"),
+                InterfaceLanguage.French => new Uri($"avares://{assemblyName}/Assets/Strings.fr.xaml"),
+                InterfaceLanguage.German => new Uri($"avares://{assemblyName}/Assets/Strings.de.xaml"),
+                InterfaceLanguage.Italian => new Uri($"avares://{assemblyName}/Assets/Strings.it.xaml"),
+                InterfaceLanguage.Japanese => new Uri($"avares://{assemblyName}/Assets/Strings.ja.xaml"),
+                InterfaceLanguage.Korean => new Uri($"avares://{assemblyName}/Assets/Strings.ko.xaml"),
+                InterfaceLanguage.Polish => new Uri($"avares://{assemblyName}/Assets/Strings.pl.xaml"),
+                InterfaceLanguage.Portuguese => new Uri($"avares://{assemblyName}/Assets/Strings.pt.xaml"),
+                InterfaceLanguage.Russian => new Uri($"avares://{assemblyName}/Assets/Strings.ru.xaml"),
+                InterfaceLanguage.Spanish => new Uri($"avares://{assemblyName}/Assets/Strings.es.xaml"),
+                InterfaceLanguage.Swedish => new Uri($"avares://{assemblyName}/Assets/Strings.sv.xaml"),
+                InterfaceLanguage.Ukrainian => new Uri($"avares://{assemblyName}/Assets/Strings.uk.xaml"),
+                InterfaceLanguage.L337 => new Uri($"avares://{assemblyName}/Assets/Strings.37.xaml"),
+                _ => new Uri($"avares://{assemblyName}/Assets/Strings.xaml"),
+            };
+#pragma warning restore IDE0072
+
+            var dictionary = new ResourceInclude(uri)
             {
                 Source = uri
             };
 
-            resources.MergedDictionaries.Add(resourceInclude);
+            resources.MergedDictionaries.Add(dictionary);
         }
 
         /// <summary>
         /// Map the current UI culture's two-letter ISO language name to a supported interface language
         /// </summary>
+        /// TODO: Merge with WPF version in Frontend
         private static InterfaceLanguage FromCurrentCulture()
         {
-            return System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
+            // Get current region code to distinguish regional variants of languages
+            string region = string.Empty;
+            try
+            {
+                // Can throw exception depending on current locale
+                region = new RegionInfo(CultureInfo.CurrentUICulture.Name).TwoLetterISORegionName;
+            }
+            catch { }
+
+            return CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
             {
                 "en" => InterfaceLanguage.English,
                 "fr" => InterfaceLanguage.French,
@@ -84,6 +96,13 @@ namespace MPF.Avalonia.Services
                 "es" => InterfaceLanguage.Spanish,
                 "sv" => InterfaceLanguage.Swedish,
                 "uk" => InterfaceLanguage.Ukrainian,
+
+                // TODO: Translate UI elements to Traditional Chinese
+                "zh" when Array.Exists(["TW", "HK", "MO"], s => s == region) => InterfaceLanguage.English,
+
+                // TODO: Translate UI elements to Simplified Chinese
+                "zh" => InterfaceLanguage.English,
+
                 _ => InterfaceLanguage.English,
             };
         }

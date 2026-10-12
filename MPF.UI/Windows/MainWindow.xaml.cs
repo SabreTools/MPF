@@ -120,10 +120,7 @@ namespace MPF.UI.Windows
         {
             // Auto detect language
             if (lang == InterfaceLanguage.AutoDetect)
-            {
-                AutoSetInterfaceLanguage();
-                return;
-            }
+                lang = FromCurrentCulture();
 
             // Set baseline language (English), required as some translations may not translate all strings
             if (lang != InterfaceLanguage.English)
@@ -170,10 +167,10 @@ namespace MPF.UI.Windows
         }
 
         /// <summary>
-        /// Sets the interface language based on system locale
-        /// Should only run at app startup, use SetInterfaceLanguage(lang) elsewhere
+        /// Map the current UI culture's two-letter ISO language name to a supported interface language
         /// </summary>
-        public void AutoSetInterfaceLanguage()
+        /// TODO: Merge with Avalonia version in Frontend
+        public InterfaceLanguage FromCurrentCulture()
         {
             // Get current region code to distinguish regional variants of languages
             string region = string.Empty;
@@ -184,39 +181,29 @@ namespace MPF.UI.Windows
             }
             catch { }
 
-            switch (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)
+            return CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
             {
-                case "en": SetInterfaceLanguage(InterfaceLanguage.English); break;
-                case "fr": SetInterfaceLanguage(InterfaceLanguage.French); break;
-                case "de": SetInterfaceLanguage(InterfaceLanguage.German); break;
-                case "it": SetInterfaceLanguage(InterfaceLanguage.Italian); break;
-                case "ja": SetInterfaceLanguage(InterfaceLanguage.Japanese); break;
-                case "ko": SetInterfaceLanguage(InterfaceLanguage.Korean); break;
-                case "pl": SetInterfaceLanguage(InterfaceLanguage.Polish); break;
-                case "pt": SetInterfaceLanguage(InterfaceLanguage.Portuguese); break;
-                case "ru": SetInterfaceLanguage(InterfaceLanguage.Russian); break;
-                case "es": SetInterfaceLanguage(InterfaceLanguage.Spanish); break;
-                case "sv": SetInterfaceLanguage(InterfaceLanguage.Swedish); break;
-                case "uk": SetInterfaceLanguage(InterfaceLanguage.Ukrainian); break;
+                "en" => InterfaceLanguage.English,
+                "fr" => InterfaceLanguage.French,
+                "de" => InterfaceLanguage.German,
+                "it" => InterfaceLanguage.Italian,
+                "ja" => InterfaceLanguage.Japanese,
+                "ko" => InterfaceLanguage.Korean,
+                "pl" => InterfaceLanguage.Polish,
+                "pt" => InterfaceLanguage.Portuguese,
+                "ru" => InterfaceLanguage.Russian,
+                "es" => InterfaceLanguage.Spanish,
+                "sv" => InterfaceLanguage.Swedish,
+                "uk" => InterfaceLanguage.Ukrainian,
 
-                // Traditional or Simplified Chinese
-                case "zh":
-                    string[] traditionalRegions = ["TW", "HK", "MO"];
-                    if (Array.Exists(traditionalRegions, r => r.Equals(region, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        // TODO: Translate UI elements to Traditional Chinese
-                    }
-                    else
-                    {
-                        // TODO: Translate UI elements to Simplified Chinese
-                    }
+                // TODO: Translate UI elements to Traditional Chinese
+                "zh" when Array.Exists(["TW", "HK", "MO"], s => s == region) => InterfaceLanguage.English,
 
-                    break;
+                // TODO: Translate UI elements to Simplified Chinese
+                "zh" => InterfaceLanguage.English,
 
-                default:
-                    // Unsupported language, don't add any translated text
-                    break;
-            }
+                _ => InterfaceLanguage.English,
+            };
         }
 
         #endregion
