@@ -43,6 +43,7 @@
 - Make KillInternalProgram return a bool, currently unused
 - Fix wording of dumping cancellation message
 - Fix Dreamdump path resolution in CLI (gmipf)
+- Minor cleanup around exit code handling
 
 ### 3.11.0 (2026-10-12)
 

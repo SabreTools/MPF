@@ -2346,6 +2346,9 @@ namespace MPF.Frontend.ViewModels
                     return;
                 }
 
+                // Log the output
+                SuccessLogLn(result.Message);
+
                 // If we didn't execute a dumping command we cannot get submission output
                 if (!_environment.IsDumpingCommand())
                 {

@@ -269,8 +269,10 @@ namespace MPF.ExecutionContexts
                 process.WaitForExit();
             }
 
+            // Capture the exit code before closing
+            int exitCode = process.ExitCode;
             process.Close();
-            return process.ExitCode;
+            return exitCode;
         }
 
         /// <summary>

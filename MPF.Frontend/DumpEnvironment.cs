@@ -527,7 +527,6 @@ namespace MPF.Frontend
             else
                 result = ResultEventArgs.Failure($"{_internalProgram} has closed with exit code {exitCode}!");
 
-            progress?.Report(result);
             return result;
         }
 
