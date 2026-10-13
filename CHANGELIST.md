@@ -39,8 +39,8 @@
 - Make StringBuilder readonly for all but oldest .NET
 - Minor cleanup around Avalonia window code
 - Clean up code around removed option
-- Report a failure when the dumping program exits with an error
-- Report a stopped dump as stopped instead of as an error
+- Report a failure when the dumping program exits with an error (gmipf)
+- Report a stopped dump as stopped instead of as an error (gmipf)
 
 ### 3.11.0 (2026-10-12)
 
