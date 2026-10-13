@@ -39,6 +39,7 @@
 - Make StringBuilder readonly for all but oldest .NET
 - Minor cleanup around Avalonia window code
 - Clean up code around removed option
+- Fix Dreamdump path resolution in CLI (gmipf)
 
 ### 3.11.0 (2026-10-12)
 

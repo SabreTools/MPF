@@ -161,7 +161,7 @@ namespace MPF.CLI.Features
                         return false;
                     }
 
-                    Options.Dumping.AaruPath = resolved;
+                    Options.Dumping.DreamdumpPath = resolved;
                 }
 
                 break;
