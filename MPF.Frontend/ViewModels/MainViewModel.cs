@@ -2338,36 +2338,30 @@ namespace MPF.Frontend.ViewModels
                 // Notify the tool that the environment ran to completion
                 _toolConsole?.NotifyToolExited();
 
+                // Exit early on execution failures
+                if (result == false)
+                {
+                    ErrorLogLn(result.Message);
+                    Status = "Execution failed!";
+                    return;
+                }
+
                 // If we didn't execute a dumping command we cannot get submission output
                 if (!_environment.IsDumpingCommand())
                 {
                     SuccessLogLn("No dumping command was run, submission information will not be gathered.");
                     Status = "Execution complete!";
-
-                    // Re-allow quick exiting
-                    AskBeforeQuit = false;
-
-                    // Reset all UI elements
-                    EnableAllUIElements();
                     return;
                 }
 
                 // Verify dump output and save it
-                if (result == true)
-                {
-                    result = await _environment.VerifyAndSaveDumpOutput(
-                        resultProgress: resultProgress,
-                        protectionProgress: protectionProgress,
-                        processUserInfo: _processUserInfo);
+                result = await _environment.VerifyAndSaveDumpOutput(
+                    resultProgress: resultProgress,
+                    protectionProgress: protectionProgress,
+                    processUserInfo: _processUserInfo);
 
-                    if (result == false)
-                        ErrorLogLn(result.Message);
-                }
-                else
-                {
+                if (result == false)
                     ErrorLogLn(result.Message);
-                    Status = "Execution failed!";
-                }
             }
             catch (Exception ex)
             {
