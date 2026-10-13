@@ -14,23 +14,6 @@ namespace MPF.Avalonia.Windows
     public partial class OptionsWindow : WindowBase
     {
         /// <summary>
-        /// File picker types for browsing executables on Windows
-        /// </summary>
-        private static readonly List<FilePickerFileType> WindowsExecutableFileTypes =
-        [
-            new("Executables") { Patterns = ["*.exe"] },
-            new("All files") { Patterns = ["*", "*.*"] },
-        ];
-
-        /// <summary>
-        /// File picker types for browsing executables on non-Windows platforms
-        /// </summary>
-        private static readonly List<FilePickerFileType> AllFilesFileTypes =
-        [
-            new("All files") { Patterns = ["*", "*.*"] },
-        ];
-
-        /// <summary>
         /// Read-only access to the current options view model
         /// </summary>
         public OptionsViewModel OptionsViewModel => DataContext as OptionsViewModel ?? new OptionsViewModel();
@@ -59,9 +42,20 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private async Task<string?> BrowseForExecutableAsync(string title)
         {
-            List<FilePickerFileType> fileTypes = OperatingSystem.IsWindows()
-                ? WindowsExecutableFileTypes
-                : AllFilesFileTypes;
+            List<FilePickerFileType> fileTypes;
+            if (OperatingSystem.IsWindows())
+            {
+                fileTypes = [
+                    new FilePickerFileType("Executables") { Patterns = ["*.exe"] },
+                    new FilePickerFileType("All files") { Patterns = ["*", "*.*"] },
+                ];
+            }
+            else
+            {
+                fileTypes = [
+                    new FilePickerFileType("All files") { Patterns = ["*", "*.*"] },
+                ];
+            }
 
             var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {

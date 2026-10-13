@@ -1,7 +1,5 @@
 using System;
-using MPF.Frontend;
 using MPF.Frontend.Tools;
-using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.Features
 {
@@ -46,7 +44,6 @@ namespace MPF.Frontend.Features
 
             // GUI
             Console.WriteLine("GUI:");
-            Console.WriteLine($"  Copy Update URL to Clipboard = {options.GUI.CopyUpdateUrlToClipboard}");
             Console.WriteLine($"  Open Log Window at Startup = {options.GUI.OpenLogWindowAtStartup}");
             Console.WriteLine($"  Default Interface Language = {options.GUI.DefaultInterfaceLanguage.LongName()}");
             Console.WriteLine($"  Show Debug Menu Item = {options.GUI.ShowDebugViewMenuItem}");

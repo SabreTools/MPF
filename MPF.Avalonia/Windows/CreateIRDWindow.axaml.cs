@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -13,21 +12,16 @@ namespace MPF.Avalonia.Windows
     public partial class CreateIRDWindow : WindowBase
     {
         /// <summary>
-        /// File picker types for saving an IRD file
-        /// </summary>
-        private static readonly List<FilePickerFileType> IrdFileTypes =
-        [
-            new("IRD File") { Patterns = ["*.ird"] },
-        ];
-
-        /// <summary>
         /// Read-only access to the current create IRD view model
         /// </summary>
         public CreateIRDViewModel CreateIRDViewModel => DataContext as CreateIRDViewModel ?? new CreateIRDViewModel();
 
+        /// <summary>
+        /// Constructor required for runtime loader
+        /// </summary>
         public CreateIRDWindow()
         {
-            InitializeWindow();
+            InitializeWindow(null);
         }
 
         /// <summary>
@@ -35,15 +29,16 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         public CreateIRDWindow(MainWindow parent)
         {
-            InitializeWindow();
+            InitializeWindow(parent);
         }
 
         /// <summary>
         /// Shared initialization for both constructors; sets the view model and wires events once opened
         /// </summary>
-        private void InitializeWindow()
+        private void InitializeWindow(MainWindow? parent)
         {
             InitializeComponent();
+            Owner = parent;
             DataContext = new CreateIRDViewModel();
         }
 
@@ -54,16 +49,14 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private async Task<string?> OpenFileAsync(string title, params string[] patterns)
         {
-            List<FilePickerFileType> fileTypes = [
-                new(title) { Patterns = patterns },
-                FilePickerFileTypes.All,
-            ];
-
             var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 Title = title,
                 AllowMultiple = false,
-                FileTypeFilter = fileTypes,
+                FileTypeFilter = [
+                    new FilePickerFileType(title) { Patterns = patterns },
+                    FilePickerFileTypes.All,
+                ],
             });
 
             return files.Count > 0 ? files[0].TryGetLocalPath() : null;
@@ -82,10 +75,12 @@ namespace MPF.Avalonia.Windows
             {
                 Title = "Save IRD",
                 SuggestedFileName = "game.ird",
-                FileTypeChoices = IrdFileTypes,
+                FileTypeChoices = [
+                    new FilePickerFileType("IRD File") { Patterns = ["*.ird"] },
+                ],
             });
 
-            string? outputPath =  file?.TryGetLocalPath();
+            string? outputPath = file?.TryGetLocalPath();
             if (string.IsNullOrWhiteSpace(outputPath))
                 return;
 

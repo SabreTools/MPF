@@ -177,18 +177,6 @@ namespace MPF.Avalonia.Windows
             RootBorder!.Padding = new Thickness(2, OperatingSystem.IsMacOS() ? 4 : 2, 2, 8);
         }
 
-        /// <summary>
-        /// Refresh the in-window title bar menu headers to the current interface language
-        /// </summary>
-        /// TODO: Can this be handled by binding?
-        private void UpdateTitleBarMenuHeaders()
-        {
-            FileMenuItem!.Header = StringResource("FileMenuString", "File");
-            ToolsMenuItem!.Header = StringResource("ToolsMenuString", "Tools");
-            HelpMenuItem!.Header = StringResource("HelpMenuString", "Help");
-            LanguagesMenuItem!.Header = StringResource("LanguageMenuString", "ENG");
-        }
-
         #endregion
 
         #region Interface Language
@@ -210,7 +198,6 @@ namespace MPF.Avalonia.Windows
             };
             MainViewModel.TranslateStrings(translationStrings);
 
-            UpdateTitleBarMenuHeaders();
             if (rebuildNativeMenus)
                 UpdateNativeMenuHeaders();
         }
@@ -241,9 +228,11 @@ namespace MPF.Avalonia.Windows
         /// Toggle the window between maximized and normal states
         /// </summary>
         private void ToggleWindowState()
-            => WindowState = WindowState == AvaloniaWindowState.Maximized
+        {
+            WindowState = WindowState == AvaloniaWindowState.Maximized
                 ? AvaloniaWindowState.Normal
                 : AvaloniaWindowState.Maximized;
+        }
 
         #endregion
 
@@ -288,22 +277,10 @@ namespace MPF.Avalonia.Windows
         public void CheckForUpdates(bool showIfSame)
         {
             MainViewModel.CheckForUpdates(out bool different, out string message, out _);
-            // if (different && MainViewModel.Options.GUI.CopyUpdateUrlToClipboard)
-            //     message += $"{Environment.NewLine}The update URL has been added copied to your clipboard";
             if (different)
                 message += $"{Environment.NewLine}You are out of date!";
             else
                 message += $"{Environment.NewLine}You have the newest version!";
-
-            // If we have a new version, put it in the clipboard
-            // if (MainViewModel.Options.GUI.CopyUpdateUrlToClipboard && different && !string.IsNullOrEmpty(url))
-            // {
-            //     try
-            //     {
-            //         Clipboard?.SetTextAsync(url);
-            //     }
-            //     catch { }
-            // }
 
             if (showIfSame || different)
             {
@@ -543,7 +520,7 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Set the UI color scheme according to the options
         /// </summary>
-        private void ApplyTheme(IResourceDictionary resources, Options options)
+        private static void ApplyTheme(IResourceDictionary resources, Options options)
         {
             bool darkMode = options.GUI.Theming.EnableDarkMode;
 

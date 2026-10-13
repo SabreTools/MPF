@@ -20,7 +20,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Internal structure version
         /// </summary>
-        public int Version { get; set; } = 2;
+        public int Version { get; set; } = 3;
 
         /// <summary>
         /// Indicate if the program is being run with a clean configuration
@@ -86,7 +86,6 @@ namespace MPF.Frontend
             VerboseLogging = source.VerboseLogging;
             InternalProgram = source.InternalProgram;
 
-            GUI.CopyUpdateUrlToClipboard = source.GUI.CopyUpdateUrlToClipboard;
             GUI.OpenLogWindowAtStartup = source.GUI.OpenLogWindowAtStartup;
             GUI.ToolConsoleAutoClose = source.GUI.ToolConsoleAutoClose;
 
@@ -442,12 +441,6 @@ namespace MPF.Frontend
     public class GuiSettings
     {
         #region Startup
-
-        /// <summary>
-        /// Try to copy the update URL to the clipboard if one is found
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool CopyUpdateUrlToClipboard { get; set; } = false;
 
         /// <summary>
         /// Have the log panel expanded by default on startup
