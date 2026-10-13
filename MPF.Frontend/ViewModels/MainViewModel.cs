@@ -967,7 +967,7 @@ namespace MPF.Frontend.ViewModels
             else if ((StartStopButtonText as string) == StopDumpingValue)
             {
                 VerboseLogLn("Canceling dumping process...");
-                _environment?.CancelDumping();
+                _ = _environment?.CancelDumping();
                 CopyProtectScanButtonEnabled = true;
             }
         }

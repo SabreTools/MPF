@@ -478,7 +478,8 @@ namespace MPF.Frontend
         /// <summary>
         /// Cancel an in-progress dumping process
         /// </summary>
-        public void CancelDumping() => _executionContext?.KillInternalProgram();
+        /// <returns>False if there was an exception in killing the program, true otherwise</remarks>
+        public bool CancelDumping() => _executionContext?.KillInternalProgram() ?? true;
 
         /// <summary>
         /// Execute the initial invocation of the dumping programs

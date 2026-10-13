@@ -40,6 +40,7 @@
 - Minor cleanup around Avalonia window code
 - Clean up code around removed option
 - Report exit codes from internal program execution (gmipf)
+- Make KillInternalProgram return a bool, currently unused
 
 ### 3.11.0 (2026-10-12)
 

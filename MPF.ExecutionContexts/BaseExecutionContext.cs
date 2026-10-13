@@ -276,17 +276,30 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Cancel an in-progress dumping process
         /// </summary>
-        public void KillInternalProgram()
+        public bool KillInternalProgram()
         {
+            // Ignore if the process is invalid
+            if (process is null)
+                return true;
+
+            // Ignore if the process is already exited
+            if (process.HasExited)
+                return true;
+
             try
             {
                 while (process is not null && !process.HasExited)
                 {
                     process.Kill();
                 }
+
+                return true;
             }
             catch
-            { }
+            {
+                // TODO: Determine how to best surface this error
+                return false;
+            }
         }
 
         /// <summary>
