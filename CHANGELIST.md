@@ -41,6 +41,7 @@
 - Clean up code around removed option
 - Report exit codes from internal program execution (gmipf)
 - Make KillInternalProgram return a bool, currently unused
+- Fix wording of dumping cancellation message
 
 ### 3.11.0 (2026-10-12)
 
