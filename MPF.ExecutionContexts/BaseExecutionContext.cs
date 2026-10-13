@@ -207,7 +207,7 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Run internal program
         /// </summary>
-        public void ExecuteInternalProgram()
+        public int ExecuteInternalProgram()
         {
             // When no output sink is attached, keep the original behavior exactly: the
             // tool runs in its own console window (UseShellExecute) with no redirection.
@@ -256,14 +256,11 @@ namespace MPF.ExecutionContexts
 
             if (redirect)
             {
-                // Pump stdout and stderr on dedicated threads using RAW reads (never
-                // ReadLine): dump tools redraw progress with a bare '\r', and ReadLine
-                // would treat every '\r' as a new line -- the exact spam/lag that made
-                // redirected output unusable before. The consumer interprets '\r'.
                 Thread outThread = StartStreamPump(process.StandardOutput);
                 Thread errThread = StartStreamPump(process.StandardError);
 
                 process.WaitForExit();
+
                 outThread.Join();
                 errThread.Join();
             }
@@ -273,22 +270,36 @@ namespace MPF.ExecutionContexts
             }
 
             process.Close();
+            return process.ExitCode;
         }
 
         /// <summary>
         /// Cancel an in-progress dumping process
         /// </summary>
-        public void KillInternalProgram()
+        public bool KillInternalProgram()
         {
+            // Ignore if the process is invalid
+            if (process is null)
+                return true;
+
+            // Ignore if the process is already exited
+            if (process.HasExited)
+                return true;
+
             try
             {
                 while (process is not null && !process.HasExited)
                 {
                     process.Kill();
                 }
+
+                return true;
             }
             catch
-            { }
+            {
+                // TODO: Determine how to best surface this error
+                return false;
+            }
         }
 
         /// <summary>

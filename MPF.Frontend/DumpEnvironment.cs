@@ -478,7 +478,8 @@ namespace MPF.Frontend
         /// <summary>
         /// Cancel an in-progress dumping process
         /// </summary>
-        public void CancelDumping() => _executionContext?.KillInternalProgram();
+        /// <returns>False if there was an exception in killing the program, true otherwise</remarks>
+        public bool CancelDumping() => _executionContext?.KillInternalProgram() ?? true;
 
         /// <summary>
         /// Execute the initial invocation of the dumping programs
@@ -511,17 +512,22 @@ namespace MPF.Frontend
             if (!string.IsNullOrEmpty(directoryName))
                 Directory.CreateDirectory(directoryName);
 
-            // Stream the tool's raw output to the attached sink, if any (GUI console).
-            // Null leaves the execution context on its legacy, non-redirected path.
+            // Stream the tool's raw output to the attached sink, if any
             _executionContext.OutputReceived = ToolOutputReceived;
 
 #if NET40
-            await Task.Factory.StartNew(() => { _executionContext.ExecuteInternalProgram(); return true; });
+            int exitCode = await Task.Factory.StartNew(_executionContext.ExecuteInternalProgram);
 #else
-            await Task.Run(_executionContext.ExecuteInternalProgram);
+            int exitCode = await Task.Run(_executionContext.ExecuteInternalProgram);
 #endif
-            progress?.Report(ResultEventArgs.Success($"{_internalProgram} has finished!"));
 
+            // Assume that an exit code of 0 is a success, actually depends on the program
+            if (exitCode == 0)
+                result = ResultEventArgs.Success($"{_internalProgram} has finished!");
+            else
+                result = ResultEventArgs.Failure($"{_internalProgram} has closed with exit code {exitCode}!");
+
+            progress?.Report(result);
             return result;
         }
 
