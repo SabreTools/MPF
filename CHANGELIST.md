@@ -47,6 +47,7 @@
 - Fix leftover text in tool output lines (gmipf)
 - Fix Aaru MacOS ARM64 download link
 - Fix per-framework OS detection
+- Simplify per-framework OS detection
 
 ### 3.11.0 (2026-10-12)
 

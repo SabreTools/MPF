@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-#if NETCOREAPP
+#if NETCOREAPP3_1
 using System.Runtime.InteropServices;
 #endif
 using SabreTools.IO.Extensions;
@@ -33,16 +33,14 @@ namespace MPF.Frontend
         #region macOS Detection
 
         /// <summary>
-        /// Whether the current process is running on macOS. On modern .NET,
-        /// Environment.OSVersion.Platform reports PlatformID.Unix for both Linux and macOS, so
-        /// the two are distinguished here rather than through PlatformID. .NET Framework never
-        /// runs on macOS, so this is always false on those targets.
+        /// Returns if the current system is MacOS
         /// </summary>
-        /// <returns>True when running on macOS; false otherwise</returns>
         private static bool IsMacOS()
         {
-#if NETCOREAPP
+#if NETCOREAPP3_1
             return RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+#elif NETCOREAPP
+            return OperatingSystem.IsMacOS();
 #else
             return false;
 #endif
@@ -67,7 +65,7 @@ namespace MPF.Frontend
         /// <returns>The drive list, with mounted volumes replaced by the devices behind them</returns>
         private static Drive[] AppendMacOSDrives(Drive[] drives, bool ignoreFixedDrives)
         {
-            // Defensive: this shells out to macOS-only tooling, so never run it off macOS
+            // Ensure this only runs on MacOS
             if (!IsMacOS())
                 return drives;
 

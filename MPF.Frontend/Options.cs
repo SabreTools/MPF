@@ -1,4 +1,7 @@
 using System.IO;
+#if NETCOREAPP3_1
+using System.Runtime.InteropServices;
+#endif
 using Newtonsoft.Json;
 using SabreTools.RedumpLib.Data;
 using AaruDumpSettings = MPF.ExecutionContexts.Aaru.DumpSettings;
@@ -189,9 +192,9 @@ namespace MPF.Frontend
             {
                 string executableName = "aaru.exe";
 #if NETCOREAPP3_1
-                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     executableName = "aaru";
-                else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     executableName = "aaru";
 #elif NETCOREAPP
                 if (System.OperatingSystem.IsLinux())
@@ -218,9 +221,9 @@ namespace MPF.Frontend
             {
                 string executableName = "DiscImageCreator.exe";
 #if NETCOREAPP3_1
-                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     executableName = "DiscImageCreator.out";
-                else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     executableName = "DiscImageCreator";
 #elif NETCOREAPP
                 if (System.OperatingSystem.IsLinux())
@@ -247,9 +250,9 @@ namespace MPF.Frontend
             {
                 string executableName = "dreamdump.exe";
 #if NETCOREAPP3_1
-                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     executableName = "dreamdump";
-                else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     executableName = "dreamdump";
 #elif NETCOREAPP
                 if (System.OperatingSystem.IsLinux())
@@ -276,9 +279,9 @@ namespace MPF.Frontend
             {
                 string executableName = "redumper.exe";
 #if NETCOREAPP3_1
-                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     executableName = "redumper";
-                else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     executableName = "redumper";
 #elif NETCOREAPP
                 if (System.OperatingSystem.IsLinux())
