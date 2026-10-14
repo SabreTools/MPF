@@ -206,11 +206,7 @@ namespace MPF.Frontend.Tools
             CommittedLines.Add(line);
             LineCommitted?.Invoke(line);
 
-#if NET20 || NET35
-            _escape = new StringBuilder();
-#else
-            _escape.Clear();
-#endif
+            _current.Length = 0;
             _cursor = 0;
         }
 
@@ -238,11 +234,7 @@ namespace MPF.Frontend.Tools
 
                 // Entire line
                 case EraseMode.EntireLine:
-#if NET20 || NET35
-                    _escape = new StringBuilder();
-#else
-                    _escape.Clear();
-#endif
+                    _current.Length = 0;
                     _cursor = 0;
                     break;
 
