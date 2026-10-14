@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using Newtonsoft.Json;
 using SabreTools.RedumpLib.Data;
@@ -188,14 +187,18 @@ namespace MPF.Frontend
         {
             get
             {
-#pragma warning disable IDE0072
-                string executableName = Environment.OSVersion.Platform switch
-                {
-                    PlatformID.Unix => "aaru",
-                    PlatformID.MacOSX => "aaru",
-                    _ => "aaru.exe"
-                };
-#pragma warning restore IDE0072
+                string executableName = "aaru.exe";
+#if NETCOREAPP3_1
+                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+                    executableName = "aaru";
+                else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
+                    executableName = "aaru";
+#elif NETCOREAPP
+                if (System.OperatingSystem.IsLinux())
+                    executableName = "aaru";
+                else if (System.OperatingSystem.IsMacOS())
+                    executableName = "aaru";
+#endif
 
 #if NET20 || NET35
                 return Path.Combine("Programs", Path.Combine("Aaru", executableName));
@@ -213,14 +216,18 @@ namespace MPF.Frontend
         {
             get
             {
-#pragma warning disable IDE0072
-                string executableName = Environment.OSVersion.Platform switch
-                {
-                    PlatformID.Unix => "DiscImageCreator.out",
-                    PlatformID.MacOSX => "DiscImageCreator",
-                    _ => "DiscImageCreator.exe"
-                };
-#pragma warning restore IDE0072
+                string executableName = "DiscImageCreator.exe";
+#if NETCOREAPP3_1
+                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+                    executableName = "DiscImageCreator.out";
+                else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
+                    executableName = "DiscImageCreator";
+#elif NETCOREAPP
+                if (System.OperatingSystem.IsLinux())
+                    executableName = "DiscImageCreator.out";
+                else if (System.OperatingSystem.IsMacOS())
+                    executableName = "DiscImageCreator";
+#endif
 
 #if NET20 || NET35
                 return Path.Combine("Programs", Path.Combine("Creator", executableName));
@@ -238,14 +245,18 @@ namespace MPF.Frontend
         {
             get
             {
-#pragma warning disable IDE0072
-                string executableName = Environment.OSVersion.Platform switch
-                {
-                    PlatformID.Unix => "dreamdump",
-                    PlatformID.MacOSX => "dreamdump",
-                    _ => "dreamdump.exe"
-                };
-#pragma warning restore IDE0072
+                string executableName = "dreamdump.exe";
+#if NETCOREAPP3_1
+                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+                    executableName = "dreamdump";
+                else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
+                    executableName = "dreamdump";
+#elif NETCOREAPP
+                if (System.OperatingSystem.IsLinux())
+                    executableName = "dreamdump";
+                else if (System.OperatingSystem.IsMacOS())
+                    executableName = "dreamdump";
+#endif
 
 #if NET20 || NET35
                 return Path.Combine("Programs", Path.Combine("Dreamdump", executableName));
@@ -263,14 +274,18 @@ namespace MPF.Frontend
         {
             get
             {
-#pragma warning disable IDE0072
-                string executableName = Environment.OSVersion.Platform switch
-                {
-                    PlatformID.Unix => "redumper",
-                    PlatformID.MacOSX => "redumper",
-                    _ => "redumper.exe"
-                };
-#pragma warning restore IDE0072
+                string executableName = "redumper.exe";
+#if NETCOREAPP3_1
+                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+                    executableName = "redumper";
+                else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
+                    executableName = "redumper";
+#elif NETCOREAPP
+                if (System.OperatingSystem.IsLinux())
+                    executableName = "redumper";
+                else if (System.OperatingSystem.IsMacOS())
+                    executableName = "redumper";
+#endif
 
 #if NET20 || NET35
                 return Path.Combine("Programs", Path.Combine("Redumper", executableName));
