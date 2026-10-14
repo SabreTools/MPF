@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Threading;
+using MPF.Frontend;
 
 namespace MPF.Avalonia
 {
@@ -36,7 +37,7 @@ namespace MPF.Avalonia
         /// </summary>
         private static void HideMacOSUnavailableWindowButtons(Window window, bool hideMinimizeButton)
         {
-            if (!OperatingSystem.IsMacOS())
+            if (!SystemEnvironment.IsMacOS())
                 return;
 
             IntPtr nsWindow = window.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;

@@ -1,6 +1,7 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using MPF.Frontend;
 
 namespace MPF.Avalonia.Windows
 {
@@ -37,7 +38,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void ConfigurePlatformMenus()
         {
-            if (!OperatingSystem.IsMacOS())
+            if (!SystemEnvironment.IsMacOS())
                 return;
 
             var nativeMenu = new NativeMenu();
@@ -133,7 +134,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void UpdateNativeMenuHeaders()
         {
-            if (!OperatingSystem.IsMacOS())
+            if (!SystemEnvironment.IsMacOS())
                 return;
 
             _nativeFileMenuGroup?.Header = CleanMenuHeader(StringResource("FileMenuString", "File"));
@@ -155,7 +156,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void NormalizeMacOutputPath()
         {
-            if (_normalizingOutputPath || !OperatingSystem.IsMacOS())
+            if (_normalizingOutputPath || !SystemEnvironment.IsMacOS())
                 return;
 
             string normalized = RemoveMacVolumesPrefix(MainViewModel.OutputPath);

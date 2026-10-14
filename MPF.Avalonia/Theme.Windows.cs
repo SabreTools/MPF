@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Styling;
+using MPF.Frontend;
 
 namespace MPF.Avalonia
 {
@@ -32,7 +33,7 @@ namespace MPF.Avalonia
         /// </summary>
         public static void ApplyWindowsTitleBarTheme(bool darkMode)
         {
-            if (!OperatingSystem.IsWindows())
+            if (!SystemEnvironment.IsWindows())
                 return;
 
             if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
@@ -50,7 +51,7 @@ namespace MPF.Avalonia
         /// </summary>
         private static void ApplyWindowTitleBarTheme(Window window, bool darkMode)
         {
-            if (!OperatingSystem.IsWindows())
+            if (!SystemEnvironment.IsWindows())
                 return;
 
             IntPtr hwnd = window.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;

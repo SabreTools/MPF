@@ -158,11 +158,11 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void ConfigurePlatformChrome()
         {
-            if (OperatingSystem.IsWindows())
+            if (SystemEnvironment.IsWindows())
                 return;
 
             SystemDecorations = SystemDecorations.Full;
-            if (OperatingSystem.IsMacOS())
+            if (SystemEnvironment.IsMacOS())
             {
                 TopMenuBar!.IsVisible = false;
                 RootGrid!.RowDefinitions[0].Height = new GridLength(0);
@@ -174,7 +174,7 @@ namespace MPF.Avalonia.Windows
                 CloseButton!.IsVisible = false;
             }
 
-            RootBorder!.Padding = new Thickness(2, OperatingSystem.IsMacOS() ? 4 : 2, 2, 8);
+            RootBorder!.Padding = new Thickness(2, SystemEnvironment.IsMacOS() ? 4 : 2, 2, 8);
         }
 
         #endregion
@@ -513,7 +513,7 @@ namespace MPF.Avalonia.Windows
                 options.GUI.Theming.EnableDarkMode = true;
 
             // Check Linux dark mode variants
-            else if (OperatingSystem.IsLinux())
+            else if (SystemEnvironment.IsLinux())
                 options.GUI.Theming.EnableDarkMode = Avalonia.Theme.IsLinuxDarkMode();
         }
 

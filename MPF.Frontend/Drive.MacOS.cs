@@ -2,9 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-#if NETCOREAPP3_1
-using System.Runtime.InteropServices;
-#endif
 using SabreTools.IO.Extensions;
 
 namespace MPF.Frontend
@@ -30,24 +27,6 @@ namespace MPF.Frontend
 
         #endregion
 
-        #region macOS Detection
-
-        /// <summary>
-        /// Returns if the current system is MacOS
-        /// </summary>
-        private static bool IsMacOS()
-        {
-#if NETCOREAPP3_1
-            return RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-#elif NETCOREAPP
-            return OperatingSystem.IsMacOS();
-#else
-            return false;
-#endif
-        }
-
-        #endregion
-
         #region macOS Helpers
 
         /// <summary>
@@ -66,7 +45,7 @@ namespace MPF.Frontend
         private static Drive[] AppendMacOSDrives(Drive[] drives, bool ignoreFixedDrives)
         {
             // Ensure this only runs on MacOS
-            if (!IsMacOS())
+            if (!SystemEnvironment.IsMacOS())
                 return drives;
 
             var kept = new List<Drive>();

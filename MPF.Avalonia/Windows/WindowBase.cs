@@ -1,10 +1,10 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using MPF.Frontend;
 
 namespace MPF.Avalonia.Windows
 {
@@ -28,7 +28,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void ApplyPlatformLayout()
         {
-            if (OperatingSystem.IsWindows())
+            if (SystemEnvironment.IsWindows())
                 return;
 
             foreach (TabControl tabControl in this.GetVisualDescendants().OfType<TabControl>())

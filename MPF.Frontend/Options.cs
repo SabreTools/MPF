@@ -191,17 +191,10 @@ namespace MPF.Frontend
             get
             {
                 string executableName = "aaru.exe";
-#if NETCOREAPP3_1
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (SystemEnvironment.IsLinux())
                     executableName = "aaru";
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (SystemEnvironment.IsMacOS())
                     executableName = "aaru";
-#elif NETCOREAPP
-                if (System.OperatingSystem.IsLinux())
-                    executableName = "aaru";
-                else if (System.OperatingSystem.IsMacOS())
-                    executableName = "aaru";
-#endif
 
 #if NET20 || NET35
                 return Path.Combine("Programs", Path.Combine("Aaru", executableName));
@@ -220,17 +213,10 @@ namespace MPF.Frontend
             get
             {
                 string executableName = "DiscImageCreator.exe";
-#if NETCOREAPP3_1
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (SystemEnvironment.IsLinux())
                     executableName = "DiscImageCreator.out";
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (SystemEnvironment.IsMacOS())
                     executableName = "DiscImageCreator";
-#elif NETCOREAPP
-                if (System.OperatingSystem.IsLinux())
-                    executableName = "DiscImageCreator.out";
-                else if (System.OperatingSystem.IsMacOS())
-                    executableName = "DiscImageCreator";
-#endif
 
 #if NET20 || NET35
                 return Path.Combine("Programs", Path.Combine("Creator", executableName));
@@ -249,17 +235,10 @@ namespace MPF.Frontend
             get
             {
                 string executableName = "dreamdump.exe";
-#if NETCOREAPP3_1
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (SystemEnvironment.IsLinux())
                     executableName = "dreamdump";
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (SystemEnvironment.IsMacOS())
                     executableName = "dreamdump";
-#elif NETCOREAPP
-                if (System.OperatingSystem.IsLinux())
-                    executableName = "dreamdump";
-                else if (System.OperatingSystem.IsMacOS())
-                    executableName = "dreamdump";
-#endif
 
 #if NET20 || NET35
                 return Path.Combine("Programs", Path.Combine("Dreamdump", executableName));
@@ -278,17 +257,10 @@ namespace MPF.Frontend
             get
             {
                 string executableName = "redumper.exe";
-#if NETCOREAPP3_1
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (SystemEnvironment.IsLinux())
                     executableName = "redumper";
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (SystemEnvironment.IsMacOS())
                     executableName = "redumper";
-#elif NETCOREAPP
-                if (System.OperatingSystem.IsLinux())
-                    executableName = "redumper";
-                else if (System.OperatingSystem.IsMacOS())
-                    executableName = "redumper";
-#endif
 
 #if NET20 || NET35
                 return Path.Combine("Programs", Path.Combine("Redumper", executableName));

@@ -285,7 +285,7 @@ namespace MPF.Frontend
             // points (e.g. "/"), which are not dumpable devices, so they are deliberately left
             // out of the DriveInfo query there.
             bool isUnix = Environment.OSVersion.Platform == PlatformID.Unix;
-            bool isMacOS = IsMacOS();
+            bool isMacOS = SystemEnvironment.IsMacOS();
 
             var desiredDriveTypes = new List<DriveType>() { DriveType.CDRom };
             if (!ignoreFixedDrives && !isUnix)

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Interactivity;
@@ -43,7 +42,7 @@ namespace MPF.Avalonia.Windows
         private async Task<string?> BrowseForExecutableAsync(string title)
         {
             List<FilePickerFileType> fileTypes;
-            if (OperatingSystem.IsWindows())
+            if (SystemEnvironment.IsWindows())
             {
                 fileTypes = [
                     new FilePickerFileType("Executables") { Patterns = ["*.exe"] },

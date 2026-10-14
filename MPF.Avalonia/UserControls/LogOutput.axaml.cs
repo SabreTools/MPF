@@ -1,4 +1,3 @@
-using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using Avalonia;
@@ -108,7 +107,7 @@ namespace MPF.Avalonia.UserControls
             try
             {
                 string logPath = "console.log";
-                if (!OperatingSystem.IsWindows() && this.GetVisualRoot() is Window owner)
+                if (!SystemEnvironment.IsWindows() && this.GetVisualRoot() is Window owner)
                 {
                     var folders = await owner.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
                     {

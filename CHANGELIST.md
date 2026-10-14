@@ -48,6 +48,7 @@
 - Fix Aaru MacOS ARM64 download link
 - Fix per-framework OS detection
 - Simplify per-framework OS detection
+- Create and use centralized OS detection methods
 
 ### 3.11.0 (2026-10-12)
 
