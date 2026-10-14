@@ -45,6 +45,7 @@
 - Fix Dreamdump path resolution in CLI (gmipf)
 - Minor cleanup around exit code handling
 - Fix leftover text in tool output lines (gmipf)
+- Fix Aaru MacOS ARM64 download link 
 
 ### 3.11.0 (2026-10-12)
 

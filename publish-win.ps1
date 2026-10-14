@@ -81,7 +81,7 @@ function Download-Programs {
         "Aaru_linux-arm64"      = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_arm64.tar.xz"
         #"Aaru_linux-armhf"     = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_armhf.tar.xz"
         "Aaru_linux-x64"        = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_amd64.tar.xz"
-        "Aaru_osx-arm64"        = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_macos-aarch64.zip"
+        "Aaru_osx-arm64"        = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_macos_aarch64.zip"
         "Aaru_osx-x64"          = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_macos.zip"
         "Aaru_win-arm64"        = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_windows_aarch64.zip"
         "Aaru_win-x86"          = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_windows_x64.zip"
