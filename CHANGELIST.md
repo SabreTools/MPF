@@ -50,6 +50,7 @@
 - Simplify per-framework OS detection
 - Create and use centralized OS detection methods
 - Add future removal note
+- Fix a couple of other OS-related issues
 
 ### 3.11.0 (2026-10-12)
 

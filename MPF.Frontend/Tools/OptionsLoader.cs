@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
@@ -165,8 +164,9 @@ namespace MPF.Frontend.Tools
         private static string GetUserConfigurationPath()
         {
             // MacOS
-            if (Environment.OSVersion.Platform == PlatformID.MacOSX)
+            if (SystemEnvironment.IsMacOS())
             {
+                // TODO: Replace this with a call to PathTool.GetAppDataDirectory when IO is updated
                 string homeDir = PathTool.GetHomeDirectory();
 #if NET20 || NET35
                 return Path.Combine(Path.Combine(Path.Combine(homeDir, "Library"), "Application Support"), "mpf");
@@ -176,7 +176,7 @@ namespace MPF.Frontend.Tools
             }
 
             // Linux
-            else if (Environment.OSVersion.Platform == PlatformID.Unix)
+            else if (SystemEnvironment.IsLinux())
             {
                 string homeDir = PathTool.GetHomeDirectory();
 #if NET20 || NET35
@@ -189,12 +189,7 @@ namespace MPF.Frontend.Tools
             // Windows
             else
             {
-                // TODO: Make a path helper for this?
-#if NET20 || NET35
-                string local = Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%");
-#else
-                string local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-#endif
+                string local = PathTool.GetLocalAppDataDirectory();
                 return Path.Combine(local, "mpf");
             }
         }

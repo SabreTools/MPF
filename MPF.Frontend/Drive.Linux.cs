@@ -44,8 +44,8 @@ namespace MPF.Frontend
         /// <returns>The drive array, extended with any optical devices not already present</returns>
         private static Drive[] AppendUnixOpticalDrives(Drive[] drives)
         {
-            // Defensive: this reads Linux /dev and sysfs paths, so never run it off-Unix
-            if (Environment.OSVersion.Platform != PlatformID.Unix)
+            // This should only run on Linux
+            if (!SystemEnvironment.IsLinux())
                 return drives;
 
             var existingNames = new HashSet<string>();
@@ -94,8 +94,8 @@ namespace MPF.Frontend
         /// <returns>The drive array, extended with any floppy drives not already present</returns>
         private static Drive[] AppendUnixFloppyDrives(Drive[] drives)
         {
-            // Defensive: this reads Linux /dev paths, so never run it off-Unix
-            if (Environment.OSVersion.Platform != PlatformID.Unix)
+            // This should only run on Linux
+            if (!SystemEnvironment.IsLinux())
                 return drives;
 
             var existingNames = new HashSet<string>();
@@ -143,8 +143,8 @@ namespace MPF.Frontend
         /// <returns>The drive array, extended with any block devices not already present</returns>
         private static Drive[] AppendUnixFixedDrives(Drive[] drives)
         {
-            // Defensive: this reads Linux /dev and sysfs paths, so never run it off-Unix
-            if (Environment.OSVersion.Platform != PlatformID.Unix)
+            // This should only run on Linux
+            if (!SystemEnvironment.IsLinux())
                 return drives;
 
             var existingNames = new HashSet<string>();

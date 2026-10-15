@@ -315,8 +315,7 @@ namespace MPF.ExecutionContexts.Redumper
                 this[FlagStrings.Drive] = true;
 
                 // Windows requires either "D" or "D:"
-                if (Environment.OSVersion.Platform != PlatformID.MacOSX
-                    && Environment.OSVersion.Platform != PlatformID.Unix)
+                if (Environment.OSVersion.Platform != PlatformID.Unix)
                 {
                     (_inputs[FlagStrings.Drive] as StringInput)?.SetValue(drivePath[0].ToString());
                 }
@@ -543,8 +542,7 @@ namespace MPF.ExecutionContexts.Redumper
                 (_inputs[FlagStrings.ImageName] as StringInput)?.SetValue($"track_{DateTime.Now:yyyyMMdd-HHmm}");
 
             // Windows requires either "D" or "D:"
-            if (Environment.OSVersion.Platform != PlatformID.MacOSX
-                && Environment.OSVersion.Platform != PlatformID.Unix
+            if (Environment.OSVersion.Platform != PlatformID.Unix
                 && _inputs[FlagStrings.Drive] is StringInput driveInput)
             {
                 if (driveInput.Value is not null && driveInput.Value.Length > 0)
