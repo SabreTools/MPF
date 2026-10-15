@@ -10,6 +10,7 @@ namespace MPF.Frontend
     /// <summary>
     /// Helpers for the system environment
     /// </summary>
+    /// TODO: Remove this when IO is updated
     public static class SystemEnvironment
     {
         /// <summary>
