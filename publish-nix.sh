@@ -176,10 +176,6 @@ function download_programs() {
             mv $TEMPDIR/** $OUTDIR/
             rm -rf $TEMPDIR
 
-            if [ -d "$OUTDIR/bin" ]; then
-                mv $OUTDIR/bin/* $OUTDIR/
-            fi
-
             # Remove empty subdirectories
             find . -empty -type d -delete
         done

@@ -51,6 +51,7 @@
 - Create and use centralized OS detection methods
 - Add future removal note
 - Fix a couple of other OS-related issues
+- Maintain Redumper extraction path
 
 ### 3.11.0 (2026-10-12)
 

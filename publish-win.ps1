@@ -166,10 +166,6 @@ function Download-Programs {
             Move-Item -Path "$BUILD_FOLDER/$TEMPDIR/*" -Destination "$BUILD_FOLDER/$OUTDIR"
             Remove-Item -Path "$TEMPDIR" -Recurse -Force
 
-            if ([System.IO.Directory]::Exists("$OUTDIR/bin")) {
-                Move-Item -Path "$BUILD_FOLDER/$OUTDIR/bin/*" -Destination "$BUILD_FOLDER/$OUTDIR"
-            }
-
             # Remove empty subdirectories
             $EMPTY = Get-ChildItem $OUTDIR -directory -recurse | Where-Object { (Get-ChildItem $_.fullName).count -eq 0 } | Select-Object -expandproperty FullName
             $EMPTY | Foreach-Object { Remove-Item $_ }

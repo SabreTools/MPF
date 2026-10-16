@@ -256,11 +256,11 @@ namespace MPF.Frontend
         {
             get
             {
-                string executableName = "redumper.exe";
+                string executableName = Path.Combine("bin", "redumper.exe");
                 if (SystemEnvironment.IsLinux())
-                    executableName = "redumper";
+                    executableName = Path.Combine("bin", "redumper");
                 else if (SystemEnvironment.IsMacOS())
-                    executableName = "redumper";
+                    executableName = Path.Combine("bin", "redumper");
 
 #if NET20 || NET35
                 return Path.Combine("Programs", Path.Combine("Redumper", executableName));
