@@ -256,7 +256,7 @@ namespace MPF.Frontend.Tools
                     continue;
                 }
 
-                var foundIds = await Validator.ValidateSingleTrack(wc, info, sha1);
+                var foundIds = await wc.ValidateSingleTrack(info, sha1);
                 if (foundIds is null)
                 {
                     resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.info"));
@@ -307,7 +307,7 @@ namespace MPF.Frontend.Tools
             if (info.PartiallyMatchedIDs.Count == 0 && info.DiscIdentifiers?.UniversalHash is not null)
             {
                 string sha1 = info.DiscIdentifiers.UniversalHash;
-                var foundIds = await Validator.ValidateUniversalHash(wc, info);
+                var foundIds = await wc.ValidateUniversalHash(info);
                 if (foundIds is null)
                     resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.info"));
                 else if (foundIds.Count == 0)

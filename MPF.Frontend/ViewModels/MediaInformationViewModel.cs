@@ -61,14 +61,8 @@ namespace MPF.Frontend.ViewModels
 
         public string? DiscTitleNonLatin
         {
-            get
-            {
-                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.DiscTitleNonLatin, out var value))
-                    return value;
-
-                return null;
-            }
-            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.DiscTitleNonLatin] = value ?? string.Empty;
+            get => SubmissionInfo.DiscIdentity.ForeignDiscTitle;
+            set => SubmissionInfo.DiscIdentity.ForeignDiscTitle = value;
         }
 
         public DiscCategory? Category
@@ -278,18 +272,6 @@ namespace MPF.Frontend.ViewModels
                 return null;
             }
             set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.PEGIID] = value ?? string.Empty;
-        }
-
-        public string? PPN
-        {
-            get
-            {
-                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.PPN, out var value))
-                    return value;
-
-                return null;
-            }
-            set => SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.PPN] = value ?? string.Empty;
         }
 
         public string? VETSFBID

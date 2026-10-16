@@ -71,10 +71,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SabreTools.RedumpLib" Version="3.3.0" />
-    </ItemGroup>
-
-    <ItemGroup>
         <Page Update="UserControls\UserInput.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
