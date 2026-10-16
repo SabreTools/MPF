@@ -52,6 +52,7 @@
 - Add future removal note
 - Fix a couple of other OS-related issues
 - Maintain Redumper extraction path
+- Fix protection scan main UI checkbox alignment
 
 ### 3.11.0 (2026-10-12)
 
