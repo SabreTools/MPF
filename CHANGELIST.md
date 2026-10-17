@@ -54,6 +54,7 @@
 - Maintain Redumper extraction path
 - Fix protection scan main UI checkbox alignment
 - Update packages
+- Update Redumper to build 767
 
 ### 3.11.0 (2026-10-12)
 
