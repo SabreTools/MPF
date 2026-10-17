@@ -141,7 +141,7 @@ namespace MPF.Avalonia.Windows
 
             // Check for updates, if necessary
             if (MainViewModel.Options.CheckForUpdatesOnStartup)
-                CheckForUpdatesClick(this, new RoutedEventArgs());
+                CheckForUpdates(showIfSame: false);
 
             // Handle first-run, if necessary
             if (MainViewModel.Options.FirstRun)

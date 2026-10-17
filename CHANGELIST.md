@@ -3,6 +3,7 @@
 - Tweak link naming for rolling build description
 - Add tooltips to Avalonia UI
 - Attempt to cleanup some window titles
+- Don't show if version is up to date on startup
 
 ### 3.11.1 (2026-10-17)
 
