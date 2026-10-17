@@ -1,8 +1,9 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="MPF.Avalonia.Windows.MessageBoxWindow"
-        MinWidth="260"
-        MaxWidth="450"
+        MinHeight="155"
+        MinWidth="154"
+        MaxWidth="470"
         SizeToContent="WidthAndHeight"
         CanMaximize="False"
         CanMinimize="False"
@@ -12,7 +13,7 @@
         <Grid RowDefinitions="Auto,Auto"
               RowSpacing="8">
             <TextBlock x:Name="MessageTextBlock"
-                       MaxWidth="310"
+                       MaxWidth="350"
                        HorizontalAlignment="Center"
                        TextAlignment="Center"
                        TextWrapping="Wrap" />

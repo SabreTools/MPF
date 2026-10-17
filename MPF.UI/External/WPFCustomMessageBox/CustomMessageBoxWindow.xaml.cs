@@ -126,6 +126,7 @@ namespace WPFCustomMessageBox
             Focusable = true;
             ShowActivated = true;
             ShowInTaskbar = true;
+            Topmost = true;
 
             if (owner is not null && owner.IsLoaded)
             {
