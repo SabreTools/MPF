@@ -49,17 +49,17 @@ jobs:
 
                       ## UI Builds
 
-                      [Windows x64 UI Release](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net10.0-windows_win-x64_release.zip)
+                      [Windows x64 - Release Build](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net10.0-windows_win-x64_release.zip)
 
-                      [Windows x64 UI Debug](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net10.0-windows_win-x64_debug.zip)
+                      [Windows x64 - Debug Build](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net10.0-windows_win-x64_debug.zip)
 
-                      [Linux x64 UI Release (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net10.0_linux-x64_release.zip)
+                      [Linux x64 - Release Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net10.0_linux-x64_release.zip)
 
-                      [Linux x64 UI Debug (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net10.0_linux-x64_debug.zip)
+                      [Linux x64 - Debug Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net10.0_linux-x64_debug.zip)
 
-                      [MacOS ARM64 UI Release (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net10.0_osx-arm64_release.zip)
+                      [MacOS ARM64 - Release Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net10.0_osx-arm64_release.zip)
 
-                      [MacOS ARM64 UI Debug (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net10.0_osx-arm64_debug.zip)"
+                      [MacOS ARM64 - Debug Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net10.0_osx-arm64_debug.zip)"
                   name: "Rolling Release"
                   prerelease: True
                   replacesArtifacts: True

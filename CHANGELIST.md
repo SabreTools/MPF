@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Tweak link naming for rolling build description
+
 ### 3.11.1 (2026-10-17)
 
 - Clean up unnecessary array copies
