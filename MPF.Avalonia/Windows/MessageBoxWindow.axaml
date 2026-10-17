@@ -4,6 +4,8 @@
         MinWidth="260"
         MaxWidth="450"
         SizeToContent="WidthAndHeight"
+        CanMaximize="False"
+        CanMinimize="False"
         CanResize="False"
         WindowStartupLocation="CenterOwner">
     <Border Padding="12">

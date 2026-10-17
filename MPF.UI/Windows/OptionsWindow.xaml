@@ -50,8 +50,10 @@
                        HorizontalContentAlignment="Center"
                        MouseDown="TitleMouseDown">
                     <Label.Content>
-                        <TextBlock TextAlignment="Center"><Run FontWeight="Bold"
-                                                               Text="{Binding Path=Title, Mode=OneWay}"/></TextBlock>
+                        <TextBlock TextAlignment="Center">
+                            <Run FontWeight="Bold"
+                                 Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </TextBlock>
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"

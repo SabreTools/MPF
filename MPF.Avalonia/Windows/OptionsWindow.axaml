@@ -9,7 +9,7 @@
                   MaxHeight="760"
                   SizeToContent="Height"
                   CanResize="False"
-                  Title="{DynamicResource OptionsTitleString}">
+                  Title="{Binding Path=Title, Mode=OneWay}">
     <local:WindowBase.Resources>
         <converters:ElementConverter x:Key="ElementConverter" />
     </local:WindowBase.Resources>
