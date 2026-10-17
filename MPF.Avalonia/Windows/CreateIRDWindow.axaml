@@ -92,6 +92,7 @@
                                      VerticalAlignment="Center" />
                             <TextBlock Grid.Row="1"
                                        Text="{DynamicResource KeyFilePathLabelString}"
+                                       ToolTip.Tip="Typically a *.key file"
                                        VerticalAlignment="Center" />
                             <TextBox x:Name="KeyPathTextBox"
                                      Grid.Row="1"
@@ -190,6 +191,7 @@
                                      VerticalContentAlignment="Top" />
                             <TextBlock Grid.Row="2"
                                        Text="{DynamicResource PICFilePathLabelString}"
+                                       ToolTip.Tip="Typically a *.physical or *_PIC.bin file"
                                        VerticalAlignment="Center" />
                             <TextBox x:Name="PICPathTextBox"
                                      Grid.Row="2"

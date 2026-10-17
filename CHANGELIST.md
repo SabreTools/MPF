@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Tweak link naming for rolling build description
+- Add tooltips to Avalonia UI
 
 ### 3.11.1 (2026-10-17)
 

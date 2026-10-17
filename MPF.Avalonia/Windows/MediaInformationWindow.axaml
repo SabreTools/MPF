@@ -140,6 +140,7 @@
                                                         Text="{Binding InternalDiscID, Mode=TwoWay}"
                                                         IsVisible="{Binding InternalDiscIDVisible}" />
                                     <controls:UserInput Label="{DynamicResource ProtectionInputString}"
+                                                        ToolTip.Tip="CAUTION: Only edit if you know what you are doing!"
                                                         Text="{Binding Protection, Mode=TwoWay}"
                                                         TextHeight="90"
                                                         Enter="True"

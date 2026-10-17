@@ -98,6 +98,7 @@
                                FontWeight="Bold" />
                     <TextBlock x:Name="StatusLabel"
                                Text="{Binding StatusFirstLine}"
+                               ToolTip.Tip="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                TextWrapping="Wrap" />
                 </StackPanel>
             </Border>
