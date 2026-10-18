@@ -61,6 +61,17 @@ MPF.UI, MPF.CLI, and MPF.Check have the same system requirements for running, wi
 
 Ensure that your operating system and runtimes are as up-to-date as possible, since some features may rely on those updates.
 
+## Linux Drive Access
+
+Redumper and DiscImageCreator send some drive commands, such as the Plextor reads, that Linux only allows for programs with the `CAP_SYS_RAWIO` capability. Without it, they stop with `Operation not permitted`, and DiscImageCreator also reports that the drive does not support the command. Unpacking MPF does not keep this capability, so set it again after every download, from the MPF folder:
+
+```bash
+sudo setcap cap_sys_rawio=ep Programs/Redumper/bin/redumper
+sudo setcap cap_sys_rawio=ep Programs/Creator/DiscImageCreator.out
+```
+
+[`scripts/setcaps.sh`](scripts/setcaps.sh) runs the same commands for a given MPF folder: `sudo sh setcaps.sh /path/to/MPF`. After that, both programs work as a normal user, without `sudo`.
+
 ## Build Instructions
 
 To build for .NET 10.0, ensure that the [.NET 10.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) (or later) is installed and included in your `PATH`. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
