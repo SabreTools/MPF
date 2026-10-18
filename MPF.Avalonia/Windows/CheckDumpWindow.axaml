@@ -58,7 +58,13 @@
                                   IsEnabled="{Binding SystemTypeComboBoxEnabled}"
                                   SelectionChanged="SystemTypeComboBoxSelectionChanged"
                                   HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Center" />
+                                  VerticalAlignment="Center">
+                            <ComboBox.Styles>
+                                <Style Selector="ComboBox /template/ Popup">
+                                    <Setter Property="Width" Value="375"/>
+                                </Style>
+                            </ComboBox.Styles>
+                        </ComboBox>
 
                         <TextBlock Grid.Row="2"
                                    Text="{DynamicResource DriveLetterLabelString}"

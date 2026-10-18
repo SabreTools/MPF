@@ -224,7 +224,13 @@
                                       ItemsSource="{Binding Systems}"
                                       SelectedItem="{Binding CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                       IsEnabled="{Binding SystemTypeComboBoxEnabled}"
-                                      SelectionChanged="SystemTypeComboBoxSelectionChanged" />
+                                      SelectionChanged="SystemTypeComboBoxSelectionChanged">
+                                <ComboBox.Styles>
+                                    <Style Selector="ComboBox /template/ Popup">
+                                        <Setter Property="Width" Value="375"/>
+                                    </Style>
+                                </ComboBox.Styles>
+                            </ComboBox>
                             <ComboBox x:Name="MediaTypeComboBox"
                                       Grid.Column="1"
                                       ItemsSource="{Binding MediaTypes}"

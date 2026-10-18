@@ -9,6 +9,7 @@
 - Update OptionsViewModel to be more proper
 - Allow selecting individual log lines in Avalonia
 - Fix missing category label in Avalonia
+- Set static width for Avalonia system selection dropdown
 
 ### 3.11.1 (2026-10-17)
 
