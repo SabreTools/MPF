@@ -486,7 +486,8 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="mediaType">PhysicalMediaType for specialized dumping parameters</param>
         /// <param name="progress">Optional result progress callback</param>
-        public async Task<ResultEventArgs> Run(PhysicalMediaType? mediaType, IProgress<ResultEventArgs>? progress = null)
+        public async Task<ResultEventArgs> Run(PhysicalMediaType? mediaType,
+            IProgress<ResultEventArgs>? progress = null)
         {
             // If we don't have parameters
             if (_executionContext is null)

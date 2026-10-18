@@ -49,7 +49,7 @@ namespace MPF.Avalonia
         }
 
         /// <inheritdoc/>
-        public void Open()
+        public void Open(Func<bool>? onClosed = null)
         {
             // Discard any leftover console from a previous run (kept open because the user
             // turned off auto-close) so each dump starts with a clean console.
@@ -60,6 +60,7 @@ namespace MPF.Avalonia
             window.AutoCloseChanged += OnAutoCloseChanged;
             window.Closed += (_, _) =>
             {
+                onClosed?.Invoke();
                 if (ReferenceEquals(_window, window))
                     _window = null;
             };

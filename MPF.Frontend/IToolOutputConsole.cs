@@ -1,3 +1,5 @@
+using System;
+
 namespace MPF.Frontend
 {
     /// <summary>
@@ -15,7 +17,8 @@ namespace MPF.Frontend
         /// <summary>
         /// Show the console. Called on the UI thread just before the tool starts.
         /// </summary>
-        public void Open();
+        /// <param name="onClosed">Additional actions to perform if a tool window is closed</param>
+        public void Open(Func<bool>? onClosed = null);
 
         /// <summary>
         /// Receive a raw chunk of the tool's standard output or error.

@@ -2328,7 +2328,7 @@ namespace MPF.Frontend.ViewModels
                 // Stream live tool output to the separate console window, if defined
                 if (_toolConsole is not null)
                 {
-                    _toolConsole.Open();
+                    _toolConsole.Open(_environment.CancelDumping);
                     _environment.ToolOutputReceived = _toolConsole.Append;
                 }
 

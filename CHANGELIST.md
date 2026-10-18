@@ -13,6 +13,7 @@
 - Always trim PIC for BDs
 - Fix typo in Windows-specific method name
 - Remove copy-pasted default height from dialog boxes in Avalonia
+- Kill dumping program if tool window is closed in Avalonia
 
 ### 3.11.1 (2026-10-17)
 
