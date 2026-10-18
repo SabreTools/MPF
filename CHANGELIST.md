@@ -11,6 +11,7 @@
 - Fix missing category label in Avalonia
 - Set static width for Avalonia system selection dropdown
 - Always trim PIC for BDs
+- Fix typo in Windows-specific method name
 
 ### 3.11.1 (2026-10-17)
 

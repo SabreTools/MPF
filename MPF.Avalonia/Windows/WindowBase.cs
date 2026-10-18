@@ -18,7 +18,7 @@ namespace MPF.Avalonia.Windows
             Opened += (_, _) =>
             {
                 Avalonia.Theme.ApplyMacOSChrome(this);
-                Avalonia.Theme.ApplyWindowTitleBarTheme(this);
+                Avalonia.Theme.ApplyWindowsTitleBarTheme(this);
                 ApplyPlatformLayout();
             };
         }

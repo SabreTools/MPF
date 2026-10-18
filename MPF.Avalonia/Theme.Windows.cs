@@ -20,7 +20,7 @@ namespace MPF.Avalonia
         /// <summary>
         /// Apply the current application theme variant to the given window's title bar
         /// </summary>
-        public static void ApplyWindowTitleBarTheme(Window window)
+        public static void ApplyWindowsTitleBarTheme(Window window)
         {
             if (Application.Current is null)
                 return;

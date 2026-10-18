@@ -15,7 +15,7 @@ namespace MPF.Avalonia.Windows
             Opened += (_, _) =>
             {
                 Avalonia.Theme.ApplyMacOSChrome(this, hideMinimizeButton: true);
-                Avalonia.Theme.ApplyWindowTitleBarTheme(this);
+                Avalonia.Theme.ApplyWindowsTitleBarTheme(this);
             };
         }
 
