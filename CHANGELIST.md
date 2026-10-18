@@ -16,6 +16,7 @@
 - Kill dumping program if tool window is closed in Avalonia
 - Add mounted drive path to Avalonia UI
 - Make non-zero return code a little more verbose
+- Add a script and README section for the drive capability on Linux (gmipf)
 
 ### 3.11.1 (2026-10-17)
 
