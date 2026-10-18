@@ -15,6 +15,7 @@
 - Remove copy-pasted default height from dialog boxes in Avalonia
 - Kill dumping program if tool window is closed in Avalonia
 - Add mounted drive path to Avalonia UI
+- Make non-zero return code a little more verbose
 
 ### 3.11.1 (2026-10-17)
 

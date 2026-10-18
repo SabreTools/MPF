@@ -228,7 +228,7 @@ namespace MPF.Frontend
             return programFound;
         }
 
-         /// <summary>
+        /// <summary>
         /// Set the parameters object based on the internal program and parameters string
         /// </summary>
         /// <param name="mediaType">PhysicalMediaType for specialized dumping parameters</param>
@@ -526,7 +526,7 @@ namespace MPF.Frontend
             if (exitCode == 0)
                 result = ResultEventArgs.Success($"{_internalProgram} has finished!");
             else
-                result = ResultEventArgs.Failure($"{_internalProgram} has closed with exit code {exitCode}!");
+                result = ResultEventArgs.Failure($"{_internalProgram} has closed with exit code {exitCode}! This may indicate an error.");
 
             return result;
         }
