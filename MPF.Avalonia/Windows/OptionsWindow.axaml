@@ -71,19 +71,19 @@
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource EnableDarkModeCheckBoxString}"
-                                                  IsChecked="{Binding Options.GUI.Theming.EnableDarkMode}"
+                                                  IsChecked="{Binding EnableDarkMode}"
                                                   ToolTip.Tip="(Experimental) Enable dark mode across the entire application" />
 
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource CheckForUpdatesCheckBoxString}"
-                                                  IsChecked="{Binding Options.CheckForUpdatesOnStartup}"
+                                                  IsChecked="{Binding CheckForUpdatesOnStartup}"
                                                   ToolTip.Tip="Check for updates when the application starts" />
 
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource FastUpdateLabelCheckBoxString}"
-                                                  IsChecked="{Binding Options.GUI.FastUpdateLabel}"
+                                                  IsChecked="{Binding FastUpdateLabel}"
                                                   ToolTip.Tip="Bypasses disc checks to quickly update the output path. Use with caution!" />
 
                                         <TextBlock Grid.Row="2"
@@ -97,7 +97,7 @@
                                                   Width="220"
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding InterfaceLanguages}"
-                                                  SelectedItem="{Binding Options.GUI.DefaultInterfaceLanguage, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
+                                                  SelectedItem="{Binding DefaultInterfaceLanguage, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
                                     </Grid>
                                 </StackPanel>
                             </Border>
@@ -117,13 +117,13 @@
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource SkipSystemDetectCheckBoxString}"
-                                                  IsChecked="{Binding Options.GUI.SkipSystemDetection}"
+                                                  IsChecked="{Binding SkipSystemDetection}"
                                                   ToolTip.Tip="Disable trying to guess system (may improve performance at startup)" />
 
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource NoFixedDrivesCheckBoxString}"
-                                                  IsChecked="{Binding Options.GUI.IgnoreFixedDrives}"
+                                                  IsChecked="{Binding IgnoreFixedDrives}"
                                                   ToolTip.Tip="Ignore hard drives and other fixed drives" />
 
                                         <TextBlock Grid.Row="1"
@@ -137,7 +137,7 @@
                                                   Width="220"
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding Systems}"
-                                                  SelectedItem="{Binding Options.Dumping.DefaultSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
+                                                  SelectedItem="{Binding DefaultSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
                                     </Grid>
                                 </StackPanel>
                             </Border>
@@ -154,13 +154,13 @@
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource VerboseLoggingCheckBoxString}"
-                                                  IsChecked="{Binding Options.VerboseLogging}"
+                                                  IsChecked="{Binding VerboseLogging}"
                                                   ToolTip.Tip="Display all logging statements" />
 
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource AutoOpenLogCheckBoxString}"
-                                                  IsChecked="{Binding Options.GUI.OpenLogWindowAtStartup}"
+                                                  IsChecked="{Binding OpenLogWindowAtStartup}"
                                                   ToolTip.Tip="Open the log panel when the program launches" />
                                     </Grid>
                                 </StackPanel>
@@ -195,7 +195,7 @@
                                 <TextBox x:Name="AaruPathTextBox"
                                          Grid.Row="0"
                                          Grid.Column="1"
-                                         Text="{Binding Options.Dumping.AaruPath, Mode=TwoWay}"
+                                         Text="{Binding AaruPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          VerticalAlignment="Center" />
                                 <Button x:Name="AaruPathButton"
                                         Grid.Row="0"
@@ -215,7 +215,7 @@
                                 <TextBox x:Name="DiscImageCreatorPathTextBox"
                                          Grid.Row="1"
                                          Grid.Column="1"
-                                         Text="{Binding Options.Dumping.DiscImageCreatorPath, Mode=TwoWay}"
+                                         Text="{Binding DiscImageCreatorPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          VerticalAlignment="Center" />
                                 <Button x:Name="DiscImageCreatorPathButton"
                                         Grid.Row="1"
@@ -235,7 +235,7 @@
                                 <TextBox x:Name="DreamdumpPathTextBox"
                                          Grid.Row="2"
                                          Grid.Column="1"
-                                         Text="{Binding Options.Dumping.DreamdumpPath, Mode=TwoWay}"
+                                         Text="{Binding DreamdumpPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          VerticalAlignment="Center" />
                                 <Button x:Name="DreamdumpPathButton"
                                         Grid.Row="2"
@@ -255,7 +255,7 @@
                                 <TextBox x:Name="RedumperPathTextBox"
                                          Grid.Row="3"
                                          Grid.Column="1"
-                                         Text="{Binding Options.Dumping.RedumperPath, Mode=TwoWay}"
+                                         Text="{Binding RedumperPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          VerticalAlignment="Center" />
                                 <Button x:Name="RedumperPathButton"
                                         Grid.Row="3"
@@ -275,7 +275,7 @@
                                           Grid.Row="4"
                                           Grid.Column="1"
                                           ItemsSource="{Binding AvailableInternalPrograms}"
-                                          SelectedItem="{Binding Options.InternalProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          SelectedItem="{Binding InternalProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="5"
@@ -287,7 +287,7 @@
                                 <TextBox x:Name="DefaultOutputPathTextBox"
                                          Grid.Row="5"
                                          Grid.Column="1"
-                                         Text="{Binding Options.Dumping.DefaultOutputPath, Mode=TwoWay}"
+                                         Text="{Binding DefaultOutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          ToolTip.Tip="Variables allowed:&#x0a;  &#37;SYSTEM&#37;&#9;(System name, long)&#x0a;  &#37;SYS&#37;&#9;&#9;(System name, short)&#x0a;  &#37;MEDIA&#37;&#9;(Media type)&#x0a;  &#37;PROGRAM&#37;&#9;(Program name, long)&#x0a;  &#37;PROG&#37;&#9;(Program name, short)&#x0a;  &#37;LABEL&#37;&#9;(Volume label)&#x0a;  &#37;DATE&#37;&#9;(Current date)&#x0a;  &#37;DATETIME&#37;&#9;(Current date and time)"
                                          VerticalAlignment="Center" />
                                 <Button x:Name="DefaultOutputPathButton"
@@ -329,68 +329,68 @@
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource UseRelativePathsCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.UseRelativePaths}"
+                                                  IsChecked="{Binding UseRelativePaths}"
                                                   ToolTip.Tip="Use relative paths when calling the dumping programs" />
 
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource ShowDiscInfoCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.MediaInformation.PromptForDiscInformation}"
+                                                  IsChecked="{Binding PromptForDiscInformation}"
                                                   ToolTip.Tip="Enable showing the media information output after dumping" />
 
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource PullAllInformationCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.Login.PullAllInformation}"
+                                                  IsChecked="{Binding PullAllInformation}"
                                                   ToolTip.Tip="Instead of pulling a safe subset of data after dumping, enable pulling all comment and content data" />
 
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource EnableTabInputCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.MediaInformation.EnableTabsInInputFields}"
+                                                  IsChecked="{Binding EnableTabsInInputFields}"
                                                   ToolTip.Tip="Enable entering tabs in supported input fields instead of tab navigation" />
 
                                         <CheckBox Grid.Row="2"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource EnableRedumpCompatibilityCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.MediaInformation.EnableRedumpCompatibility}"
+                                                  IsChecked="{Binding EnableRedumpCompatibility}"
                                                   ToolTip.Tip="Enable limiting outputs to only those supported by Redump" />
 
                                         <CheckBox Grid.Row="2"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource ShowEjectReminderCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.ShowDiscEjectReminder}"
+                                                  IsChecked="{Binding ShowDiscEjectReminder}"
                                                   ToolTip.Tip="Enable showing the disc eject reminder after information is gathered" />
 
                                         <CheckBox Grid.Row="3"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource AddPlaceholdersCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.MediaInformation.AddPlaceholders}"
+                                                  IsChecked="{Binding AddPlaceholders}"
                                                   ToolTip.Tip="Enable adding placeholder text in the output for required and optional fields" />
 
                                         <CheckBox Grid.Row="3"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource AddFilenameSuffixCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.AddFilenameSuffix}"
+                                                  IsChecked="{Binding AddFilenameSuffix}"
                                                   ToolTip.Tip="Enable appending the output filename to the generated files" />
 
                                         <CheckBox Grid.Row="4"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource OutputSubmissionJSONCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.OutputSubmissionJSON}"
+                                                  IsChecked="{Binding OutputSubmissionJSON}"
                                                   ToolTip.Tip="Enable outputting a compressed JSON version of the submission info" />
 
                                         <CheckBox Grid.Row="4"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource IncludeArtifactsCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.IncludeArtifacts}"
-                                                  IsEnabled="{Binding Options.Processing.OutputSubmissionJSON}"
+                                                  IsChecked="{Binding IncludeArtifacts}"
+                                                  IsEnabled="{Binding OutputSubmissionJSON}"
                                                   ToolTip.Tip="Include log files in serialized JSON data [NOT RECOMMENDED TO USE]" />
 
                                         <CheckBox Grid.Row="5"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource CompressLogFilesCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.CompressLogFiles}"
+                                                  IsChecked="{Binding CompressLogFiles}"
                                                   ToolTip.Tip="Compress output log files to reduce space" />
 
                                         <TextBlock Grid.Row="6"
@@ -404,19 +404,19 @@
                                                   Width="220"
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding LogCompressions}"
-                                                  SelectedItem="{Binding Options.Processing.LogCompression, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                                  IsEnabled="{Binding Options.Processing.CompressLogFiles}" />
+                                                  SelectedItem="{Binding LogCompression, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                                  IsEnabled="{Binding CompressLogFiles}" />
 
                                         <CheckBox Grid.Row="7"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource DeleteUnnecessaryFilesCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.DeleteUnnecessaryFiles}"
+                                                  IsChecked="{Binding DeleteUnnecessaryFiles}"
                                                   ToolTip.Tip="Delete unnecesary output files to reduce space" />
 
                                         <CheckBox Grid.Row="7"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource CreatePS3IRDAfterDumpingCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.CreateIRDAfterDumping}"
+                                                  IsChecked="{Binding CreateIRDAfterDumping}"
                                                   ToolTip.Tip="Automatically creates an IRD file after dumping a PS3 disc" />
                                     </Grid>
                                 </StackPanel>
@@ -436,25 +436,25 @@
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource EnableProtectionScanCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.ProtectionScanning.ScanForProtection}"
+                                                  IsChecked="{Binding ScanForProtection}"
                                                   ToolTip.Tip="Enable automatic checking for copy protection on dumped media" />
 
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource ScanArchiveContentsCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.ProtectionScanning.ScanArchivesForProtection}"
+                                                  IsChecked="{Binding ScanArchivesForProtection}"
                                                   ToolTip.Tip="Enable scanning archive contents during protection scanning (may drastically increase scanning time but is more accurate)" />
 
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource IncludeDebugInformationCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation}"
+                                                  IsChecked="{Binding IncludeDebugProtectionInformation}"
                                                   ToolTip.Tip="Include debug information during protection scans" />
 
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource HideDriveLettersCheckBoxString}"
-                                                  IsChecked="{Binding Options.Processing.ProtectionScanning.HideDriveLetters}"
+                                                  IsChecked="{Binding HideDriveLetters}"
                                                   ToolTip.Tip="Remove drive letters from protection scan output" />
                                     </Grid>
                                 </StackPanel>
@@ -481,7 +481,7 @@
                                                 IsSnapToTickEnabled="True"
                                                 TickPlacement="BottomRight"
                                                 Ticks="{Binding Source={x:Static core:Constants.SpeedsForCDAsCollection}}"
-                                                Value="{Binding Options.Dumping.DumpSpeeds.CD, Mode=TwoWay}"
+                                                Value="{Binding DumpSpeedCD, Mode=TwoWay}"
                                                 TickFrequency="2" />
                                         <TextBox Grid.Column="2"
                                                  Width="32"
@@ -508,7 +508,7 @@
                                                 IsSnapToTickEnabled="True"
                                                 TickPlacement="BottomRight"
                                                 Ticks="{Binding Source={x:Static core:Constants.SpeedsForDVDAsCollection}}"
-                                                Value="{Binding Options.Dumping.DumpSpeeds.DVD, Mode=TwoWay}"
+                                                Value="{Binding DumpSpeedDVD, Mode=TwoWay}"
                                                 TickFrequency="2" />
                                         <TextBox Grid.Column="2"
                                                  Width="32"
@@ -535,7 +535,7 @@
                                                 IsSnapToTickEnabled="True"
                                                 TickPlacement="BottomRight"
                                                 Ticks="{Binding Source={x:Static core:Constants.SpeedsForHDDVDAsCollection}}"
-                                                Value="{Binding Options.Dumping.DumpSpeeds.HDDVD, Mode=TwoWay}"
+                                                Value="{Binding DumpSpeedHDDVD, Mode=TwoWay}"
                                                 TickFrequency="2" />
                                         <TextBox Grid.Column="2"
                                                  Width="32"
@@ -562,7 +562,7 @@
                                                 IsSnapToTickEnabled="True"
                                                 TickPlacement="BottomRight"
                                                 Ticks="{Binding Source={x:Static core:Constants.SpeedsForBDAsCollection}}"
-                                                Value="{Binding Options.Dumping.DumpSpeeds.Bluray, Mode=TwoWay}"
+                                                Value="{Binding DumpSpeedBluray, Mode=TwoWay}"
                                                 TickFrequency="1" />
                                         <TextBox Grid.Column="2"
                                                  Width="32"
@@ -607,25 +607,25 @@
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource AaruEnableDebugOutputCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.Aaru.EnableDebug}"
+                                                  IsChecked="{Binding AaruEnableDebug}"
                                                   ToolTip.Tip="Enable debug output in logs" />
 
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource AaruEnableVerboseOutputCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.Aaru.EnableVerbose}"
+                                                  IsChecked="{Binding AaruEnableVerbose}"
                                                   ToolTip.Tip="Enable verbose output in logs" />
 
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource AaruForceDumpingCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.Aaru.ForceDumping}"
+                                                  IsChecked="{Binding AaruForceDumping}"
                                                   ToolTip.Tip="Enable forcing dump even if there are issues" />
 
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource AaruStripPersonalDataCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.Aaru.StripPersonalData}"
+                                                  IsChecked="{Binding AaruStripPersonalData}"
                                                   ToolTip.Tip="Enable stripping of personally identifiable information from metadata" />
 
                                         <TextBlock Grid.Row="2"
@@ -637,7 +637,7 @@
                                                  Grid.Column="1"
                                                  Width="220"
                                                  HorizontalAlignment="Left"
-                                                 Text="{Binding Options.Dumping.Aaru.RereadCount, Mode=TwoWay}"
+                                                 Text="{Binding AaruRereadCount, Mode=TwoWay}"
                                                  ToolTip.Tip="Specifies how many rereads are attempted for sector and subchannel errors" />
                                     </Grid>
                                 </StackPanel>
@@ -658,26 +658,25 @@
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource DiscImageCreatorQuietModeCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.DIC.QuietMode}"
+                                                  IsChecked="{Binding DiscImageCreatorQuietMode}"
                                                   ToolTip.Tip="Disable sounds (beeps) during and after operations" />
 
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource DiscImageCreatorParanoidModeCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.DIC.ParanoidMode}"
+                                                  IsChecked="{Binding DiscImageCreatorParanoidMode}"
                                                   ToolTip.Tip="Enable pedantic and super-safe flags" />
 
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource DiscImageCreatorUseCMIFlagCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.DIC.UseCMIFlag}"
+                                                  IsChecked="{Binding DiscImageCreatorUseCMIFlag}"
                                                   ToolTip.Tip="Enable the CMI flag for supported disc types (DVD/HD-DVD only)" />
 
-                                        <CheckBox x:Name="MultiSectorReadCheckBox"
-                                                  Grid.Row="1"
+                                        <CheckBox Grid.Row="1"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource DiscImageCreatorMultiSectorReadCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.DIC.MultiSectorRead}"
+                                                  IsChecked="{Binding DiscImageCreatorMultiSectorRead}"
                                                   ToolTip.Tip="Enable the /mr flag for BD drive dumping" />
 
                                         <TextBlock Grid.Row="2"
@@ -689,8 +688,8 @@
                                                  Grid.Column="1"
                                                  Width="220"
                                                  HorizontalAlignment="Left"
-                                                 Text="{Binding Options.Dumping.DIC.MultiSectorReadValue, Mode=TwoWay}"
-                                                 IsEnabled="{Binding #MultiSectorReadCheckBox.IsChecked}"
+                                                 Text="{Binding DiscImageCreatorMultiSectorReadValue, Mode=TwoWay}"
+                                                 IsEnabled="{Binding DiscImageCreatorMultiSectorRead}"
                                                  ToolTip.Tip="Set the default value for the /mr flag" />
 
                                         <TextBlock Grid.Row="3"
@@ -702,7 +701,7 @@
                                                  Grid.Column="1"
                                                  Width="220"
                                                  HorizontalAlignment="Left"
-                                                 Text="{Binding Options.Dumping.DIC.RereadCount, Mode=TwoWay}"
+                                                 Text="{Binding DiscImageCreatorCDRereadCount, Mode=TwoWay}"
                                                  ToolTip.Tip="Specifies how many rereads are attempted on C2 error [CD only]" />
 
                                         <TextBlock Grid.Row="4"
@@ -714,7 +713,7 @@
                                                  Grid.Column="1"
                                                  Width="220"
                                                  HorizontalAlignment="Left"
-                                                 Text="{Binding Options.Dumping.DIC.DVDRereadCount, Mode=TwoWay}"
+                                                 Text="{Binding DiscImageCreatorDVDRereadCount, Mode=TwoWay}"
                                                  ToolTip.Tip="Specifies how many rereads are attempted on read error [DVD/HD-DVD/BD only]" />
                                     </Grid>
                                 </StackPanel>
@@ -741,14 +740,13 @@
                                                  Grid.Column="1"
                                                  Width="220"
                                                  HorizontalAlignment="Left"
-                                                 Text="{Binding Options.Dumping.Dreamdump.RereadCount, Mode=TwoWay}"
+                                                 Text="{Binding DreamdumpRereadCount, Mode=TwoWay}"
                                                  ToolTip.Tip="Specifies how many rereads are attempted on read error" />
 
-                                        <CheckBox x:Name="DreamdumpNonRedumpModeCheckBox"
-                                                  Grid.Row="1"
+                                        <CheckBox Grid.Row="1"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource DreamdumpNonRedumpOptionsCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.Dreamdump.NonRedumpMode}"
+                                                  IsChecked="{Binding DreamdumpNonRedumpMode}"
                                                   ToolTip.Tip="Enable non-redump options"
                                                   Click="DreamdumpNonRedumpModeClicked" />
 
@@ -763,8 +761,8 @@
                                                   Width="220"
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding DreamdumpSectorOrders}"
-                                                  SelectedItem="{Binding Options.Dumping.Dreamdump.SectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                                  IsEnabled="{Binding #DreamdumpNonRedumpModeCheckBox.IsChecked}" />
+                                                  SelectedItem="{Binding DreamdumpSectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                                  IsEnabled="{Binding DreamdumpNonRedumpMode}" />
                                     </Grid>
                                 </StackPanel>
                             </Border>
@@ -784,13 +782,13 @@
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource RedumperEnableVerboseOutputCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.Redumper.EnableVerbose}"
+                                                  IsChecked="{Binding RedumperEnableVerbose}"
                                                   ToolTip.Tip="Enable verbose output in logs" />
 
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource RedumperEnableRefineSectorModeFlagCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.Redumper.RefineSectorMode}"
+                                                  IsChecked="{Binding RedumperRefineSectorMode}"
                                                   ToolTip.Tip="Enable the refine sector mode flag by default" />
 
                                         <TextBlock Grid.Row="1"
@@ -802,7 +800,7 @@
                                                  Grid.Column="1"
                                                  Width="220"
                                                  HorizontalAlignment="Left"
-                                                 Text="{Binding Options.Dumping.Redumper.RereadCount, Mode=TwoWay}"
+                                                 Text="{Binding RedumperRereadCount, Mode=TwoWay}"
                                                  ToolTip.Tip="Specifies how many rereads are attempted on read error" />
 
                                         <TextBlock Grid.Row="2"
@@ -814,14 +812,13 @@
                                                  Grid.Column="1"
                                                  Width="220"
                                                  HorizontalAlignment="Left"
-                                                 Text="{Binding Options.Dumping.Redumper.LeadinRetryCount, Mode=TwoWay}"
+                                                 Text="{Binding RedumperLeadinRetryCount, Mode=TwoWay}"
                                                  ToolTip.Tip="Specifies how many retries are attempted for lead-in on Plextor drives" />
 
-                                        <CheckBox x:Name="RedumperNonRedumpModeCheckBox"
-                                                  Grid.Row="3"
+                                        <CheckBox Grid.Row="3"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource RedumperNonRedumpOptionsCheckBoxString}"
-                                                  IsChecked="{Binding Options.Dumping.Redumper.NonRedumpMode}"
+                                                  IsChecked="{Binding RedumperNonRedumpMode}"
                                                   ToolTip.Tip="Enable non-redump options"
                                                   Click="RedumperNonRedumpModeClicked" />
 
@@ -836,8 +833,8 @@
                                                   Width="220"
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding RedumperReadMethods}"
-                                                  SelectedItem="{Binding Options.Dumping.Redumper.ReadMethod, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                                  IsEnabled="{Binding #RedumperNonRedumpModeCheckBox.IsChecked}" />
+                                                  SelectedItem="{Binding RedumperReadMethod, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                                  IsEnabled="{Binding RedumperNonRedumpMode}" />
 
                                         <TextBlock Grid.Row="5"
                                                    Grid.Column="0"
@@ -850,8 +847,8 @@
                                                   Width="220"
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding RedumperSectorOrders}"
-                                                  SelectedItem="{Binding Options.Dumping.Redumper.SectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                                  IsEnabled="{Binding #RedumperNonRedumpModeCheckBox.IsChecked}" />
+                                                  SelectedItem="{Binding RedumperSectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                                  IsEnabled="{Binding RedumperNonRedumpMode}" />
 
                                         <TextBlock Grid.Row="6"
                                                    Grid.Column="0"
@@ -864,8 +861,8 @@
                                                   Width="220"
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding RedumperDriveTypes}"
-                                                  SelectedItem="{Binding Options.Dumping.Redumper.DriveType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                                  IsEnabled="{Binding #RedumperNonRedumpModeCheckBox.IsChecked}" />
+                                                  SelectedItem="{Binding RedumperDriveType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                                  IsEnabled="{Binding RedumperNonRedumpMode}" />
 
                                         <TextBlock Grid.Row="7"
                                                    Grid.Column="0"
@@ -876,8 +873,8 @@
                                                  Grid.Column="1"
                                                  Width="220"
                                                  HorizontalAlignment="Left"
-                                                 Text="{Binding Options.Dumping.Redumper.DrivePregapStart, Mode=TwoWay}"
-                                                 IsEnabled="{Binding #RedumperNonRedumpModeCheckBox.IsChecked}"
+                                                 Text="{Binding RedumperDrivePregapStart, Mode=TwoWay}"
+                                                 IsEnabled="{Binding RedumperNonRedumpMode}"
                                                  ToolTip.Tip="Specifies negative LBA for drive to start reading disc pregap from" />
                                     </Grid>
                                 </StackPanel>
@@ -908,7 +905,7 @@
                                     <CheckBox Grid.Row="0"
                                               Grid.Column="0"
                                               Content="{DynamicResource RetrieveMatchInformationCheckBoxString}"
-                                              IsChecked="{Binding Options.Processing.Login.RetrieveMatchInformation}"
+                                              IsChecked="{Binding RetrieveMatchInformation}"
                                               ToolTip.Tip="Attempts to retrieve match information from Redump" />
                                 </StackPanel>
                             </Border>

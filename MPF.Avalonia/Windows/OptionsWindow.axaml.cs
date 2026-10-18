@@ -91,7 +91,7 @@ namespace MPF.Avalonia.Windows
         {
             string? result = await BrowseForExecutableAsync("Aaru");
             if (!string.IsNullOrWhiteSpace(result))
-                OptionsViewModel.Options.Dumping.AaruPath = result;
+                OptionsViewModel.AaruPath = result;
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace MPF.Avalonia.Windows
         {
             string? result = await BrowseForExecutableAsync("DiscImageCreator");
             if (!string.IsNullOrWhiteSpace(result))
-                OptionsViewModel.Options.Dumping.DiscImageCreatorPath = result;
+                OptionsViewModel.DiscImageCreatorPath = result;
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace MPF.Avalonia.Windows
         {
             string? result = await BrowseForExecutableAsync("Dreamdump");
             if (!string.IsNullOrWhiteSpace(result))
-                OptionsViewModel.Options.Dumping.DreamdumpPath = result;
+                OptionsViewModel.DreamdumpPath = result;
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace MPF.Avalonia.Windows
         {
             string? result = await BrowseForExecutableAsync("Redumper");
             if (!string.IsNullOrWhiteSpace(result))
-                OptionsViewModel.Options.Dumping.RedumperPath = result;
+                OptionsViewModel.RedumperPath = result;
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace MPF.Avalonia.Windows
         {
             string? result = await BrowseForFolderAsync("Default Output Path");
             if (!string.IsNullOrWhiteSpace(result))
-                OptionsViewModel.Options.Dumping.DefaultOutputPath = result;
+                OptionsViewModel.DefaultOutputPath = result;
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void DreamdumpNonRedumpModeClicked(object? sender, RoutedEventArgs e)
         {
-            if (DreamdumpNonRedumpModeCheckBox!.IsChecked == true)
+            if (OptionsViewModel.DreamdumpNonRedumpMode)
                 _ = MessageBoxWindow.ShowAsync(this, StringResource("WarningMessageString", "Warning"),
             "All logs generated with these options will not be acceptable for Redump submission", 1, true);
             else
@@ -151,7 +151,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void RedumperNonRedumpModeClicked(object? sender, RoutedEventArgs e)
         {
-            if (RedumperNonRedumpModeCheckBox!.IsChecked == true)
+            if (OptionsViewModel.RedumperNonRedumpMode)
                 _ = MessageBoxWindow.ShowAsync(this, StringResource("WarningMessageString", "Warning"),
             "All logs generated with these options will not be acceptable for Redump submission", 1, true);
             else

@@ -33,7 +33,7 @@
                         <TextBox x:Name="InputPathTextBox"
                                  Grid.Row="0"
                                  Grid.Column="1"
-                                 Text="{Binding InputPath, Mode=TwoWay}"
+                                 Text="{Binding InputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  IsEnabled="{Binding InputPathTextBoxEnabled}"
                                  TextChanged="InputPathTextBoxTextChanged"
                                  VerticalAlignment="Center" />

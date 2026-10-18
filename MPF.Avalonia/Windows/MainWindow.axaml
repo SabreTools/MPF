@@ -242,7 +242,7 @@
                               ColumnDefinitions="*,Auto"
                               ColumnSpacing="8">
                             <TextBox x:Name="OutputPathTextBox"
-                                     Text="{Binding OutputPath, Mode=TwoWay}"
+                                     Text="{Binding OutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{Binding OutputPathTextBoxEnabled}"
                                      TextChanged="OutputPathTextBoxTextChanged"
                                      VerticalAlignment="Center" />

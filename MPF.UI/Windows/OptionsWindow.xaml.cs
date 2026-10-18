@@ -154,7 +154,7 @@ namespace MPF.UI.Windows
         {
             string? result = BrowseForPath(this, sender as System.Windows.Controls.Button);
             if (result is not null)
-                OptionsViewModel.Options.Dumping.AaruPath = result;
+                OptionsViewModel.AaruPath = result;
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace MPF.UI.Windows
         {
             string? result = BrowseForPath(this, sender as System.Windows.Controls.Button);
             if (result is not null)
-                OptionsViewModel.Options.Dumping.DefaultOutputPath = result;
+                OptionsViewModel.DefaultOutputPath = result;
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace MPF.UI.Windows
         {
             string? result = BrowseForPath(this, sender as System.Windows.Controls.Button);
             if (result is not null)
-                OptionsViewModel.Options.Dumping.DiscImageCreatorPath = result;
+                OptionsViewModel.DiscImageCreatorPath = result;
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace MPF.UI.Windows
         {
             string? result = BrowseForPath(this, sender as System.Windows.Controls.Button);
             if (result is not null)
-                OptionsViewModel.Options.Dumping.DreamdumpPath = result;
+                OptionsViewModel.DreamdumpPath = result;
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace MPF.UI.Windows
         {
             string? result = BrowseForPath(this, sender as System.Windows.Controls.Button);
             if (result is not null)
-                OptionsViewModel.Options.Dumping.RedumperPath = result;
+                OptionsViewModel.RedumperPath = result;
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace MPF.UI.Windows
         /// </summary>
         private void DreamdumpNonRedumpModeClicked(object sender, EventArgs e)
         {
-            if (OptionsViewModel.Options.Dumping.Dreamdump.NonRedumpMode)
+            if (OptionsViewModel.DreamdumpNonRedumpMode)
                 CustomMessageBox.Show(this, "All logs generated with these options will not be acceptable for Redump submission",
                     (string)System.Windows.Application.Current.FindResource("WarningMessageString"), MessageBoxButton.OK, MessageBoxImage.Warning);
             else
@@ -214,7 +214,7 @@ namespace MPF.UI.Windows
         /// </summary>
         private void RedumperNonRedumpModeClicked(object sender, EventArgs e)
         {
-            if (OptionsViewModel.Options.Dumping.Redumper.NonRedumpMode)
+            if (OptionsViewModel.RedumperNonRedumpMode)
                 CustomMessageBox.Show(this, "All logs generated with these options will not be acceptable for Redump submission",
                     (string)System.Windows.Application.Current.FindResource("WarningMessageString"), MessageBoxButton.OK, MessageBoxImage.Warning);
             else

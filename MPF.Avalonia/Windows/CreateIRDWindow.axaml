@@ -26,7 +26,7 @@
                         <TextBox x:Name="InputPathTextBox"
                                  Grid.Row="0"
                                  Grid.Column="1"
-                                 Text="{Binding InputPath, Mode=TwoWay}"
+                                 Text="{Binding InputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  TextChanged="InputPathTextBoxTextChanged"
                                  VerticalAlignment="Center" />
                         <Button x:Name="InputPathBrowseButton"
@@ -44,7 +44,7 @@
                         <TextBox x:Name="LogPathTextBox"
                                  Grid.Row="1"
                                  Grid.Column="1"
-                                 Text="{Binding LogPath, Mode=TwoWay}"
+                                 Text="{Binding LogPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  TextChanged="LogPathTextBoxTextChanged"
                                  VerticalAlignment="Center" />
                         <Button x:Name="LogPathBrowseButton"
@@ -97,7 +97,7 @@
                             <TextBox x:Name="KeyPathTextBox"
                                      Grid.Row="1"
                                      Grid.Column="1"
-                                     Text="{Binding KeyPath, Mode=TwoWay}"
+                                     Text="{Binding KeyPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      TextChanged="KeyPathTextBoxTextChanged"
                                      VerticalAlignment="Center" />
                             <Button x:Name="KeyPathBrowseButton"
@@ -196,7 +196,7 @@
                             <TextBox x:Name="PICPathTextBox"
                                      Grid.Row="2"
                                      Grid.Column="1"
-                                     Text="{Binding PICPath, Mode=TwoWay}"
+                                     Text="{Binding PICPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      TextChanged="PICPathTextBoxTextChanged"
                                      VerticalAlignment="Center" />
                             <Button x:Name="PICPathBrowseButton"
