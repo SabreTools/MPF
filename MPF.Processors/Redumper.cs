@@ -216,20 +216,12 @@ namespace MPF.Processors
                     if (mediaType == PhysicalMediaType.BluRay || mediaType == PhysicalMediaType.NintendoWiiUOpticalDisc)
                     {
                         int trimLength = -1;
-                        if (System == PhysicalSystem.MicrosoftXboxOne
-                            || System == PhysicalSystem.MicrosoftXboxSeriesXS
-                            || System == PhysicalSystem.NintendoWiiU
-                            || System == PhysicalSystem.SonyPlayStation3
-                            || System == PhysicalSystem.SonyPlayStation4
-                            || System == PhysicalSystem.SonyPlayStation5)
-                        {
-                            if (info.DiscIdentifiers.Layerbreak3 != default)
-                                trimLength = 520;
-                            else if (info.DiscIdentifiers.Layerbreak2 != default)
-                                trimLength = 392;
-                            else
-                                trimLength = 264;
-                        }
+                        if (info.DiscIdentifiers.Layerbreak3 != default)
+                            trimLength = 520;
+                        else if (info.DiscIdentifiers.Layerbreak2 != default)
+                            trimLength = 392;
+                        else
+                            trimLength = 264;
 
                         info.DumpMetadata.PIC = GetPIC($"{basePath}.physical", trimLength)
                             ?? GetPIC($"{basePath}.0.physical", trimLength)
