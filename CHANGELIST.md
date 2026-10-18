@@ -10,6 +10,7 @@
 - Allow selecting individual log lines in Avalonia
 - Fix missing category label in Avalonia
 - Set static width for Avalonia system selection dropdown
+- Always trim PIC for BDs
 
 ### 3.11.1 (2026-10-17)
 
