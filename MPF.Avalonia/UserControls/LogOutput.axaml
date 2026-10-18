@@ -21,7 +21,7 @@
                               ItemsSource="{Binding Entries, RelativeSource={RelativeSource AncestorType=local:LogOutput}}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Margin="10,0,0,2"
+                            <SelectableTextBlock Margin="10,0,0,2"
                                        Text="{Binding Text}"
                                        Foreground="{Binding Foreground}"
                                        FontFamily="Consolas, Menlo, monospace"
