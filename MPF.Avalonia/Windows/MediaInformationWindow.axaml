@@ -54,7 +54,7 @@
                                     <Grid ColumnDefinitions="3*,7*"
                                           ColumnSpacing="4"
                                           HorizontalAlignment="Stretch">
-                                        <TextBlock
+                                        <TextBlock Text="{DynamicResource CategoryLabelString}"
                                                    HorizontalAlignment="Right"
                                                    VerticalAlignment="Center" />
                                         <ComboBox x:Name="CategoryComboBox"
@@ -65,8 +65,8 @@
                                     </Grid>
 
                                     <controls:MultiSelectDropDown x:Name="RegionDropDown"
-                                                                      Label="{DynamicResource RegionsLabelString}"
-                                                                      ItemsSource="{Binding Regions}" />
+                                                                  Label="{DynamicResource RegionsLabelString}"
+                                                                  ItemsSource="{Binding Regions}" />
 
                                     <controls:MultiSelectDropDown x:Name="LanguagesDropDown"
                                                                   Label="{DynamicResource LanguagesLabelString}"
@@ -308,7 +308,7 @@
                                                     TextHeight="75"
                                                     Enter="True"
                                                     TextWrapping="Wrap" />
-                                
+
                                 <!-- Video -->
                                 <controls:UserInput Label="Game Footage"
                                                     Text="{Binding GameFootage, Mode=TwoWay}"
@@ -320,7 +320,7 @@
                                                     TextHeight="75"
                                                     Enter="True"
                                                     TextWrapping="Wrap" />
-                                
+
                                 <!-- Miscellaneous -->
                                 <controls:UserInput Label="Patches"
                                                     Text="{Binding Patches, Mode=TwoWay}"

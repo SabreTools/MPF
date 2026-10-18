@@ -8,6 +8,7 @@
 - Ensure path selections update text boxes in Avalonia
 - Update OptionsViewModel to be more proper
 - Allow selecting individual log lines in Avalonia
+- Fix missing category label in Avalonia
 
 ### 3.11.1 (2026-10-17)
 
