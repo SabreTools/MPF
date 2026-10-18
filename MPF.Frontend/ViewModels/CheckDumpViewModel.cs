@@ -132,6 +132,32 @@ namespace MPF.Frontend.ViewModels
         } = true;
 
         /// <summary>
+        /// Currently provided mount path for scanning
+        /// </summary>
+        public string MountedPath
+        {
+            get;
+            set
+            {
+                field = value;
+                TriggerPropertyChanged(nameof(MountedPath));
+            }
+        } = string.Empty;
+
+        /// <summary>
+        /// Indicates the status of the mount path text box
+        /// </summary>
+        public bool MountedPathTextBoxEnabled
+        {
+            get;
+            set
+            {
+                field = value;
+                TriggerPropertyChanged(nameof(MountedPathTextBoxEnabled));
+            }
+        } = true;
+
+        /// <summary>
         /// Currently selected dumping program
         /// </summary>
         public InternalProgram CurrentProgram
@@ -352,6 +378,7 @@ namespace MPF.Frontend.ViewModels
             InputPathTextBoxEnabled = true;
             InputPathBrowseButtonEnabled = true;
             DriveLetterComboBoxEnabled = true;
+            MountedPathTextBoxEnabled = true;
             DumpingProgramComboBoxEnabled = true;
             CheckDumpButtonEnabled = ShouldEnableCheckDumpButton();
             CancelButtonEnabled = true;
@@ -366,6 +393,7 @@ namespace MPF.Frontend.ViewModels
             InputPathTextBoxEnabled = false;
             InputPathBrowseButtonEnabled = false;
             DriveLetterComboBoxEnabled = false;
+            MountedPathTextBoxEnabled = false;
             DumpingProgramComboBoxEnabled = false;
             CheckDumpButtonEnabled = false;
             CancelButtonEnabled = false;
@@ -474,6 +502,18 @@ namespace MPF.Frontend.ViewModels
                 CurrentSystem,
                 CurrentProgram);
             env.SetProcessor();
+
+            // If we have a mounted path, replace the environment
+            if (MountedPath is not null && Directory.Exists(MountedPath))
+            {
+                var drive = Drive.Create(null, MountedPath);
+                env = new DumpEnvironment(Options,
+                    Path.GetFullPath(InputPath.Trim('"')),
+                    drive,
+                    CurrentSystem,
+                    CurrentProgram);
+                env.SetProcessor();
+            }
 
             // Finally, attempt to do the output dance
             var result = await env.VerifyAndSaveDumpOutput(

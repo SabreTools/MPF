@@ -208,7 +208,7 @@
                     <TextBlock Text="{DynamicResource SettingsGroupBoxString}"
                                FontWeight="Bold" />
                     <Grid ColumnDefinitions="120,*"
-                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                           RowSpacing="4"
                           ColumnSpacing="18">
                         <TextBlock x:Name="SystemMediaTypeLabel"
@@ -248,11 +248,14 @@
                               ColumnDefinitions="*,Auto"
                               ColumnSpacing="8">
                             <TextBox x:Name="OutputPathTextBox"
+                                     Grid.Row="0"
+                                     Grid.Column="0"
                                      Text="{Binding OutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{Binding OutputPathTextBoxEnabled}"
                                      TextChanged="OutputPathTextBoxTextChanged"
                                      VerticalAlignment="Center" />
                             <Button x:Name="OutputPathBrowseButton"
+                                    Grid.Row="0"
                                     Grid.Column="1"
                                     Content="{DynamicResource BrowseButtonString}"
                                     IsEnabled="{Binding OutputPathBrowseButtonEnabled}"
@@ -263,6 +266,7 @@
                         </Grid>
 
                         <TextBlock Grid.Row="2"
+                                   Grid.Column="0"
                                    Text="{DynamicResource DriveLetterLabelString}"
                                    VerticalAlignment="Center" />
                         <ComboBox x:Name="DriveLetterComboBox"
@@ -276,6 +280,7 @@
                                   SelectionChanged="DriveLetterComboBoxSelectionChanged" />
 
                         <TextBlock Grid.Row="3"
+                                   Grid.Column="0"
                                    Text="{DynamicResource DriveSpeedLabelString}"
                                    VerticalAlignment="Center" />
                         <ComboBox x:Name="DriveSpeedComboBox"
@@ -289,6 +294,7 @@
                                   SelectionChanged="DriveSpeedComboBoxSelectionChanged" />
 
                         <TextBlock Grid.Row="4"
+                                   Grid.Column="0"
                                    Text="{DynamicResource DumpingProgramLabelString}"
                                    VerticalAlignment="Center" />
                         <ComboBox x:Name="DumpingProgramComboBox"
@@ -302,6 +308,7 @@
                                   SelectionChanged="DumpingProgramComboBoxSelectionChanged" />
 
                         <TextBlock Grid.Row="5"
+                                   Grid.Column="0"
                                    Text="{DynamicResource ParametersLabelString}"
                                    VerticalAlignment="Center" />
                         <Grid Grid.Row="5"
@@ -323,6 +330,17 @@
                                       HorizontalAlignment="Center"
                                       VerticalAlignment="Center" />
                         </Grid>
+
+                        <TextBlock Grid.Row="6"
+                                   Grid.Column="0"
+                                   Text="{DynamicResource MountedPathLabelString}"
+                                   ToolTip.Tip="Mounted file path for disc checks, only recommended on non-Windows systems"
+                                   VerticalAlignment="Center" />
+                        <TextBox Grid.Row="6"
+                                 Grid.Column="1"
+                                 Text="{Binding MountedPath, Mode=TwoWay}"
+                                 IsEnabled="{Binding MountedPathTextBoxEnabled}"
+                                 VerticalAlignment="Center" />
                     </Grid>
                 </StackPanel>
             </Border>

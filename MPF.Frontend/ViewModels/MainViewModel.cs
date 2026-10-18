@@ -406,6 +406,32 @@ namespace MPF.Frontend.ViewModels
         } = true;
 
         /// <summary>
+        /// Currently provided mount path for scanning
+        /// </summary>
+        public string MountedPath
+        {
+            get;
+            set
+            {
+                field = value;
+                TriggerPropertyChanged(nameof(MountedPath));
+            }
+        } = string.Empty;
+
+        /// <summary>
+        /// Indicates the status of the mount path text box
+        /// </summary>
+        public bool MountedPathTextBoxEnabled
+        {
+            get;
+            set
+            {
+                field = value;
+                TriggerPropertyChanged(nameof(MountedPathTextBoxEnabled));
+            }
+        } = true;
+
+        /// <summary>
         /// Indicates the status of the start/stop button
         /// </summary>
         public bool StartStopButtonEnabled
@@ -2357,8 +2383,22 @@ namespace MPF.Frontend.ViewModels
                     return;
                 }
 
+                // If we have a mounted path, replace the environment
+                var checkEnvironment = _environment;
+                if (MountedPath is not null)
+                {
+                    var drive = Drive.Create(null, MountedPath);
+                    checkEnvironment = new DumpEnvironment(
+                        Options,
+                        EvaluateOutputPath(OutputPath),
+                        drive,
+                        CurrentSystem,
+                        CurrentProgram);
+                    checkEnvironment.SetProcessor();
+                }
+
                 // Verify dump output and save it
-                result = await _environment.VerifyAndSaveDumpOutput(
+                result = await checkEnvironment.VerifyAndSaveDumpOutput(
                     resultProgress: resultProgress,
                     protectionProgress: protectionProgress,
                     processUserInfo: _processUserInfo);
@@ -2400,6 +2440,7 @@ namespace MPF.Frontend.ViewModels
                 DumpingProgramComboBoxEnabled = false;
                 ScanForProtectionCheckBoxEnabled = false;
                 ParametersTextBoxEnabled = true;
+                MountedPathTextBoxEnabled = false;
 
                 MediaScanButtonEnabled = false;
                 UpdateVolumeLabelEnabled = false;
@@ -2422,6 +2463,7 @@ namespace MPF.Frontend.ViewModels
                 DumpingProgramComboBoxEnabled = true;
                 ScanForProtectionCheckBoxEnabled = true;
                 ParametersTextBoxEnabled = false;
+                MountedPathTextBoxEnabled = true;
 
                 MediaScanButtonEnabled = true;
                 UpdateVolumeLabelEnabled = true;

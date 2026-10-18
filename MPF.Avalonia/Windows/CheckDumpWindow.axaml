@@ -24,10 +24,11 @@
                     <TextBlock Text="{DynamicResource SettingsGroupBoxString}"
                                FontWeight="Bold" />
                     <Grid ColumnDefinitions="160,*,Auto"
-                          RowDefinitions="Auto,Auto,Auto,Auto"
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto"
                           ColumnSpacing="6"
                           RowSpacing="4">
                         <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
                                    Text="{DynamicResource InputPathLabelString}"
                                    VerticalAlignment="Center" />
                         <TextBox x:Name="InputPathTextBox"
@@ -48,6 +49,7 @@
                                 VerticalAlignment="Center" />
 
                         <TextBlock Grid.Row="1"
+                                   Grid.Column="0"
                                    Text="{DynamicResource SystemLabelString}"
                                    VerticalAlignment="Center" />
                         <ComboBox x:Name="SystemTypeComboBox"
@@ -67,6 +69,7 @@
                         </ComboBox>
 
                         <TextBlock Grid.Row="2"
+                                   Grid.Column="0"
                                    Text="{DynamicResource DriveLetterLabelString}"
                                    VerticalAlignment="Center" />
                         <ComboBox x:Name="DriveLetterComboBox"
@@ -79,10 +82,22 @@
                                   VerticalAlignment="Center" />
 
                         <TextBlock Grid.Row="3"
+                                   Grid.Column="0"
+                                   Text="{DynamicResource MountedPathLabelString}"
+                                   ToolTip.Tip="Mounted file path for disc checks, only recommended on non-Windows systems"
+                                   VerticalAlignment="Center" />
+                        <TextBox Grid.Row="3"
+                                 Grid.Column="1"
+                                 Text="{Binding MountedPath, Mode=TwoWay}"
+                                 IsEnabled="{Binding MountedPathTextBoxEnabled}"
+                                 VerticalAlignment="Center" />
+
+                        <TextBlock Grid.Row="4"
+                                   Grid.Column="0"
                                    Text="{DynamicResource DumpingProgramLabelString}"
                                    VerticalAlignment="Center" />
                         <ComboBox x:Name="DumpingProgramComboBox"
-                                  Grid.Row="3"
+                                  Grid.Row="4"
                                   Grid.Column="1"
                                   ItemsSource="{Binding AvailableInternalPrograms}"
                                   SelectedItem="{Binding CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"

@@ -228,7 +228,7 @@ namespace MPF.Frontend
             return programFound;
         }
 
-        /// <summary>
+         /// <summary>
         /// Set the parameters object based on the internal program and parameters string
         /// </summary>
         /// <param name="mediaType">PhysicalMediaType for specialized dumping parameters</param>
