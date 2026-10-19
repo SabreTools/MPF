@@ -181,6 +181,50 @@ namespace MPF.Frontend.Test
 
         #endregion
 
+        #region ReadUnixDiscPresence
+
+        [Theory]
+        [InlineData("E:ID_CDROM=1\nE:ID_CDROM_MEDIA=1\nE:ID_FS_TYPE=udf\n", true)]
+        [InlineData("E:ID_CDROM=1\nE:ID_CDROM_DVD=1\n", false)]
+        [InlineData("E:ID_VENDOR=ASUS\n", null)]
+        public void ReadUnixDiscPresence_UdevEntry_Presence(string entry, bool? expected)
+        {
+            string root = Path.Combine(Path.GetTempPath(), $"mpf-test-udev-{Guid.NewGuid():N}");
+            try
+            {
+                Directory.CreateDirectory(Path.Combine(root, "block", "sr0"));
+                Directory.CreateDirectory(Path.Combine(root, "data"));
+                File.WriteAllText(Path.Combine(root, "block", "sr0", "dev"), "11:0\n");
+                File.WriteAllText(Path.Combine(root, "data", "b11:0"), entry);
+
+                Assert.Equal(expected, Drive.ReadUnixDiscPresence("/dev/sr0", Path.Combine(root, "block"), Path.Combine(root, "data")));
+            }
+            finally
+            {
+                Directory.Delete(root, recursive: true);
+            }
+        }
+
+        [Fact]
+        public void ReadUnixDiscPresence_NoUdevEntry_Null()
+        {
+            string root = Path.Combine(Path.GetTempPath(), $"mpf-test-udev-{Guid.NewGuid():N}");
+            try
+            {
+                Directory.CreateDirectory(Path.Combine(root, "block", "sr0"));
+                File.WriteAllText(Path.Combine(root, "block", "sr0", "dev"), "11:0\n");
+
+                Assert.Null(Drive.ReadUnixDiscPresence("/dev/sr0", Path.Combine(root, "block"), Path.Combine(root, "data")));
+                Assert.Null(Drive.ReadUnixDiscPresence("/dev/sg1", Path.Combine(root, "block"), Path.Combine(root, "data")));
+            }
+            finally
+            {
+                Directory.Delete(root, recursive: true);
+            }
+        }
+
+        #endregion
+
         #region EnumerateMacOSWholeDiskNodes
 
         [Fact]

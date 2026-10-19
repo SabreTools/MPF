@@ -72,8 +72,13 @@ namespace MPF.Frontend.FileSystems
             {
                 if (IsUnixDevice(path))
                 {
-                    // Random access avoids reading ahead into sectors that are slow or impossible to read
                     string blockDevice = GetUnixBlockDevice(path);
+
+                    // Opening the device closes an open tray, so it is not opened if udev saw no disc in the drive
+                    if (Drive.ReadUnixDiscPresence(blockDevice, "/sys/class/block", "/run/udev/data") == false)
+                        return null;
+
+                    // Random access avoids reading ahead into sectors that are slow or impossible to read
                     var device = new FileStream(blockDevice, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, SectorSize, FileOptions.RandomAccess);
                     stream = new VolumeStream(device, GetUnixDeviceLength(blockDevice));
                     var deviceFileSystem = Open(stream);

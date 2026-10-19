@@ -286,6 +286,38 @@ namespace MPF.Frontend
             return 0;
         }
 
+        /// <summary>
+        /// Read whether udev saw a disc in an optical drive
+        /// </summary>
+        /// <param name="devicePath">Device path of the drive (e.g. "/dev/sr0")</param>
+        /// <param name="sysBlockRoot">Root of the sysfs block devices (normally "/sys/class/block")</param>
+        /// <param name="udevDataRoot">Root of the udev database (normally "/run/udev/data")</param>
+        /// <returns>True if udev saw a disc, false if it saw none, null if udev did not check the drive</returns>
+        /// <remarks>
+        /// Opening the device of a drive with an open tray makes the kernel close the tray. udev
+        /// checks an optical drive when a disc is inserted or removed and sets ID_CDROM=1 in the
+        /// entry of the drive, and ID_CDROM_MEDIA=1 while a disc is in it. Reading the entry does
+        /// not access the drive
+        /// </remarks>
+        internal static bool? ReadUnixDiscPresence(string devicePath, string sysBlockRoot, string udevDataRoot)
+        {
+            try
+            {
+                // The entry is named after the major and minor number of the device (e.g. "b11:0")
+                string numberPath = Path.Combine(Path.Combine(sysBlockRoot, Path.GetFileName(devicePath)), "dev");
+                string[] entry = File.ReadAllLines(Path.Combine(udevDataRoot, $"b{File.ReadAllText(numberPath).Trim()}"));
+                if (Array.IndexOf(entry, "E:ID_CDROM=1") < 0)
+                    return null;
+
+                return Array.IndexOf(entry, "E:ID_CDROM_MEDIA=1") >= 0;
+            }
+            catch
+            {
+                // Without a udev entry for the drive, nothing is known about the disc
+                return null;
+            }
+        }
+
         #endregion
     }
 }
