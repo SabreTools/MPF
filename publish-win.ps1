@@ -154,6 +154,10 @@ function Download-Programs {
             # Handle Dreamdump bare binaries
             elseif ($PREFIX -eq "Dreamdump") {
                 mkdir $TEMPDIR
+
+                # Set as executable
+                Write-Host "Cannot set executable bit in Powershell, will have to be done manually"
+
                 if ( [string]::IsNullOrEmpty($EXT) ) {
                     Move-Item -Path $OUTNAME -Destination "$TEMPDIR/dreamdump"
                 }

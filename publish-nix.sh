@@ -163,7 +163,11 @@ function download_programs() {
             # Handle Dreamdump bare binaries
             elif [[ $PREFIX = "Dreamdump" ]]; then
                 mkdir $TEMPDIR
-            if [[ -z "$EXT" || $EXT =~ / ]]; then
+
+                # Set as executable
+                chmod a+x "$OUTNAME"
+
+                if [[ -z "$EXT" || $EXT =~ / ]]; then
                     mv "$OUTNAME" "$TEMPDIR/dreamdump"
                 else
                     mv "$OUTNAME" "$TEMPDIR/dreamdump.$EXT"
