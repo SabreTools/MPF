@@ -143,7 +143,7 @@ namespace MPF.Check.Features
             Console.WriteLine("    --no-retrieve              Disable retrieving match information from online sources");
             Console.WriteLine("    --pull-all                 Pull all information from online sources (requires --username and --password)");
             Console.WriteLine("-p, --path <drivepath>         Physical drive path for additional checks");
-            Console.WriteLine("-s, --scan                     Enable copy protection scan (requires --path)");
+            Console.WriteLine("-s, --scan                     Enable copy protection scan (scans the image without --path)");
             Console.WriteLine("    --disable-archives         Disable scanning archives (requires --scan)");
             Console.WriteLine("    --enable-debug             Enable debug protection information (requires --scan)");
             Console.WriteLine("    --hide-drive-letters       Hide drive letters from scan output (requires --scan)");

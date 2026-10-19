@@ -127,6 +127,7 @@ namespace MPF.Frontend.Features
             Console.WriteLine($"  Scan Archives for Protection = {options.Processing.ProtectionScanning.ScanArchivesForProtection}");
             Console.WriteLine($"  Hide Drive Letters = {options.Processing.ProtectionScanning.HideDriveLetters}");
             Console.WriteLine($"  Include Debug Protection Information = {options.Processing.ProtectionScanning.IncludeDebugProtectionInformation}");
+            Console.WriteLine($"  Scan Dump Image Files = {options.Processing.ProtectionScanning.ScanDumpImageFiles}");
             Console.WriteLine();
 
             // Web Login Information

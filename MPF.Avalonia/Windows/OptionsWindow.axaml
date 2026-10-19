@@ -432,7 +432,7 @@
                                                FontWeight="Bold" />
                                     <Grid ColumnDefinitions="*,*"
                                           ColumnSpacing="16"
-                                          RowDefinitions="Auto,Auto">
+                                          RowDefinitions="Auto,Auto,Auto">
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource EnableProtectionScanCheckBoxString}"
@@ -456,6 +456,13 @@
                                                   Content="{DynamicResource HideDriveLettersCheckBoxString}"
                                                   IsChecked="{Binding HideDriveLetters}"
                                                   ToolTip.Tip="Remove drive letters from protection scan output" />
+
+                                        <CheckBox x:Name="ScanDumpImageFilesCheckBox"
+                                                  Grid.Row="2"
+                                                  Grid.Column="0"
+                                                  Content="{DynamicResource ScanDumpImageFilesCheckBoxString}"
+                                                  IsChecked="{Binding ScanDumpImageFiles}"
+                                                  ToolTip.Tip="Scan the files inside the dump image instead of the disc in the drive" />
                                     </Grid>
                                 </StackPanel>
                             </Border>

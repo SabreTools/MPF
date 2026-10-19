@@ -109,6 +109,7 @@
     <x:String x:Key="ScanArchiveContentsCheckBoxString">Scan Archive Contents</x:String>
     <x:String x:Key="IncludeDebugInformationCheckBoxString">Include Debug Information</x:String>
     <x:String x:Key="HideDriveLettersCheckBoxString">Hide Drive Letters</x:String>
+    <x:String x:Key="ScanDumpImageFilesCheckBoxString">Scan Dump Image Files</x:String>
     <x:String x:Key="DefaultSpeedsGroupBoxString">Default Speeds</x:String>
     <x:String x:Key="CDLabelString">CD</x:String>
     <x:String x:Key="DVDLabelString">DVD</x:String>

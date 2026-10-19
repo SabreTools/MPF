@@ -103,7 +103,7 @@ namespace MPF.Check.Features
         internal readonly FlagInput RetrieveInput = new(_retrieveName, "--retrieve", "Enable retrieving match information from online sources");
 
         private const string _scanName = "scan";
-        internal readonly FlagInput ScanInput = new(_scanName, ["-s", "--scan"], "Enable copy protection scan (requires --path)");
+        internal readonly FlagInput ScanInput = new(_scanName, ["-s", "--scan"], "Enable copy protection scan (scans the image without --path)");
 
         private const string _showDriveLettersName = "show-drive-letters";
         internal readonly FlagInput ShowDriveLettersInput = new(_showDriveLettersName, "--show-drive-letters", "Show drive letters in scan output (requires --scan)");
@@ -264,7 +264,7 @@ namespace MPF.Check.Features
                 else if (PathInput.ProcessInput(args, ref index))
                     DevicePath = PathInput.Value;
 
-                // Scan for protection (requires device path)
+                // Scan for protection
                 else if (ScanInput.ProcessInput(args, ref index))
                     Options.Processing.ProtectionScanning.ScanForProtection = true;
                 else if (NoScanInput.ProcessInput(args, ref index))
