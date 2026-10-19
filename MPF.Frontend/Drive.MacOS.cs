@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 using SabreTools.IO.Extensions;
 
 namespace MPF.Frontend
@@ -314,6 +315,58 @@ namespace MPF.Frontend
         }
 
         /// <summary>
+        /// Get the directory macOS mounted the disc in a drive at
+        /// </summary>
+        /// <param name="devicePath">BSD name of the drive (e.g. "disk4")</param>
+        /// <returns>The mount point, or null when the disc is not mounted</returns>
+        /// <remarks>
+        /// The mount table is read with "mount", which answers at once, while "diskutil info"
+        /// takes about half a second per device
+        /// </remarks>
+        internal static string? GetMacOSMountPoint(string? devicePath)
+        {
+            if (string.IsNullOrEmpty(devicePath) || IsMacOSMountPoint(devicePath))
+                return null;
+
+            return ParseMacOSMountPoint(RunMacOSCommand("mount", string.Empty), devicePath!);
+        }
+
+        /// <summary>
+        /// Parse the mount point of a drive from the output of "mount"
+        /// </summary>
+        /// <param name="mountOutput">Raw "mount" output</param>
+        /// <param name="devicePath">BSD name of the drive (e.g. "disk4")</param>
+        /// <returns>The mount point, or null when the disc is not mounted</returns>
+        /// <remarks>
+        /// "mount" lists one mounted file system per line as "/dev/disk4s0 on /Volumes/LABEL
+        /// (cd9660, local, read-only)". The file system of a disc may sit on the whole disk or
+        /// on one of its slices ("disk4s0")
+        /// </remarks>
+        internal static string? ParseMacOSMountPoint(string? mountOutput, string devicePath)
+        {
+            if (string.IsNullOrEmpty(mountOutput))
+                return null;
+
+            // The whole disk or one of its slices, but not another disk ("disk41")
+            var device = new Regex($"^/dev/{Regex.Escape(devicePath)}(s[0-9]+)?$");
+            foreach (var rawLine in mountOutput!.Split('\n'))
+            {
+                int on = rawLine.IndexOf(" on ", StringComparison.Ordinal);
+                if (on <= 0 || !device.IsMatch(rawLine.Substring(0, on)))
+                    continue;
+
+                // The mount point may contain parentheses itself, the options are the last ones
+                int options = rawLine.LastIndexOf(" (", StringComparison.Ordinal);
+                if (options <= on)
+                    continue;
+
+                return rawLine.Substring(on + " on ".Length, options - on - " on ".Length);
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Run "diskutil info &lt;deviceName&gt;" and return its standard output, or an empty
         /// string on any failure. The device name comes from the internal node enumeration, so
         /// it is a trusted "diskN" token rather than external input.
@@ -322,13 +375,22 @@ namespace MPF.Frontend
         /// <returns>The command's standard output, or an empty string on failure</returns>
         /// TODO: Figure out if invoking diskutil is the only way of listing all drives
         private static string RunDiskutilInfo(string deviceName)
+            => RunMacOSCommand("diskutil", $"info {deviceName}");
+
+        /// <summary>
+        /// Run a command and return its standard output, or an empty string on any failure
+        /// </summary>
+        /// <param name="fileName">Command to run</param>
+        /// <param name="arguments">Arguments of the command</param>
+        /// <returns>The command's standard output, or an empty string on failure</returns>
+        private static string RunMacOSCommand(string fileName, string arguments)
         {
             try
             {
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = "diskutil",
-                    Arguments = $"info {deviceName}",
+                    FileName = fileName,
+                    Arguments = arguments,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,

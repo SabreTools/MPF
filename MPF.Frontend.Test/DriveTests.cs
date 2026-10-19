@@ -469,6 +469,47 @@ namespace MPF.Frontend.Test
 
         #endregion
 
+        #region ParseMacOSMountPoint
+
+        /// <summary>
+        /// Output of "mount" on macOS with two discs, the second one in disk4
+        /// </summary>
+        private const string MacOSMountOutput =
+            """
+            /dev/disk3s1s1 on / (apfs, sealed, local, read-only, journaled)
+            devfs on /dev (devfs, local, nobrowse)
+            /dev/disk41s0 on /Volumes/OTHER DISC (cd9660, local, nodev, nosuid, read-only, noowners)
+            /dev/disk4s0 on /Volumes/CINEMA_EIKAIWA_TAIKEN (cd9660, local, nodev, nosuid, read-only, noowners)
+
+            """;
+
+        [Theory]
+        [InlineData("disk4", "/Volumes/CINEMA_EIKAIWA_TAIKEN")]
+        [InlineData("disk41", "/Volumes/OTHER DISC")]
+        [InlineData("disk3", null)]
+        [InlineData("disk5", null)]
+        public void ParseMacOSMountPoint_Slices_MountPoint(string devicePath, string? expected)
+        {
+            Assert.Equal(expected, Drive.ParseMacOSMountPoint(MacOSMountOutput, devicePath));
+        }
+
+        [Fact]
+        public void ParseMacOSMountPoint_WholeDiskWithParentheses_MountPoint()
+        {
+            string output = "/dev/disk4 on /Volumes/GAME (DISC 1) (udf, local, nodev, nosuid, read-only, noowners)\n";
+            Assert.Equal("/Volumes/GAME (DISC 1)", Drive.ParseMacOSMountPoint(output, "disk4"));
+        }
+
+        [Fact]
+        public void ParseMacOSMountPoint_NoOptions_Null()
+        {
+            Assert.Null(Drive.ParseMacOSMountPoint("/dev/disk4 on /Volumes/GAME\n", "disk4"));
+            Assert.Null(Drive.ParseMacOSMountPoint(null, "disk4"));
+            Assert.Null(Drive.ParseMacOSMountPoint(string.Empty, "disk4"));
+        }
+
+        #endregion
+
         #region ParseDiskutilByteSize
 
         [Theory]
