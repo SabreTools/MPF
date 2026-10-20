@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using MPF.Frontend.FileSystems;
 using SabreTools.IO.Extensions;
 
 namespace MPF.Frontend
@@ -74,11 +75,43 @@ namespace MPF.Frontend
                 if (drive is not null)
                 {
                     drive.MarkedActive = true;
+                    drive.PopulateFromUnixDevice(devicePath);
                     extra.Add(drive);
                 }
             }
 
             return [.. drives, .. extra];
+        }
+
+        /// <summary>
+        /// Populate the file system and size of the disc in an optical drive on Linux, as Windows reports them
+        /// </summary>
+        /// <param name="devicePath">Block or SCSI generic device path of the drive</param>
+        /// <remarks>DriveInfo does not report them, since the disc is not mounted</remarks>
+        private void PopulateFromUnixDevice(string devicePath)
+        {
+            // This should only run on Linux
+            if (!SystemEnvironment.IsLinux())
+                return;
+
+            using var files = ImageFileSystem.Create(devicePath);
+            DriveFormat = GetWindowsDriveFormat(files?.FileSystemName);
+            TotalSize = files?.VolumeSize ?? default;
+        }
+
+        /// <summary>
+        /// Get the name Windows reports for the file system of a disc
+        /// </summary>
+        /// <param name="fileSystemName">Name of the file system read from the disc (e.g. "ISO 9660")</param>
+        /// <returns>"CDFS" for ISO 9660, "UDF" for UDF, empty otherwise</returns>
+        internal static string GetWindowsDriveFormat(string? fileSystemName)
+        {
+            if (fileSystemName == "ISO 9660")
+                return "CDFS";
+            else if (fileSystemName == "UDF")
+                return "UDF";
+
+            return string.Empty;
         }
 
         /// <summary>

@@ -225,6 +225,19 @@ namespace MPF.Frontend.Test
 
         #endregion
 
+        #region GetWindowsDriveFormat
+
+        [Theory]
+        [InlineData("ISO 9660", "CDFS")]
+        [InlineData("UDF", "UDF")]
+        [InlineData(null, "")]
+        public void GetWindowsDriveFormat_FileSystemName_WindowsName(string? fileSystemName, string expected)
+        {
+            Assert.Equal(expected, Drive.GetWindowsDriveFormat(fileSystemName));
+        }
+
+        #endregion
+
         #region EnumerateMacOSWholeDiskNodes
 
         [Fact]

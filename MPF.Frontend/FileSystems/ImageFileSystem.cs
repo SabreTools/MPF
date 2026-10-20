@@ -35,6 +35,12 @@ namespace MPF.Frontend.FileSystems
         /// </summary>
         public string? FileSystemName { get; private set; }
 
+        /// <summary>
+        /// Size of the volume of the file system that is read in bytes, as Windows reports it for a mounted disc,
+        /// 0 if no file system was found
+        /// </summary>
+        public long VolumeSize { get; private set; }
+
         /// <inheritdoc/>
         public override string? VolumeLabel => _volumeLabel;
 

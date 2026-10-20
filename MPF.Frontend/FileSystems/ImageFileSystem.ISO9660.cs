@@ -50,12 +50,9 @@ namespace MPF.Frontend.FileSystems
                     return false;
 
                 // Keep reads within the volume, since a disc may continue with audio tracks after it
-                if (_data is VolumeStream)
-                {
-                    long volumeLength = (long)pvd.VolumeSpaceSize.LittleEndian * pvd.GetLogicalBlockSize(SectorSize);
-                    if (volumeLength > 0)
-                        _data.SetLength(volumeLength);
-                }
+                long volumeLength = (long)pvd.VolumeSpaceSize.LittleEndian * pvd.GetLogicalBlockSize(SectorSize);
+                if (_data is VolumeStream && volumeLength > 0)
+                    _data.SetLength(volumeLength);
 
                 if (joliet is not null)
                 {
@@ -71,6 +68,7 @@ namespace MPF.Frontend.FileSystems
 
                 _iso9660BlockLength = _iso9660.GetLogicalBlockSize(SectorSize);
                 FileSystemName = "ISO 9660";
+                VolumeSize = volumeLength;
                 return true;
             }
             catch

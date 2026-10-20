@@ -260,6 +260,10 @@ namespace MPF.Frontend
         {
             var driveInfo = Array.Find(DriveInfo.GetDrives(), d => d?.Name == DevicePath);
             PopulateFromDriveInfo(driveInfo);
+
+            // Optical drives on Linux are not listed by DriveInfo, so the disc is read again
+            if (DevicePath is not null && SystemEnvironment.IsLinux() && InternalDriveType == Frontend.InternalDriveType.Optical)
+                PopulateFromUnixDevice(DevicePath);
         }
 
         /// <inheritdoc/>

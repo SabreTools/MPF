@@ -23,6 +23,19 @@ namespace MPF.Frontend.Test.FileSystems
             Assert.Equal("TESTDISC", fileSystem.VolumeLabel);
         }
 
+        [Theory]
+        [InlineData("Bridge", 301L * 2048)]
+        [InlineData("Joliet", 451L * 2048)]
+        [InlineData("Primary", 451L * 2048)]
+        [InlineData("UDFOnly", 301L * 2048)]
+        [InlineData("Raw", 301L * 2048)]
+        public void Create_Variant_VolumeSize(string variant, long expected)
+        {
+            // The ISO 9660 volume space is 451 sectors, the UDF partition starts at sector 257 and is 44 sectors long
+            using var fileSystem = Open(variant);
+            Assert.Equal(expected, fileSystem.VolumeSize);
+        }
+
         [Fact]
         public void Create_NoFileSystem_FirstBytesReadable()
         {
@@ -31,6 +44,7 @@ namespace MPF.Frontend.Test.FileSystems
 
             using var fileSystem = ImageFileSystem.Create(new MemoryStream(image));
             Assert.Null(fileSystem.FileSystemName);
+            Assert.Equal(0, fileSystem.VolumeSize);
             Assert.False(fileSystem.FileExists("README.TXT"));
             Assert.Empty(fileSystem.GetFiles(string.Empty, "*", recursive: true));
             Assert.Equal([0x53, 0x00], fileSystem.ReadFirstBytes(2));
