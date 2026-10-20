@@ -207,6 +207,7 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Run internal program
         /// </summary>
+        /// <returns>The exit code of the internal program</returns>
         public int ExecuteInternalProgram()
         {
             // When no output sink is attached, keep the original behavior exactly: the
@@ -278,28 +279,31 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Cancel an in-progress dumping process
         /// </summary>
+        /// <returns>True if the process was invalid or exited successfully, false otherwise</returns>
         public bool KillInternalProgram()
         {
             // Ignore if the process is invalid
             if (process is null)
                 return true;
 
-            // Ignore if the process is already exited
-            if (process.HasExited)
-                return true;
-
             try
             {
-                while (process is not null && !process.HasExited)
-                {
-                    process.Kill();
-                }
+                // Ignore if the process is already exited
+                if (process.HasExited)
+                    return true;
 
+                // Kill the process and wait up to 5 seconds to exit
+                process.Kill();
+                return process.WaitForExit(milliseconds: 5000);
+            }
+            catch (InvalidOperationException)
+            {
+                // Ignore if the process is already disposed
                 return true;
             }
             catch
             {
-                // TODO: Determine how to best surface this error
+                // Report all other exceptions as failure
                 return false;
             }
         }

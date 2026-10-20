@@ -19,6 +19,7 @@
 - Add a script and README section for the drive capability on Linux (gmipf)
 - Set Dreamdump to be executable in bash script, add warning to PS
 - Remove eject reminder from Avalonia Check
+- Clean up program cancellation to be safer
 
 ### 3.11.1 (2026-10-17)
 
