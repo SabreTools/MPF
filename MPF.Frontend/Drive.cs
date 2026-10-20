@@ -261,9 +261,12 @@ namespace MPF.Frontend
             var driveInfo = Array.Find(DriveInfo.GetDrives(), d => d?.Name == DevicePath);
             PopulateFromDriveInfo(driveInfo);
 
-            // Optical drives on Linux are not listed by DriveInfo, so udev is asked again if there is a disc
+            // Optical drives on Linux are not listed by DriveInfo, so udev is asked again if there is a disc and the disc is read again
             if (DevicePath is not null && SystemEnvironment.IsLinux() && InternalDriveType == Frontend.InternalDriveType.Optical)
+            {
                 MarkedActive = MayContainUnixDisc(DevicePath);
+                PopulateFromUnixDevice(DevicePath);
+            }
         }
 
         /// <inheritdoc/>
