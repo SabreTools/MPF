@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 using MPF.Frontend.FileSystems;
 using SabreTools.IO.Extensions;
 
@@ -9,6 +11,16 @@ namespace MPF.Frontend
     public partial class Drive
     {
         #region Fields
+
+        /// <summary>
+        /// Flags to open a device on Linux for reading without waiting for a disc (O_RDONLY | O_NONBLOCK | O_CLOEXEC)
+        /// </summary>
+        private const int UnixOpenReadNonBlocking = 0x0000 | 0x0800 | 0x80000;
+
+        /// <summary>
+        /// Advice that a file on Linux is read in random order (POSIX_FADV_RANDOM)
+        /// </summary>
+        private const int UnixAdviceRandom = 1;
 
         /// <summary>
         /// sysfs block-device name prefixes that the fixed-drive enumerator does not surface:
@@ -376,6 +388,38 @@ namespace MPF.Frontend
                 return null;
             }
         }
+
+        /// <summary>
+        /// Open the block device of an optical drive on Linux for reading
+        /// </summary>
+        /// <param name="devicePath">Block device path of the drive (e.g. "/dev/sr0")</param>
+        /// <returns>Handle of the device</returns>
+        /// <remarks>
+        /// Opening the device of a drive with an open tray makes the kernel close the tray, also
+        /// in the seconds before udev noticed that the tray was opened. With O_NONBLOCK, the tray
+        /// stays open and reads fail while there is no disc
+        /// </remarks>
+        internal static SafeFileHandle OpenUnixDevice(string devicePath)
+        {
+            int descriptor = open(devicePath, UnixOpenReadNonBlocking);
+            if (descriptor < 0)
+                throw new IOException($"Could not open {devicePath}, error {Marshal.GetLastWin32Error()}");
+
+            // Random access avoids reading ahead into sectors that are slow or impossible to read
+            var handle = new SafeFileHandle(new IntPtr(descriptor), true);
+            posix_fadvise(descriptor, 0, 0, UnixAdviceRandom);
+            return handle;
+        }
+
+        #endregion
+
+        #region Native Interop
+
+        [DllImport("libc", SetLastError = true)]
+        private static extern int open(string pathname, int flags);
+
+        [DllImport("libc")]
+        private static extern int posix_fadvise(int fd, long offset, long len, int advice);
 
         #endregion
     }
