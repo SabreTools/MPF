@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using SabreTools.Data.Extensions;
-using SabreTools.IO.Extensions;
 
 namespace MPF.Frontend.FileSystems
 {
@@ -72,7 +71,7 @@ namespace MPF.Frontend.FileSystems
             {
                 if (IsUnixDevice(path))
                 {
-                    string blockDevice = GetUnixBlockDevice(path);
+                    string blockDevice = Drive.GetUnixBlockDevice(path);
 
                     // Opening the device closes an open tray, so it is not opened if udev saw no disc in the drive
                     if (Drive.ReadUnixDiscPresence(blockDevice, "/sys/class/block", "/run/udev/data") == false)
@@ -383,24 +382,6 @@ namespace MPF.Frontend.FileSystems
         private static bool IsUnixDevice(string path)
             => Environment.OSVersion.Platform == PlatformID.Unix
                 && path.StartsWith("/dev/", StringComparison.Ordinal);
-
-        /// <summary>
-        /// Get the block device of a SCSI generic device on Linux, since only block devices can be read by sector
-        /// </summary>
-        /// <returns>Path of the block device, the given path if it is no SCSI generic device</returns>
-        private static string GetUnixBlockDevice(string path)
-        {
-            string name = Path.GetFileName(path);
-            if (!name.StartsWith("sg", StringComparison.Ordinal))
-                return path;
-
-            string blockRoot = Path.Combine(Path.Combine(Path.Combine("/sys/class/scsi_generic", name), "device"), "block");
-            string[] blockDevices = IOExtensions.SafeGetFileSystemEntries(blockRoot);
-            if (blockDevices.Length == 0)
-                return path;
-
-            return Path.Combine("/dev", Path.GetFileName(blockDevices[0]));
-        }
 
         /// <summary>
         /// Get the length of a device on Linux from sysfs

@@ -2116,7 +2116,8 @@ namespace MPF.Frontend.ViewModels
                 return null;
 
             // If the drive is marked as inactive
-            if (!drive.MarkedActive)
+            // An empty optical drive on Linux keeps the default output name
+            if (!drive.MarkedActive && !(SystemEnvironment.IsLinux() && drive.InternalDriveType == InternalDriveType.Optical))
                 return DiscNotDetectedValue;
 
             // Use internal serials where appropriate

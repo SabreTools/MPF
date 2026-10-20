@@ -69,11 +69,11 @@ namespace MPF.Frontend
                 if (!existingNames.Add(devicePath))
                     continue;
 
-                // Force marking the drive as active if it's found
+                // Mark the drive as active unless udev saw no disc in it, like a drive that is not ready on Windows
                 var drive = Create(Frontend.InternalDriveType.Optical, devicePath);
                 if (drive is not null)
                 {
-                    drive.MarkedActive = true;
+                    drive.MarkedActive = MayContainUnixDisc(devicePath);
                     extra.Add(drive);
                 }
             }
@@ -285,6 +285,32 @@ namespace MPF.Frontend
 
             return 0;
         }
+
+        /// <summary>
+        /// Get the block device of a SCSI generic device on Linux, since only block devices can be read by sector
+        /// </summary>
+        /// <returns>Path of the block device, the given path if it is no SCSI generic device</returns>
+        internal static string GetUnixBlockDevice(string path)
+        {
+            string name = Path.GetFileName(path);
+            if (!name.StartsWith("sg", StringComparison.Ordinal))
+                return path;
+
+            string blockRoot = Path.Combine(Path.Combine(Path.Combine("/sys/class/scsi_generic", name), "device"), "block");
+            string[] blockDevices = IOExtensions.SafeGetFileSystemEntries(blockRoot);
+            if (blockDevices.Length == 0)
+                return path;
+
+            return Path.Combine("/dev", Path.GetFileName(blockDevices[0]));
+        }
+
+        /// <summary>
+        /// Determine if an optical drive on Linux may contain a disc
+        /// </summary>
+        /// <param name="devicePath">Block or SCSI generic device path of the drive</param>
+        /// <returns>False if udev saw no disc in the drive, true otherwise</returns>
+        private static bool MayContainUnixDisc(string devicePath)
+            => ReadUnixDiscPresence(GetUnixBlockDevice(devicePath), "/sys/class/block", "/run/udev/data") != false;
 
         /// <summary>
         /// Read whether udev saw a disc in an optical drive
