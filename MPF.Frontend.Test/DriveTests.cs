@@ -181,6 +181,63 @@ namespace MPF.Frontend.Test
 
         #endregion
 
+        #region ReadUnixDiscPresence
+
+        [Theory]
+        [InlineData("E:ID_CDROM=1\nE:ID_CDROM_MEDIA=1\nE:ID_FS_TYPE=udf\n", true)]
+        [InlineData("E:ID_CDROM=1\nE:ID_CDROM_DVD=1\n", false)]
+        [InlineData("E:ID_VENDOR=ASUS\n", null)]
+        public void ReadUnixDiscPresence_UdevEntry_Presence(string entry, bool? expected)
+        {
+            string root = Path.Combine(Path.GetTempPath(), $"mpf-test-udev-{Guid.NewGuid():N}");
+            try
+            {
+                Directory.CreateDirectory(Path.Combine(root, "block", "sr0"));
+                Directory.CreateDirectory(Path.Combine(root, "data"));
+                File.WriteAllText(Path.Combine(root, "block", "sr0", "dev"), "11:0\n");
+                File.WriteAllText(Path.Combine(root, "data", "b11:0"), entry);
+
+                Assert.Equal(expected, Drive.ReadUnixDiscPresence("/dev/sr0", Path.Combine(root, "block"), Path.Combine(root, "data")));
+            }
+            finally
+            {
+                Directory.Delete(root, recursive: true);
+            }
+        }
+
+        [Fact]
+        public void ReadUnixDiscPresence_NoUdevEntry_Null()
+        {
+            string root = Path.Combine(Path.GetTempPath(), $"mpf-test-udev-{Guid.NewGuid():N}");
+            try
+            {
+                Directory.CreateDirectory(Path.Combine(root, "block", "sr0"));
+                File.WriteAllText(Path.Combine(root, "block", "sr0", "dev"), "11:0\n");
+
+                Assert.Null(Drive.ReadUnixDiscPresence("/dev/sr0", Path.Combine(root, "block"), Path.Combine(root, "data")));
+                Assert.Null(Drive.ReadUnixDiscPresence("/dev/sg1", Path.Combine(root, "block"), Path.Combine(root, "data")));
+            }
+            finally
+            {
+                Directory.Delete(root, recursive: true);
+            }
+        }
+
+        #endregion
+
+        #region GetWindowsDriveFormat
+
+        [Theory]
+        [InlineData("ISO 9660", "CDFS")]
+        [InlineData("UDF", "UDF")]
+        [InlineData(null, "")]
+        public void GetWindowsDriveFormat_FileSystemName_WindowsName(string? fileSystemName, string expected)
+        {
+            Assert.Equal(expected, Drive.GetWindowsDriveFormat(fileSystemName));
+        }
+
+        #endregion
+
         #region EnumerateMacOSWholeDiskNodes
 
         [Fact]
@@ -469,6 +526,47 @@ namespace MPF.Frontend.Test
 
         #endregion
 
+        #region ParseMacOSMountPoint
+
+        /// <summary>
+        /// Output of "mount" on macOS with two discs, the second one in disk4
+        /// </summary>
+        private const string MacOSMountOutput =
+            """
+            /dev/disk3s1s1 on / (apfs, sealed, local, read-only, journaled)
+            devfs on /dev (devfs, local, nobrowse)
+            /dev/disk41s0 on /Volumes/OTHER DISC (cd9660, local, nodev, nosuid, read-only, noowners)
+            /dev/disk4s0 on /Volumes/CINEMA_EIKAIWA_TAIKEN (cd9660, local, nodev, nosuid, read-only, noowners)
+
+            """;
+
+        [Theory]
+        [InlineData("disk4", "/Volumes/CINEMA_EIKAIWA_TAIKEN")]
+        [InlineData("disk41", "/Volumes/OTHER DISC")]
+        [InlineData("disk3", null)]
+        [InlineData("disk5", null)]
+        public void ParseMacOSMountPoint_Slices_MountPoint(string devicePath, string? expected)
+        {
+            Assert.Equal(expected, Drive.ParseMacOSMountPoint(MacOSMountOutput, devicePath));
+        }
+
+        [Fact]
+        public void ParseMacOSMountPoint_WholeDiskWithParentheses_MountPoint()
+        {
+            string output = "/dev/disk4 on /Volumes/GAME (DISC 1) (udf, local, nodev, nosuid, read-only, noowners)\n";
+            Assert.Equal("/Volumes/GAME (DISC 1)", Drive.ParseMacOSMountPoint(output, "disk4"));
+        }
+
+        [Fact]
+        public void ParseMacOSMountPoint_NoOptions_Null()
+        {
+            Assert.Null(Drive.ParseMacOSMountPoint("/dev/disk4 on /Volumes/GAME\n", "disk4"));
+            Assert.Null(Drive.ParseMacOSMountPoint(null, "disk4"));
+            Assert.Null(Drive.ParseMacOSMountPoint(string.Empty, "disk4"));
+        }
+
+        #endregion
+
         #region ParseDiskutilByteSize
 
         [Theory]
@@ -481,6 +579,21 @@ namespace MPF.Frontend.Test
         public void ParseDiskutilByteSize_ExtractsExactBytes(string value, long expected)
         {
             Assert.Equal(expected, Drive.ParseDiskutilByteSize(value));
+        }
+
+        #endregion
+
+        #region ParseDiskutilBlockSize
+
+        [Theory]
+        [InlineData("2352 Bytes", 2352)]
+        [InlineData("2048 Bytes", 2048)]
+        [InlineData("512 Bytes", 512)]
+        [InlineData("", 0)]
+        [InlineData("no size information", 0)]
+        public void ParseDiskutilBlockSize_ExtractsBytes(string value, int expected)
+        {
+            Assert.Equal(expected, Drive.ParseDiskutilBlockSize(value));
         }
 
         #endregion

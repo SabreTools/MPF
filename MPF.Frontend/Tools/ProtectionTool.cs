@@ -7,13 +7,15 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
+using MPF.Frontend.FileSystems;
 using SabreTools.Collections.Extensions;
 using SabreTools.IO.Extensions;
+using SabreTools.Wrappers;
 
 #pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'
 namespace MPF.Frontend.Tools
 {
-    public static class ProtectionTool
+    public static partial class ProtectionTool
     {
         /// <summary>
         /// Set of protection prefixes to filter on
@@ -72,69 +74,295 @@ namespace MPF.Frontend.Tools
         ];
 
         /// <summary>
+        /// Determine if the drive path can be scanned as a set of files
+        /// </summary>
+        /// <param name="drive">Drive object representing the current drive</param>
+        /// <returns>True if the drive path is a readable directory, false otherwise</returns>
+        /// <remarks>Device paths such as /dev/sr0 or disk2 are not directories</remarks>
+        public static bool CanScanDrivePath(Drive? drive)
+            => Directory.Exists(drive?.DevicePath);
+
+        /// <summary>
         /// Run comprehensive protection scans based on both the
         /// physical media as well as the image
         /// </summary>
         /// <param name="basePath">Base output image path</param>
         /// <param name="drive">Drive object representing the current drive</param>
         /// <param name="options">Options object that determines what to scan</param>
-        /// <param name="progress">Optional progress callback</param>
-        public static async Task<Dictionary<string, List<string>>> RunCombinedProtectionScans(string basePath,
+        /// <param name="protectionProgress">Optional progress callback</param>
+        /// <param name="resultProgress">Optional callback noting where the scanned files are read from</param>
+        /// <returns>Set of all detected copy protections, null if no files could be scanned</returns>
+        public static async Task<Dictionary<string, List<string>>?> RunCombinedProtectionScans(string basePath,
             Drive? drive,
             Options options,
-            IProgress<ProtectionProgress>? protectionProgress = null)
+            IProgress<ProtectionProgress>? protectionProgress = null,
+            IProgress<ResultEventArgs>? resultProgress = null)
         {
             // Setup the output protections dictionary
             Dictionary<string, List<string>> protections = [];
 
             // Scan the disc image, if possible
-            if (File.Exists($"{basePath}.iso"))
+            foreach (string imagePath in DiscFileSystem.GetDumpImagePaths(basePath))
             {
-                var imageProtections = await RunProtectionScanOnImage($"{basePath}.iso", options, protectionProgress);
+                var imageProtections = await RunProtectionScanOnImage(imagePath, options, protectionProgress);
                 protections.MergeWith(imageProtections);
-            }
-            else if (File.Exists($"{basePath}.bin"))
-            {
-                var imageProtections = await RunProtectionScanOnImage($"{basePath}.bin", options, protectionProgress);
-                protections.MergeWith(imageProtections);
-            }
-            else if (File.Exists($"{basePath}.cue"))
-            {
-                string[] cueLines = File.ReadAllLines($"{basePath}.cue");
-                foreach (string cueLine in cueLines)
-                {
-                    // Skip all non-FILE lines
-                    if (!cueLine.StartsWith("FILE"))
-                        continue;
-
-                    // Extract the information
-                    var match = Regex.Match(cueLine, @"FILE ""(.*?)"" BINARY");
-                    if (!match.Success || match.Groups.Count == 0)
-                        continue;
-
-                    // Get the track name from the matches
-                    string trackName = match.Groups[1].Value;
-                    trackName = Path.GetFileNameWithoutExtension(trackName);
-                    string baseDir = Path.GetDirectoryName(basePath) ?? string.Empty;
-                    string trackPath = Path.Combine(baseDir, trackName);
-
-                    // Scan the track for protections, if it exists
-                    if (File.Exists($"{trackPath}.bin"))
-                    {
-                        var trackProtections = await RunProtectionScanOnImage($"{trackPath}.bin", options, protectionProgress);
-                        protections.MergeWith(trackProtections);
-                    }
-                }
             }
 
             // Scan the mounted drive path
-            if (drive?.DevicePath is not null)
+            bool scanDumpImageFiles = options.Processing.ProtectionScanning.ScanDumpImageFiles;
+            if (CanScanDrivePath(drive) && !scanDumpImageFiles)
             {
-                var driveProtections = await RunProtectionScanOnPath(drive.DevicePath, options, protectionProgress);
+                resultProgress?.Report(ResultEventArgs.Neutral("Scanning the files of the disc in the drive for protection"));
+                var driveProtections = await RunProtectionScanOnPath(drive!.DevicePath!, options, protectionProgress);
                 protections.MergeWith(driveProtections);
+                return protections;
             }
 
+            // Otherwise scan the files of the dump image, without reading the disc again
+            Dictionary<string, List<string>>? fileProtections;
+            using (var imageFiles = DiscFileSystem.OpenDump(basePath))
+            using (var driveFiles = imageFiles is null ? DiscFileSystem.OpenDrive(drive) : null)
+            {
+                if (imageFiles is not null)
+                {
+                    string reason = scanDumpImageFiles ? "set in options" : "no mounted disc path";
+                    resultProgress?.Report(ResultEventArgs.Neutral($"Scanning the files of the dump image for protection ({reason})"));
+                    fileProtections = await RunProtectionScanOnFiles(imageFiles, imageFiles.SourcePath!, options, protectionProgress);
+                }
+                else if (driveFiles is not null && driveFiles.DirectoryExists(string.Empty))
+                {
+                    // Without readable files in the dump image, the disc in the drive is scanned
+                    resultProgress?.Report(ResultEventArgs.Neutral("Scanning the files of the disc in the drive for protection (no readable dump image)"));
+                    fileProtections = await RunProtectionScanOnFiles(driveFiles, drive!.DevicePath!, options, protectionProgress);
+                }
+                else
+                {
+                    fileProtections = null;
+                }
+            }
+
+            // An empty result is only meaningful if files were scanned
+            if (fileProtections is null)
+                return null;
+
+            protections.MergeWith(fileProtections);
             return protections;
+        }
+
+        /// <summary>
+        /// Run protection scan on the files of a disc
+        /// </summary>
+        /// <param name="files">Files of the disc to scan</param>
+        /// <param name="sourcePath">Path of the disc image or device, put in front of the scanned file names</param>
+        /// <param name="options">Options object that determines what to scan</param>
+        /// <param name="progress">Optional progress callback</param>
+        /// <returns>Set of all detected copy protections, null if the disc has no files</returns>
+        /// <remarks>
+        /// The files of a disc image or device are written to a temporary directory and scanned there,
+        /// without extracting the whole disc: the scanner identifies a file by its first bytes and only
+        /// parses files of known types that it can open as that type, so other files only get the bytes read
+        /// to identify and open them and their length (as a sparse file), which keeps their name, size and
+        /// first bytes for the path checks
+        /// </remarks>
+        public static async Task<Dictionary<string, List<string>>?> RunProtectionScanOnFiles(DiscFileSystem files,
+            string sourcePath,
+            Options options,
+            IProgress<ProtectionProgress>? progress = null)
+        {
+            // Files in a directory are scanned in place
+            if (files is FolderFileSystem folder)
+                return await RunProtectionScanOnPath(folder.Root, options, progress);
+
+            if (files is not ImageFileSystem image)
+                return null;
+
+            string mirrorPath = Path.GetFullPath(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()));
+            return await RunProtectionScanOnFiles(image, sourcePath, options, progress, mirrorPath);
+        }
+
+        /// <summary>
+        /// Run protection scan on the files of a disc image or device in a temporary directory
+        /// </summary>
+        /// <param name="image">Disc image or device to scan</param>
+        /// <param name="sourcePath">Path of the disc image or device, put in front of the scanned file names</param>
+        /// <param name="options">Options object that determines what to scan</param>
+        /// <param name="progress">Optional progress callback</param>
+        /// <param name="mirrorPath">Temporary directory to write the files to, removed afterwards</param>
+        /// <returns>Set of all detected copy protections, null if the disc has no files</returns>
+        internal static async Task<Dictionary<string, List<string>>?> RunProtectionScanOnFiles(ImageFileSystem image,
+            string sourcePath,
+            Options options,
+            IProgress<ProtectionProgress>? progress,
+            string mirrorPath)
+        {
+            var entries = image.GetAllEntries();
+            if (!entries.Exists(entry => !entry.IsDirectory))
+                return null;
+
+            Directory.CreateDirectory(mirrorPath);
+            try
+            {
+#if NET40
+                await Task.Factory.StartNew(() => CreateMirror(image, entries, mirrorPath));
+#else
+                await Task.Run(() => CreateMirror(image, entries, mirrorPath));
+#endif
+                var found = await RunProtectionScanOnPath(mirrorPath, options, progress);
+
+                // Name the scanned files after the disc image or device instead of the temporary directory
+                Dictionary<string, List<string>> protections = [];
+                foreach (var kvp in found)
+                {
+                    protections[$"{sourcePath}{kvp.Key.Substring(mirrorPath.Length)}"] = kvp.Value;
+                }
+
+                return protections;
+            }
+            finally
+            {
+                Directory.Delete(mirrorPath, true);
+            }
+        }
+
+        /// <summary>
+        /// Write the files of a disc to a directory, in full only where the scanner parses them
+        /// </summary>
+        /// <param name="image">Disc image or device to read</param>
+        /// <param name="entries">Files and directories of the disc</param>
+        /// <param name="mirrorPath">Directory to write to</param>
+        /// <returns>Number of files written</returns>
+        internal static int CreateMirror(ImageFileSystem image, List<DiscEntry> entries, string mirrorPath)
+        {
+            int written = 0;
+            var buffer = new byte[1024 * 1024];
+            foreach (var entry in entries)
+            {
+                // Names that cannot be written as a path on this system are skipped
+                if (!IsSafeRelativePath(entry.Path))
+                    continue;
+
+                string target = Path.Combine(mirrorPath, entry.Path.Replace('/', Path.DirectorySeparatorChar));
+                if (entry.IsDirectory)
+                {
+                    Directory.CreateDirectory(target);
+                    continue;
+                }
+
+                Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+                written++;
+                using var output = File.Create(target);
+                using var source = image.OpenEntry(entry);
+
+                // Files that cannot be read, such as interleaved files, keep their length without their contents
+                if (source is null)
+                {
+                    SetSparseLength(output, entry.Length);
+                    continue;
+                }
+
+                // What is read to identify and open the file is written as it is read, so it is read only once
+                var copying = new CopyingStream(source, output);
+
+                // Read the first sector, which holds the bytes the scanner identifies the file by
+                int headerLength = ReadFully(copying, buffer, 2048);
+
+                byte[] magic = new byte[Math.Min(16, headerLength)];
+                Array.Copy(buffer, magic, magic.Length);
+                string extension = Path.GetExtension(entry.Name).ToLowerInvariant().TrimStart('.');
+                bool readInFull = IsReadInFull(magic, extension, copying);
+
+                // Opening a file as its type ignores errors, which stop the scan like those of other files
+                if (copying.Error is not null)
+                    throw new IOException($"{entry.Path} could not be copied", copying.Error);
+
+                // Files the scanner does not read further keep their length without the rest of their contents
+                if (!readInFull)
+                {
+                    SetSparseLength(output, entry.Length);
+                    continue;
+                }
+
+                source.Seek(copying.Copied, SeekOrigin.Begin);
+                int read;
+                while ((read = source.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    output.Write(buffer, 0, read);
+                }
+            }
+
+            return written;
+        }
+
+        /// <summary>
+        /// Set the length of a file without writing the rest of it, which reads as zeros
+        /// </summary>
+        /// <param name="file">File to set the length of</param>
+        /// <param name="length">Length to set</param>
+        private static void SetSparseLength(FileStream file, long length)
+        {
+            // Windows only leaves out the rest of a file that is marked as sparse
+            if (SystemEnvironment.IsWindows())
+                MarkWindowsSparseFile(file);
+
+            file.SetLength(length);
+        }
+
+        /// <summary>
+        /// Determine if the scanner reads a file further than its first bytes
+        /// </summary>
+        /// <param name="magic">First bytes of the file</param>
+        /// <param name="extension">Extension of the file, without the period</param>
+        /// <param name="source">Stream of the file</param>
+        /// <returns>True if the file is of a known type and can be opened as that type, or is a text file, false otherwise</returns>
+        private static bool IsReadInFull(byte[] magic, string extension, Stream source)
+        {
+            var fileType = WrapperFactory.GetFileType(magic, extension);
+            if (fileType == WrapperType.UNKNOWN)
+                return false;
+
+            // Text files are scanned without being opened as a type
+            if (fileType == WrapperType.Textfile)
+                return true;
+
+            // Opening a file takes many small reads, which a drive answers faster in larger pieces
+            source.Seek(0, SeekOrigin.Begin);
+            return WrapperFactory.CreateWrapper(fileType, new BufferedStream(source, 64 * 1024)) is not null;
+        }
+
+        /// <summary>
+        /// Read up to a number of bytes from the start of a stream
+        /// </summary>
+        /// <returns>Number of bytes read</returns>
+        private static int ReadFully(Stream stream, byte[] buffer, int count)
+        {
+            int total = 0;
+            while (total < count)
+            {
+                int read = stream.Read(buffer, total, count - total);
+                if (read <= 0)
+                    break;
+
+                total += read;
+            }
+
+            return total;
+        }
+
+        /// <summary>
+        /// Determine if a relative path from a disc can be written below a directory
+        /// </summary>
+        /// <param name="path">Relative path, separated by '/'</param>
+        /// <returns>True if every name of the path is a valid file name, false otherwise</returns>
+        internal static bool IsSafeRelativePath(string path)
+        {
+            char[] invalid = Path.GetInvalidFileNameChars();
+            foreach (string name in path.Split('/'))
+            {
+                if (name.Length == 0 || name == "." || name == ".." || name.IndexOfAny(invalid) >= 0)
+                    return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -212,17 +440,14 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Format found protections to a deduplicated, ordered string
         /// </summary>
-        /// <param name="protections">Dictionary of file to list of protection mappings</param>
-        /// <param name="drive">Drive object representing the current drive</param>
+        /// <param name="protections">Dictionary of file to list of protection mappings, null if no files were scanned</param>
         /// <returns>Detected protections, if any</returns>
-        public static string? FormatProtections(Dictionary<string, List<string>>? protections, Drive? drive)
+        public static string? FormatProtections(Dictionary<string, List<string>>? protections)
         {
             // If the filtered list is empty in some way, return
             if (protections is null)
                 return "[EXTERNAL SCAN NEEDED]";
-            else if (protections.Count == 0 && drive?.DevicePath is null)
-                return "Mounted disc path missing [EXTERNAL SCAN NEEDED]";
-            else if (protections.Count == 0 && drive?.DevicePath is not null)
+            else if (protections.Count == 0)
                 return "No protections found [OMIT LINE FROM SUBMISSION]";
 
             // Sanitize context-sensitive protections

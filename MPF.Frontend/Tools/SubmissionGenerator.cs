@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
+using MPF.Frontend.FileSystems;
 using MPF.Processors;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Data.Sections;
@@ -111,7 +112,13 @@ namespace MPF.Frontend.Tools
             ProcessPhysicalMediaType(info, mediaType, options.Processing.MediaInformation.AddPlaceholders);
 
             // Extract info based specifically on PhysicalSystem
-            ProcessSystem(info, system, drive, options.Processing.MediaInformation.AddPlaceholders, processor is DiscImageCreator, basePath);
+            // A disc that cannot be read as a directory is read from the dump image, without reading the disc again
+            using (var files = ProtectionTool.CanScanDrivePath(drive)
+                ? DiscFileSystem.OpenDrive(drive)
+                : DiscFileSystem.OpenDump(basePath) ?? DiscFileSystem.OpenDrive(drive))
+            {
+                ProcessSystem(info, system, files, options.Processing.MediaInformation.AddPlaceholders, processor is DiscImageCreator, basePath);
+            }
 
             // Run anti-modchip check, if necessary
             // TODO: Reenable when anti-modchip documentation is updated
@@ -132,15 +139,14 @@ namespace MPF.Frontend.Tools
                     if (options.Processing.ProtectionScanning.ScanForProtection)
                     {
                         resultProgress?.Report(ResultEventArgs.Neutral("Running copy protection scan... this might take a while!"));
+                        protections = await ProtectionTool.RunCombinedProtectionScans(basePath, drive, options, protectionProgress, resultProgress);
 
-                        // Explicitly note missing/invalid device paths
-                        if (drive?.DevicePath is null)
-                            resultProgress?.Report(ResultEventArgs.Success("No mounted device path found, protection outputs may be incomplete!"));
-
-                        protections = await ProtectionTool.RunCombinedProtectionScans(basePath, drive, options, protectionProgress);
+                        // Explicitly note when no files could be scanned
+                        if (protections is null)
+                            resultProgress?.Report(ResultEventArgs.Failure("No files could be read from the dump image or the disc, protection outputs need an external scan!"));
                     }
 
-                    var protectionString = ProtectionTool.FormatProtections(protections, drive);
+                    var protectionString = ProtectionTool.FormatProtections(protections);
 
                     info.DumpMetadata.Protection += protectionString;
                     info.DumpMetadata.FullProtections = ReformatProtectionDictionary(protections);
@@ -856,7 +862,7 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Processes default data based on system type
         /// </summary>
-        private static bool ProcessSystem(SubmissionInfo info, PhysicalSystem? system, Drive? drive, bool addPlaceholders, bool isDiscImageCreator, string basePath)
+        private static bool ProcessSystem(SubmissionInfo info, PhysicalSystem? system, DiscFileSystem? files, bool addPlaceholders, bool isDiscImageCreator, string basePath)
         {
             if (system == PhysicalSystem.AcornArchimedesAndRiscPC)
             {
@@ -879,7 +885,7 @@ namespace MPF.Frontend.Tools
                 info.DiscIdentity.Category ??= DiscCategory.Video;
 
                 // General protection info
-                string? bdProtection = PhysicalTool.GetBluRayProtection(drive);
+                string? bdProtection = PhysicalTool.GetBluRayProtection(files);
                 if (bdProtection is not null && string.IsNullOrEmpty(info.DumpMetadata.Protection))
                     info.DumpMetadata.Protection = bdProtection;
                 else if (bdProtection is not null)
@@ -888,7 +894,7 @@ namespace MPF.Frontend.Tools
                     info.DumpMetadata.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
                 // Determine if BEE is set
-                bool busEncryptionEnabled = PhysicalTool.GetBusEncryptionEnabled(drive);
+                bool busEncryptionEnabled = PhysicalTool.GetBusEncryptionEnabled(files);
                 if (busEncryptionEnabled && !info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.Protection))
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.Protection] = "Bus Encryption Enabled";
                 else if (busEncryptionEnabled && info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.Protection))
@@ -940,11 +946,11 @@ namespace MPF.Frontend.Tools
                 || system == PhysicalSystem.AppleMacintosh)
             {
                 info.DumpMetadata.CommentsSpecialFields[SiteCode.SteamAppID] =
-                        PhysicalTool.GetSteamAppInfo(drive) ?? string.Empty;
+                        PhysicalTool.GetSteamAppInfo(files) ?? string.Empty;
                 info.DumpMetadata.ContentsSpecialFields[SiteCode.SteamSimSidDepotID] =
-                    PhysicalTool.GetSteamSimSidInfo(drive) ?? string.Empty;
+                    PhysicalTool.GetSteamSimSidInfo(files) ?? string.Empty;
                 info.DumpMetadata.ContentsSpecialFields[SiteCode.SteamCsmCsdDepotID] =
-                    PhysicalTool.GetSteamCsmCsdInfo(drive) ?? string.Empty;
+                    PhysicalTool.GetSteamCsmCsdInfo(files) ?? string.Empty;
             }
             else if (system == PhysicalSystem.IncredibleTechnologiesEagle)
             {
@@ -960,19 +966,19 @@ namespace MPF.Frontend.Tools
             }
             else if (system == PhysicalSystem.KonamiPython2)
             {
-                string? kp2Exe = PhysicalTool.GetPlayStationExecutableName(drive);
+                string? kp2Exe = PhysicalTool.GetPlayStationExecutableName(files);
 
                 // TODO: Remove this hack when DIC supports build date output
                 if (isDiscImageCreator)
                     info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", kp2Exe);
 
-                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, kp2Exe, fixTwoDigitYear: true);
+                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, files, PhysicalTool.GetPlayStationSerial);
+                info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(files, kp2Exe, fixTwoDigitYear: true);
 
                 if (CommentFieldExists(info, SiteCode.InternalSerialName, out kp2Exe))
                     info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(kp2Exe)];
 
-                SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
+                SetVersionIfNotExists(info, files, PhysicalTool.GetPlayStation2Version);
             }
             else if (system == PhysicalSystem.KonamiSystemGV)
             {
@@ -1001,16 +1007,16 @@ namespace MPF.Frontend.Tools
                 if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                info.DumpMetadata.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
-                info.DumpMetadata.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(files) ?? string.Empty;
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(files) ?? string.Empty;
             }
             else if (system == PhysicalSystem.MicrosoftXboxSeriesXS)
             {
                 if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                info.DumpMetadata.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
-                info.DumpMetadata.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(files) ?? string.Empty;
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(files) ?? string.Empty;
             }
             else if (system == PhysicalSystem.NamcoSegaNintendoTriforce)
             {
@@ -1069,54 +1075,54 @@ namespace MPF.Frontend.Tools
             }
             else if (system == PhysicalSystem.SonyPlayStation)
             {
-                string? ps1Exe = PhysicalTool.GetPlayStationExecutableName(drive);
+                string? ps1Exe = PhysicalTool.GetPlayStationExecutableName(files);
 
                 // TODO: Remove this hack when DIC supports build date output
                 if (isDiscImageCreator)
                     info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps1Exe, psx: true);
 
-                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, ps1Exe, fixTwoDigitYear: true);
+                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, files, PhysicalTool.GetPlayStationSerial);
+                info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(files, ps1Exe, fixTwoDigitYear: true);
 
                 if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps1Exe))
                     info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(ps1Exe)];
             }
             else if (system == PhysicalSystem.SonyPlayStation2)
             {
-                string? ps2Exe = PhysicalTool.GetPlayStationExecutableName(drive);
+                string? ps2Exe = PhysicalTool.GetPlayStationExecutableName(files);
 
                 // TODO: Remove this hack when DIC supports build date output
                 if (isDiscImageCreator)
                     info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps2Exe);
 
-                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, ps2Exe, fixTwoDigitYear: true);
+                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, files, PhysicalTool.GetPlayStationSerial);
+                info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(files, ps2Exe, fixTwoDigitYear: true);
 
                 if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps2Exe))
                     info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(ps2Exe)];
 
-                SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
+                SetVersionIfNotExists(info, files, PhysicalTool.GetPlayStation2Version);
             }
             else if (system == PhysicalSystem.SonyPlayStation3)
             {
                 info.DiscIdentifiers.DiscKey ??= addPlaceholders ? RequiredIfCFW : string.Empty;
                 info.DiscIdentifiers.DiscID ??= addPlaceholders ? RequiredIfCFW : string.Empty;
 
-                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation3Serial);
-                SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation3Version);
-                SetContentFieldIfNotExists(info, SiteCode.Patches, drive, FormatPlayStation3FirmwareVersion);
+                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, files, PhysicalTool.GetPlayStation3Serial);
+                SetVersionIfNotExists(info, files, PhysicalTool.GetPlayStation3Version);
+                SetContentFieldIfNotExists(info, SiteCode.Patches, files, FormatPlayStation3FirmwareVersion);
             }
             else if (system == PhysicalSystem.SonyPlayStation4)
             {
-                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation4Serial);
-                SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation4Version);
-                SetContentFieldIfNotExists(info, SiteCode.Games, drive, PhysicalTool.GetPlayStation4PkgInfo);
+                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, files, PhysicalTool.GetPlayStation4Serial);
+                SetVersionIfNotExists(info, files, PhysicalTool.GetPlayStation4Version);
+                SetContentFieldIfNotExists(info, SiteCode.Games, files, PhysicalTool.GetPlayStation4PkgInfo);
             }
             else if (system == PhysicalSystem.SonyPlayStation5)
             {
-                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation5Serial);
-                SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation5Version);
-                SetContentFieldIfNotExists(info, SiteCode.Games, drive, PhysicalTool.GetPlayStation5PkgInfo);
+                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, files, PhysicalTool.GetPlayStation5Serial);
+                SetVersionIfNotExists(info, files, PhysicalTool.GetPlayStation5Version);
+                SetContentFieldIfNotExists(info, SiteCode.Games, files, PhysicalTool.GetPlayStation5PkgInfo);
             }
             else if (system == PhysicalSystem.TomyKissSite)
             {
@@ -1134,9 +1140,9 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get a preformatted string for the PS3 firmware version, if possible
         /// </summary>
-        private static string? FormatPlayStation3FirmwareVersion(Drive? drive)
+        private static string? FormatPlayStation3FirmwareVersion(DiscFileSystem? files)
         {
-            string? firmwareVersion = PhysicalTool.GetPlayStation3FirmwareVersion(drive);
+            string? firmwareVersion = PhysicalTool.GetPlayStation3FirmwareVersion(files);
             if (string.IsNullOrEmpty(firmwareVersion))
                 return string.Empty;
 
@@ -1165,14 +1171,14 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Set a comment field if it doesn't already have a value
         /// </summary>
-        private static void SetCommentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive, Func<Drive?, string?> valueFunc)
+        private static void SetCommentFieldIfNotExists(SubmissionInfo info, SiteCode key, DiscFileSystem? files, Func<DiscFileSystem?, string?> valueFunc)
         {
             // If the field has a valid value, skip
             if (CommentFieldExists(info, key, out _))
                 return;
 
             // Set the value
-            string? value = valueFunc(drive);
+            string? value = valueFunc(files);
             if (value is not null)
                 info.DumpMetadata.CommentsSpecialFields[key] = value;
         }
@@ -1199,14 +1205,14 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Set a content field if it doesn't already have a value
         /// </summary>
-        private static void SetContentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive, Func<Drive?, string?> valueFunc)
+        private static void SetContentFieldIfNotExists(SubmissionInfo info, SiteCode key, DiscFileSystem? files, Func<DiscFileSystem?, string?> valueFunc)
         {
             // If the field has a valid value, skip
             if (ContentFieldExists(info, key, out _))
                 return;
 
             // Set the value
-            string? value = valueFunc(drive);
+            string? value = valueFunc(files);
             if (value is not null)
                 info.DumpMetadata.ContentsSpecialFields![key] = value;
         }
@@ -1214,14 +1220,14 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Set the version if it doesn't already have a value
         /// </summary>
-        private static void SetVersionIfNotExists(SubmissionInfo info, Drive? drive, Func<Drive?, string?> valueFunc)
+        private static void SetVersionIfNotExists(SubmissionInfo info, DiscFileSystem? files, Func<DiscFileSystem?, string?> valueFunc)
         {
             // If the version already exists, skip
             if (!string.IsNullOrEmpty(info.DiscIdentifiers.Version))
                 return;
 
             // Set the version
-            info.DiscIdentifiers.Version = valueFunc(drive) ?? string.Empty;
+            info.DiscIdentifiers.Version = valueFunc(files) ?? string.Empty;
         }
 
         /// <summary>

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
+using MPF.Frontend.FileSystems;
 using SabreTools.IO.Extensions;
 
 namespace MPF.Frontend
@@ -8,6 +11,16 @@ namespace MPF.Frontend
     public partial class Drive
     {
         #region Fields
+
+        /// <summary>
+        /// Flags to open a device on Linux for reading without waiting for a disc (O_RDONLY | O_NONBLOCK | O_CLOEXEC)
+        /// </summary>
+        private const int UnixOpenReadNonBlocking = 0x0000 | 0x0800 | 0x80000;
+
+        /// <summary>
+        /// Advice that a file on Linux is read in random order (POSIX_FADV_RANDOM)
+        /// </summary>
+        private const int UnixAdviceRandom = 1;
 
         /// <summary>
         /// sysfs block-device name prefixes that the fixed-drive enumerator does not surface:
@@ -69,16 +82,33 @@ namespace MPF.Frontend
                 if (!existingNames.Add(devicePath))
                     continue;
 
-                // Force marking the drive as active if it's found
+                // Mark the drive as active unless udev saw no disc in it, like a drive that is not ready on Windows
                 var drive = Create(Frontend.InternalDriveType.Optical, devicePath);
                 if (drive is not null)
                 {
-                    drive.MarkedActive = true;
+                    drive.MarkedActive = MayContainUnixDisc(devicePath);
+                    drive.PopulateFromUnixDevice(devicePath);
                     extra.Add(drive);
                 }
             }
 
             return [.. drives, .. extra];
+        }
+
+        /// <summary>
+        /// Populate the file system and size of the disc in an optical drive on Linux, as Windows reports them
+        /// </summary>
+        /// <param name="devicePath">Block or SCSI generic device path of the drive</param>
+        /// <remarks>DriveInfo does not report them, since the disc is not mounted</remarks>
+        private void PopulateFromUnixDevice(string devicePath)
+        {
+            // This should only run on Linux
+            if (!SystemEnvironment.IsLinux())
+                return;
+
+            using var files = ImageFileSystem.Create(devicePath);
+            DriveFormat = GetWindowsDriveFormat(files?.FileSystemName);
+            TotalSize = files?.VolumeSize ?? default;
         }
 
         /// <summary>
@@ -285,6 +315,96 @@ namespace MPF.Frontend
 
             return 0;
         }
+
+        /// <summary>
+        /// Get the block device of a SCSI generic device on Linux, since only block devices can be read by sector
+        /// </summary>
+        /// <returns>Path of the block device, the given path if it is no SCSI generic device</returns>
+        internal static string GetUnixBlockDevice(string path)
+        {
+            string name = Path.GetFileName(path);
+            if (!name.StartsWith("sg", StringComparison.Ordinal))
+                return path;
+
+            string blockRoot = Path.Combine(Path.Combine(Path.Combine("/sys/class/scsi_generic", name), "device"), "block");
+            string[] blockDevices = IOExtensions.SafeGetFileSystemEntries(blockRoot);
+            if (blockDevices.Length == 0)
+                return path;
+
+            return Path.Combine("/dev", Path.GetFileName(blockDevices[0]));
+        }
+
+        /// <summary>
+        /// Determine if an optical drive on Linux may contain a disc
+        /// </summary>
+        /// <param name="devicePath">Block or SCSI generic device path of the drive</param>
+        /// <returns>False if udev saw no disc in the drive, true otherwise</returns>
+        private static bool MayContainUnixDisc(string devicePath)
+            => ReadUnixDiscPresence(GetUnixBlockDevice(devicePath), "/sys/class/block", "/run/udev/data") != false;
+
+        /// <summary>
+        /// Read whether udev saw a disc in an optical drive
+        /// </summary>
+        /// <param name="devicePath">Device path of the drive (e.g. "/dev/sr0")</param>
+        /// <param name="sysBlockRoot">Root of the sysfs block devices (normally "/sys/class/block")</param>
+        /// <param name="udevDataRoot">Root of the udev database (normally "/run/udev/data")</param>
+        /// <returns>True if udev saw a disc, false if it saw none, null if udev did not check the drive</returns>
+        /// <remarks>
+        /// Opening the device of a drive with an open tray makes the kernel close the tray. udev
+        /// checks an optical drive when a disc is inserted or removed and sets ID_CDROM=1 in the
+        /// entry of the drive, and ID_CDROM_MEDIA=1 while a disc is in it. Reading the entry does
+        /// not access the drive
+        /// </remarks>
+        internal static bool? ReadUnixDiscPresence(string devicePath, string sysBlockRoot, string udevDataRoot)
+        {
+            try
+            {
+                // The entry is named after the major and minor number of the device (e.g. "b11:0")
+                string numberPath = Path.Combine(Path.Combine(sysBlockRoot, Path.GetFileName(devicePath)), "dev");
+                string[] entry = File.ReadAllLines(Path.Combine(udevDataRoot, $"b{File.ReadAllText(numberPath).Trim()}"));
+                if (Array.IndexOf(entry, "E:ID_CDROM=1") < 0)
+                    return null;
+
+                return Array.IndexOf(entry, "E:ID_CDROM_MEDIA=1") >= 0;
+            }
+            catch
+            {
+                // Without a udev entry for the drive, nothing is known about the disc
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Open the block device of an optical drive on Linux for reading
+        /// </summary>
+        /// <param name="devicePath">Block device path of the drive (e.g. "/dev/sr0")</param>
+        /// <returns>Handle of the device</returns>
+        /// <remarks>
+        /// Opening the device of a drive with an open tray makes the kernel close the tray, also
+        /// in the seconds before udev noticed that the tray was opened. With O_NONBLOCK, the tray
+        /// stays open and reads fail while there is no disc
+        /// </remarks>
+        internal static SafeFileHandle OpenUnixDevice(string devicePath)
+        {
+            int descriptor = open(devicePath, UnixOpenReadNonBlocking);
+            if (descriptor < 0)
+                throw new IOException($"Could not open {devicePath}, error {Marshal.GetLastWin32Error()}");
+
+            // Random access avoids reading ahead into sectors that are slow or impossible to read
+            var handle = new SafeFileHandle(new IntPtr(descriptor), true);
+            posix_fadvise(descriptor, 0, 0, UnixAdviceRandom);
+            return handle;
+        }
+
+        #endregion
+
+        #region Native Interop
+
+        [DllImport("libc", SetLastError = true)]
+        private static extern int open(string pathname, int flags);
+
+        [DllImport("libc")]
+        private static extern int posix_fadvise(int fd, long offset, long len, int advice);
 
         #endregion
     }
