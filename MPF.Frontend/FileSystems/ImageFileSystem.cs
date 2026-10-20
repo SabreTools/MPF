@@ -108,6 +108,32 @@ namespace MPF.Frontend.FileSystems
         }
 
         /// <summary>
+        /// Open a device that can only be read in whole blocks
+        /// </summary>
+        /// <param name="devicePath">Path to the device</param>
+        /// <param name="length">Length of the device in bytes</param>
+        /// <param name="blockSize">Number of bytes in a block of the device, 2352 for a CD with raw sectors</param>
+        /// <returns>File system on success, null if the device cannot be opened</returns>
+        internal static ImageFileSystem? Create(string devicePath, long length, int blockSize)
+        {
+            Stream? stream = null;
+            try
+            {
+                // Without a buffer of its own, every read of the file stream is one read of whole blocks
+                var device = new FileStream(devicePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1);
+                stream = new VolumeStream(device, length, blockSize);
+                var deviceFileSystem = Create(stream);
+                deviceFileSystem.SourcePath = devicePath;
+                return deviceFileSystem;
+            }
+            catch
+            {
+                stream?.Dispose();
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Open a disc image from a stream
         /// </summary>
         /// <param name="stream">Seekable stream of a disc image (2048 or raw 2352-byte sectors), disposed with the file system</param>

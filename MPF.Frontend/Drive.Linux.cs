@@ -112,21 +112,6 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Get the name Windows reports for the file system of a disc
-        /// </summary>
-        /// <param name="fileSystemName">Name of the file system read from the disc (e.g. "ISO 9660")</param>
-        /// <returns>"CDFS" for ISO 9660, "UDF" for UDF, empty otherwise</returns>
-        internal static string GetWindowsDriveFormat(string? fileSystemName)
-        {
-            if (fileSystemName == "ISO 9660")
-                return "CDFS";
-            else if (fileSystemName == "UDF")
-                return "UDF";
-
-            return string.Empty;
-        }
-
-        /// <summary>
         /// Append Linux floppy drives that DriveInfo did not surface. Two kinds are covered:
         /// legacy on-board floppy nodes (/dev/fd0, /dev/fd1, ...) and USB floppy drives, which
         /// the kernel exposes as ordinary SCSI disks (/dev/sd*). Neither is ever a mount point,

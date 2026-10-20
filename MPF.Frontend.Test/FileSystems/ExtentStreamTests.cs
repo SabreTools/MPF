@@ -65,5 +65,51 @@ namespace MPF.Frontend.Test.FileSystems
             Assert.Equal(2, stream.Read(actual, 0, 8));
             Assert.Equal(new byte[] { 5, 6 }, new[] { actual[0], actual[1] });
         }
+
+        [Fact]
+        public void VolumeStream_BlockSize_ReadsWholeBlocksOnce()
+        {
+            var device = new WholeBlockStream([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 4);
+            var stream = new VolumeStream(device, 10, 4);
+
+            var actual = new byte[4];
+            stream.Seek(5, SeekOrigin.Begin);
+            Assert.Equal(4, stream.Read(actual, 0, 4));
+            Assert.Equal(new byte[] { 6, 7, 8, 9 }, actual);
+            Assert.Equal(1, stream.Read(actual, 0, 4));
+            Assert.Equal(10, actual[0]);
+            Assert.Equal(0, stream.Read(actual, 0, 4));
+
+            stream.Seek(4, SeekOrigin.Begin);
+            Assert.Equal(4, stream.Read(actual, 0, 4));
+            Assert.Equal(new byte[] { 5, 6, 7, 8 }, actual);
+            Assert.Equal(2, device.Reads);
+        }
+
+        [Fact]
+        public void VolumeStream_BlockSize_EndsWithDevice()
+        {
+            var device = new WholeBlockStream([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 4);
+            var stream = new VolumeStream(device, 12, 4);
+
+            var actual = new byte[4];
+            stream.Seek(8, SeekOrigin.Begin);
+            Assert.Equal(2, stream.Read(actual, 0, 4));
+            Assert.Equal(new byte[] { 9, 10 }, new[] { actual[0], actual[1] });
+        }
+
+        [Fact]
+        public void VolumeStream_BlockSize_KeepsLimitedBlocks()
+        {
+            // 65 blocks of 2 bytes, one more than are kept
+            var device = new WholeBlockStream(new byte[130], 2);
+            var stream = new VolumeStream(device, 130, 2);
+
+            var actual = new byte[130];
+            Assert.Equal(130, stream.Read(actual, 0, 130));
+            stream.Seek(0, SeekOrigin.Begin);
+            Assert.Equal(2, stream.Read(actual, 0, 2));
+            Assert.Equal(66, device.Reads);
+        }
     }
 }

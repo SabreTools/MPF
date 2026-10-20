@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using MPF.Frontend.FileSystems;
 using SabreTools.IO.Extensions;
 
 namespace MPF.Frontend
@@ -76,6 +77,7 @@ namespace MPF.Frontend
                 var d = Create(device.InternalDriveType, device.DevicePath!);
                 if (d is not null)
                 {
+                    d.DriveFormat = device.DriveFormat;
                     d.TotalSize = device.TotalSize;
                     d.MarkedActive = device.InternalDriveType != Frontend.InternalDriveType.Removable
                         || device.TotalSize > 0;
@@ -121,11 +123,41 @@ namespace MPF.Frontend
                     continue;
 
                 var device = ParseMacOSDiskutilInfo(info, node);
-                if (device is not null)
-                    result.Add(device);
+                if (device is null)
+                    continue;
+
+                if (device.InternalDriveType == Frontend.InternalDriveType.Optical)
+                    device.PopulateFromMacOSDevice(info);
+
+                result.Add(device);
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Populate the file system and size of the disc in an optical drive on macOS, as Windows reports them
+        /// </summary>
+        /// <param name="diskutilInfoOutput">Raw "diskutil info" output for the drive</param>
+        /// <remarks>
+        /// The disc is read from the raw device of the whole disc, which belongs to the user logged in at the
+        /// console, unlike the devices of its tracks. The block device of the whole disc cannot be opened when the
+        /// disc has audio tracks, as macOS mounts them on it. The raw device can only be read in whole blocks, which
+        /// are raw 2352-byte sectors on a CD.
+        /// </remarks>
+        private void PopulateFromMacOSDevice(string diskutilInfoOutput)
+        {
+            var fields = ParseDiskutilFields(diskutilInfoOutput);
+            long size = fields.TryGetValue("Disk Size", out var diskSize)
+                ? ParseDiskutilByteSize(diskSize)
+                : 0;
+            int blockSize = fields.TryGetValue("Device Block Size", out var deviceBlockSize)
+                ? ParseDiskutilBlockSize(deviceBlockSize)
+                : 0;
+
+            using var files = ImageFileSystem.Create($"/dev/r{DevicePath}", size, blockSize);
+            DriveFormat = GetWindowsDriveFormat(files?.FileSystemName);
+            TotalSize = files?.VolumeSize ?? default;
         }
 
         /// <summary>
@@ -283,6 +315,24 @@ namespace MPF.Frontend
             }
 
             return 0;
+        }
+
+        /// <summary>
+        /// Parse the number of bytes in a block from a diskutil "Device Block Size" value, which formats it as
+        /// "2048 Bytes"
+        /// </summary>
+        /// <param name="blockSizeValue">The "Device Block Size" field value</param>
+        /// <returns>The block size in bytes, or 0 when it cannot be determined</returns>
+        internal static int ParseDiskutilBlockSize(string blockSizeValue)
+        {
+            if (string.IsNullOrEmpty(blockSizeValue))
+                return 0;
+
+            string number = blockSizeValue.Trim();
+            if (number.EndsWith("Bytes", StringComparison.OrdinalIgnoreCase))
+                number = number.Substring(0, number.Length - "Bytes".Length).Trim();
+
+            return int.TryParse(number, out int bytes) && bytes > 0 ? bytes : 0;
         }
 
         /// <summary>

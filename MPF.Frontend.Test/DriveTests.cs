@@ -582,5 +582,20 @@ namespace MPF.Frontend.Test
         }
 
         #endregion
+
+        #region ParseDiskutilBlockSize
+
+        [Theory]
+        [InlineData("2352 Bytes", 2352)]
+        [InlineData("2048 Bytes", 2048)]
+        [InlineData("512 Bytes", 512)]
+        [InlineData("", 0)]
+        [InlineData("no size information", 0)]
+        public void ParseDiskutilBlockSize_ExtractsBytes(string value, int expected)
+        {
+            Assert.Equal(expected, Drive.ParseDiskutilBlockSize(value));
+        }
+
+        #endregion
     }
 }
