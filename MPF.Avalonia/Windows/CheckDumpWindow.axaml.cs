@@ -55,15 +55,6 @@ namespace MPF.Avalonia.Windows
         /// <returns>Dialog open result</returns>
         private bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
         {
-            if (options?.Processing?.ShowDiscEjectReminder == true)
-            {
-                MessageBoxWindow.ShowAsync(this,
-                    StringResource("EjectTitleString", "Eject"),
-                    StringResource("EjectMessageString", "It is now safe to eject the disc"),
-                    1,
-                    true);
-            }
-
             // TODO: Determine the real difference between these paths
             if (Dispatcher.UIThread.CheckAccess())
             {

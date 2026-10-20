@@ -18,6 +18,7 @@
 - Make non-zero return code a little more verbose
 - Add a script and README section for the drive capability on Linux (gmipf)
 - Set Dreamdump to be executable in bash script, add warning to PS
+- Remove eject reminder from Avalonia Check
 
 ### 3.11.1 (2026-10-17)
 
