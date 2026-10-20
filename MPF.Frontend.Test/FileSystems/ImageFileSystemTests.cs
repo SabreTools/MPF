@@ -36,6 +36,28 @@ namespace MPF.Frontend.Test.FileSystems
             Assert.Equal(expected, fileSystem.VolumeSize);
         }
 
+        [Theory]
+        [InlineData("Bridge", 512, "UDF", 301L * 2048)]
+        [InlineData("Bridge", 2048, "UDF", 301L * 2048)]
+        [InlineData("Primary", 2048, "ISO 9660", 451L * 2048)]
+        [InlineData("Raw", 2352, "UDF", 301L * 2048)]
+        public void Create_WholeBlockDevice_Variant(string variant, int blockSize, string expectedName, long expectedSize)
+        {
+            byte[] image = Load(variant);
+            var device = new VolumeStream(new WholeBlockStream(image, blockSize), image.Length, blockSize);
+
+            using var fileSystem = ImageFileSystem.Create(device);
+            Assert.Equal(expectedName, fileSystem.FileSystemName);
+            Assert.Equal(expectedSize, fileSystem.VolumeSize);
+            Assert.Equal("TESTDISC", fileSystem.VolumeLabel);
+        }
+
+        [Fact]
+        public void Create_MissingWholeBlockDevice_Null()
+        {
+            Assert.Null(ImageFileSystem.Create("/dev/mpf-test-missing-device", 2048 * 2048, 2048));
+        }
+
         [Fact]
         public void Create_NoFileSystem_FirstBytesReadable()
         {
