@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using MPF.Frontend.FileSystems;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SabreTools.Hashing;
@@ -19,33 +20,27 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the last modified date for a file from a physical disc, if possible
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <param name="filePath">Relative file path</param>
         /// <returns>Output last modified date in "yyyy-mm-dd" format if possible, null on error</returns>
-        public static string? GetFileDate(Drive? drive, string? filePath, bool fixTwoDigitYear = false)
+        public static string? GetFileDate(DiscFileSystem? files, string? filePath, bool fixTwoDigitYear = false)
         {
-            // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, we can't do this part
+            if (files is null)
                 return null;
 
             // If the executable name is invalid, we can't do this part
             if (string.IsNullOrEmpty(filePath))
                 return null;
 
-            // Now that we have the EXE name, try to get the fileinfo for it
-            string exePath = Path.Combine(drive.DevicePath, filePath);
-            if (!File.Exists(exePath))
-                return null;
-
             try
             {
                 // Get the last modified time
-                var fi = new FileInfo(exePath);
-                var lastModified = fi.LastWriteTimeUtc;
+                var lastWriteTimeUtc = files.GetLastWriteTimeUtc(filePath!);
+                if (lastWriteTimeUtc is null)
+                    return null;
+
+                var lastModified = lastWriteTimeUtc.Value;
                 int year = lastModified.Year;
                 int month = lastModified.Month;
                 int day = lastModified.Day;
@@ -66,42 +61,13 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
-        /// Get the first numBytes bytes from a disc drive
+        /// Get the first numBytes bytes from a disc
         /// </summary>
-        /// <param name="drive">Drive to get sector from</param>
-        /// <param name="numBytes">Number of bytes to read from drive, maximum of one sector (2048 bytes)</param>
+        /// <param name="files">Files of the disc to get the first sector from</param>
+        /// <param name="numBytes">Number of bytes to read from the disc, maximum of one sector (2048 bytes)</param>
         /// <returns>Byte array of first sector of data, null on error</returns>
-        public static byte[]? GetFirstBytes(Drive? drive, int numBytes)
-        {
-            if (drive is null || drive.Letter is null || drive.Letter == '\0')
-                return null;
-
-            // Must read between 1 and 2048 bytes
-            if (numBytes < 1)
-                return null;
-            else if (numBytes > 2048)
-                numBytes = 2048;
-
-            string drivePath = $"\\\\.\\{drive.Letter}:";
-            var firstSector = new byte[numBytes];
-            try
-            {
-                // Open the drive as a raw device
-                using var driveStream = new FileStream(drivePath, FileMode.Open, FileAccess.Read);
-
-                // Read the first sector
-                int bytesRead = driveStream.Read(firstSector, 0, numBytes);
-                if (bytesRead < numBytes)
-                    return null;
-            }
-            catch
-            {
-                // Absorb the exception
-                return null;
-            }
-
-            return firstSector;
-        }
+        public static byte[]? GetFirstBytes(DiscFileSystem? files, int numBytes)
+            => files?.ReadFirstBytes(numBytes);
 
         #endregion
 
@@ -110,27 +76,21 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get Blu-ray protection information
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Formatted string representing the protection on success, null otherwise</returns>
-        public static string? GetBluRayProtection(Drive? drive)
+        public static string? GetBluRayProtection(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't get information
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, we can't get information
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, we can't get information
+            if (files is null)
                 return null;
 
             // Generate unit key file hash
             string? unitKeyFileHash = null;
-#if NET20 || NET35
-            string unitKeyPath = Path.Combine(Path.Combine(drive.DevicePath, "AACS"), "Unit_Key_RO.inf ");
-#else
-            string unitKeyPath = Path.Combine(drive.DevicePath, "AACS", "Unit_Key_RO.inf ");
-#endif
-            if (File.Exists(unitKeyPath))
-                unitKeyFileHash = HashTool.GetFileHash(unitKeyPath, HashType.SHA1)?.ToUpperInvariant();
+            using (var unitKeyFile = files.OpenFile("AACS/Unit_Key_RO.inf "))
+            {
+                if (unitKeyFile is not null)
+                    unitKeyFileHash = HashTool.GetStreamHash(unitKeyFile, HashType.SHA1)?.ToUpperInvariant();
+            }
 
             // Generate the output strings
             var sb = new StringBuilder();
@@ -146,39 +106,30 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get if the Bus Encryption Enabled (BEE) flag is set in a path
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Bus encryption enabled status if possible, false otherwise</returns>
-        public static bool GetBusEncryptionEnabled(Drive? drive)
+        public static bool GetBusEncryptionEnabled(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't get BEE flag
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return false;
-
-            // If the folder no longer exists, we can't get BEE flag
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, we can't get BEE flag
+            if (files is null)
                 return false;
 
             // Get the two possible file paths
-#if NET20 || NET35
-            string content000 = Path.Combine(Path.Combine(drive.DevicePath, "AACS"), "Content000.cer");
-            string content001 = Path.Combine(Path.Combine(drive.DevicePath, "AACS"), "Content001.cer");
-#else
-            string content000 = Path.Combine(drive.DevicePath, "AACS", "Content000.cer");
-            string content001 = Path.Combine(drive.DevicePath, "AACS", "Content001.cer");
-#endif
+            string content000 = "AACS/Content000.cer";
+            string content001 = "AACS/Content001.cer";
 
             try
             {
                 // Check the required files
-                if (File.Exists(content000) && new FileInfo(content000).Length > 1)
+                if (files.GetFileLength(content000) > 1)
                 {
-                    using var fs = File.OpenRead(content000);
+                    using var fs = files.OpenFile(content000)!;
                     _ = fs.ReadByte(); // Skip the first byte
                     return fs.ReadByte() > 127;
                 }
-                else if (File.Exists(content001) && new FileInfo(content001).Length > 1)
+                else if (files.GetFileLength(content001) > 1)
                 {
-                    using var fs = File.OpenRead(content001);
+                    using var fs = files.OpenFile(content001)!;
                     _ = fs.ReadByte(); // Skip the first byte
                     return fs.ReadByte() > 127;
                 }
@@ -200,45 +151,29 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get info for discs containing Steam2 (sis/sim/sid) depots
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Steam2 information on success, null otherwise</returns>
-        public static string? GetSteamSimSidInfo(Drive? drive)
+        public static string? GetSteamSimSidInfo(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't get any sis files
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, we can't get any information
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, we can't get any sis files
+            if (files is null)
                 return null;
 
             try
             {
                 // ? needed due to note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
-#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
-                var options = new EnumerationOptions
-                {
-                    MatchCasing = MatchCasing.CaseInsensitive,
-                    RecurseSubdirectories = true,
-                };
-                string[] sisPaths = Directory.GetFiles(drive.DevicePath, "?*.sis", options);
-#else
-                string[] sisPaths = Directory.GetFiles(drive.DevicePath, "?*.sis", SearchOption.AllDirectories);
-#endif
+                string[] sisPaths = files.GetFiles(string.Empty, "?*.sis", recursive: true);
 
                 var steamDepotIdList = new List<long>();
                 foreach (string sis in sisPaths)
                 {
-                    if (!File.Exists(sis))
-                        continue;
-
                     // Arbitrary filesize cap, a disc would need over 100x the normal amount of depots to go over this
-                    long sisSize = new FileInfo(sis).Length;
-                    if (sisSize > 10_000)
+                    long sisSize = files.GetFileLength(sis);
+                    if (sisSize < 0 || sisSize > 10_000)
                         continue;
 
                     // Read the sku sis file
-                    using var fileStream = new FileStream(sis, FileMode.Open, FileAccess.Read);
+                    using var fileStream = files.OpenFile(sis);
                     var skuSisDeserializer = new SabreTools.Serialization.Readers.SkuSis();
                     var skuSis = skuSisDeserializer.Deserialize(fileStream);
                     if (skuSis?.Sku is null)
@@ -272,45 +207,29 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get info for discs containing Steam3 (sis/csm/csd) depots
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Steam Csm/Csd information on success, null otherwise</returns>
-        public static string? GetSteamCsmCsdInfo(Drive? drive)
+        public static string? GetSteamCsmCsdInfo(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't get exe name
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, we can't get any information
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, we can't get exe name
+            if (files is null)
                 return null;
 
             try
             {
                 // ? needed due to note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
-#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
-                var options = new EnumerationOptions
-                {
-                    MatchCasing = MatchCasing.CaseInsensitive,
-                    RecurseSubdirectories = true,
-                };
-                string[] sisPaths = Directory.GetFiles(drive.DevicePath, "?*.sis", options);
-#else
-                string[] sisPaths = Directory.GetFiles(drive.DevicePath, "?*.sis", SearchOption.AllDirectories);
-#endif
+                string[] sisPaths = files.GetFiles(string.Empty, "?*.sis", recursive: true);
 
                 var steamDepotIdDict = new SortedDictionary<long, long>();
                 foreach (string sis in sisPaths)
                 {
-                    if (!File.Exists(sis))
-                        continue;
-
                     // Arbitrary filesize cap, a disc would need over 100x the normal amount of depots to go over this.
-                    long sisSize = new FileInfo(sis).Length;
-                    if (sisSize > 10_000)
+                    long sisSize = files.GetFileLength(sis);
+                    if (sisSize < 0 || sisSize > 10_000)
                         continue;
 
                     // Read the sku sis file
-                    using var fileStream = new FileStream(sis, FileMode.Open, FileAccess.Read);
+                    using var fileStream = files.OpenFile(sis);
                     var skuSisDeserializer = new SabreTools.Serialization.Readers.SkuSis();
                     var skuSis = skuSisDeserializer.Deserialize(fileStream);
                     if (skuSis?.Sku is null)
@@ -353,48 +272,30 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get info for discs containing Steam2 (sis/sim/sid) depots
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Steam2 information on success, null otherwise</returns>
-        public static string? GetSteamAppInfo(Drive? drive)
+        public static string? GetSteamAppInfo(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't get exe name
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, we can't get any information
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, we can't get exe name
+            if (files is null)
                 return null;
 
             try
             {
                 // ? needed due to note in note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
-#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
-                var options = new EnumerationOptions
-                {
-                    MatchCasing = MatchCasing.CaseInsensitive,
-                    RecurseSubdirectories = true,
-                };
-                string[] sisPaths = Directory.GetFiles(drive.DevicePath, "?*.sis", options);
-#else
-                string[] sisPaths = Directory.GetFiles(drive.DevicePath, "?*.sis", SearchOption.AllDirectories);
-#endif
+                string[] sisPaths = files.GetFiles(string.Empty, "?*.sis", recursive: true);
 
                 // Looping needed in case i.e. this is a coverdisc with multiple steam game installers on it.
                 var steamAppIdList = new List<long>();
                 foreach (string sis in sisPaths)
                 {
-                    if (!File.Exists(sis))
-                        continue;
-
-                    string filename = Path.GetFileName(sis);
-
                     // Arbitrary filesize cap, a disc would need over 100x the normal amount of depots to go over this.
-                    long sisSize = new FileInfo(sis).Length;
-                    if (sisSize > 10_000)
+                    long sisSize = files.GetFileLength(sis);
+                    if (sisSize < 0 || sisSize > 10_000)
                         continue;
 
                     // Read the sku sis file
-                    using var fileStream = new FileStream(sis, FileMode.Open, FileAccess.Read);
+                    using var fileStream = files.OpenFile(sis);
                     var skuSisDeserializer = new SabreTools.Serialization.Readers.SkuSis();
                     var skuSis = skuSisDeserializer.Deserialize(fileStream);
                     if (skuSis?.Sku is null)
@@ -428,26 +329,19 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the EXE name from a PlayStation disc, if possible
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Executable name on success, null otherwise</returns>
-        public static string? GetPlayStationExecutableName(Drive? drive)
+        public static string? GetPlayStationExecutableName(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't get exe name
-            if (string.IsNullOrEmpty(drive?.DevicePath))
+            // If there are no disc files, we can't get exe name
+            if (files is null)
                 return null;
-
-            // If the folder no longer exists, we can't get exe name
-            if (!Directory.Exists(drive!.DevicePath))
-                return null;
-
-            // Get the two paths that we will need to check
-            string psxExePath = Path.Combine(drive.DevicePath, "PSX.EXE");
-            string systemCnfPath = Path.Combine(drive.DevicePath, "SYSTEM.CNF");
 
             try
             {
                 // Read the CNF file as an INI file
-                var systemCnf = new IniFile(systemCnfPath);
+                using var systemCnfFile = files.OpenFile("SYSTEM.CNF") ?? throw new FileNotFoundException();
+                var systemCnf = new IniFile(systemCnfFile);
                 string? bootValue = string.Empty;
 
                 // PlayStation uses "BOOT" as the key
@@ -476,7 +370,7 @@ namespace MPF.Frontend.Tools
             }
 
             // If the SYSTEM.CNF value can't be found, try PSX.EXE
-            if (File.Exists(psxExePath))
+            if (files.FileExists("PSX.EXE"))
                 return "PSX.EXE";
 
             // If neither can be found, we return null
@@ -486,12 +380,12 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the serial from a PlayStation disc, if possible
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Serial on success, null otherwise</returns>
-        public static string? GetPlayStationSerial(Drive? drive)
+        public static string? GetPlayStationSerial(DiscFileSystem? files)
         {
             // Try to get the executable name
-            string? exeName = GetPlayStationExecutableName(drive);
+            string? exeName = GetPlayStationExecutableName(files);
             if (string.IsNullOrEmpty(exeName))
                 return null;
 
@@ -514,25 +408,22 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the version from a PlayStation 2 disc, if possible
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Game version if possible, null on error</returns>
-        public static string? GetPlayStation2Version(Drive? drive)
+        public static string? GetPlayStation2Version(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.DevicePath))
+            // If there are no disc files, we can't do this part
+            if (files is null)
                 return null;
-
-            // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.DevicePath))
-                return null;
-
-            // Get the SYSTEM.CNF path to check
-            string systemCnfPath = Path.Combine(drive.DevicePath, "SYSTEM.CNF");
 
             try
             {
                 // Try to parse the SYSTEM.CNF file
-                var systemCnf = new IniFile(systemCnfPath);
+                using var systemCnfFile = files.OpenFile("SYSTEM.CNF");
+                if (systemCnfFile is null)
+                    return null;
+
+                var systemCnf = new IniFile(systemCnfFile);
                 if (systemCnf.ContainsKey("VER"))
                     return systemCnf["VER"];
 
@@ -549,25 +440,20 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the internal serial from a PlayStation 3 disc, if possible
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-        public static string? GetPlayStation3Serial(Drive? drive)
+        public static string? GetPlayStation3Serial(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, we can't do this part
+            if (files is null)
                 return null;
 
             // Attempt to use PS3_DISC.SFB
-            string sfbPath = Path.Combine(drive.DevicePath, "PS3_DISC.SFB");
-            if (File.Exists(sfbPath))
+            if (files.FileExists("PS3_DISC.SFB"))
             {
                 try
                 {
-                    using var br = new BinaryReader(File.OpenRead(sfbPath));
+                    using var br = new BinaryReader(files.OpenFile("PS3_DISC.SFB")!);
                     br.BaseStream.Seek(0x220, SeekOrigin.Begin);
                     return new string(br.ReadChars(0x10)).TrimEnd('\0');
                 }
@@ -579,16 +465,12 @@ namespace MPF.Frontend.Tools
             }
 
             // Attempt to use PARAM.SFO
-#if NET20 || NET35
-            string sfoPath = Path.Combine(Path.Combine(drive.DevicePath, "PS3_GAME"), "PARAM.SFO");
-#else
-            string sfoPath = Path.Combine(drive.DevicePath, "PS3_GAME", "PARAM.SFO");
-#endif
-            if (File.Exists(sfoPath))
+            string sfoPath = "PS3_GAME/PARAM.SFO";
+            if (files.FileExists(sfoPath))
             {
                 try
                 {
-                    using var br = new BinaryReader(File.OpenRead(sfoPath));
+                    using var br = new BinaryReader(files.OpenFile(sfoPath)!);
                     br.BaseStream.Seek(-0x18, SeekOrigin.End);
                     return new string(br.ReadChars(9)).TrimEnd('\0').Insert(4, "-");
                 }
@@ -605,25 +487,20 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the version from a PlayStation 3 disc, if possible
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Game version if possible, null on error</returns>
-        public static string? GetPlayStation3Version(Drive? drive)
+        public static string? GetPlayStation3Version(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, we can't do this part
+            if (files is null)
                 return null;
 
             // Attempt to use PS3_DISC.SFB
-            string sfbPath = Path.Combine(drive.DevicePath, "PS3_DISC.SFB");
-            if (File.Exists(sfbPath))
+            if (files.FileExists("PS3_DISC.SFB"))
             {
                 try
                 {
-                    using var br = new BinaryReader(File.OpenRead(sfbPath));
+                    using var br = new BinaryReader(files.OpenFile("PS3_DISC.SFB")!);
                     br.BaseStream.Seek(0x230, SeekOrigin.Begin);
                     var discVersion = new string(br.ReadChars(0x10)).TrimEnd('\0');
                     if (!string.IsNullOrEmpty(discVersion))
@@ -637,16 +514,12 @@ namespace MPF.Frontend.Tools
             }
 
             // Attempt to use PARAM.SFO
-#if NET20 || NET35
-            string sfoPath = Path.Combine(Path.Combine(drive.DevicePath, "PS3_GAME"), "PARAM.SFO");
-#else
-            string sfoPath = Path.Combine(drive.DevicePath, "PS3_GAME", "PARAM.SFO");
-#endif
-            if (File.Exists(sfoPath))
+            string sfoPath = "PS3_GAME/PARAM.SFO";
+            if (files.FileExists(sfoPath))
             {
                 try
                 {
-                    using var br = new BinaryReader(File.OpenRead(sfoPath));
+                    using var br = new BinaryReader(files.OpenFile(sfoPath)!);
                     br.BaseStream.Seek(-0x08, SeekOrigin.End);
                     return new string(br.ReadChars(5)).TrimEnd('\0');
                 }
@@ -663,30 +536,22 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the firmware version from a PlayStation 3 disc, if possible
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Firmware version if possible, null on error</returns>
-        public static string? GetPlayStation3FirmwareVersion(Drive? drive)
+        public static string? GetPlayStation3FirmwareVersion(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, we can't do this part
+            if (files is null)
                 return null;
 
             // Attempt to read from /PS3_UPDATE/PS3UPDAT.PUP
-#if NET20 || NET35
-            string pupPath = Path.Combine(Path.Combine(drive.DevicePath, "PS3_UPDATE"), "PS3UPDAT.PUP");
-#else
-            string pupPath = Path.Combine(drive.DevicePath, "PS3_UPDATE", "PS3UPDAT.PUP");
-#endif
-            if (!File.Exists(pupPath))
+            string pupPath = "PS3_UPDATE/PS3UPDAT.PUP";
+            if (!files.FileExists(pupPath))
                 return null;
 
             try
             {
-                using var br = new BinaryReader(File.OpenRead(pupPath));
+                using var br = new BinaryReader(files.OpenFile(pupPath)!);
                 br.BaseStream.Seek(0x3E, SeekOrigin.Begin);
                 byte[] buf = new byte[2];
                 br.Read(buf, 0, 2);
@@ -705,31 +570,23 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the internal serial from a PlayStation 4 disc, if possible
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-        public static string? GetPlayStation4Serial(Drive? drive)
+        public static string? GetPlayStation4Serial(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, we can't do this part
+            if (files is null)
                 return null;
 
             // If we can't find param.sfo, we don't have a PlayStation 4 disc
-#if NET20 || NET35
-            string paramSfoPath = Path.Combine(Path.Combine(drive.DevicePath, "bd"), "param.sfo");
-#else
-            string paramSfoPath = Path.Combine(drive.DevicePath, "bd", "param.sfo");
-#endif
-            if (!File.Exists(paramSfoPath))
+            string paramSfoPath = "bd/param.sfo";
+            if (!files.FileExists(paramSfoPath))
                 return null;
 
             // Let's try reading param.sfo to find the serial at the end of the file
             try
             {
-                using var br = new BinaryReader(File.OpenRead(paramSfoPath));
+                using var br = new BinaryReader(files.OpenFile(paramSfoPath)!);
                 br.BaseStream.Seek(-0x14, SeekOrigin.End);
                 return new string(br.ReadChars(9)).Insert(4, "-");
             }
@@ -743,31 +600,23 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the version from a PlayStation 4 disc, if possible
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Game version if possible, null on error</returns>
-        public static string? GetPlayStation4Version(Drive? drive)
+        public static string? GetPlayStation4Version(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, we can't do this part
+            if (files is null)
                 return null;
 
             // If we can't find param.sfo, we don't have a PlayStation 4 disc
-#if NET20 || NET35
-            string paramSfoPath = Path.Combine(Path.Combine(drive.DevicePath, "bd"), "param.sfo");
-#else
-            string paramSfoPath = Path.Combine(drive.DevicePath, "bd", "param.sfo");
-#endif
-            if (!File.Exists(paramSfoPath))
+            string paramSfoPath = "bd/param.sfo";
+            if (!files.FileExists(paramSfoPath))
                 return null;
 
             // Let's try reading param.sfo to find the version at the end of the file
             try
             {
-                using var br = new BinaryReader(File.OpenRead(paramSfoPath));
+                using var br = new BinaryReader(files.OpenFile(paramSfoPath)!);
                 br.BaseStream.Seek(-0x08, SeekOrigin.End);
                 return new string(br.ReadChars(5));
             }
@@ -781,16 +630,12 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the app.pkg info from a PlayStation 4 disc, if possible
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>PKG info if possible, null on error</returns>
-        public static string? GetPlayStation4PkgInfo(Drive? drive)
+        public static string? GetPlayStation4PkgInfo(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, we can't do this part
+            if (files is null)
                 return null;
 
             // Try parse the app.pkg (multiple if they exist)
@@ -798,20 +643,17 @@ namespace MPF.Frontend.Tools
             {
                 string? pkgInfo = "";
 
-                string[] appDirs = Directory.GetDirectories(Path.Combine(drive.DevicePath, "app"), "?????????", SearchOption.TopDirectoryOnly);
+                string[] appDirs = files.GetDirectories("app", "?????????");
 
                 foreach (string dir in appDirs)
                 {
-                    string appPkgPath = Path.Combine(dir, "app.pkg");
-                    if (!File.Exists(appPkgPath))
-                        continue;
-
-                    long appPkgSize = new FileInfo(appPkgPath).Length;
+                    string appPkgPath = $"{dir}/app.pkg";
+                    long appPkgSize = files.GetFileLength(appPkgPath);
                     if (appPkgSize < 4096)
                         continue;
 
                     // Read the app.pkg header
-                    using var fileStream = new FileStream(appPkgPath, FileMode.Open, FileAccess.Read);
+                    using var fileStream = files.OpenFile(appPkgPath);
                     var appPkgHeaderDeserializer = new SabreTools.Serialization.Readers.AppPkgHeader();
                     var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
 
@@ -834,12 +676,12 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the internal serial from a PlayStation 5 disc, if possible
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-        public static string? GetPlayStation5Serial(Drive? drive)
+        public static string? GetPlayStation5Serial(DiscFileSystem? files)
         {
             // Attempt to get the param.json file
-            var json = GetPlayStation5ParamsJsonFromDrive(drive);
+            var json = GetPlayStation5ParamsJson(files);
             if (json is null)
                 return null;
 
@@ -857,12 +699,12 @@ namespace MPF.Frontend.Tools
         // <summary>
         /// Get the version from a PlayStation 5 disc, if possible
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Game version if possible, null on error</returns>
-        public static string? GetPlayStation5Version(Drive? drive)
+        public static string? GetPlayStation5Version(DiscFileSystem? files)
         {
             // Attempt to get the param.json file
-            var json = GetPlayStation5ParamsJsonFromDrive(drive);
+            var json = GetPlayStation5ParamsJson(files);
             if (json is null)
                 return null;
 
@@ -878,46 +720,25 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
-        /// Get the params.json file from a drive path, if possible
+        /// Get the params.json file from a disc, if possible
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>JObject representing the JSON on success, null on error</returns>
-        private static JObject? GetPlayStation5ParamsJsonFromDrive(Drive? drive)
+        private static JObject? GetPlayStation5ParamsJson(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, we can't do this part
+            if (files is null)
                 return null;
 
             // If we can't find param.json, we don't have a PlayStation 5 disc
-#if NET20 || NET35
-            string paramJsonPath = Path.Combine(Path.Combine(drive.DevicePath, "bd"), "param.json");
-#else
-            string paramJsonPath = Path.Combine(drive.DevicePath, "bd", "param.json");
-#endif
-            return GetPlayStation5ParamsJsonFromFile(paramJsonPath);
-        }
-
-        /// <summary>
-        /// Get the params.json file from a filename, if possible
-        /// </summary>
-        /// <param name="filename">Filename to check</param>
-        /// <returns>JObject representing the JSON on success, null on error</returns>
-        private static JObject? GetPlayStation5ParamsJsonFromFile(string? filename)
-        {
-            // If the file doesn't exist
-            if (string.IsNullOrEmpty(filename))
-                return null;
-            if (!File.Exists(filename))
+            string paramJsonPath = "bd/param.json";
+            if (!files.FileExists(paramJsonPath))
                 return null;
 
             // Let's try reading param.json to find the version in the unencrypted JSON
             try
             {
-                using var br = new BinaryReader(File.OpenRead(filename));
+                using var br = new BinaryReader(files.OpenFile(paramJsonPath)!);
                 br.BaseStream.Seek(0x800, SeekOrigin.Begin);
                 byte[] jsonBytes = br.ReadBytes((int)(br.BaseStream.Length - 0x800));
                 return JsonConvert.DeserializeObject(Encoding.ASCII.GetString(jsonBytes)) as JObject;
@@ -932,16 +753,12 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the app.pkg info from a PlayStation 5 disc, if possible
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>PKG info if possible, null on error</returns>
-        public static string? GetPlayStation5PkgInfo(Drive? drive)
+        public static string? GetPlayStation5PkgInfo(DiscFileSystem? files)
         {
-            // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, we can't do this part
+            if (files is null)
                 return null;
 
             // Try parse the app_sc.pkg (multiple if they exist)
@@ -949,20 +766,17 @@ namespace MPF.Frontend.Tools
             {
                 string? pkgInfo = "";
 
-                string[] appDirs = Directory.GetDirectories(Path.Combine(drive.DevicePath, "app"), "?????????", SearchOption.TopDirectoryOnly);
+                string[] appDirs = files.GetDirectories("app", "?????????");
 
                 foreach (string dir in appDirs)
                 {
-                    string appPkgPath = Path.Combine(dir, "app_sc.pkg");
-                    if (!File.Exists(appPkgPath))
-                        continue;
-
-                    long appPkgSize = new FileInfo(appPkgPath).Length;
+                    string appPkgPath = $"{dir}/app_sc.pkg";
+                    long appPkgSize = files.GetFileLength(appPkgPath);
                     if (appPkgSize < 4096)
                         continue;
 
                     // Read the app_sc.pkg header
-                    using var fileStream = new FileStream(appPkgPath, FileMode.Open, FileAccess.Read);
+                    using var fileStream = files.OpenFile(appPkgPath);
                     var appPkgHeaderDeserializer = new SabreTools.Serialization.Readers.AppPkgHeader();
                     var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
 
@@ -989,27 +803,23 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get all filenames for Xbox One and Xbox Series X
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Filenames if possible, null on error</returns>
-        public static string? GetXboxFilenames(Drive? drive)
+        public static string? GetXboxFilenames(DiscFileSystem? files)
         {
-            // If there's no drive path, can't do anything
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, can't do anything
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, can't do anything
+            if (files is null)
                 return null;
 
             // Get the MSXC directory path
-            string msxc = Path.Combine(drive.DevicePath, "MSXC");
-            if (!Directory.Exists(msxc))
+            string msxc = "MSXC";
+            if (!files.DirectoryExists(msxc))
                 return null;
 
             try
             {
-                var files = Directory.GetFiles(msxc, "*", SearchOption.TopDirectoryOnly);
-                var filenames = Array.ConvertAll(files, Path.GetFileName);
+                var msxcFiles = files.GetFiles(msxc, "*", recursive: false);
+                var filenames = Array.ConvertAll(msxcFiles, Path.GetFileName);
                 return string.Join("\n", filenames);
             }
             catch
@@ -1022,32 +832,26 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get Title ID(s) for Xbox One and Xbox Series X
         /// </summary>
-        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="files">Files of the disc to extract information from</param>
         /// <returns>Title ID(s) if possible, null on error</returns>
-        public static string? GetXboxTitleID(Drive? drive)
+        public static string? GetXboxTitleID(DiscFileSystem? files)
         {
-            // If there's no drive path, can't do anything
-            if (string.IsNullOrEmpty(drive?.DevicePath))
-                return null;
-
-            // If the folder no longer exists, can't do anything
-            if (!Directory.Exists(drive!.DevicePath))
+            // If there are no disc files, can't do anything
+            if (files is null)
                 return null;
 
             // Get the catalog.js path
-#if NET20 || NET35
-            string catalogjs = Path.Combine(drive.DevicePath, Path.Combine("MSXC", Path.Combine("Metadata", "catalog.js")));
-#else
-            string catalogjs = Path.Combine(drive.DevicePath, "MSXC", "Metadata", "catalog.js");
-#endif
+            string catalogjs = "MSXC/Metadata/catalog.js";
+
             // Check catalog.js exists
-            if (!File.Exists(catalogjs))
+            if (!files.FileExists(catalogjs))
                 return null;
 
             // Deserialize catalog.js and extract Title ID(s)
             try
             {
-                var catalog = new SabreTools.Serialization.Readers.Catalog().Deserialize(catalogjs);
+                using var catalogStream = files.OpenFile(catalogjs);
+                var catalog = new SabreTools.Serialization.Readers.Catalog().Deserialize(catalogStream);
                 if (catalog is null)
                     return null;
                 if (!string.IsNullOrEmpty(catalog.TitleID))
@@ -1078,14 +882,11 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Detect the Sega system based on the CD ROM header
         /// </summary>
-        /// <param name="drive">Drive to detect system from</param>
+        /// <param name="files">Files of the disc to detect system from</param>
         /// <returns>Detected PhysicalSystem if detected, null otherwise</returns>
-        public static PhysicalSystem? DetectSegaSystem(Drive? drive)
+        public static PhysicalSystem? DetectSegaSystem(DiscFileSystem? files)
         {
-            if (drive is null)
-                return null;
-
-            byte[]? firstSector = GetFirstBytes(drive, 0x10);
+            byte[]? firstSector = GetFirstBytes(files, 0x10);
             if (firstSector is null || firstSector.Length < 0x10)
                 return null;
 
@@ -1112,14 +913,11 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Detect a 3DO disc based on the CD ROM header
         /// </summary>
-        /// <param name="drive">Drive to detect 3DO disc from</param>
+        /// <param name="files">Files of the disc to detect 3DO disc from</param>
         /// <returns>PhysicalSystem.Panasonic3DOInteractiveMultiplayer if detected, null otherwise</returns>
-        public static PhysicalSystem? Detect3DOSystem(Drive? drive)
+        public static PhysicalSystem? Detect3DOSystem(DiscFileSystem? files)
         {
-            if (drive is null)
-                return null;
-
-            byte[]? firstSector = GetFirstBytes(drive, 0xC0);
+            byte[]? firstSector = GetFirstBytes(files, 0xC0);
             if (firstSector is null || firstSector.Length < 0xC0)
                 return null;
 

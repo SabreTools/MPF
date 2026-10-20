@@ -260,6 +260,10 @@ namespace MPF.Frontend
         {
             var driveInfo = Array.Find(DriveInfo.GetDrives(), d => d?.Name == DevicePath);
             PopulateFromDriveInfo(driveInfo);
+
+            // Optical drives on Linux are not listed by DriveInfo, so the disc is read again
+            if (DevicePath is not null && SystemEnvironment.IsLinux() && InternalDriveType == Frontend.InternalDriveType.Optical)
+                PopulateFromUnixDevice(DevicePath);
         }
 
         /// <inheritdoc/>
@@ -340,6 +344,21 @@ namespace MPF.Frontend
             }
 
             return [.. drives];
+        }
+
+        /// <summary>
+        /// Get the name Windows reports for the file system of a disc
+        /// </summary>
+        /// <param name="fileSystemName">Name of the file system read from the disc (e.g. "ISO 9660")</param>
+        /// <returns>"CDFS" for ISO 9660, "UDF" for UDF, empty otherwise</returns>
+        internal static string GetWindowsDriveFormat(string? fileSystemName)
+        {
+            if (fileSystemName == "ISO 9660")
+                return "CDFS";
+            else if (fileSystemName == "UDF")
+                return "UDF";
+
+            return string.Empty;
         }
 
         /// <summary>

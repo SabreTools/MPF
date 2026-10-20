@@ -20,6 +20,7 @@
 - Set Dreamdump to be executable in bash script, add warning to PS
 - Remove eject reminder from Avalonia Check
 - Clean up program cancellation to be safer
+- Read disc files without mounting (gmipf)
 
 ### 3.11.1 (2026-10-17)
 
