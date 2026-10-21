@@ -685,7 +685,7 @@ namespace MPF.Frontend.ViewModels
             UpdateVolumeLabelEnabled = true;
 
             // If we have a selected drive, keep track of it
-            char? lastSelectedDrive = CurrentDrive?.DevicePath?[0] ?? null;
+            string? lastSelectedDrive = CurrentDrive?.DevicePath;
 
             // Populate the list of drives and add it to the combo box
             Drives = Drive.CreateListOfDrives(Options.GUI.IgnoreFixedDrives);
@@ -697,7 +697,7 @@ namespace MPF.Frontend.ViewModels
                 // Check for the last selected drive, if possible
                 int index = -1;
                 if (lastSelectedDrive is not null)
-                    index = Drives.FindIndex(d => d.MarkedActive && (d.DevicePath?[0] ?? '\0') == lastSelectedDrive);
+                    index = Drives.FindIndex(d => d.MarkedActive && d.DevicePath == lastSelectedDrive);
 
                 // Check for active optical drives
                 if (index == -1)
@@ -2007,8 +2007,16 @@ namespace MPF.Frontend.ViewModels
             // Catch this in case there's an input path issue
             try
             {
-                int driveIndex = Drives.ConvertAll(d => d.DevicePath?[0] ?? '\0')
-                    .IndexOf(_environment.ContextInputPath?[0] ?? default);
+                // Check for the whole input path
+                int driveIndex = Drives.FindIndex(d => d.DevicePath == _environment.ContextInputPath);
+
+                // Check for the drive letter, as some programs only take the letter on Windows
+                if (driveIndex == -1)
+                {
+                    driveIndex = Drives.ConvertAll(d => d.DevicePath?[0] ?? '\0')
+                        .IndexOf(_environment.ContextInputPath?[0] ?? default);
+                }
+
                 CurrentDrive = driveIndex != -1 ? Drives[driveIndex] : Drives[0];
             }
             catch { }
