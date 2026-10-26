@@ -22,6 +22,7 @@
 - Clean up program cancellation to be safer
 - Ensure the mounted path is checked properly in UI
 - Add more supported Redumper disc profiles
+- Minor SS validation fix
 
 ### 3.11.1 (2026-10-17)
 
