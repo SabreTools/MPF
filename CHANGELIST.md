@@ -23,6 +23,7 @@
 - Ensure the mounted path is checked properly in UI
 - Add more supported Redumper disc profiles
 - Minor SS validation fix
+- Clarify "mounted" parameter for Check CLI
 
 ### 3.11.1 (2026-10-17)
 
