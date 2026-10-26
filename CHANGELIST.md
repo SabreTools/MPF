@@ -20,6 +20,9 @@
 - Set Dreamdump to be executable in bash script, add warning to PS
 - Remove eject reminder from Avalonia Check
 - Clean up program cancellation to be safer
+- Ensure the mounted path is checked properly in UI
+- Add more supported Redumper disc profiles
+- Minor SS validation fix
 - Keep selected drive when rescanning or editing parameters (gmipf)
 
 ### 3.11.1 (2026-10-17)

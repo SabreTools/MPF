@@ -1273,6 +1273,7 @@ namespace MPF.Processors
                 "DVD+RW" => PhysicalMediaType.DVD,
                 "DVD+R" => PhysicalMediaType.DVD,
 
+                // TODO: DDCD should be a separate type
                 "DDCD-ROM" => PhysicalMediaType.CDROM,
                 "DDCD-R" => PhysicalMediaType.CDROM,
                 "DDCD-RW" => PhysicalMediaType.CDROM,
@@ -1292,10 +1293,19 @@ namespace MPF.Processors
                 "HD DVD-R DL" => PhysicalMediaType.HDDVD,
                 "HD DVD-RW DL" => PhysicalMediaType.HDDVD,
 
-                "NINTENDO" => PhysicalMediaType.NintendoWiiOpticalDisc, // Maybe also GC?
-                "RESERVED5" => PhysicalMediaType.NintendoWiiOpticalDisc, // Maybe also GC?
+                // Values from PS3/PS4 OEM drives
+                "PS1 CD-ROM" => PhysicalMediaType.CDROM,
+                "PS2 CD-ROM" => PhysicalMediaType.CDROM,
+                "PS2 DVD-ROM" => PhysicalMediaType.DVD,
+                "PS3 DVD-ROM" => PhysicalMediaType.DVD,
+                "PS3 BD-ROM" => PhysicalMediaType.BluRay,
+                "PS4 BD-ROM" => PhysicalMediaType.BluRay,
 
                 "NON STANDARD" => null,
+
+                // These were removed at some point
+                "NINTENDO" => PhysicalMediaType.NintendoWiiOpticalDisc, // Maybe also GC?
+                "RESERVED5" => PhysicalMediaType.NintendoWiiOpticalDisc, // Maybe also GC?
 
                 _ => null,
             };
