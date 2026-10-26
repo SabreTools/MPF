@@ -2385,7 +2385,7 @@ namespace MPF.Frontend.ViewModels
 
                 // If we have a mounted path, replace the environment
                 var checkEnvironment = _environment;
-                if (MountedPath is not null)
+                if (MountedPath is not null && Directory.Exists(MountedPath))
                 {
                     var drive = Drive.Create(null, MountedPath);
                     checkEnvironment = new DumpEnvironment(
