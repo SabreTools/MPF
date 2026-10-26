@@ -24,6 +24,7 @@
 - Add more supported Redumper disc profiles
 - Minor SS validation fix
 - Clarify "mounted" parameter for Check CLI
+- Keep selected drive when rescanning or editing parameters (gmipf)
 
 ### 3.11.1 (2026-10-17)
 
