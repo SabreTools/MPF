@@ -28,6 +28,7 @@
 - Add WUDD processor support
 - Add WUDD images as valid file picker targets
 - Simplify WUDD log file finding slightly
+- Enable Disc ID display for WiiU
 
 ### 3.11.1 (2026-10-17)
 

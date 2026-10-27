@@ -166,7 +166,8 @@ namespace MPF.Frontend.ViewModels
             set => SubmissionInfo.DiscIdentifiers.DiscID = value;
         }
 
-        public bool InternalDiscIDVisible => SubmissionInfo.DiscIdentity.System == PhysicalSystem.SonyPlayStation3;
+        public bool InternalDiscIDVisible => SubmissionInfo.DiscIdentity.System == PhysicalSystem.NintendoWiiU
+           || SubmissionInfo.DiscIdentity.System == PhysicalSystem.SonyPlayStation3;
 
         public string? Protection
         {

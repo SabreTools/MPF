@@ -232,7 +232,7 @@ namespace MPF.Processors.Test
 
         #endregion
 
-#region GetLogFilePath
+        #region GetLogFilePath
 
         [Fact]
         public void GetLogFilePath_Empty_Null()
