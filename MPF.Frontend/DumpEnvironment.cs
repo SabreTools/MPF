@@ -278,6 +278,7 @@ namespace MPF.Frontend
                 InternalProgram.PS3CFW => new PS3CFW(_system),
                 InternalProgram.Redumper => new Redumper(_system),
                 InternalProgram.UmdImageCreator => new UmdImageCreator(_system),
+                InternalProgram.WUDD => new WUDD(_system),
                 InternalProgram.XboxBackupCreator => new XboxBackupCreator(_system),
 
                 // If no dumping program found, set to null

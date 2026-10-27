@@ -158,6 +158,7 @@ namespace MPF.Frontend
                 InternalProgram.Generic => "Generic",
                 InternalProgram.PS3CFW => "PS3 CFW",
                 InternalProgram.UmdImageCreator => "UmdImageCreator",
+                InternalProgram.WUDD => "WUDD",
                 InternalProgram.XboxBackupCreator => "XboxBackupCreator",
 
                 #endregion
@@ -341,6 +342,7 @@ namespace MPF.Frontend
                 InternalProgram.Generic => "generic",
                 InternalProgram.PS3CFW => "ps3cfw",
                 InternalProgram.UmdImageCreator => "uic",
+                InternalProgram.WUDD => "wudd",
                 InternalProgram.XboxBackupCreator => "xbc",
 
                 #endregion
@@ -447,6 +449,8 @@ namespace MPF.Frontend
                     or "umd"
                     or "umdcreator"
                     or "umdimagecreator" => InternalProgram.UmdImageCreator,
+                "wudd"
+                    or "wiiu" => InternalProgram.WUDD,
                 "xbc"
                     or "xbox"
                     or "xbox360"

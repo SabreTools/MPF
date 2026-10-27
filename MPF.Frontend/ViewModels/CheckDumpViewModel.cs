@@ -300,6 +300,7 @@ namespace MPF.Frontend.ViewModels
             InternalProgram.CleanRip,
             InternalProgram.PS3CFW,
             InternalProgram.UmdImageCreator,
+            InternalProgram.WUDD,
             InternalProgram.XboxBackupCreator,
             InternalProgram.Generic,
         ];

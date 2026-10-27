@@ -447,6 +447,7 @@ namespace MPF.Frontend.Tools
                 PS3CFW => InternalProgram.PS3CFW,
                 Redumper => InternalProgram.Redumper,
                 UmdImageCreator => InternalProgram.UmdImageCreator,
+                WUDD => InternalProgram.WUDD,
                 XboxBackupCreator => InternalProgram.XboxBackupCreator,
                 _ => null,
             };

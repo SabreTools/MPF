@@ -25,6 +25,7 @@
 - Minor SS validation fix
 - Clarify "mounted" parameter for Check CLI
 - Keep selected drive when rescanning or editing parameters (gmipf)
+- Add WUDD processor support
 
 ### 3.11.1 (2026-10-17)
 

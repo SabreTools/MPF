@@ -1327,6 +1327,7 @@ namespace MPF.Frontend.ViewModels
                     case InternalProgram.Generic:
                     case InternalProgram.PS3CFW:
                     case InternalProgram.UmdImageCreator:
+                    case InternalProgram.WUDD:
                     case InternalProgram.XboxBackupCreator:
                         VerboseLogLn($"Unsupported dumping program: {CurrentProgram.LongName()}");
                         break;
@@ -2635,6 +2636,7 @@ namespace MPF.Frontend.ViewModels
                     case InternalProgram.Generic:
                     case InternalProgram.PS3CFW:
                     case InternalProgram.UmdImageCreator:
+                    case InternalProgram.WUDD:
                     case InternalProgram.XboxBackupCreator:
                         VerboseLogLn($"Unsupported dumping program: {CurrentProgram.LongName()}");
                         return false;
