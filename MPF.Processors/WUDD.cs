@@ -89,13 +89,7 @@ namespace MPF.Processors
                 return null;
 
             var currentFiles = Directory.GetFiles(parentDirectory);
-            string? logPath = Array.Find(currentFiles, f => logFilenameRegex.IsMatch(f));
-            if (string.IsNullOrEmpty(value: logPath))
-                return null;
-
-            // Extract the version string
-            var match = logFilenameRegex.Match(logPath);
-            return match.Groups[1].Value;
+            return Array.Find(currentFiles, f => logFilenameRegex.IsMatch(f));
         }
 
         #endregion

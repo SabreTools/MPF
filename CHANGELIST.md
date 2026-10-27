@@ -27,6 +27,7 @@
 - Keep selected drive when rescanning or editing parameters (gmipf)
 - Add WUDD processor support
 - Add WUDD images as valid file picker targets
+- Simplify WUDD log file finding slightly
 
 ### 3.11.1 (2026-10-17)
 
