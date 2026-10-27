@@ -117,7 +117,7 @@ namespace MPF.Avalonia.Windows
                 Title = StringResource("InputPathLabelString", "Input Path"),
                 AllowMultiple = false,
                 FileTypeFilter = [
-                    new FilePickerFileType("Disc Images") { Patterns = ["*.iso", "*.cue", "*.aaruf", "*.bca"] },
+                    new FilePickerFileType("Disc Images") { Patterns = ["*.iso", "*.cue", "*.aaruf", "*.bca", "*.wud"] },
                     new FilePickerFileType("Log Archives") { Patterns = ["*_logs.zip"] },
                     FilePickerFileTypes.All,
                 ],
