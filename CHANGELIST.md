@@ -30,6 +30,7 @@
 - Simplify WUDD log file finding slightly
 - Enable Disc ID display for WiiU
 - Disc ID for WiiU is actually internal serial name
+- No longer trim BCA
 
 ### 3.11.1 (2026-10-17)
 
