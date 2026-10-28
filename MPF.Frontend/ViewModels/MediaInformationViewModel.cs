@@ -1424,7 +1424,7 @@ namespace MPF.Frontend.ViewModels
             get => SubmissionInfo.DumpMetadata.SBI;
         }
 
-        public bool SBIVisible => SBI is not null;
+        public bool SBIVisible => !string.IsNullOrEmpty(SBI);
 
         public string? SSHash
         {

@@ -31,6 +31,7 @@
 - Enable Disc ID display for WiiU
 - Disc ID for WiiU is actually internal serial name
 - No longer trim BCA
+- SBI should not be visible if empty
 
 ### 3.11.1 (2026-10-17)
 
