@@ -247,6 +247,7 @@ namespace MPF.Frontend
             {
                 InternalDriveType = driveType,
                 DevicePath = bsdName,
+                MountedPath = bsdName,
                 TotalSize = size,
             };
         }

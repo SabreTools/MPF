@@ -211,6 +211,7 @@ namespace MPF.Frontend
                 {
                     InternalDriveType = driveType,
                     DevicePath = Path.Combine(devRoot!, name),
+                    MountedPath = Path.Combine(devRoot, name),
                     TotalSize = totalSize,
                 });
             }

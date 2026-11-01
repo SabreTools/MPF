@@ -115,6 +115,7 @@ namespace MPF.Frontend.ViewModels
             {
                 field = value;
                 TriggerPropertyChanged(nameof(CurrentDrive));
+                TriggerPropertyChanged(nameof(MountedPath));
             }
         }
 
@@ -136,13 +137,17 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public string MountedPath
         {
-            get;
+            get => CurrentDrive?.MountedPath ?? string.Empty;
             set
             {
-                field = value;
+                if (CurrentDrive is null)
+                    return;
+
+                CurrentDrive.MountedPath = value;
+                TriggerPropertyChanged(nameof(CurrentDrive));
                 TriggerPropertyChanged(nameof(MountedPath));
             }
-        } = string.Empty;
+        }
 
         /// <summary>
         /// Indicates the status of the mount path text box
@@ -503,18 +508,6 @@ namespace MPF.Frontend.ViewModels
                 CurrentSystem,
                 CurrentProgram);
             env.SetProcessor();
-
-            // If we have a mounted path, replace the environment
-            if (MountedPath is not null && Directory.Exists(MountedPath))
-            {
-                var drive = Drive.Create(null, MountedPath);
-                env = new DumpEnvironment(Options,
-                    Path.GetFullPath(InputPath.Trim('"')),
-                    drive,
-                    CurrentSystem,
-                    CurrentProgram);
-                env.SetProcessor();
-            }
 
             // Finally, attempt to do the output dance
             var result = await env.VerifyAndSaveDumpOutput(

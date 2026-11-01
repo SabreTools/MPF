@@ -33,6 +33,13 @@ namespace MPF.Frontend
         public string? DevicePath { get; private set; } = null;
 
         /// <summary>
+        /// Mounted filesystem path
+        /// </summary>
+        /// <remarks>Examples include "D:\" on Windows and "/media/cdrom0" on Unix</remarks>
+        /// TODO: This should not have a public setter
+        public string? MountedPath { get; set; } = null;
+
+        /// <summary>
         /// Represents if the drive has been marked active
         /// </summary>
         public bool MarkedActive { get; private set; } = false;
@@ -140,6 +147,7 @@ namespace MPF.Frontend
 
             // Populate the data fields
             DevicePath = driveInfo.Name;
+            MountedPath = driveInfo.Name;
             MarkedActive = driveInfo.IsReady;
             if (MarkedActive)
             {

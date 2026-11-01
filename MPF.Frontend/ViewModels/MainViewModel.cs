@@ -259,6 +259,7 @@ namespace MPF.Frontend.ViewModels
             {
                 field = value;
                 TriggerPropertyChanged(nameof(CurrentDrive));
+                TriggerPropertyChanged(nameof(MountedPath));
             }
         }
 
@@ -410,13 +411,17 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public string MountedPath
         {
-            get;
+            get => CurrentDrive?.MountedPath ?? string.Empty;
             set
             {
-                field = value;
+                if (CurrentDrive is null)
+                    return;
+
+                CurrentDrive.MountedPath = value;
+                TriggerPropertyChanged(nameof(CurrentDrive));
                 TriggerPropertyChanged(nameof(MountedPath));
             }
-        } = string.Empty;
+        }
 
         /// <summary>
         /// Indicates the status of the mount path text box
@@ -1603,12 +1608,12 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private static PhysicalSystem? GetPhysicalSystem(Drive? drive)
         {
-            // If the drive does not exist, we can't do anything
-            if (drive is null || string.IsNullOrEmpty(drive.DevicePath))
+            // If the mounted filesystem does not exist, we can't do anything
+            if (drive is null || string.IsNullOrEmpty(drive.MountedPath))
                 return null;
 
             // If we can't read the files in the drive, we can only perform physical checks
-            if (!drive.MarkedActive || !Directory.Exists(drive.DevicePath))
+            if (!drive.MarkedActive || !Directory.Exists(drive.MountedPath))
             {
                 try
                 {
@@ -1645,14 +1650,14 @@ namespace MPF.Frontend.ViewModels
             #region Arcade
 
             // Funworld Photo Play
-            if (File.Exists(Path.Combine(drive.DevicePath, "PP.INF"))
-                && Directory.Exists(Path.Combine(drive.DevicePath, "PPINC")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "PP.INF"))
+                && Directory.Exists(Path.Combine(drive.MountedPath, "PPINC")))
             {
                 return PhysicalSystem.FunworldPhotoPlay;
             }
 
             // Konami Python 2
-            if (Directory.Exists(Path.Combine(drive.DevicePath, "PY2.D")))
+            if (Directory.Exists(Path.Combine(drive.MountedPath, "PY2.D")))
             {
                 return PhysicalSystem.KonamiPython2;
             }
@@ -1662,7 +1667,7 @@ namespace MPF.Frontend.ViewModels
             #region Consoles
 
             // Apple/Bandai Pippin
-            if (File.Exists(Path.Combine(drive.DevicePath, "PippinAuthenticationFile")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "PippinAuthenticationFile")))
             {
                 return PhysicalSystem.AppleBandaiPippin;
             }
@@ -1670,7 +1675,7 @@ namespace MPF.Frontend.ViewModels
             // Bandai Playdia Quick Interactive System
             try
             {
-                List<string> files = [.. Directory.GetFiles(drive.DevicePath, "*", SearchOption.TopDirectoryOnly)];
+                List<string> files = [.. Directory.GetFiles(drive.MountedPath, "*", SearchOption.TopDirectoryOnly)];
 
                 if (files.Exists(f => f.EndsWith(".AJS", StringComparison.OrdinalIgnoreCase))
                     && files.Exists(f => f.EndsWith(".GLB", StringComparison.OrdinalIgnoreCase)))
@@ -1682,35 +1687,35 @@ namespace MPF.Frontend.ViewModels
 
             // Commodore CDTV/CD32
 #if NET20 || NET35
-            if (File.Exists(Path.Combine(Path.Combine(drive.DevicePath, "S"), "STARTUP-SEQUENCE")))
+            if (File.Exists(Path.Combine(Path.Combine(drive.MountedPath, "S"), "STARTUP-SEQUENCE")))
 #else
-            if (File.Exists(Path.Combine(drive.DevicePath, "S", "STARTUP-SEQUENCE")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "S", "STARTUP-SEQUENCE")))
 #endif
             {
-                if (File.Exists(Path.Combine(drive.DevicePath, "CDTV.TM")))
+                if (File.Exists(Path.Combine(drive.MountedPath, "CDTV.TM")))
                     return PhysicalSystem.CommodoreAmigaCDTV;
                 else
                     return PhysicalSystem.CommodoreAmigaCD32;
             }
 
             // Mattel HyperScan -- TODO: May need case-insensitivity added
-            if (File.Exists(Path.Combine(drive.DevicePath, "hyper.exe")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "hyper.exe")))
             {
                 return PhysicalSystem.MattelHyperScan;
             }
 
             // Mattel Fisher-Price iXL
 #if NET20 || NET35
-            if (File.Exists(Path.Combine(Path.Combine(drive.DevicePath, "iXL"), "iXLUpdater.exe")))
+            if (File.Exists(Path.Combine(Path.Combine(drive.MountedPath, "iXL"), "iXLUpdater.exe")))
 #else
-            if (File.Exists(Path.Combine(drive.DevicePath, "iXL", "iXLUpdater.exe")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "iXL", "iXLUpdater.exe")))
 #endif
             {
                 return PhysicalSystem.MattelFisherPriceiXL;
             }
 
             // Memorex - Visual Information System
-            if (File.Exists(Path.Combine(drive.DevicePath, "CONTROL.TAT")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "CONTROL.TAT")))
             {
                 return PhysicalSystem.MemorexVisualInformationSystem;
             }
@@ -1718,8 +1723,8 @@ namespace MPF.Frontend.ViewModels
             // Microsoft Xbox 360
             try
             {
-                if (Directory.Exists(Path.Combine(drive.DevicePath, "$SystemUpdate"))
-                    && Path.Combine(drive.DevicePath, "$SystemUpdate").SafeGetFiles().Length > 0
+                if (Directory.Exists(Path.Combine(drive.MountedPath, "$SystemUpdate"))
+                    && Path.Combine(drive.MountedPath, "$SystemUpdate").SafeGetFiles().Length > 0
                     && drive.TotalSize <= 500_000_000)
                 {
                     return PhysicalSystem.MicrosoftXbox360;
@@ -1730,14 +1735,14 @@ namespace MPF.Frontend.ViewModels
             // Microsoft Xbox One and Series X
             try
             {
-                if (Directory.Exists(Path.Combine(drive.DevicePath, "MSXC")))
+                if (Directory.Exists(Path.Combine(drive.MountedPath, "MSXC")))
                 {
                     try
                     {
 #if NET20 || NET35
-                        string catalogjs = Path.Combine(drive.DevicePath, Path.Combine("MSXC", Path.Combine("Metadata", "catalog.js")));
+                        string catalogjs = Path.Combine(drive.MountedPath, Path.Combine("MSXC", Path.Combine("Metadata", "catalog.js")));
 #else
-                        string catalogjs = Path.Combine(drive.DevicePath, "MSXC", "Metadata", "catalog.js");
+                        string catalogjs = Path.Combine(drive.MountedPath, "MSXC", "Metadata", "catalog.js");
 #endif
                         if (!File.Exists(catalogjs))
                             return PhysicalSystem.MicrosoftXboxOne;
@@ -1769,7 +1774,7 @@ namespace MPF.Frontend.ViewModels
             catch { }
 
             // Playmaji Polymega
-            if (File.Exists(Path.Combine(drive.DevicePath, "Get Polymega App.url")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "Get Polymega App.url")))
             {
                 return PhysicalSystem.PlaymajiPolymega;
             }
@@ -1786,22 +1791,22 @@ namespace MPF.Frontend.ViewModels
             catch { }
 
             // Sega Dreamcast
-            if (File.Exists(Path.Combine(drive.DevicePath, "IP.BIN")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "IP.BIN")))
             {
                 return PhysicalSystem.SegaDreamcast;
             }
 
             // Sega Mega-CD / Sega-CD
 #if NET20 || NET35
-            if (File.Exists(Path.Combine(Path.Combine(drive.DevicePath, "_BOOT"), "IP.BIN"))
-                || File.Exists(Path.Combine(Path.Combine(drive.DevicePath, "_BOOT"), "SP.BIN"))
-                || File.Exists(Path.Combine(Path.Combine(drive.DevicePath, "_BOOT"), "SP_AS.BIN"))
-                || File.Exists(Path.Combine(drive.DevicePath, "FILESYSTEM.BIN")))
+            if (File.Exists(Path.Combine(Path.Combine(drive.MountedPath, "_BOOT"), "IP.BIN"))
+                || File.Exists(Path.Combine(Path.Combine(drive.MountedPath, "_BOOT"), "SP.BIN"))
+                || File.Exists(Path.Combine(Path.Combine(drive.MountedPath, "_BOOT"), "SP_AS.BIN"))
+                || File.Exists(Path.Combine(drive.MountedPath, "FILESYSTEM.BIN")))
 #else
-            if (File.Exists(Path.Combine(drive.DevicePath, "_BOOT", "IP.BIN"))
-                || File.Exists(Path.Combine(drive.DevicePath, "_BOOT", "SP.BIN"))
-                || File.Exists(Path.Combine(drive.DevicePath, "_BOOT", "SP_AS.BIN"))
-                || File.Exists(Path.Combine(drive.DevicePath, "FILESYSTEM.BIN")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "_BOOT", "IP.BIN"))
+                || File.Exists(Path.Combine(drive.MountedPath, "_BOOT", "SP.BIN"))
+                || File.Exists(Path.Combine(drive.MountedPath, "_BOOT", "SP_AS.BIN"))
+                || File.Exists(Path.Combine(drive.MountedPath, "FILESYSTEM.BIN")))
 #endif
             {
                 return PhysicalSystem.SegaMegaCDSegaCD;
@@ -1810,10 +1815,10 @@ namespace MPF.Frontend.ViewModels
             // SNK Neo-Geo CD
             try
             {
-                if (File.Exists(Path.Combine(drive.DevicePath, "ABS.TXT"))
-                    || File.Exists(Path.Combine(drive.DevicePath, "BIB.TXT"))
-                    || File.Exists(Path.Combine(drive.DevicePath, "CPY.TXT"))
-                    || File.Exists(Path.Combine(drive.DevicePath, "IPL.TXT")))
+                if (File.Exists(Path.Combine(drive.MountedPath, "ABS.TXT"))
+                    || File.Exists(Path.Combine(drive.MountedPath, "BIB.TXT"))
+                    || File.Exists(Path.Combine(drive.MountedPath, "CPY.TXT"))
+                    || File.Exists(Path.Combine(drive.MountedPath, "IPL.TXT")))
                 {
                     return PhysicalSystem.SNKNeoGeoCD;
                 }
@@ -1821,8 +1826,8 @@ namespace MPF.Frontend.ViewModels
             catch { }
 
             // Sony PlayStation and Sony PlayStation 2
-            string psxExePath = Path.Combine(drive.DevicePath, "PSX.EXE");
-            string systemCnfPath = Path.Combine(drive.DevicePath, "SYSTEM.CNF");
+            string psxExePath = Path.Combine(drive.MountedPath, "PSX.EXE");
+            string systemCnfPath = Path.Combine(drive.MountedPath, "SYSTEM.CNF");
             if (File.Exists(systemCnfPath))
             {
                 // Check for either BOOT or BOOT2
@@ -1840,9 +1845,9 @@ namespace MPF.Frontend.ViewModels
             // Sony PlayStation 3
             try
             {
-                if (Directory.Exists(Path.Combine(drive.DevicePath, "PS3_GAME"))
-                    || Directory.Exists(Path.Combine(drive.DevicePath, "PS3_UPDATE"))
-                    || File.Exists(Path.Combine(drive.DevicePath, "PS3_DISC.SFB")))
+                if (Directory.Exists(Path.Combine(drive.MountedPath, "PS3_GAME"))
+                    || Directory.Exists(Path.Combine(drive.MountedPath, "PS3_UPDATE"))
+                    || File.Exists(Path.Combine(drive.MountedPath, "PS3_DISC.SFB")))
                 {
                     return PhysicalSystem.SonyPlayStation3;
                 }
@@ -1851,9 +1856,9 @@ namespace MPF.Frontend.ViewModels
 
             // Sony PlayStation 4
 #if NET20 || NET35
-            if (File.Exists(Path.Combine(Path.Combine(Path.Combine(drive.DevicePath, "PS4"), "UPDATE"), "PS4UPDATE.PUP")))
+            if (File.Exists(Path.Combine(Path.Combine(Path.Combine(drive.MountedPath, "PS4"), "UPDATE"), "PS4UPDATE.PUP")))
 #else
-            if (File.Exists(Path.Combine(drive.DevicePath, "PS4", "UPDATE", "PS4UPDATE.PUP")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "PS4", "UPDATE", "PS4UPDATE.PUP")))
 #endif
             {
                 return PhysicalSystem.SonyPlayStation4;
@@ -1861,32 +1866,32 @@ namespace MPF.Frontend.ViewModels
 
             // Sony PlayStation 5
 #if NET20 || NET35
-            if (File.Exists(Path.Combine(Path.Combine(Path.Combine(drive.DevicePath, "PS5"), "UPDATE"), "PS5UPDATE.PUP")))
+            if (File.Exists(Path.Combine(Path.Combine(Path.Combine(drive.MountedPath, "PS5"), "UPDATE"), "PS5UPDATE.PUP")))
 #else
-            if (File.Exists(Path.Combine(drive.DevicePath, "PS5", "UPDATE", "PS5UPDATE.PUP")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "PS5", "UPDATE", "PS5UPDATE.PUP")))
 #endif
             {
                 return PhysicalSystem.SonyPlayStation5;
             }
 
             // V.Tech V.Flash / V.Smile Pro
-            if (File.Exists(Path.Combine(drive.DevicePath, "0SYSTEM")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "0SYSTEM")))
             {
                 return PhysicalSystem.VTechVFlashVSmilePro;
             }
 
             // VM Labs NUON
 #if NET20 || NET35
-            if (File.Exists(Path.Combine(Path.Combine(drive.DevicePath, "NUON"), "nuon.run")))
+            if (File.Exists(Path.Combine(Path.Combine(drive.MountedPath, "NUON"), "nuon.run")))
 #else
-            if (File.Exists(Path.Combine(drive.DevicePath, "NUON", "nuon.run")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "NUON", "nuon.run")))
 #endif
             {
                 return PhysicalSystem.VMLabsNUON;
             }
 
             // ZAPit Games - GameWave
-            if (File.Exists(Path.Combine(drive.DevicePath, "gamewave.diz")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "gamewave.diz")))
             {
                 return PhysicalSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem;
             }
@@ -1896,7 +1901,7 @@ namespace MPF.Frontend.ViewModels
             #region Computers
 
             // Amiga CD (Do this check AFTER CD32/CDTV)
-            if (File.Exists(Path.Combine(drive.DevicePath, "Disk.info")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "Disk.info")))
             {
                 return PhysicalSystem.CommodoreAmigaCD;
             }
@@ -1904,9 +1909,9 @@ namespace MPF.Frontend.ViewModels
             // Fujitsu FM Towns
             try
             {
-                if (File.Exists(Path.Combine(drive.DevicePath, "TMENU.EXP"))
-                    || File.Exists(Path.Combine(drive.DevicePath, "TBIOS.SYS"))
-                    || File.Exists(Path.Combine(drive.DevicePath, "TBIOS.BIN")))
+                if (File.Exists(Path.Combine(drive.MountedPath, "TMENU.EXP"))
+                    || File.Exists(Path.Combine(drive.MountedPath, "TBIOS.SYS"))
+                    || File.Exists(Path.Combine(drive.MountedPath, "TBIOS.BIN")))
                 {
                     return PhysicalSystem.FujitsuFMTownsSeries;
                 }
@@ -1914,7 +1919,7 @@ namespace MPF.Frontend.ViewModels
             catch { }
 
             // Sharp X68000
-            if (File.Exists(Path.Combine(drive.DevicePath, "COMMAND.X")))
+            if (File.Exists(Path.Combine(drive.MountedPath, "COMMAND.X")))
             {
                 return PhysicalSystem.SharpX68000;
             }
@@ -1924,7 +1929,7 @@ namespace MPF.Frontend.ViewModels
             #region Video Formats
 
             // BD-Video
-            if (Directory.Exists(Path.Combine(drive.DevicePath, "BDMV")))
+            if (Directory.Exists(Path.Combine(drive.MountedPath, "BDMV")))
             {
                 // Technically BD-Audio has this as well, but it's hard to split that out right now
                 return PhysicalSystem.BDVideo;
@@ -1933,14 +1938,14 @@ namespace MPF.Frontend.ViewModels
             // DVD-Audio and DVD-Video
             try
             {
-                if (Directory.Exists(Path.Combine(drive.DevicePath, "AUDIO_TS"))
-                    && Path.Combine(drive.DevicePath, "AUDIO_TS").SafeGetFiles().Length > 0)
+                if (Directory.Exists(Path.Combine(drive.MountedPath, "AUDIO_TS"))
+                    && Path.Combine(drive.MountedPath, "AUDIO_TS").SafeGetFiles().Length > 0)
                 {
                     return PhysicalSystem.DVDAudio;
                 }
 
-                else if (Directory.Exists(Path.Combine(drive.DevicePath, "VIDEO_TS"))
-                    && Path.Combine(drive.DevicePath, "VIDEO_TS").SafeGetFiles().Length > 0)
+                else if (Directory.Exists(Path.Combine(drive.MountedPath, "VIDEO_TS"))
+                    && Path.Combine(drive.MountedPath, "VIDEO_TS").SafeGetFiles().Length > 0)
                 {
                     return PhysicalSystem.DVDVideo;
                 }
@@ -1950,8 +1955,8 @@ namespace MPF.Frontend.ViewModels
             // HD-DVD-Video
             try
             {
-                if (Directory.Exists(Path.Combine(drive.DevicePath, "HVDVD_TS"))
-                    && Path.Combine(drive.DevicePath, "HVDVD_TS").SafeGetFiles().Length > 0)
+                if (Directory.Exists(Path.Combine(drive.MountedPath, "HVDVD_TS"))
+                    && Path.Combine(drive.MountedPath, "HVDVD_TS").SafeGetFiles().Length > 0)
                 {
                     return PhysicalSystem.HDDVDVideo;
                 }
@@ -1961,8 +1966,8 @@ namespace MPF.Frontend.ViewModels
             // Photo CD
             try
             {
-                if (Directory.Exists(Path.Combine(drive.DevicePath, "PHOTO_CD"))
-                    && Path.Combine(drive.DevicePath, "PHOTO_CD").SafeGetFiles().Length > 0)
+                if (Directory.Exists(Path.Combine(drive.MountedPath, "PHOTO_CD"))
+                    && Path.Combine(drive.MountedPath, "PHOTO_CD").SafeGetFiles().Length > 0)
                 {
                     return PhysicalSystem.PhotoCD;
                 }
@@ -1972,8 +1977,8 @@ namespace MPF.Frontend.ViewModels
             // VCD
             try
             {
-                if (Directory.Exists(Path.Combine(drive.DevicePath, "VCD"))
-                    && Path.Combine(drive.DevicePath, "VCD").SafeGetFiles().Length > 0)
+                if (Directory.Exists(Path.Combine(drive.MountedPath, "VCD"))
+                    && Path.Combine(drive.MountedPath, "VCD").SafeGetFiles().Length > 0)
                 {
                     return PhysicalSystem.VideoCD;
                 }
@@ -2392,22 +2397,8 @@ namespace MPF.Frontend.ViewModels
                     return;
                 }
 
-                // If we have a mounted path, replace the environment
-                var checkEnvironment = _environment;
-                if (MountedPath is not null && Directory.Exists(MountedPath))
-                {
-                    var drive = Drive.Create(null, MountedPath);
-                    checkEnvironment = new DumpEnvironment(
-                        Options,
-                        EvaluateOutputPath(OutputPath),
-                        drive,
-                        CurrentSystem,
-                        CurrentProgram);
-                    checkEnvironment.SetProcessor();
-                }
-
                 // Verify dump output and save it
-                result = await checkEnvironment.VerifyAndSaveDumpOutput(
+                result = await _environment.VerifyAndSaveDumpOutput(
                     resultProgress: resultProgress,
                     protectionProgress: protectionProgress,
                     processUserInfo: _processUserInfo);

@@ -133,9 +133,9 @@ namespace MPF.Frontend.Tools
                     {
                         resultProgress?.Report(ResultEventArgs.Neutral("Running copy protection scan... this might take a while!"));
 
-                        // Explicitly note missing/invalid device paths
-                        if (drive?.DevicePath is null)
-                            resultProgress?.Report(ResultEventArgs.Success("No mounted device path found, protection outputs may be incomplete!"));
+                        // Explicitly note missing/invalid mounted filesystem paths
+                        if (drive?.MountedPath is null)
+                            resultProgress?.Report(ResultEventArgs.Success("No mounted filesystem path found, protection outputs may be incomplete!"));
 
                         protections = await ProtectionTool.RunCombinedProtectionScans(basePath, drive, options, protectionProgress);
                     }

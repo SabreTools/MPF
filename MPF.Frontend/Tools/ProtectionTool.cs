@@ -127,10 +127,10 @@ namespace MPF.Frontend.Tools
                 }
             }
 
-            // Scan the mounted drive path
-            if (drive?.DevicePath is not null)
+            // Scan the mounted filesystem path
+            if (drive?.MountedPath is not null)
             {
-                var driveProtections = await RunProtectionScanOnPath(drive.DevicePath, options, protectionProgress);
+                var driveProtections = await RunProtectionScanOnPath(drive.MountedPath, options, protectionProgress);
                 protections.MergeWith(driveProtections);
             }
 
@@ -220,9 +220,9 @@ namespace MPF.Frontend.Tools
             // If the filtered list is empty in some way, return
             if (protections is null)
                 return "[EXTERNAL SCAN NEEDED]";
-            else if (protections.Count == 0 && drive?.DevicePath is null)
+            else if (protections.Count == 0 && drive?.MountedPath is null)
                 return "Mounted disc path missing [EXTERNAL SCAN NEEDED]";
-            else if (protections.Count == 0 && drive?.DevicePath is not null)
+            else if (protections.Count == 0 && drive?.MountedPath is not null)
                 return "No protections found [OMIT LINE FROM SUBMISSION]";
 
             // Sanitize context-sensitive protections
