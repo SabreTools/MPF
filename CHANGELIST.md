@@ -33,6 +33,7 @@
 - No longer trim BCA
 - SBI should not be visible if empty
 - Make mounted filesystem path inherent to Drive implementation
+- Ensure mounted path text box disabled on dump start
 
 ### 3.11.1 (2026-10-17)
 

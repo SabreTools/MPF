@@ -1433,8 +1433,9 @@ namespace MPF.Frontend.ViewModels
             DriveLetterComboBoxEnabled = false;
             DriveSpeedComboBoxEnabled = false;
             DumpingProgramComboBoxEnabled = false;
-            ScanForProtectionCheckBoxEnabled = false;
             EnableParametersCheckBoxEnabled = false;
+            MountedPathTextBoxEnabled = false;
+            ScanForProtectionCheckBoxEnabled = false;
             StartStopButtonText = StopDumpingValue;
             MediaScanButtonEnabled = false;
             UpdateVolumeLabelEnabled = false;
@@ -1456,8 +1457,9 @@ namespace MPF.Frontend.ViewModels
             DriveLetterComboBoxEnabled = true;
             DriveSpeedComboBoxEnabled = true;
             DumpingProgramComboBoxEnabled = true;
-            ScanForProtectionCheckBoxEnabled = true;
             EnableParametersCheckBoxEnabled = true;
+            MountedPathTextBoxEnabled = true;
+            ScanForProtectionCheckBoxEnabled = true;
             StartStopButtonText = StartDumpingValue;
             MediaScanButtonEnabled = true;
             UpdateVolumeLabelEnabled = true;
@@ -2089,8 +2091,9 @@ namespace MPF.Frontend.ViewModels
             DriveLetterComboBoxEnabled = false;
             DriveSpeedComboBoxEnabled = false;
             DumpingProgramComboBoxEnabled = false;
-            ScanForProtectionCheckBoxEnabled = false;
             EnableParametersCheckBoxEnabled = false;
+            MountedPathTextBoxEnabled = false;
+            ScanForProtectionCheckBoxEnabled = false;
 
             StartStopButtonEnabled = false;
             MediaScanButtonEnabled = false;
@@ -2129,8 +2132,9 @@ namespace MPF.Frontend.ViewModels
                 DriveLetterComboBoxEnabled = true;
                 DriveSpeedComboBoxEnabled = true;
                 DumpingProgramComboBoxEnabled = true;
-                ScanForProtectionCheckBoxEnabled = true;
                 EnableParametersCheckBoxEnabled = true;
+                MountedPathTextBoxEnabled = true;
+                ScanForProtectionCheckBoxEnabled = true;
 
                 StartStopButtonEnabled = ShouldEnableDumpingButton();
                 MediaScanButtonEnabled = true;
@@ -2438,9 +2442,9 @@ namespace MPF.Frontend.ViewModels
                 DriveLetterComboBoxEnabled = false;
                 DriveSpeedComboBoxEnabled = false;
                 DumpingProgramComboBoxEnabled = false;
-                ScanForProtectionCheckBoxEnabled = false;
                 ParametersTextBoxEnabled = true;
                 MountedPathTextBoxEnabled = false;
+                ScanForProtectionCheckBoxEnabled = false;
 
                 MediaScanButtonEnabled = false;
                 UpdateVolumeLabelEnabled = false;
@@ -2461,9 +2465,9 @@ namespace MPF.Frontend.ViewModels
                 DriveLetterComboBoxEnabled = true;
                 DriveSpeedComboBoxEnabled = true;
                 DumpingProgramComboBoxEnabled = true;
-                ScanForProtectionCheckBoxEnabled = true;
                 ParametersTextBoxEnabled = false;
                 MountedPathTextBoxEnabled = true;
+                ScanForProtectionCheckBoxEnabled = true;
 
                 MediaScanButtonEnabled = true;
                 UpdateVolumeLabelEnabled = true;
