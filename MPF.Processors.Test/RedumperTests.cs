@@ -606,7 +606,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetDVDProtection_ValidNotAlways_Filled()
         {
-            string? expected = "FILE Title Key: No Title Key\nDecrypted Disc Key: No Key\n";
+            string? expected = "FILE Title Key: N/A\nDecrypted Disc Key: No Key\n";
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             string? actual = Redumper.GetDVDProtection(log, includeAlways: false);
             Assert.Equal(expected, actual);
@@ -615,7 +615,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetDVDProtection_ValidAlways_Filled()
         {
-            string? expected = "Region: 1 2 3 4 5 6 7 8\nCopyright Protection System Type: No\nFILE Title Key: No Title Key\nDecrypted Disc Key: No Key\n";
+            string? expected = "Region: 1 2 3 4 5 6 7 8\nCopyright Protection System Type: NONE\nFILE Title Key: N/A\nDecrypted Disc Key: No Key\n";
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             string? actual = Redumper.GetDVDProtection(log, includeAlways: true);
             Assert.Equal(expected, actual);
