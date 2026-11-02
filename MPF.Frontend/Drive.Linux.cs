@@ -304,7 +304,11 @@ namespace MPF.Frontend
                 foreach (string mount in mountsLines)
                 {
                     // Split the whitespace-separated mount entry line
+#if NETFRAMEWORK
+                    string[] entry = mount.Split(' ');
+#else
                     string[] entry = mount.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+#endif
                     if (entry.Length < 2)
                         continue;
 
