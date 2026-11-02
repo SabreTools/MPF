@@ -1343,7 +1343,7 @@ namespace MPF.Processors
                             copyrightProtectionSystemType = line.Substring("protection system type: ".Length);
 #endif
                             if (copyrightProtectionSystemType == "none" || copyrightProtectionSystemType == "<none>")
-                                copyrightProtectionSystemType = "No";
+                                copyrightProtectionSystemType = "NONE";
                         }
                         else if (line.StartsWith("region management information:"))
                         {
@@ -1373,9 +1373,9 @@ namespace MPF.Processors
                                 {
                                     string normalizedKey = match.Groups[2].Value.Replace(':', ' ');
                                     if (normalizedKey == "none" || normalizedKey == "<none>")
-                                        normalizedKey = "No Title Key";
+                                        normalizedKey = "N/A";
                                     else if (normalizedKey == "<error>")
-                                        normalizedKey = "Error Retrieving Title Key";
+                                        normalizedKey = "(error)";
 
                                     vobKeys += $"{match.Groups[1].Value} Title Key: {normalizedKey}\n";
                                 }
