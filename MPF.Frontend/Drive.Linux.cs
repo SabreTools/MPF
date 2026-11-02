@@ -224,6 +224,27 @@ namespace MPF.Frontend
         }
 
         /// <summary>
+        /// Set the mount point as defined in /proc/mounts or from generic SCSI
+        /// </summary>
+        private void SetMountPoint()
+        {
+            // Try to process the drive as generic SCSI
+            string? mountPoint = GetMountPointGeneric(DevicePath);
+            if (mountPoint is not null)
+            {
+                MountedPath = mountPoint;
+                return;
+            }
+
+            // Try to process the drive as a block device
+            mountPoint = GetMountPointMounts(DevicePath);
+            if (mountPoint is not null)
+                MountedPath = mountPoint;
+        }
+
+        #region Remove when IO is updated
+
+        /// <summary>
         /// Check whether a sysfs block-device name is a virtual or non-target device that
         /// should not be surfaced as a dump target.
         /// </summary>
@@ -292,29 +313,11 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Set the mount point as defined in /proc/mounts or from generic SCSI
-        /// </summary>
-        private void SetMountPoint()
-        {
-            // Try to process the drive as generic SCSI
-            string? mountPoint = GetMountPointGeneric(DevicePath);
-            if (mountPoint is not null)
-            {
-                MountedPath = mountPoint;
-                return;
-            }
-
-            // Try to process the drive as a block device
-            mountPoint = GetMountPointMounts(DevicePath);
-            if (mountPoint is not null)
-                MountedPath = mountPoint;
-        }
-
-        /// <summary>
         /// Get the mount point based on the block device mapping for generic SCSI
         /// </summary>
         /// <param name="devicePath">Device path to check</param>
         /// <returns>Mount point for the generic device on success, null otherwise</returns>
+        /// TODO: Remove when IO is updated
         private static string? GetMountPointGeneric(string? devicePath)
         {
             // If the device path is invalid
@@ -360,6 +363,7 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="devicePath">Device path to check</param>
         /// <returns>Mount point for the device on success, null otherwise</returns>
+        /// TODO: Remove when IO is updated
         private static string? GetMountPointMounts(string? devicePath)
         {
             // If the device path is invalid
@@ -407,6 +411,8 @@ namespace MPF.Frontend
                 return null;
             }
         }
+
+        #endregion
 
         #endregion
     }

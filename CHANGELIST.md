@@ -40,6 +40,7 @@
 - Handle per-drive creation with mount mapping, OS cleanup
 - Be a little clever with generic SCSI mapping
 - Normalize DVD protection fields
+- Move some Linux methods around, add moving notes
 
 ### 3.11.1 (2026-10-17)
 
