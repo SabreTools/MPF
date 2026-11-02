@@ -34,6 +34,7 @@
 - SBI should not be visible if empty
 - Make mounted filesystem path inherent to Drive implementation
 - Ensure mounted path text box disabled on dump start
+- Make PS1 and PS2 SYSTEM.CNF checks case-insensitive
 
 ### 3.11.1 (2026-10-17)
 

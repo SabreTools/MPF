@@ -442,7 +442,12 @@ namespace MPF.Frontend.Tools
 
             // Get the two paths that we will need to check
             string psxExePath = Path.Combine(drive.MountedPath, "PSX.EXE");
+            if (!File.Exists(psxExePath))
+                psxExePath = Path.Combine(drive.MountedPath, "psx.exe");
+
             string systemCnfPath = Path.Combine(drive.MountedPath, "SYSTEM.CNF");
+            if (!File.Exists(systemCnfPath))
+                systemCnfPath = Path.Combine(drive.MountedPath, "system.cnf");
 
             try
             {
@@ -528,6 +533,8 @@ namespace MPF.Frontend.Tools
 
             // Get the SYSTEM.CNF path to check
             string systemCnfPath = Path.Combine(drive.MountedPath, "SYSTEM.CNF");
+            if (!File.Exists(systemCnfPath))
+                systemCnfPath = Path.Combine(drive.MountedPath, "system.cnf");
 
             try
             {

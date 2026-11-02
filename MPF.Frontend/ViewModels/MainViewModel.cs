@@ -1829,7 +1829,13 @@ namespace MPF.Frontend.ViewModels
 
             // Sony PlayStation and Sony PlayStation 2
             string psxExePath = Path.Combine(drive.MountedPath, "PSX.EXE");
+            if (!File.Exists(psxExePath))
+                psxExePath = Path.Combine(drive.MountedPath, "psx.exe");
+
             string systemCnfPath = Path.Combine(drive.MountedPath, "SYSTEM.CNF");
+            if (!File.Exists(systemCnfPath))
+                systemCnfPath = Path.Combine(drive.MountedPath, "system.cnf");
+
             if (File.Exists(systemCnfPath))
             {
                 // Check for either BOOT or BOOT2
