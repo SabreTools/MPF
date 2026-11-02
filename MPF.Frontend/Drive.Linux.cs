@@ -207,13 +207,16 @@ namespace MPF.Frontend
 
                 long totalSize = ReadUnixBlockDeviceSize(entry);
 
-                result.Add(new Drive
+                var drive = new Drive
                 {
                     InternalDriveType = driveType,
                     DevicePath = Path.Combine(devRoot!, name),
                     MountedPath = Path.Combine(devRoot, name),
                     TotalSize = totalSize,
-                });
+                };
+                drive.SetMountPoint();
+
+                result.Add(drive);
             }
 
             return result;
@@ -288,10 +291,9 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Set the mount points as defined in /proc/mounts
+        /// Set the mount point as defined in /proc/mounts
         /// </summary>
-        /// <param name="drives">Set of all available drives</param>
-        private static void SetMountPoints(Drive[] drives)
+        private void SetMountPoint()
         {
             string mountsPath = "/proc/mounts";
             try
@@ -316,9 +318,12 @@ namespace MPF.Frontend
                     string devicePath = entry[0];
                     string mountPoint = entry[1];
 
-                    // Match the drive and set the mount point
-                    var matchingDrive = Array.Find(drives, d => string.Equals(d.DevicePath, devicePath));
-                    matchingDrive?.MountedPath = mountPoint;
+                    // If the drive does not match
+                    if (!string.Equals(DevicePath, devicePath))
+                        continue;
+
+                    // Set the mount point
+                    MountedPath = mountPoint;
                 }
             }
             catch

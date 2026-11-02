@@ -37,6 +37,7 @@
 - Make PS1 and PS2 SYSTEM.CNF checks case-insensitive
 - Attempt to automatically find mount points for Linux
 - Fix compatibility with older .NET
+- Handle per-drive creation with mount mapping, OS cleanup
 
 ### 3.11.1 (2026-10-17)
 
