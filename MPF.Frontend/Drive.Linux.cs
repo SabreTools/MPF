@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using SabreTools.IO.Extensions;
 
 namespace MPF.Frontend
@@ -291,15 +292,86 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Set the mount point as defined in /proc/mounts
+        /// Set the mount point as defined in /proc/mounts or from generic SCSI
         /// </summary>
         private void SetMountPoint()
         {
+            // Try to process the drive as generic SCSI
+            string? mountPoint = GetMountPointGeneric(DevicePath);
+            if (mountPoint is not null)
+            {
+                MountedPath = mountPoint;
+                return;
+            }
+
+            // Try to process the drive as a block device
+            mountPoint = GetMountPointMounts(DevicePath);
+            if (mountPoint is not null)
+                MountedPath = mountPoint;
+        }
+
+        /// <summary>
+        /// Get the mount point based on the block device mapping for generic SCSI
+        /// </summary>
+        /// <param name="devicePath">Device path to check</param>
+        /// <returns>Mount point for the generic device on success, null otherwise</returns>
+        private static string? GetMountPointGeneric(string? devicePath)
+        {
+            // If the device path is invalid
+            if (devicePath is null)
+                return null;
+
+            // If the device does not match the generic pattern
+            if (!Regex.IsMatch(devicePath, @"/dev/sg.+"))
+                return null;
+
+            // Get the SCSI name from the path by trimming `/dev/`
+#if NETFRAMEWORK
+            string scsiName = devicePath.Substring(5);
+#else
+            string scsiName = devicePath[5..];
+#endif
+
+            // Build the path to the block directory
+            string blockDirectory = $"/sys/class/scsi_generic/{scsiName}/device/block/";
+            if (!Directory.Exists(blockDirectory))
+                return null;
+
+            // If there are no block mappings
+            var blockDevices = IOExtensions.SafeGetDirectories(blockDirectory);
+            if (blockDevices.Length == 0)
+                return null;
+
+            // Take the first found block mapping and reformat to `/dev/sr*`
+            string mappedDevice = blockDevices[0];
+#if NETFRAMEWORK
+            mappedDevice = mappedDevice.Substring($"/sys/class/scsi_generic/{scsiName}/device/block/".Length);
+#else
+            mappedDevice = mappedDevice[$"/sys/class/scsi_generic/{scsiName}/device/block/".Length..];
+#endif
+            mappedDevice = $"/dev/{mappedDevice}";
+
+            // Return the mount point for that device
+            return GetMountPointMounts(mappedDevice);
+        }
+
+        /// <summary>
+        /// Get the mount point based a mapping to /proc/mounts
+        /// </summary>
+        /// <param name="devicePath">Device path to check</param>
+        /// <returns>Mount point for the device on success, null otherwise</returns>
+        private static string? GetMountPointMounts(string? devicePath)
+        {
+            // If the device path is invalid
+            if (devicePath is null)
+                return null;
+
+            // Try reading the mounts file for information
             string mountsPath = "/proc/mounts";
             try
             {
                 if (!File.Exists(mountsPath))
-                    return;
+                    return null;
 
                 // Read all lines from the mounts file
                 string[] mountsLines = File.ReadAllLines(mountsPath);
@@ -315,20 +387,24 @@ namespace MPF.Frontend
                         continue;
 
                     // Extract the two required pieces
-                    string devicePath = entry[0];
-                    string mountPoint = entry[1];
+                    string entryDevicePath = entry[0];
+                    string entryMountPoint = entry[1];
 
                     // If the drive does not match
-                    if (!string.Equals(DevicePath, devicePath))
+                    if (!string.Equals(devicePath, entryDevicePath))
                         continue;
 
-                    // Set the mount point
-                    MountedPath = mountPoint;
+                    // Return the mount point
+                    return entryMountPoint;
                 }
+
+                // No matches were found
+                return null;
             }
             catch
             {
                 // Absorb errors for now
+                return null;
             }
         }
 
