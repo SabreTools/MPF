@@ -287,6 +287,42 @@ namespace MPF.Frontend
             return 0;
         }
 
+        /// <summary>
+        /// Set the mount points as defined in /proc/mounts
+        /// </summary>
+        /// <param name="drives">Set of all available drives</param>
+        private static void SetMountPoints(Drive[] drives)
+        {
+            string mountsPath = "/proc/mounts";
+            try
+            {
+                if (!File.Exists(mountsPath))
+                    return;
+
+                // Read all lines from the mounts file
+                string[] mountsLines = File.ReadAllLines(mountsPath);
+                foreach (string mount in mountsLines)
+                {
+                    // Split the whitespace-separated mount entry line
+                    string[] entry = mount.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    if (entry.Length < 2)
+                        continue;
+
+                    // Extract the two required pieces
+                    string devicePath = entry[0];
+                    string mountPoint = entry[1];
+
+                    // Match the drive and set the mount point
+                    var matchingDrive = Array.Find(drives, d => string.Equals(d.DevicePath, devicePath));
+                    matchingDrive?.MountedPath = mountPoint;
+                }
+            }
+            catch
+            {
+                // Absorb errors for now
+            }
+        }
+
         #endregion
     }
 }

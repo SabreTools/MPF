@@ -344,6 +344,7 @@ namespace MPF.Frontend
                 {
                     drives = AppendUnixFloppyDrives(drives);
                     drives = AppendUnixFixedDrives(drives);
+                    SetMountPoints(drives);
                 }
             }
 
