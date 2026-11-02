@@ -39,6 +39,7 @@
 - Fix compatibility with older .NET
 - Handle per-drive creation with mount mapping, OS cleanup
 - Be a little clever with generic SCSI mapping
+- Normalize DVD protection fields
 
 ### 3.11.1 (2026-10-17)
 
