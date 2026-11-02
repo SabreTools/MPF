@@ -41,6 +41,7 @@
 - Be a little clever with generic SCSI mapping
 - Normalize DVD protection fields
 - Move some Linux methods around, add moving notes
+- Check for length of arrays of IDs for visibility
 
 ### 3.11.1 (2026-10-17)
 
