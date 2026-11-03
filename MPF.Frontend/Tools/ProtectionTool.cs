@@ -228,6 +228,8 @@ namespace MPF.Frontend.Tools
             // Sanitize context-sensitive protections
             var sanitized = SanitizeContextSensitiveProtections(protections);
 
+            // TODO: Remove trimming when BOS is updated
+
             // Get a list of distinct found protections
 #if NET20
             var protectionValues = new List<string>();
@@ -238,13 +240,15 @@ namespace MPF.Frontend.Tools
 
                 foreach (var prot in value)
                 {
-                    if (!protectionValues.Contains(prot))
-                        protectionValues.Add(prot);
+                    string trimmedProt = prot.Trim();
+                    if (!protectionValues.Contains(trimmedProt))
+                        protectionValues.Add(trimmedProt);
                 }
             }
 #else
             var protectionValues = sanitized
                 .SelectMany(kvp => kvp.Value)
+                .Select(p => p.Trim())
                 .Distinct()
                 .ToList();
 #endif
