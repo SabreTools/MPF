@@ -148,6 +148,10 @@ namespace MPF.Frontend.Tools
             Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
+            // Ignore invalid paths
+            if (string.IsNullOrEmpty(path))
+                return [];
+
 #if NET40
             var found = await Task.Factory.StartNew(() =>
 #else
@@ -184,6 +188,10 @@ namespace MPF.Frontend.Tools
             Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
+            // Ignore invalid paths
+            if (string.IsNullOrEmpty(image))
+                return [];
+
 #if NET40
             var found = await Task.Factory.StartNew(() =>
 #else

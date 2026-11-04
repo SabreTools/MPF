@@ -48,6 +48,7 @@
 - Fix incorrect replacement path
 - Handle space encoding in mount points and volume labels
 - Mount points should be left alone
+- Explicitly ignore unmounted discs for protection scanning
 
 ### 3.11.1 (2026-10-17)
 
