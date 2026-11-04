@@ -347,7 +347,9 @@ namespace MPF.Frontend
                         continue;
 
                     // Return the mount point
-                    return Path.GetFileName(entry);
+                    return Path.GetFileName(entry)
+                        .Replace("\\x20", " ") // Replace hex-encoded space characters
+                        .Replace("\\020", " "); // Replace octal-encoded space characters
                 }
 
                 // No matches were found
@@ -421,7 +423,9 @@ namespace MPF.Frontend
                         continue;
 
                     // Return the mount point
-                    return entryMountPoint;
+                    return entryMountPoint
+                        .Replace("\\x20", " ") // Replace hex-encoded space characters
+                        .Replace("\\020", " "); // Replace octal-encoded space characters
                 }
 
                 // No matches were found

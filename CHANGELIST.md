@@ -46,6 +46,7 @@
 - Try to map labels to drives in Avalonia in .NET 6 and up
 - Relative paths don't resolve on Linux properly
 - Fix incorrect replacement path
+- Handle space encoding in mount points and volume labels
 
 ### 3.11.1 (2026-10-17)
 
