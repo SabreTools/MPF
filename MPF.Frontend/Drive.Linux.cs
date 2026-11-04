@@ -216,12 +216,36 @@ namespace MPF.Frontend
                     TotalSize = totalSize,
                 };
                 drive.SetMountPoint();
+#if NET6_0_OR_GREATER
+                drive.SetLabel();
+#endif
 
                 result.Add(drive);
             }
 
             return result;
         }
+
+#if NET6_0_OR_GREATER
+        /// <summary>
+        /// Set the label as defined in /dev/disk/by-label/ or from generic SCSI
+        /// </summary>
+        private void SetLabel()
+        {
+            // Try to process the drive as generic SCSI
+            string? label = GetLabelGeneric(DevicePath);
+            if (label is not null)
+            {
+                VolumeLabel = label;
+                return;
+            }
+
+            // Try to process the drive as a block device
+            label = GetLabelLink(DevicePath);
+            if (label is not null)
+                VolumeLabel = label;
+        }
+#endif
 
         /// <summary>
         /// Set the mount point as defined in /proc/mounts or from generic SCSI
@@ -242,7 +266,7 @@ namespace MPF.Frontend
                 MountedPath = mountPoint;
         }
 
-        #region Remove when IO is updated
+        #region TODO: Remove when IO is updated
 
         /// <summary>
         /// Check whether a sysfs block-device name is a virtual or non-target device that
@@ -250,7 +274,6 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="name">Block-device name (e.g. "sda", "loop0")</param>
         /// <returns>True when the device should be skipped</returns>
-        /// TODO: Remove when IO is updated
         private static bool IsExcludedUnixBlockDevice(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -265,94 +288,94 @@ namespace MPF.Frontend
             return false;
         }
 
+#if NET6_0_OR_GREATER
         /// <summary>
-        /// Read the sysfs "removable" flag for a block device.
+        /// Get the label based on the block device mapping for generic SCSI
         /// </summary>
-        /// <param name="sysBlockEntry">Path to the device directory under the sysfs block root</param>
-        /// <returns>True when the device reports itself as removable; false otherwise</returns>
-        /// TODO: Remove when IO is updated
-        private static bool ReadUnixRemovableFlag(string sysBlockEntry)
+        /// <param name="devicePath">Device path to check</param>
+        /// <returns>Label for the generic device on success, null otherwise</returns>
+        private static string? GetLabelGeneric(string? devicePath)
         {
-            string removablePath = Path.Combine(sysBlockEntry, "removable");
-            try
-            {
-                if (!File.Exists(removablePath))
-                    return false;
+            // If the device path is invalid
+            if (devicePath is null)
+                return null;
 
-                return File.ReadAllText(removablePath).Trim() == "1";
-            }
-            catch
-            {
-                return false;
-            }
+            // Get the mapped device
+            var mappedDevice = GetMappedDeviceForGeneric(devicePath);
+            if (mappedDevice is null)
+                return null;
+
+            // Return the label for that device
+            return GetLabelLink(mappedDevice);
         }
 
         /// <summary>
-        /// Read the device size from sysfs (reported in 512-byte sectors) and convert to bytes.
+        /// Get the label based on the softlinks in /dev/disk/by-label/
         /// </summary>
-        /// <param name="sysBlockEntry">Path to the device directory under the sysfs block root</param>
-        /// <returns>The device size in bytes, or 0 when it cannot be determined</returns>
-        /// TODO: Remove when IO is updated
-        private static long ReadUnixBlockDeviceSize(string sysBlockEntry)
+        /// <param name="devicePath">Device path to check</param>
+        /// <returns>Label for the device on success, null otherwise</returns>
+        private static string? GetLabelLink(string? devicePath)
         {
-            string sizePath = Path.Combine(sysBlockEntry, "size");
+            // If the device path is invalid
+            if (devicePath is null)
+                return null;
+
+            // Try looping through the by-label directory
+            string byLabelPath = "/dev/disk/by-label/";
             try
             {
-                if (!File.Exists(sizePath))
-                    return 0;
+                if (!Directory.Exists(byLabelPath))
+                    return null;
 
-                if (long.TryParse(File.ReadAllText(sizePath).Trim(), out long sectors) && sectors > 0)
-                    return sectors * 512L;
+                var entries = Directory.GetFileSystemEntries("/dev/disk/by-label/");
+                foreach (var entry in entries)
+                {
+                    // Ensure the entry is a file
+                    if (!File.Exists(entry))
+                        continue;
+
+                    // Extract the link target from the file
+                    var linkTarget = new FileInfo(entry).LinkTarget;
+                    if (linkTarget is null)
+                        continue;
+
+                    // Reformat the link target based on relative paths
+                    linkTarget = Path.GetFullPath(linkTarget);
+
+                    // If the drive does not match
+                    if (!string.Equals(devicePath, linkTarget))
+                        continue;
+
+                    // Return the mount point
+                    return Path.GetFileName(entry);
+                }
+
+                // No matches were found
+                return null;
             }
             catch
             {
-                // Unreadable size; report it as unknown
+                // Absorb errors for now
+                return null;
             }
-
-            return 0;
         }
+#endif
 
         /// <summary>
         /// Get the mount point based on the block device mapping for generic SCSI
         /// </summary>
         /// <param name="devicePath">Device path to check</param>
         /// <returns>Mount point for the generic device on success, null otherwise</returns>
-        /// TODO: Remove when IO is updated
         private static string? GetMountPointGeneric(string? devicePath)
         {
             // If the device path is invalid
             if (devicePath is null)
                 return null;
 
-            // If the device does not match the generic pattern
-            if (!Regex.IsMatch(devicePath, @"/dev/sg.+"))
+            // Get the mapped device
+            var mappedDevice = GetMappedDeviceForGeneric(devicePath);
+            if (mappedDevice is null)
                 return null;
-
-            // Get the SCSI name from the path by trimming `/dev/`
-#if NETFRAMEWORK
-            string scsiName = devicePath.Substring(5);
-#else
-            string scsiName = devicePath[5..];
-#endif
-
-            // Build the path to the block directory
-            string blockDirectory = $"/sys/class/scsi_generic/{scsiName}/device/block/";
-            if (!Directory.Exists(blockDirectory))
-                return null;
-
-            // If there are no block mappings
-            var blockDevices = IOExtensions.SafeGetDirectories(blockDirectory);
-            if (blockDevices.Length == 0)
-                return null;
-
-            // Take the first found block mapping and reformat to `/dev/sr*`
-            string mappedDevice = blockDevices[0];
-#if NETFRAMEWORK
-            mappedDevice = mappedDevice.Substring($"/sys/class/scsi_generic/{scsiName}/device/block/".Length);
-#else
-            mappedDevice = mappedDevice[$"/sys/class/scsi_generic/{scsiName}/device/block/".Length..];
-#endif
-            mappedDevice = $"/dev/{mappedDevice}";
 
             // Return the mount point for that device
             return GetMountPointMounts(mappedDevice);
@@ -363,7 +386,6 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="devicePath">Device path to check</param>
         /// <returns>Mount point for the device on success, null otherwise</returns>
-        /// TODO: Remove when IO is updated
         private static string? GetMountPointMounts(string? devicePath)
         {
             // If the device path is invalid
@@ -382,7 +404,7 @@ namespace MPF.Frontend
                 foreach (string mount in mountsLines)
                 {
                     // Split the whitespace-separated mount entry line
-#if NETFRAMEWORK
+#if NETFRAMEWORK || NETSTANDARD
                     string[] entry = mount.Split(' ');
 #else
                     string[] entry = mount.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -410,6 +432,97 @@ namespace MPF.Frontend
                 // Absorb errors for now
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Read the device size from sysfs (reported in 512-byte sectors) and convert to bytes
+        /// </summary>
+        /// <param name="sysBlockEntry">Path to the device directory under the sysfs block root</param>
+        /// <returns>The device size in bytes, 0 on error</returns>
+        private static long ReadUnixBlockDeviceSize(string sysBlockEntry)
+        {
+            string sizePath = Path.Combine(sysBlockEntry, "size");
+            try
+            {
+                if (!File.Exists(sizePath))
+                    return 0;
+
+                string sizeString = File.ReadAllText(sizePath).Trim();
+                if (long.TryParse(sizeString, out long sectors) && sectors > 0)
+                    return sectors * 512;
+            }
+            catch
+            {
+                // Unreadable size; report it as unknown
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Read the sysfs "removable" flag for a block device
+        /// </summary>
+        /// <param name="sysBlockEntry">Path to the device directory under the sysfs block root</param>
+        /// <returns>True when the device reports itself as removable, false otherwise</returns>
+        private static bool ReadUnixRemovableFlag(string sysBlockEntry)
+        {
+            string removablePath = Path.Combine(sysBlockEntry, "removable");
+            try
+            {
+                if (!File.Exists(removablePath))
+                    return false;
+
+                string removableString = File.ReadAllText(removablePath).Trim();
+                return removableString == "1";
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Map a generic (/dev/sg*) device to its corresponding block (/dev/sr*) device
+        /// </summary>
+        /// <param name="devicePath">Device path to check</param>
+        /// <returns>The mapped device path on success, null otherwise</returns>
+        private static string? GetMappedDeviceForGeneric(string? devicePath)
+        {
+            // If the device path is invalid
+            if (devicePath is null)
+                return null;
+
+#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
+            // If the device does not match the generic pattern
+            if (!Regex.IsMatch(devicePath, @"/dev/sg.+"))
+                return null;
+#pragma warning restore SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
+
+            // Get the SCSI name from the path by trimming `/dev/`
+#if NETFRAMEWORK || NETSTANDARD
+            string scsiName = devicePath.Substring(5);
+#else
+            string scsiName = devicePath[5..];
+#endif
+
+            // Build the path to the block directory
+            string blockDirectory = $"/sys/class/scsi_generic/{scsiName}/device/block/";
+            if (!Directory.Exists(blockDirectory))
+                return null;
+
+            // If there are no block mappings
+            var blockDevices = IOExtensions.SafeGetDirectories(blockDirectory);
+            if (blockDevices.Length == 0)
+                return null;
+
+            // Take the first found block mapping and reformat to `/dev/sr*`
+            string mappedDevice = blockDevices[0];
+#if NETFRAMEWORK || NETSTANDARD
+            mappedDevice = mappedDevice.Substring($"/sys/class/scsi_generic/{scsiName}/device/block/".Length);
+#else
+            mappedDevice = mappedDevice[$"/sys/class/scsi_generic/{scsiName}/device/block/".Length..];
+#endif
+            return $"/dev/{mappedDevice}";
         }
 
         #endregion

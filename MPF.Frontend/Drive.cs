@@ -167,9 +167,14 @@ namespace MPF.Frontend
                 VolumeLabel = string.Empty;
             }
 
-            // If on Linux, try to set the mount point
+            // If on Linux, try to set the mount point and label (.NET 5 and above)
             if (SystemEnvironment.IsLinux())
+            {
                 SetMountPoint();
+#if NET6_0_OR_GREATER
+                SetLabel();
+#endif
+            }
         }
 
         #region Public Functionality
