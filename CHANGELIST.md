@@ -47,6 +47,7 @@
 - Relative paths don't resolve on Linux properly
 - Fix incorrect replacement path
 - Handle space encoding in mount points and volume labels
+- Mount points should be left alone
 
 ### 3.11.1 (2026-10-17)
 

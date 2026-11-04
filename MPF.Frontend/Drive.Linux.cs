@@ -423,9 +423,7 @@ namespace MPF.Frontend
                         continue;
 
                     // Return the mount point
-                    return entryMountPoint
-                        .Replace("\\x20", " ") // Replace hex-encoded space characters
-                        .Replace("\\020", " "); // Replace octal-encoded space characters
+                    return entryMountPoint;
                 }
 
                 // No matches were found
