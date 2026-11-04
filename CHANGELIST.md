@@ -44,6 +44,7 @@
 - Check for length of arrays of IDs for visibility
 - Trim protection strings for edge cases
 - Try to map labels to drives in Avalonia in .NET 6 and up
+- Relative paths don't resolve on Linux properly
 
 ### 3.11.1 (2026-10-17)
 
