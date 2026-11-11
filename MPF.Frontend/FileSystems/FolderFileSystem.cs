@@ -182,13 +182,21 @@ namespace MPF.Frontend.FileSystems
                 }
 
                 string? match = null;
-                foreach (string entry in Directory.GetFileSystemEntries(current))
+                try
                 {
-                    if (string.Equals(TrimVersion(Path.GetFileName(entry)), TrimVersion(name), StringComparison.OrdinalIgnoreCase))
+                    foreach (string entry in Directory.GetFileSystemEntries(current))
                     {
-                        match = entry;
-                        break;
+                        if (string.Equals(TrimVersion(Path.GetFileName(entry)), TrimVersion(name), StringComparison.OrdinalIgnoreCase))
+                        {
+                            match = entry;
+                            break;
+                        }
                     }
+                }
+                catch
+                {
+                    // Absorb the exception, the directory cannot be listed, like a removed disc
+                    return null;
                 }
 
                 if (match is null)
