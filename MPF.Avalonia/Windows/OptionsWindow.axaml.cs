@@ -33,8 +33,8 @@ namespace MPF.Avalonia.Windows
             // Set the window title
             OptionsViewModel.Title = Title;
 
-            // Elsewhere drives are device paths, whose files are scanned in the dump image after dumping anyway
-            ScanDumpImageFilesCheckBox!.IsVisible = SystemEnvironment.IsWindows();
+            // On macOS drives have no mounted filesystem path, so the files of the dump image are scanned anyway
+            ScanDumpImageFilesCheckBox!.IsVisible = SystemEnvironment.IsWindows() || SystemEnvironment.IsLinux();
         }
 
         #region UI Functionality
