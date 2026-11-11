@@ -35,11 +35,12 @@ namespace MPF.Frontend.Tools
 
             try
             {
-                // Get the last modified time
+                // Now that we have the EXE name, try to get the fileinfo for it
                 var lastWriteTimeUtc = files.GetLastWriteTimeUtc(filePath!);
                 if (lastWriteTimeUtc is null)
                     return null;
 
+                // Get the last modified time
                 var lastModified = lastWriteTimeUtc.Value;
                 int year = lastModified.Year;
                 int month = lastModified.Month;
@@ -337,10 +338,14 @@ namespace MPF.Frontend.Tools
             if (files is null)
                 return null;
 
+            // Get the two paths that we will need to check
+            string psxExePath = "PSX.EXE";
+            string systemCnfPath = "SYSTEM.CNF";
+
             try
             {
                 // Read the CNF file as an INI file
-                using var systemCnfFile = files.OpenFile("SYSTEM.CNF") ?? throw new FileNotFoundException();
+                using var systemCnfFile = files.OpenFile(systemCnfPath) ?? throw new FileNotFoundException();
                 var systemCnf = new IniFile(systemCnfFile);
                 string? bootValue = string.Empty;
 
@@ -370,7 +375,7 @@ namespace MPF.Frontend.Tools
             }
 
             // If the SYSTEM.CNF value can't be found, try PSX.EXE
-            if (files.FileExists("PSX.EXE"))
+            if (files.FileExists(psxExePath))
                 return "PSX.EXE";
 
             // If neither can be found, we return null
@@ -416,10 +421,13 @@ namespace MPF.Frontend.Tools
             if (files is null)
                 return null;
 
+            // Get the SYSTEM.CNF path to check
+            string systemCnfPath = "SYSTEM.CNF";
+
             try
             {
                 // Try to parse the SYSTEM.CNF file
-                using var systemCnfFile = files.OpenFile("SYSTEM.CNF");
+                using var systemCnfFile = files.OpenFile(systemCnfPath);
                 if (systemCnfFile is null)
                     return null;
 
@@ -732,6 +740,8 @@ namespace MPF.Frontend.Tools
 
             // If we can't find param.json, we don't have a PlayStation 5 disc
             string paramJsonPath = "bd/param.json";
+
+            // If the file doesn't exist
             if (!files.FileExists(paramJsonPath))
                 return null;
 
