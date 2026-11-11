@@ -260,6 +260,7 @@ namespace MPF.Frontend.ViewModels
             {
                 field = value;
                 TriggerPropertyChanged(nameof(CurrentDrive));
+                TriggerPropertyChanged(nameof(MountedPath));
             }
         }
 
@@ -411,13 +412,17 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public string MountedPath
         {
-            get;
+            get => CurrentDrive?.MountedPath ?? string.Empty;
             set
             {
-                field = value;
+                if (CurrentDrive is null)
+                    return;
+
+                CurrentDrive.MountedPath = value;
+                TriggerPropertyChanged(nameof(CurrentDrive));
                 TriggerPropertyChanged(nameof(MountedPath));
             }
-        } = string.Empty;
+        }
 
         /// <summary>
         /// Indicates the status of the mount path text box
@@ -686,7 +691,7 @@ namespace MPF.Frontend.ViewModels
             UpdateVolumeLabelEnabled = true;
 
             // If we have a selected drive, keep track of it
-            char? lastSelectedDrive = CurrentDrive?.DevicePath?[0] ?? null;
+            string? lastSelectedDrive = CurrentDrive?.DevicePath;
 
             // Populate the list of drives and add it to the combo box
             Drives = Drive.CreateListOfDrives(Options.GUI.IgnoreFixedDrives);
@@ -698,7 +703,7 @@ namespace MPF.Frontend.ViewModels
                 // Check for the last selected drive, if possible
                 int index = -1;
                 if (lastSelectedDrive is not null)
-                    index = Drives.FindIndex(d => d.MarkedActive && (d.DevicePath?[0] ?? '\0') == lastSelectedDrive);
+                    index = Drives.FindIndex(d => d.MarkedActive && d.DevicePath == lastSelectedDrive);
 
                 // Check for active optical drives
                 if (index == -1)
@@ -1328,6 +1333,7 @@ namespace MPF.Frontend.ViewModels
                     case InternalProgram.Generic:
                     case InternalProgram.PS3CFW:
                     case InternalProgram.UmdImageCreator:
+                    case InternalProgram.WUDD:
                     case InternalProgram.XboxBackupCreator:
                         VerboseLogLn($"Unsupported dumping program: {CurrentProgram.LongName()}");
                         break;
@@ -1429,8 +1435,9 @@ namespace MPF.Frontend.ViewModels
             DriveLetterComboBoxEnabled = false;
             DriveSpeedComboBoxEnabled = false;
             DumpingProgramComboBoxEnabled = false;
-            ScanForProtectionCheckBoxEnabled = false;
             EnableParametersCheckBoxEnabled = false;
+            MountedPathTextBoxEnabled = false;
+            ScanForProtectionCheckBoxEnabled = false;
             StartStopButtonText = StopDumpingValue;
             MediaScanButtonEnabled = false;
             UpdateVolumeLabelEnabled = false;
@@ -1452,8 +1459,9 @@ namespace MPF.Frontend.ViewModels
             DriveLetterComboBoxEnabled = true;
             DriveSpeedComboBoxEnabled = true;
             DumpingProgramComboBoxEnabled = true;
-            ScanForProtectionCheckBoxEnabled = true;
             EnableParametersCheckBoxEnabled = true;
+            MountedPathTextBoxEnabled = true;
+            ScanForProtectionCheckBoxEnabled = true;
             StartStopButtonText = StartDumpingValue;
             MediaScanButtonEnabled = true;
             UpdateVolumeLabelEnabled = true;
@@ -1604,8 +1612,8 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private static PhysicalSystem? GetPhysicalSystem(Drive? drive, DiscFileSystem? files)
         {
-            // If the drive does not exist, we can't do anything
-            if (drive is null || string.IsNullOrEmpty(drive.DevicePath))
+            // If the mounted filesystem does not exist, we can't do anything
+            if (drive is null || string.IsNullOrEmpty(drive.MountedPath))
                 return null;
 
             // If we can't read the files in the drive, we can only perform physical checks
@@ -1978,8 +1986,16 @@ namespace MPF.Frontend.ViewModels
             // Catch this in case there's an input path issue
             try
             {
-                int driveIndex = Drives.ConvertAll(d => d.DevicePath?[0] ?? '\0')
-                    .IndexOf(_environment.ContextInputPath?[0] ?? default);
+                // Check for the whole input path
+                int driveIndex = Drives.FindIndex(d => d.DevicePath == _environment.ContextInputPath);
+
+                // Check for the drive letter, as some programs only take the letter on Windows
+                if (driveIndex == -1)
+                {
+                    driveIndex = Drives.ConvertAll(d => d.DevicePath?[0] ?? '\0')
+                        .IndexOf(_environment.ContextInputPath?[0] ?? default);
+                }
+
                 CurrentDrive = driveIndex != -1 ? Drives[driveIndex] : Drives[0];
             }
             catch { }
@@ -2054,8 +2070,9 @@ namespace MPF.Frontend.ViewModels
             DriveLetterComboBoxEnabled = false;
             DriveSpeedComboBoxEnabled = false;
             DumpingProgramComboBoxEnabled = false;
-            ScanForProtectionCheckBoxEnabled = false;
             EnableParametersCheckBoxEnabled = false;
+            MountedPathTextBoxEnabled = false;
+            ScanForProtectionCheckBoxEnabled = false;
 
             StartStopButtonEnabled = false;
             MediaScanButtonEnabled = false;
@@ -2094,8 +2111,9 @@ namespace MPF.Frontend.ViewModels
                 DriveLetterComboBoxEnabled = true;
                 DriveSpeedComboBoxEnabled = true;
                 DumpingProgramComboBoxEnabled = true;
-                ScanForProtectionCheckBoxEnabled = true;
                 EnableParametersCheckBoxEnabled = true;
+                MountedPathTextBoxEnabled = true;
+                ScanForProtectionCheckBoxEnabled = true;
 
                 StartStopButtonEnabled = ShouldEnableDumpingButton();
                 MediaScanButtonEnabled = true;
@@ -2364,22 +2382,8 @@ namespace MPF.Frontend.ViewModels
                     return;
                 }
 
-                // If we have a mounted path, replace the environment
-                var checkEnvironment = _environment;
-                if (MountedPath is not null)
-                {
-                    var drive = Drive.Create(null, MountedPath);
-                    checkEnvironment = new DumpEnvironment(
-                        Options,
-                        EvaluateOutputPath(OutputPath),
-                        drive,
-                        CurrentSystem,
-                        CurrentProgram);
-                    checkEnvironment.SetProcessor();
-                }
-
                 // Verify dump output and save it
-                result = await checkEnvironment.VerifyAndSaveDumpOutput(
+                result = await _environment.VerifyAndSaveDumpOutput(
                     resultProgress: resultProgress,
                     protectionProgress: protectionProgress,
                     processUserInfo: _processUserInfo);
@@ -2419,9 +2423,9 @@ namespace MPF.Frontend.ViewModels
                 DriveLetterComboBoxEnabled = false;
                 DriveSpeedComboBoxEnabled = false;
                 DumpingProgramComboBoxEnabled = false;
-                ScanForProtectionCheckBoxEnabled = false;
                 ParametersTextBoxEnabled = true;
                 MountedPathTextBoxEnabled = false;
+                ScanForProtectionCheckBoxEnabled = false;
 
                 MediaScanButtonEnabled = false;
                 UpdateVolumeLabelEnabled = false;
@@ -2442,9 +2446,9 @@ namespace MPF.Frontend.ViewModels
                 DriveLetterComboBoxEnabled = true;
                 DriveSpeedComboBoxEnabled = true;
                 DumpingProgramComboBoxEnabled = true;
-                ScanForProtectionCheckBoxEnabled = true;
                 ParametersTextBoxEnabled = false;
                 MountedPathTextBoxEnabled = true;
+                ScanForProtectionCheckBoxEnabled = true;
 
                 MediaScanButtonEnabled = true;
                 UpdateVolumeLabelEnabled = true;
@@ -2608,6 +2612,7 @@ namespace MPF.Frontend.ViewModels
                     case InternalProgram.Generic:
                     case InternalProgram.PS3CFW:
                     case InternalProgram.UmdImageCreator:
+                    case InternalProgram.WUDD:
                     case InternalProgram.XboxBackupCreator:
                         VerboseLogLn($"Unsupported dumping program: {CurrentProgram.LongName()}");
                         return false;

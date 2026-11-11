@@ -246,6 +246,8 @@ namespace MPF.CLI.Features
 
             // Populate an environment
             var drive = Drive.Create(null, DevicePath ?? string.Empty);
+            drive?.MountedPath = MountedPath;
+
             var env = new DumpEnvironment(Options,
                 FilePath,
                 drive,
@@ -277,19 +279,6 @@ namespace MPF.CLI.Features
                 Console.Error.WriteLine();
                 Console.WriteLine("Execution not recognized as dumping command, skipping processing...");
                 return true;
-            }
-
-            // If we have a mounted path, replace the environment
-            if (MountedPath is not null && Directory.Exists(MountedPath))
-            {
-                drive = Drive.Create(null, MountedPath);
-                env = new DumpEnvironment(Options,
-                    FilePath,
-                    drive,
-                    System,
-                    internalProgram: null);
-                env.SetExecutionContext(PhysicalMediaType, null);
-                env.SetProcessor();
             }
 
             // Finally, attempt to do the output dance

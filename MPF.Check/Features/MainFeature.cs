@@ -91,7 +91,7 @@ namespace MPF.Check.Features
         internal readonly FlagInput NoZipInput = new(_noZipName, ["--no-zip"], "Disable log file compression");
 
         private const string _pathName = "path";
-        internal readonly StringInput PathInput = new(_pathName, ["-p", "--path"], "Physical drive path for additional checks");
+        internal readonly StringInput PathInput = new(_pathName, ["-p", "--path"], "Mounted drive path for additional checks");
 
         private const string _placeholdersName = "placeholders";
         internal readonly FlagInput PlaceholdersInput = new(_placeholdersName, "--placeholders", "Enable placeholder values in submission info");

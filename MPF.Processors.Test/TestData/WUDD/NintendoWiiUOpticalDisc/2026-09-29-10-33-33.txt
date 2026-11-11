@@ -1,0 +1,24 @@
+-WUDD log file-
+Dump start datetime: 2026-09-29 10:33:33
+Duration: 30 minutes 30 seconds
+WUDD version: v1.2.3 2026_08_21_12_17
+
+--Disc info--
+Filepaths:
+	ntfs0:/wudump/WUP-Z-ABCD/game.wud
+Disc ID: WUP-Z-ABCD
+Size of original WUD in bytes: 25025314816
+Hashes of uncompressed WUD:
+ CRC32: 00000000
+ MD5: d41d8cd98f00b204e9800998ecf8427e
+ SHA1: da39a3ee5e6b4b0d3255bfef95601890afd80709
+ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+--Disc key info--
+Filename: ntfs0:/wudump/WUP-Z-ABCD/game.key
+Size: 16
+Hashes:
+ CRC32: deadbeef
+ MD5: deadbeefdeadbeefdeadbeefdeadbeef
+ SHA1: deadbeefdeadbeefdeadbeefdeadbeefdeadbeef
+ SHA256: deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef

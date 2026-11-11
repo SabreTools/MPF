@@ -321,7 +321,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetBCA_ValidPath_Formatted()
         {
-            string expected = "0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n";
+            string expected = "0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n";
             string bcaPath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "DVD", "test.bca");
 
             string? actual = Redumper.GetBCA(bcaPath);
@@ -606,7 +606,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetDVDProtection_ValidNotAlways_Filled()
         {
-            string? expected = "FILE Title Key: No Title Key\nDecrypted Disc Key: No Key\n";
+            string? expected = "FILE Title Key: N/A\nDecrypted Disc Key: No Key\n";
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             string? actual = Redumper.GetDVDProtection(log, includeAlways: false);
             Assert.Equal(expected, actual);
@@ -615,7 +615,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetDVDProtection_ValidAlways_Filled()
         {
-            string? expected = "Region: 1 2 3 4 5 6 7 8\nCopyright Protection System Type: No\nFILE Title Key: No Title Key\nDecrypted Disc Key: No Key\n";
+            string? expected = "Region: 1 2 3 4 5 6 7 8\nCopyright Protection System Type: NONE\nFILE Title Key: N/A\nDecrypted Disc Key: No Key\n";
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             string? actual = Redumper.GetDVDProtection(log, includeAlways: true);
             Assert.Equal(expected, actual);

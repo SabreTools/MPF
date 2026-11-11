@@ -80,7 +80,7 @@ namespace MPF.Frontend.Tools
         /// <returns>True if the drive path is a readable directory, false otherwise</returns>
         /// <remarks>Device paths such as /dev/sr0 or disk2 are not directories</remarks>
         public static bool CanScanDrivePath(Drive? drive)
-            => Directory.Exists(drive?.DevicePath);
+            => Directory.Exists(drive?.MountedPath);
 
         /// <summary>
         /// Run comprehensive protection scans based on both the
@@ -108,12 +108,12 @@ namespace MPF.Frontend.Tools
                 protections.MergeWith(imageProtections);
             }
 
-            // Scan the mounted drive path
+            // Scan the mounted filesystem path
             bool scanDumpImageFiles = options.Processing.ProtectionScanning.ScanDumpImageFiles;
             if (CanScanDrivePath(drive) && !scanDumpImageFiles)
             {
                 resultProgress?.Report(ResultEventArgs.Neutral("Scanning the files of the disc in the drive for protection"));
-                var driveProtections = await RunProtectionScanOnPath(drive!.DevicePath!, options, protectionProgress);
+                var driveProtections = await RunProtectionScanOnPath(drive!.MountedPath!, options, protectionProgress);
                 protections.MergeWith(driveProtections);
                 return protections;
             }
@@ -376,6 +376,10 @@ namespace MPF.Frontend.Tools
             Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
+            // Ignore invalid paths
+            if (string.IsNullOrEmpty(path))
+                return [];
+
 #if NET40
             var found = await Task.Factory.StartNew(() =>
 #else
@@ -412,6 +416,10 @@ namespace MPF.Frontend.Tools
             Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
+            // Ignore invalid paths
+            if (string.IsNullOrEmpty(image))
+                return [];
+
 #if NET40
             var found = await Task.Factory.StartNew(() =>
 #else
@@ -453,6 +461,8 @@ namespace MPF.Frontend.Tools
             // Sanitize context-sensitive protections
             var sanitized = SanitizeContextSensitiveProtections(protections);
 
+            // TODO: Remove trimming when BOS is updated
+
             // Get a list of distinct found protections
 #if NET20
             var protectionValues = new List<string>();
@@ -463,13 +473,15 @@ namespace MPF.Frontend.Tools
 
                 foreach (var prot in value)
                 {
-                    if (!protectionValues.Contains(prot))
-                        protectionValues.Add(prot);
+                    string trimmedProt = prot.Trim();
+                    if (!protectionValues.Contains(trimmedProt))
+                        protectionValues.Add(trimmedProt);
                 }
             }
 #else
             var protectionValues = sanitized
                 .SelectMany(kvp => kvp.Value)
+                .Select(p => p.Trim())
                 .Distinct()
                 .ToList();
 #endif
