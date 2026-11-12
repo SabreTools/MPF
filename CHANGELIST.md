@@ -49,7 +49,7 @@
 - Handle space encoding in mount points and volume labels
 - Mount points should be left alone
 - Explicitly ignore unmounted discs for protection scanning
-- Read disc files without mounting (gmipf)
+- Read disc files from the dump image (gmipf)
 
 ### 3.11.1 (2026-10-17)
 
