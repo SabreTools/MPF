@@ -379,6 +379,7 @@ namespace MPF.Frontend.Tools
             options.Processing.ProtectionScanning.ScanArchivesForProtection = GetBooleanSetting(source, "ScanArchivesForProtection", true);
             options.Processing.ProtectionScanning.HideDriveLetters = GetBooleanSetting(source, "HideDriveLetters", false);
             options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = GetBooleanSetting(source, "IncludeDebugProtectionInformation", false);
+            options.Processing.ProtectionScanning.ScanDumpImageFiles = GetBooleanSetting(source, "ScanDumpImageFiles", false);
 
             options.Processing.Login.PullAllInformation = GetBooleanSetting(source, "PullAllInformation", false);
             options.Processing.Login.RetrieveMatchInformation = GetBooleanSetting(source, "RetrieveMatchInformation", true);
@@ -486,6 +487,7 @@ namespace MPF.Frontend.Tools
                 { "ScanArchivesForProtection", options.Processing.ProtectionScanning.ScanArchivesForProtection.ToString() },
                 { "IncludeDebugProtectionInformation", options.Processing.ProtectionScanning.IncludeDebugProtectionInformation.ToString() },
                 { "HideDriveLetters", options.Processing.ProtectionScanning.HideDriveLetters.ToString() },
+                { "ScanDumpImageFiles", options.Processing.ProtectionScanning.ScanDumpImageFiles.ToString() },
 
                 { "VerboseLogging", options.VerboseLogging.ToString() },
                 { "OpenLogWindowAtStartup", options.GUI.OpenLogWindowAtStartup.ToString() },

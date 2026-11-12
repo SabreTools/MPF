@@ -175,6 +175,10 @@ namespace MPF.Frontend
                 SetLabel();
 #endif
             }
+
+            // If on macOS, try to set the mount point
+            if (SystemEnvironment.IsMacOS())
+                MountedPath = GetMacOSMountPoint(DevicePath) ?? MountedPath;
         }
 
         #region Public Functionality
@@ -354,6 +358,21 @@ namespace MPF.Frontend
             }
 
             return [.. drives];
+        }
+
+        /// <summary>
+        /// Get the name Windows reports for the file system of a disc
+        /// </summary>
+        /// <param name="fileSystemName">Name of the file system read from the disc (e.g. "ISO 9660")</param>
+        /// <returns>"CDFS" for ISO 9660, "UDF" for UDF, empty otherwise</returns>
+        internal static string GetWindowsDriveFormat(string? fileSystemName)
+        {
+            if (fileSystemName == "ISO 9660")
+                return "CDFS";
+            else if (fileSystemName == "UDF")
+                return "UDF";
+
+            return string.Empty;
         }
 
         /// <summary>

@@ -661,6 +661,17 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        /// <inheritdoc cref="ProtectionScanningSettings.ScanDumpImageFiles"/>
+        public bool ScanDumpImageFiles
+        {
+            get => Options.Processing.ProtectionScanning.ScanDumpImageFiles;
+            set
+            {
+                Options.Processing.ProtectionScanning.ScanDumpImageFiles = value;
+                TriggerPropertyChanged(nameof(ScanDumpImageFiles));
+            }
+        }
+
         /// <inheritdoc cref="ProtectionScanningSettings.ScanForProtection"/>
         public bool ScanForProtection
         {

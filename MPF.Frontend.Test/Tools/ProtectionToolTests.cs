@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Threading.Tasks;
+using MPF.Frontend.FileSystems;
+using MPF.Frontend.Test.FileSystems;
 using MPF.Frontend.Tools;
 using Xunit;
 
@@ -8,6 +13,400 @@ namespace MPF.Frontend.Test.Tools
 {
     public class ProtectionToolTests
     {
+        #region CanScanDrivePath
+
+        [Fact]
+        public void CanScanDrivePath_Null_False()
+        {
+            bool actual = ProtectionTool.CanScanDrivePath(null);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void CanScanDrivePath_Directory_True()
+        {
+            string path = Path.Combine(Environment.CurrentDirectory, "TestData", "MacOSDev");
+            var drive = Drive.Create(null, path);
+
+            bool actual = ProtectionTool.CanScanDrivePath(drive);
+            Assert.True(actual);
+        }
+
+        #endregion
+
+        #region RunCombinedProtectionScans
+
+        [Fact]
+        public async Task RunCombinedProtectionScans_NoImageNoDrive_Null()
+        {
+            string basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "ProtectionTool", "missing");
+
+            var actual = await ProtectionTool.RunCombinedProtectionScans(basePath, null, new Options());
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public async Task RunCombinedProtectionScans_UnreadableImageNoDrive_Null()
+        {
+            string basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "ProtectionTool", "unreadable");
+
+            var actual = await ProtectionTool.RunCombinedProtectionScans(basePath, null, new Options());
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public async Task RunCombinedProtectionScans_ImageNoDrive_ImageFilesScanned()
+        {
+            string basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "ProtectionTool", "test");
+
+            var actual = await ProtectionTool.RunCombinedProtectionScans(basePath, null, new Options());
+            Assert.Equal("Bitpool", ProtectionTool.FormatProtections(actual));
+        }
+
+        [Fact]
+        public async Task RunCombinedProtectionScans_ImageDirectoryDrive_ImageFilesNotScanned()
+        {
+            string basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "ProtectionTool", "test");
+            var drive = Drive.Create(null, Path.Combine(Environment.CurrentDirectory, "TestData", "MacOSDev"));
+
+            var actual = await ProtectionTool.RunCombinedProtectionScans(basePath, drive, new Options());
+            Assert.Equal("No protections found [OMIT LINE FROM SUBMISSION]", ProtectionTool.FormatProtections(actual));
+        }
+
+        [Fact]
+        public async Task RunCombinedProtectionScans_ImageDirectoryDriveOptionSet_ImageFilesScanned()
+        {
+            string basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "ProtectionTool", "test");
+            var drive = Drive.Create(null, Path.Combine(Environment.CurrentDirectory, "TestData", "MacOSDev"));
+            var options = new Options();
+            options.Processing.ProtectionScanning.ScanDumpImageFiles = true;
+
+            var actual = await ProtectionTool.RunCombinedProtectionScans(basePath, drive, options);
+            Assert.Equal("Bitpool", ProtectionTool.FormatProtections(actual));
+        }
+
+        #endregion
+
+        #region RunProtectionScanOnFiles
+
+        [Fact]
+        public async Task RunProtectionScanOnFiles_Image_KeysNamedAfterImage()
+        {
+            using var files = OpenTestImage();
+            string sourcePath = Path.Combine("dumps", "disc.iso");
+
+            var actual = await ProtectionTool.RunProtectionScanOnFiles(files, sourcePath, new Options());
+            Assert.NotNull(actual);
+            Assert.Equal("Bitpool", ProtectionTool.FormatProtections(actual));
+            Assert.All(actual.Keys, key => Assert.StartsWith(sourcePath, key));
+        }
+
+        [Fact]
+        public async Task RunProtectionScanOnFiles_NoFiles_Null()
+        {
+            using var files = ImageFileSystem.Create(new MemoryStream(new byte[32 * 2048]));
+
+            var actual = await ProtectionTool.RunProtectionScanOnFiles(files, "disc.iso", new Options());
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public async Task RunProtectionScanOnFiles_UnreadableFile_TemporaryFilesRemoved()
+        {
+            // Directories can be read, file contents cannot
+            byte[] image = LoadTestImage();
+            int firstFileSector = BitConverter.ToInt32(image, (16 * 2048) + 156 + 2) + 5;
+            using var files = ImageFileSystem.Create(new FailingStream(image, failFrom: firstFileSector * 2048L));
+            string mirrorPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+
+            await Assert.ThrowsAsync<IOException>(() => ProtectionTool.RunProtectionScanOnFiles(files, "disc.iso", new Options(), null, mirrorPath));
+            Assert.False(Directory.Exists(mirrorPath));
+        }
+
+        [Fact]
+        public async Task RunProtectionScanOnFiles_Folder_ScannedInPlace()
+        {
+            string path = Path.Combine(Environment.CurrentDirectory, "TestData", "MacOSDev");
+
+            var actual = await ProtectionTool.RunProtectionScanOnFiles(new FolderFileSystem(path), "ignored", new Options());
+            Assert.NotNull(actual);
+            Assert.Empty(actual);
+        }
+
+        #endregion
+
+        #region CreateMirror
+
+        [Fact]
+        public void CreateMirror_UnknownType_FirstSectorAndLength()
+        {
+            using var files = OpenTestImage();
+            string mirrorPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            try
+            {
+                ProtectionTool.CreateMirror(files, files.GetAllEntries(), mirrorPath);
+
+                // Unknown file types keep their first sector and their length, the rest reads as zeros
+                byte[] large = File.ReadAllBytes(Path.Combine(mirrorPath, "DATA", "LARGE.BIN"));
+                Assert.Equal(5000, large.Length);
+                for (int i = 0; i < 2048; i++)
+                {
+                    Assert.Equal((byte)(i * 7 % 251), large[i]);
+                }
+
+                for (int i = 2048; i < large.Length; i++)
+                {
+                    Assert.Equal(0, large[i]);
+                }
+
+                // Known file types are copied in full
+                byte[] tool = File.ReadAllBytes(Path.Combine(mirrorPath, "DATA", "TOOL.EXE"));
+                Assert.Equal(3000, tool.Length);
+                Assert.Equal((byte)(2999 * 13 % 256), tool[2999]);
+
+                // Directories are kept, even if empty
+                Assert.True(Directory.Exists(Path.Combine(mirrorPath, "EMPTY")));
+                Assert.True(File.Exists(Path.Combine(mirrorPath, "Long Directory Name", "Long File Name.txt")));
+            }
+            finally
+            {
+                Directory.Delete(mirrorPath, true);
+            }
+        }
+
+        [Fact]
+        public void CreateMirror_UnknownType_SparseOnWindows()
+        {
+            using var files = OpenTestImage();
+            string mirrorPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            try
+            {
+                ProtectionTool.CreateMirror(files, files.GetAllEntries(), mirrorPath);
+
+                // Windows only leaves out the zeros after the first sector in a file marked as sparse
+                var attributes = File.GetAttributes(Path.Combine(mirrorPath, "DATA", "LARGE.BIN"));
+                Assert.Equal(SystemEnvironment.IsWindows(), (attributes & FileAttributes.SparseFile) != 0);
+            }
+            finally
+            {
+                Directory.Delete(mirrorPath, true);
+            }
+        }
+
+        [Fact]
+        public void CreateMirror_NotOpenableAsType_ReadPartAndLength()
+        {
+            // Named like an archive without being one, such as a dummy file, so the scanner cannot open it
+            byte[] image = LoadTestImage();
+            var counting = new FailingStream(image, failFrom: image.Length);
+            using var files = ImageFileSystem.Create(counting);
+            List<DiscEntry> entries = [new DiscEntry("DATA/DUMMY.ZIP", false, 163840, null, [new Extent(0, 163840, true)], null, null, 0)];
+            string mirrorPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            try
+            {
+                long before = counting.BytesRead;
+                Assert.Equal(1, ProtectionTool.CreateMirror(files, entries, mirrorPath));
+                Assert.True(counting.BytesRead - before < 163840);
+
+                // What was read to identify and open the file is kept, such as the volume descriptor in sector 16
+                byte[] dummy = File.ReadAllBytes(Path.Combine(mirrorPath, "DATA", "DUMMY.ZIP"));
+                Assert.Equal(163840, dummy.Length);
+                Assert.Equal(image[32769], dummy[32769]);
+            }
+            finally
+            {
+                Directory.Delete(mirrorPath, true);
+            }
+        }
+
+        [Fact]
+        public void CreateMirror_OpenedAsType_ReadOnce()
+        {
+            byte[] image = LoadTestImage();
+            var counting = new FailingStream(image, failFrom: image.Length);
+            using var files = ImageFileSystem.Create(counting);
+            var tool = files.GetAllEntries().Find(entry => entry.Path == "DATA/TOOL.EXE")!;
+            string mirrorPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            try
+            {
+                long before = counting.BytesRead;
+                Assert.Equal(1, ProtectionTool.CreateMirror(files, [tool], mirrorPath));
+
+                // Only the first sector is read twice, to identify the file and to open it as its type
+                Assert.Equal(tool.Length + 2048, counting.BytesRead - before);
+                byte[] copy = File.ReadAllBytes(Path.Combine(mirrorPath, "DATA", "TOOL.EXE"));
+                Assert.Equal(3000, copy.Length);
+                Assert.Equal((byte)(2999 * 13 % 256), copy[2999]);
+            }
+            finally
+            {
+                Directory.Delete(mirrorPath, true);
+            }
+        }
+
+        [Fact]
+        public void CreateMirror_OpenedAsTypeReturningToStart_Full()
+        {
+            // An executable followed by 160 KB of other data, which opening it reads in part before returning to its start
+            byte[] image = LoadTestImage();
+            using var files = ImageFileSystem.Create(new MemoryStream(image));
+            var tool = files.GetAllEntries().Find(entry => entry.Path == "DATA/TOOL.EXE")!;
+            long offset = tool.Extents![0].Offset;
+            List<DiscEntry> entries = [new DiscEntry("DATA/BIG.EXE", false, 163000, null, [new Extent(offset, 3000, true), new Extent(0, 160000, true)], null, null, 0)];
+            string mirrorPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            try
+            {
+                Assert.Equal(1, ProtectionTool.CreateMirror(files, entries, mirrorPath));
+
+                byte[] expected = [.. image.Skip((int)offset).Take(3000), .. image.Take(160000)];
+                Assert.Equal(expected, File.ReadAllBytes(Path.Combine(mirrorPath, "DATA", "BIG.EXE")));
+            }
+            finally
+            {
+                Directory.Delete(mirrorPath, true);
+            }
+        }
+
+        [Fact]
+        public void CreateMirror_TextFile_Full()
+        {
+            // Text files are scanned without being opened as a type
+            using var files = OpenTestImage();
+            var large = files.GetAllEntries().Find(entry => entry.Path == "DATA/LARGE.BIN")!;
+            List<DiscEntry> entries = [new DiscEntry("DATA/LARGE.TXT", false, large.Length, null, large.Extents, null, null, 0)];
+            string mirrorPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            try
+            {
+                Assert.Equal(1, ProtectionTool.CreateMirror(files, entries, mirrorPath));
+
+                byte[] text = File.ReadAllBytes(Path.Combine(mirrorPath, "DATA", "LARGE.TXT"));
+                Assert.Equal(5000, text.Length);
+                Assert.Equal((byte)(4999 * 7 % 251), text[4999]);
+            }
+            finally
+            {
+                Directory.Delete(mirrorPath, true);
+            }
+        }
+
+        [Fact]
+        public void CreateMirror_UnreadableWhileOpening_Throws()
+        {
+            // An archive header that claims more data than the first sector holds, and the next sector cannot be read
+            byte[] image = LoadTestImage();
+            DiscEntry large;
+            using (var files = ImageFileSystem.Create(new MemoryStream(image)))
+            {
+                large = files.GetAllEntries().Find(entry => entry.Path == "DATA/LARGE.BIN")!;
+            }
+
+            int offset = (int)large.Extents![0].Offset;
+            Array.Clear(image, offset, 30);
+            image[offset] = 0x50;
+            image[offset + 1] = 0x4B;
+            image[offset + 2] = 0x03;
+            image[offset + 3] = 0x04;
+            BitConverter.GetBytes(4000).CopyTo(image, offset + 18);
+
+            using var damaged = ImageFileSystem.Create(new FailingStream(image, failFrom: offset + 2048));
+            string mirrorPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            try
+            {
+                Assert.Throws<IOException>(() => ProtectionTool.CreateMirror(damaged, [large], mirrorPath));
+            }
+            finally
+            {
+                Directory.Delete(mirrorPath, true);
+            }
+        }
+
+        [Fact]
+        public void CreateMirror_UnreadableFile_LengthOnly()
+        {
+            // Interleaved files have no extents to read
+            using var files = OpenTestImage();
+            List<DiscEntry> entries = [new DiscEntry("DATA/INTERLEAVED.EXE", false, 3000, null, null, null, null, 0)];
+            string mirrorPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            try
+            {
+                Assert.Equal(1, ProtectionTool.CreateMirror(files, entries, mirrorPath));
+                Assert.Equal(new byte[3000], File.ReadAllBytes(Path.Combine(mirrorPath, "DATA", "INTERLEAVED.EXE")));
+            }
+            finally
+            {
+                Directory.Delete(mirrorPath, true);
+            }
+        }
+
+        [Fact]
+        public void CreateMirror_UnsafePath_Skipped()
+        {
+            using var files = OpenTestImage();
+            string outsideName = $"{Guid.NewGuid()}.txt";
+            List<DiscEntry> entries = [new DiscEntry($"../{outsideName}", false, 7, null, null, null, null, 0)];
+            string mirrorPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            string outsidePath = Path.Combine(Path.GetTempPath(), outsideName);
+            try
+            {
+                Assert.Equal(0, ProtectionTool.CreateMirror(files, entries, mirrorPath));
+                Assert.False(File.Exists(outsidePath));
+            }
+            finally
+            {
+                File.Delete(outsidePath);
+            }
+        }
+
+        [Theory]
+        [InlineData("INSTALL/BITPOOL.RSC", true)]
+        [InlineData("Long Directory Name/Long File Name.txt", true)]
+        [InlineData("../outside.txt", false)]
+        [InlineData("DATA/./FILE", false)]
+        [InlineData("DATA//FILE", false)]
+        [InlineData("DATA/FI\0LE", false)]
+        public void IsSafeRelativePath_Path_Expected(string path, bool expected)
+        {
+            Assert.Equal(expected, ProtectionTool.IsSafeRelativePath(path));
+        }
+
+        /// <summary>
+        /// Open the UDF bridge test image
+        /// </summary>
+        private static ImageFileSystem OpenTestImage()
+            => ImageFileSystem.Create(new MemoryStream(LoadTestImage()));
+
+        /// <summary>
+        /// Load the UDF bridge test image
+        /// </summary>
+        private static byte[] LoadTestImage()
+        {
+            string path = Path.Combine(Environment.CurrentDirectory, "TestData", "FileSystems", "udf-bridge.iso.gz");
+            using var gzip = new GZipStream(File.OpenRead(path), CompressionMode.Decompress);
+            using var data = new MemoryStream();
+            gzip.CopyTo(data);
+            return data.ToArray();
+        }
+
+        #endregion
+
+        #region FormatProtections
+
+        [Fact]
+        public void FormatProtections_Null_ExternalScanNeeded()
+        {
+            string? actual = ProtectionTool.FormatProtections(null);
+            Assert.Equal("[EXTERNAL SCAN NEEDED]", actual);
+        }
+
+        [Fact]
+        public void FormatProtections_Empty_NoProtectionsFound()
+        {
+            string? actual = ProtectionTool.FormatProtections([]);
+            Assert.Equal("No protections found [OMIT LINE FROM SUBMISSION]", actual);
+        }
+
+        #endregion
+
         #region SanitizeContextSensitiveProtections
 
         [Fact]
