@@ -23,6 +23,84 @@ namespace MPF.Frontend.Test.FileSystems
             Assert.Equal("TESTDISC", fileSystem.VolumeLabel);
         }
 
+        [Theory]
+        [InlineData("Bridge", 301L * 2048)]
+        [InlineData("Joliet", 451L * 2048)]
+        [InlineData("Primary", 451L * 2048)]
+        [InlineData("UDFOnly", 301L * 2048)]
+        [InlineData("Raw", 301L * 2048)]
+        public void Create_Variant_VolumeSize(string variant, long expected)
+        {
+            // The ISO 9660 volume space is 451 sectors, the UDF partition starts at sector 257 and is 44 sectors long
+            using var fileSystem = Open(variant);
+            Assert.Equal(expected, fileSystem.VolumeSize);
+        }
+
+        [Theory]
+        [InlineData("Bridge", 512, "UDF", 301L * 2048)]
+        [InlineData("Bridge", 2048, "UDF", 301L * 2048)]
+        [InlineData("Primary", 2048, "ISO 9660", 451L * 2048)]
+        [InlineData("Raw", 2352, "UDF", 301L * 2048)]
+        public void Create_WholeBlockDevice_Variant(string variant, int blockSize, string expectedName, long expectedSize)
+        {
+            byte[] image = Load(variant);
+            var device = new VolumeStream(new WholeBlockStream(image, blockSize), image.Length, blockSize);
+
+            using var fileSystem = ImageFileSystem.Create(device);
+            Assert.Equal(expectedName, fileSystem.FileSystemName);
+            Assert.Equal(expectedSize, fileSystem.VolumeSize);
+            Assert.Equal("TESTDISC", fileSystem.VolumeLabel);
+        }
+
+        [Fact]
+        public void Create_MissingWholeBlockDevice_Null()
+        {
+            Assert.Null(ImageFileSystem.Create("/dev/mpf-test-missing-device", 2048 * 2048, 2048));
+        }
+
+        [Theory]
+        [InlineData(1, 16)]
+        [InlineData(2, 24)]
+        public void ReadFirstSector_RawSector_UserData(byte mode, int userDataStart)
+        {
+            var image = new byte[2 * 2352];
+            for (int i = 1; i < 11; i++)
+            {
+                image[i] = 0xFF;
+            }
+
+            image[15] = mode;
+            image[userDataStart] = 0x53;
+            image[userDataStart + 2047] = 0x45;
+
+            var device = new WholeBlockStream(image, 2352);
+            byte[]? firstSector = ImageFileSystem.ReadFirstSector(device);
+            Assert.NotNull(firstSector);
+            Assert.Equal(2048, firstSector.Length);
+            Assert.Equal(0x53, firstSector[0]);
+            Assert.Equal(0x45, firstSector[2047]);
+            Assert.Equal(1, device.Reads);
+        }
+
+        [Fact]
+        public void ReadFirstSector_Blocks2048_FirstBlock()
+        {
+            // A raw sector is no whole block of a DVD, so the first block is read instead
+            var image = new byte[2 * 2048];
+            image[0] = 0x53;
+
+            byte[]? firstSector = ImageFileSystem.ReadFirstSector(new WholeBlockStream(image, 2048));
+            Assert.NotNull(firstSector);
+            Assert.Equal(2048, firstSector.Length);
+            Assert.Equal(0x53, firstSector[0]);
+        }
+
+        [Fact]
+        public void ReadFirstSector_AudioSector_Null()
+        {
+            Assert.Null(ImageFileSystem.ReadFirstSector(new WholeBlockStream(new byte[2 * 2352], 2352)));
+        }
+
         [Fact]
         public void Create_NoFileSystem_FirstBytesReadable()
         {
@@ -31,6 +109,7 @@ namespace MPF.Frontend.Test.FileSystems
 
             using var fileSystem = ImageFileSystem.Create(new MemoryStream(image));
             Assert.Null(fileSystem.FileSystemName);
+            Assert.Equal(0, fileSystem.VolumeSize);
             Assert.False(fileSystem.FileExists("README.TXT"));
             Assert.Empty(fileSystem.GetFiles(string.Empty, "*", recursive: true));
             Assert.Equal([0x53, 0x00], fileSystem.ReadFirstBytes(2));
@@ -292,6 +371,33 @@ namespace MPF.Frontend.Test.FileSystems
 
             using var fileSystem = ImageFileSystem.Create(new MemoryStream(image));
             Assert.Equal(7, fileSystem.GetFileLength("README.TXT"));
+        }
+
+        [Fact]
+        public void GetFileLength_DeviceLengthBeyondVolume_BigEndianLength()
+        {
+            // A device also holds the tracks after the volume, such as audio tracks
+            byte[] image = Load("Primary");
+            int volumeSectors = BitConverter.ToInt32(image, (16 * 2048) + 80);
+            Array.Resize(ref image, (volumeSectors + 100) * 2048);
+
+            // The little-endian length of README.TXT reaches into these tracks
+            int record = FindRootRecord(image, "README.TXT;1");
+            int fileSector = BitConverter.ToInt32(image, record + 2);
+            WriteInt32(image, record + 10, (volumeSectors - fileSector + 10) * 2048);
+
+            using var fileSystem = ImageFileSystem.Create(new VolumeStream(new MemoryStream(image), image.Length));
+            Assert.Equal(7, fileSystem.GetFileLength("README.TXT"));
+        }
+
+        [Fact]
+        public void FileExists_DeviceVolumeSizeZero_True()
+        {
+            byte[] image = Load("Primary");
+            WriteBothEndian(image, (16 * 2048) + 80, 0);
+
+            using var fileSystem = ImageFileSystem.Create(new VolumeStream(new MemoryStream(image), image.Length));
+            Assert.True(fileSystem.FileExists("README.TXT"));
         }
 
         [Fact]

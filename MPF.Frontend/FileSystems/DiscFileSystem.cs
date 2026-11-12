@@ -84,7 +84,9 @@ namespace MPF.Frontend.FileSystems
         /// <returns>File system on success, null if the files of the disc cannot be read</returns>
         /// <remarks>
         /// The mounted filesystem path of the drive is read if it is a directory, otherwise a drive
-        /// letter or another directory given as the device path
+        /// letter or another directory given as the device path. On macOS, the disc in an optical
+        /// drive is read from the directory macOS mounted it at, and its first sector from the
+        /// device, like through the device of a drive letter on Windows
         /// </remarks>
         public static DiscFileSystem? OpenDrive(Drive? drive)
         {
@@ -99,6 +101,21 @@ namespace MPF.Frontend.FileSystems
             string devicePath = drive.DevicePath!;
             if (Directory.Exists(devicePath) || FolderFileSystem.IsWindowsDriveRoot(devicePath))
                 return new FolderFileSystem(devicePath);
+
+            // Other drives are only read as optical discs, or if the type is unknown (a path given on the command line)
+            if (drive.InternalDriveType is not null && drive.InternalDriveType != InternalDriveType.Optical)
+                return null;
+
+            if (SystemEnvironment.IsMacOS())
+            {
+                string? mountPoint = Drive.GetMacOSMountPoint(devicePath);
+                if (mountPoint is not null)
+                    return new FolderFileSystem(mountPoint, devicePath);
+
+                // A disc that macOS did not mount, such as a 3DO disc, only has its first sector read
+                byte[]? firstSector = Drive.ReadMacOSFirstSector(devicePath);
+                return firstSector is null ? null : ImageFileSystem.Create(new MemoryStream(firstSector));
+            }
 
             return null;
         }

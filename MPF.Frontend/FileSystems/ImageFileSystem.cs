@@ -6,7 +6,7 @@ using SabreTools.Data.Extensions;
 namespace MPF.Frontend.FileSystems
 {
     /// <summary>
-    /// Files of a disc read from a disc image, without mounting or extracting it
+    /// Files of a disc read from a disc image or a device, without mounting or extracting it
     /// </summary>
     /// <remarks>
     /// Reads the UDF file system if the disc has one and the ISO 9660 file system otherwise,
@@ -25,7 +25,7 @@ namespace MPF.Frontend.FileSystems
         private const int RawSectorSize = 2352;
 
         /// <summary>
-        /// Path of the disc image, null if opened from a stream
+        /// Path of the disc image or device, null if opened from a stream
         /// </summary>
         public string? SourcePath { get; private set; }
 
@@ -33,6 +33,12 @@ namespace MPF.Frontend.FileSystems
         /// Name of the file system that is read, null if no file system was found
         /// </summary>
         public string? FileSystemName { get; private set; }
+
+        /// <summary>
+        /// Size of the volume of the file system that is read in bytes, as Windows reports it for a mounted disc,
+        /// 0 if no file system was found
+        /// </summary>
+        public long VolumeSize { get; private set; }
 
         /// <inheritdoc/>
         public override string? VolumeLabel => _volumeLabel;
@@ -82,6 +88,65 @@ namespace MPF.Frontend.FileSystems
                 stream?.Dispose();
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Open a device that can only be read in whole blocks
+        /// </summary>
+        /// <param name="devicePath">Path to the device</param>
+        /// <param name="length">Length of the device in bytes</param>
+        /// <param name="blockSize">Number of bytes in a block of the device, 2352 for a CD with raw sectors</param>
+        /// <returns>File system on success, null if the device cannot be opened</returns>
+        internal static ImageFileSystem? Create(string devicePath, long length, int blockSize)
+        {
+            Stream? stream = null;
+            try
+            {
+                // Without a buffer of its own, every read of the file stream is one read of whole blocks
+                var device = new FileStream(devicePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1);
+                stream = new VolumeStream(device, length, blockSize);
+                var deviceFileSystem = Create(stream);
+                deviceFileSystem.SourcePath = devicePath;
+                return deviceFileSystem;
+            }
+            catch
+            {
+                stream?.Dispose();
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Read the user data of the first sector of a device that can only be read in whole blocks
+        /// </summary>
+        /// <param name="device">Device to read, at its start</param>
+        /// <returns>The user data of the sector, null if it has none</returns>
+        /// <remarks>
+        /// The blocks are raw 2352-byte sectors on a CD and 2048-byte sectors otherwise. Reading a raw
+        /// sector fails on a device with 2048-byte blocks, as it is not a whole block there
+        /// </remarks>
+        internal static byte[]? ReadFirstSector(Stream device)
+        {
+            var sector = new byte[RawSectorSize];
+            try
+            {
+                if (device.Read(sector, 0, RawSectorSize) < RawSectorSize)
+                    return null;
+            }
+            catch (IOException)
+            {
+                var data = new byte[SectorSize];
+                device.Seek(0, SeekOrigin.Begin);
+                return device.Read(data, 0, SectorSize) == SectorSize ? data : null;
+            }
+
+            // A sector of an audio track has no sync pattern and no user data
+            if (!HasSyncPattern(sector))
+                return null;
+
+            var userData = new byte[SectorSize];
+            using var stream = new CDROMExtensions.UserDataStream(new MemoryStream(sector));
+            return stream.Read(userData, 0, SectorSize) == SectorSize ? userData : null;
         }
 
         /// <summary>
@@ -373,12 +438,20 @@ namespace MPF.Frontend.FileSystems
             if (file.Read(sync, 0, sync.Length) != sync.Length)
                 return false;
 
-            if (sync[0] != 0x00 || sync[11] != 0x00)
+            return HasSyncPattern(sync);
+        }
+
+        /// <summary>
+        /// Determine if a raw CD sector starts with the sync pattern of a data sector
+        /// </summary>
+        private static bool HasSyncPattern(byte[] sector)
+        {
+            if (sector[0] != 0x00 || sector[11] != 0x00)
                 return false;
 
             for (int i = 1; i < 11; i++)
             {
-                if (sync[i] != 0xFF)
+                if (sector[i] != 0xFF)
                     return false;
             }
 

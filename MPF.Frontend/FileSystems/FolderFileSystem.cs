@@ -17,10 +17,17 @@ namespace MPF.Frontend.FileSystems
         /// </summary>
         public string Root { get; }
 
+        /// <summary>
+        /// BSD name of the drive on macOS to read the first sector from, null for none
+        /// </summary>
+        private readonly string? _devicePath;
+
         /// <param name="root">Root directory of the disc</param>
-        public FolderFileSystem(string root)
+        /// <param name="devicePath">BSD name of the drive on macOS to read the first sector from, null for none</param>
+        public FolderFileSystem(string root, string? devicePath = null)
         {
             Root = root;
+            _devicePath = devicePath;
         }
 
         /// <inheritdoc/>
@@ -105,17 +112,29 @@ namespace MPF.Frontend.FileSystems
         }
 
         /// <inheritdoc/>
-        /// <remarks>Only possible for a drive letter on Windows</remarks>
+        /// <remarks>Only possible for a drive letter on Windows or a drive on macOS</remarks>
         public override byte[]? ReadFirstBytes(int numBytes)
         {
-            if (!IsWindowsDriveRoot(Root))
-                return null;
-
             // Must read between 1 and 2048 bytes
             if (numBytes < 1)
                 return null;
             else if (numBytes > 2048)
                 numBytes = 2048;
+
+            // A drive on macOS is read from its device
+            if (_devicePath is not null && SystemEnvironment.IsMacOS())
+            {
+                byte[]? sector = Drive.ReadMacOSFirstSector(_devicePath);
+                if (sector is null)
+                    return null;
+
+                var firstBytes = new byte[numBytes];
+                Array.Copy(sector, firstBytes, numBytes);
+                return firstBytes;
+            }
+
+            if (!IsWindowsDriveRoot(Root))
+                return null;
 
             string drivePath = $"\\\\.\\{Root[0]}:";
             var firstSector = new byte[numBytes];

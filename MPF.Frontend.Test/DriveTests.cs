@@ -181,6 +181,19 @@ namespace MPF.Frontend.Test
 
         #endregion
 
+        #region GetWindowsDriveFormat
+
+        [Theory]
+        [InlineData("ISO 9660", "CDFS")]
+        [InlineData("UDF", "UDF")]
+        [InlineData(null, "")]
+        public void GetWindowsDriveFormat_FileSystemName_WindowsName(string? fileSystemName, string expected)
+        {
+            Assert.Equal(expected, Drive.GetWindowsDriveFormat(fileSystemName));
+        }
+
+        #endregion
+
         #region EnumerateMacOSWholeDiskNodes
 
         [Fact]
@@ -469,6 +482,71 @@ namespace MPF.Frontend.Test
 
         #endregion
 
+        #region ReadMacOSFirstSector
+
+        [Fact]
+        public void ReadMacOSFirstSector_MissingDevice_Null()
+        {
+            Assert.Null(Drive.ReadMacOSFirstSector("mpf-test-missing-device"));
+        }
+
+        #endregion
+
+        #region ParseMacOSMountPoint
+
+        /// <summary>
+        /// Output of "mount" on macOS with two discs, the second one in disk4
+        /// </summary>
+        private const string MacOSMountOutput =
+            """
+            /dev/disk3s1s1 on / (apfs, sealed, local, read-only, journaled)
+            devfs on /dev (devfs, local, nobrowse)
+            /dev/disk41s0 on /Volumes/OTHER DISC (cd9660, local, nodev, nosuid, read-only, noowners)
+            /dev/disk4s0 on /Volumes/CINEMA_EIKAIWA_TAIKEN (cd9660, local, nodev, nosuid, read-only, noowners)
+
+            """;
+
+        [Theory]
+        [InlineData("disk4", "/Volumes/CINEMA_EIKAIWA_TAIKEN")]
+        [InlineData("disk41", "/Volumes/OTHER DISC")]
+        [InlineData("disk3", null)]
+        [InlineData("disk5", null)]
+        public void ParseMacOSMountPoint_Slices_MountPoint(string devicePath, string? expected)
+        {
+            Assert.Equal(expected, Drive.ParseMacOSMountPoint(MacOSMountOutput, devicePath));
+        }
+
+        [Fact]
+        public void ParseMacOSMountPoint_WholeDiskWithParentheses_MountPoint()
+        {
+            string output = "/dev/disk4 on /Volumes/GAME (DISC 1) (udf, local, nodev, nosuid, read-only, noowners)\n";
+            Assert.Equal("/Volumes/GAME (DISC 1)", Drive.ParseMacOSMountPoint(output, "disk4"));
+        }
+
+        [Fact]
+        public void ParseMacOSMountPoint_AudioTracksFirst_DataTrack()
+        {
+            // A mixed mode disc, with its audio tracks mounted before its data track
+            const string output =
+                """
+                /dev/disk4 on /Volumes/Audio CD (cddafs, local, nodev, nosuid, read-only, noowners)
+                /dev/disk4s0 on /Volumes/COMMANDOS (cd9660, local, nodev, nosuid, read-only, noowners)
+
+                """;
+            Assert.Equal("/Volumes/COMMANDOS", Drive.ParseMacOSMountPoint(output, "disk4"));
+            Assert.Null(Drive.ParseMacOSMountPoint(output.Split('\n')[0], "disk4"));
+        }
+
+        [Fact]
+        public void ParseMacOSMountPoint_NoOptions_Null()
+        {
+            Assert.Null(Drive.ParseMacOSMountPoint("/dev/disk4 on /Volumes/GAME\n", "disk4"));
+            Assert.Null(Drive.ParseMacOSMountPoint(null, "disk4"));
+            Assert.Null(Drive.ParseMacOSMountPoint(string.Empty, "disk4"));
+        }
+
+        #endregion
+
         #region ParseDiskutilByteSize
 
         [Theory]
@@ -481,6 +559,21 @@ namespace MPF.Frontend.Test
         public void ParseDiskutilByteSize_ExtractsExactBytes(string value, long expected)
         {
             Assert.Equal(expected, Drive.ParseDiskutilByteSize(value));
+        }
+
+        #endregion
+
+        #region ParseDiskutilBlockSize
+
+        [Theory]
+        [InlineData("2352 Bytes", 2352)]
+        [InlineData("2048 Bytes", 2048)]
+        [InlineData("512 Bytes", 512)]
+        [InlineData("", 0)]
+        [InlineData("no size information", 0)]
+        public void ParseDiskutilBlockSize_ExtractsBytes(string value, int expected)
+        {
+            Assert.Equal(expected, Drive.ParseDiskutilBlockSize(value));
         }
 
         #endregion

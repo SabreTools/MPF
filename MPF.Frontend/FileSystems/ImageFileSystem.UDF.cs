@@ -45,6 +45,7 @@ namespace MPF.Frontend.FileSystems
                     _volumeLabel = label;
 
                 FileSystemName = "UDF";
+                VolumeSize = GetUDFVolumeSize(volume);
                 return true;
             }
             catch
@@ -52,6 +53,22 @@ namespace MPF.Frontend.FileSystems
                 // Absorb the exception, there is no readable UDF file system
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Get the size of a UDF volume in bytes, up to the end of its last partition
+        /// </summary>
+        /// <remarks>Windows reports this size for a mounted disc with a UDF file system</remarks>
+        private static long GetUDFVolumeSize(Volume volume)
+        {
+            long sectors = 0;
+            foreach (var descriptor in volume.VolumeDescriptorSequence)
+            {
+                if (descriptor is PartitionDescriptor partition)
+                    sectors = Math.Max(sectors, (long)partition.PartitionStartingLocation + partition.PartitionLength);
+            }
+
+            return sectors * SectorSize;
         }
 
         /// <summary>
