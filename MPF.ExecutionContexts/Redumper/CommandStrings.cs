@@ -9,6 +9,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string Disc = "disc";
         public const string Rings = "rings";
         public const string Dump = "dump";
+        public const string SpiralDump = "spiral::dump";
         public const string DumpExtra = "dump::extra";
         public const string Refine = "refine";
         public const string DVDKey = "dvdkey";

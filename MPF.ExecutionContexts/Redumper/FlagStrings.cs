@@ -90,6 +90,8 @@ namespace MPF.ExecutionContexts.Redumper
         public const string Skip = "--skip";
         public const string DumpWriteOffset = "--dump-write-offset";
         public const string DumpReadSize = "--dump-read-size";
+        public const string SpiralDriveDreamcast = "--spiraldrive-dreamcast";
+        public const string SpiralDriveLeadoutSectors = "--spiraldrive-leadout-sectors";
         public const string OverreadLeadout = "--overread-leadout";
         public const string ForceUnscrambled = "--force-unscrambled";
         public const string ForceRefine = "--force-refine";
