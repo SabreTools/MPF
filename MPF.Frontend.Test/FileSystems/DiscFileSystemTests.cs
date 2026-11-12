@@ -38,11 +38,50 @@ namespace MPF.Frontend.Test.FileSystems
         public void OpenDrive_MountedPath_FolderFileSystem()
         {
             // A mounted filesystem path that is a folder is read instead of the device
+            if (OperatingSystem.IsLinux())
+                return;
+
             var drive = Drive.Create(InternalDriveType.Optical, GetTestPath("ProtectionTool", "test.iso"));
             drive!.MountedPath = GetTestPath("FileSystems", "Folder");
             using var fileSystem = DiscFileSystem.OpenDrive(drive);
             var folder = Assert.IsType<FolderFileSystem>(fileSystem);
             Assert.Equal(drive.MountedPath, folder.Root);
+        }
+
+        [Fact]
+        public void OpenDrive_MountedOnLinux_ImageFileSystem()
+        {
+            // On Linux a mounted disc is still read from the device, which also has its first sector
+            if (!OperatingSystem.IsLinux())
+                return;
+
+            var drive = Drive.Create(InternalDriveType.Optical, GetTestPath("ProtectionTool", "test.iso"));
+            drive!.MountedPath = GetTestPath("FileSystems", "Folder");
+            using var fileSystem = DiscFileSystem.OpenDrive(drive);
+            Assert.IsType<ImageFileSystem>(fileSystem);
+            Assert.NotNull(fileSystem.ReadFirstBytes(16));
+        }
+
+        [Fact]
+        public void OpenDrive_DeviceUnreadableOnLinux_FolderFileSystem()
+        {
+            // A device that cannot be opened leaves the mounted filesystem path
+            if (!OperatingSystem.IsLinux())
+                return;
+
+            var drive = Drive.Create(InternalDriveType.Optical, "/dev/mpf-test-missing-device");
+            drive!.MountedPath = GetTestPath("FileSystems", "Folder");
+            using var fileSystem = DiscFileSystem.OpenDrive(drive);
+            var folder = Assert.IsType<FolderFileSystem>(fileSystem);
+            Assert.Equal(drive.MountedPath, folder.Root);
+        }
+
+        [Fact]
+        public void OpenDrive_NotOptical_Null()
+        {
+            // Only optical discs are read from the device
+            var drive = Drive.Create(InternalDriveType.HardDisk, GetTestPath("ProtectionTool", "test.iso"));
+            Assert.Null(DiscFileSystem.OpenDrive(drive));
         }
 
         [Fact]

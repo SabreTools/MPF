@@ -83,20 +83,31 @@ namespace MPF.Frontend.FileSystems
         /// <param name="drive">Drive to open</param>
         /// <returns>File system on success, null if the files of the disc cannot be read</returns>
         /// <remarks>
-        /// The mounted filesystem path of the drive is read if it is a directory, otherwise a drive
-        /// letter or another directory given as the device path
+        /// On Linux, the disc in an optical drive is read from the device, also when it is mounted,
+        /// so its first sector can be read like through the device of a drive letter on Windows.
+        /// Otherwise the mounted filesystem path of the drive is read if it is a directory, or a
+        /// drive letter or another directory given as the device path
         /// </remarks>
         public static DiscFileSystem? OpenDrive(Drive? drive)
         {
             if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
+            // Only optical discs are read from the device, or if the type is unknown (a path given on the command line)
+            string devicePath = drive!.DevicePath!;
+            bool optical = drive.InternalDriveType is null || drive.InternalDriveType == InternalDriveType.Optical;
+            if (SystemEnvironment.IsLinux() && optical && !Directory.Exists(devicePath))
+            {
+                var device = ImageFileSystem.Create(devicePath);
+                if (device is not null)
+                    return device;
+            }
+
             // A mounted filesystem path that is a folder is read as one
-            if (!string.IsNullOrEmpty(drive!.MountedPath) && Directory.Exists(drive.MountedPath))
+            if (!string.IsNullOrEmpty(drive.MountedPath) && Directory.Exists(drive.MountedPath))
                 return new FolderFileSystem(drive.MountedPath!);
 
             // Drive letters are kept even if the disc cannot be read as files, to read its first sector
-            string devicePath = drive.DevicePath!;
             if (Directory.Exists(devicePath) || FolderFileSystem.IsWindowsDriveRoot(devicePath))
                 return new FolderFileSystem(devicePath);
 

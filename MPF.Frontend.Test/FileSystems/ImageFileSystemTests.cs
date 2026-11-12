@@ -23,6 +23,19 @@ namespace MPF.Frontend.Test.FileSystems
             Assert.Equal("TESTDISC", fileSystem.VolumeLabel);
         }
 
+        [Theory]
+        [InlineData("Bridge", 301L * 2048)]
+        [InlineData("Joliet", 451L * 2048)]
+        [InlineData("Primary", 451L * 2048)]
+        [InlineData("UDFOnly", 301L * 2048)]
+        [InlineData("Raw", 301L * 2048)]
+        public void Create_Variant_VolumeSize(string variant, long expected)
+        {
+            // The ISO 9660 volume space is 451 sectors, the UDF partition starts at sector 257 and is 44 sectors long
+            using var fileSystem = Open(variant);
+            Assert.Equal(expected, fileSystem.VolumeSize);
+        }
+
         [Fact]
         public void Create_NoFileSystem_FirstBytesReadable()
         {
@@ -31,6 +44,7 @@ namespace MPF.Frontend.Test.FileSystems
 
             using var fileSystem = ImageFileSystem.Create(new MemoryStream(image));
             Assert.Null(fileSystem.FileSystemName);
+            Assert.Equal(0, fileSystem.VolumeSize);
             Assert.False(fileSystem.FileExists("README.TXT"));
             Assert.Empty(fileSystem.GetFiles(string.Empty, "*", recursive: true));
             Assert.Equal([0x53, 0x00], fileSystem.ReadFirstBytes(2));
@@ -218,6 +232,12 @@ namespace MPF.Frontend.Test.FileSystems
         }
 
         [Fact]
+        public void Create_MissingDevice_Null()
+        {
+            Assert.Null(ImageFileSystem.Create("/dev/mpf-test-missing-device"));
+        }
+
+        [Fact]
         public void Create_NoUDFAnnounced_AnchorNotRead()
         {
             // Reading a sector that is not needed can take minutes on a damaged disc
@@ -292,6 +312,33 @@ namespace MPF.Frontend.Test.FileSystems
 
             using var fileSystem = ImageFileSystem.Create(new MemoryStream(image));
             Assert.Equal(7, fileSystem.GetFileLength("README.TXT"));
+        }
+
+        [Fact]
+        public void GetFileLength_DeviceLengthBeyondVolume_BigEndianLength()
+        {
+            // A device also holds the tracks after the volume, such as audio tracks
+            byte[] image = Load("Primary");
+            int volumeSectors = BitConverter.ToInt32(image, (16 * 2048) + 80);
+            Array.Resize(ref image, (volumeSectors + 100) * 2048);
+
+            // The little-endian length of README.TXT reaches into these tracks
+            int record = FindRootRecord(image, "README.TXT;1");
+            int fileSector = BitConverter.ToInt32(image, record + 2);
+            WriteInt32(image, record + 10, (volumeSectors - fileSector + 10) * 2048);
+
+            using var fileSystem = ImageFileSystem.Create(new VolumeStream(new MemoryStream(image), image.Length));
+            Assert.Equal(7, fileSystem.GetFileLength("README.TXT"));
+        }
+
+        [Fact]
+        public void FileExists_DeviceVolumeSizeZero_True()
+        {
+            byte[] image = Load("Primary");
+            WriteBothEndian(image, (16 * 2048) + 80, 0);
+
+            using var fileSystem = ImageFileSystem.Create(new VolumeStream(new MemoryStream(image), image.Length));
+            Assert.True(fileSystem.FileExists("README.TXT"));
         }
 
         [Fact]

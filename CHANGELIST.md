@@ -50,6 +50,7 @@
 - Mount points should be left alone
 - Explicitly ignore unmounted discs for protection scanning
 - Read disc files from the dump image (gmipf)
+- Read disc files from the drive on Linux without mounting (gmipf)
 
 ### 3.11.1 (2026-10-17)
 

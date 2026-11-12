@@ -51,5 +51,19 @@ namespace MPF.Frontend.Test.FileSystems
             stream.Seek(-2, SeekOrigin.End);
             Assert.Equal(9, stream.ReadByte());
         }
+
+        [Fact]
+        public void VolumeStream_Length_ReadsLimited()
+        {
+            var stream = new VolumeStream(CreateVolume(), 4);
+
+            var actual = new byte[8];
+            Assert.Equal(4, stream.Read(actual, 0, 8));
+            Assert.Equal(0, stream.Read(actual, 0, 8));
+
+            stream.SetLength(6);
+            Assert.Equal(2, stream.Read(actual, 0, 8));
+            Assert.Equal(new byte[] { 5, 6 }, new[] { actual[0], actual[1] });
+        }
     }
 }

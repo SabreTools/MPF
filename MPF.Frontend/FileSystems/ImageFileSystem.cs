@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using SabreTools.Data.Extensions;
+using SabreTools.IO.Extensions;
 
 namespace MPF.Frontend.FileSystems
 {
     /// <summary>
-    /// Files of a disc read from a disc image, without mounting or extracting it
+    /// Files of a disc read from a disc image or a device, without mounting or extracting it
     /// </summary>
     /// <remarks>
     /// Reads the UDF file system if the disc has one and the ISO 9660 file system otherwise,
@@ -25,7 +26,7 @@ namespace MPF.Frontend.FileSystems
         private const int RawSectorSize = 2352;
 
         /// <summary>
-        /// Path of the disc image, null if opened from a stream
+        /// Path of the disc image or device, null if opened from a stream
         /// </summary>
         public string? SourcePath { get; private set; }
 
@@ -33,6 +34,12 @@ namespace MPF.Frontend.FileSystems
         /// Name of the file system that is read, null if no file system was found
         /// </summary>
         public string? FileSystemName { get; private set; }
+
+        /// <summary>
+        /// Size of the volume of the file system that is read in bytes, as Windows reports it for a mounted disc,
+        /// 0 if no file system was found
+        /// </summary>
+        public long VolumeSize { get; private set; }
 
         /// <inheritdoc/>
         public override string? VolumeLabel => _volumeLabel;
@@ -59,9 +66,9 @@ namespace MPF.Frontend.FileSystems
         }
 
         /// <summary>
-        /// Open a disc image
+        /// Open a disc image or a device
         /// </summary>
-        /// <param name="path">Path to a disc image (2048 or raw 2352-byte sectors)</param>
+        /// <param name="path">Path to a disc image (2048 or raw 2352-byte sectors) or device</param>
         /// <returns>File system on success, null if the path cannot be opened</returns>
         /// <remarks>A disc without a readable file system still allows reading the first sector</remarks>
         public static ImageFileSystem? Create(string path)
@@ -69,13 +76,29 @@ namespace MPF.Frontend.FileSystems
             Stream? stream = null;
             try
             {
-                if (!File.Exists(path))
-                    return null;
+                if (IsUnixDevice(path))
+                {
+                    string blockDevice = GetUnixBlockDevice(path);
 
-                stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-                var imageFileSystem = Create(stream);
-                imageFileSystem.SourcePath = path;
-                return imageFileSystem;
+                    // The device is not opened if udev saw no disc in the drive
+                    if (Drive.ReadUnixDiscPresence(blockDevice, "/sys/class/block", "/run/udev/data") == false)
+                        return null;
+
+                    var device = new FileStream(Drive.OpenUnixDevice(blockDevice), FileAccess.Read, SectorSize);
+                    stream = new VolumeStream(device, GetUnixDeviceLength(blockDevice));
+                    var deviceFileSystem = Open(stream);
+                    deviceFileSystem.SourcePath = path;
+                    return deviceFileSystem;
+                }
+                else if (File.Exists(path))
+                {
+                    stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    var imageFileSystem = Create(stream);
+                    imageFileSystem.SourcePath = path;
+                    return imageFileSystem;
+                }
+
+                return null;
             }
             catch
             {
@@ -358,6 +381,44 @@ namespace MPF.Frontend.FileSystems
         #endregion
 
         #region Opening
+
+        /// <summary>
+        /// Determine if a path is a device on Linux
+        /// </summary>
+        private static bool IsUnixDevice(string path)
+            => Environment.OSVersion.Platform == PlatformID.Unix
+                && path.StartsWith("/dev/", StringComparison.Ordinal);
+
+        /// <summary>
+        /// Get the block device of a SCSI generic device on Linux, since only block devices can be read by sector
+        /// </summary>
+        /// <returns>Path of the block device, the given path if it is no SCSI generic device</returns>
+        private static string GetUnixBlockDevice(string path)
+        {
+            string name = Path.GetFileName(path);
+            if (!name.StartsWith("sg", StringComparison.Ordinal))
+                return path;
+
+            string blockRoot = Path.Combine(Path.Combine(Path.Combine("/sys/class/scsi_generic", name), "device"), "block");
+            string[] blockDevices = IOExtensions.SafeGetFileSystemEntries(blockRoot);
+            if (blockDevices.Length == 0)
+                return path;
+
+            return Path.Combine("/dev", Path.GetFileName(blockDevices[0]));
+        }
+
+        /// <summary>
+        /// Get the length of a device on Linux from sysfs
+        /// </summary>
+        /// <returns>Length of the device in bytes, long.MaxValue if unknown</returns>
+        private static long GetUnixDeviceLength(string path)
+        {
+            string sizePath = Path.Combine(Path.Combine("/sys/class/block", Path.GetFileName(path)), "size");
+            if (File.Exists(sizePath) && long.TryParse(File.ReadAllText(sizePath).Trim(), out long sectors) && sectors > 0)
+                return sectors * 512;
+
+            return long.MaxValue;
+        }
 
         /// <summary>
         /// Determine if an image contains raw 2352-byte CD sectors
