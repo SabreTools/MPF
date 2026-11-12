@@ -175,6 +175,10 @@ namespace MPF.Frontend
                 SetLabel();
 #endif
             }
+
+            // If on macOS, try to set the mount point
+            if (SystemEnvironment.IsMacOS())
+                MountedPath = GetMacOSMountPoint(DevicePath) ?? MountedPath;
         }
 
         #region Public Functionality

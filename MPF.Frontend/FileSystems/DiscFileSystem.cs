@@ -84,9 +84,9 @@ namespace MPF.Frontend.FileSystems
         /// <returns>File system on success, null if the files of the disc cannot be read</returns>
         /// <remarks>
         /// The mounted filesystem path of the drive is read if it is a directory, otherwise a drive
-        /// letter or another directory given as the device path. On macOS, the disc in an optical
-        /// drive is read from the directory macOS mounted it at, and its first sector from the
-        /// device, like through the device of a drive letter on Windows
+        /// letter or another directory given as the device path. On macOS, the first sector is read
+        /// from the device, like through the device of a drive letter on Windows, and the disc in an
+        /// optical drive without a mounted filesystem path is read from the directory macOS mounted it at
         /// </remarks>
         public static DiscFileSystem? OpenDrive(Drive? drive)
         {
@@ -95,7 +95,7 @@ namespace MPF.Frontend.FileSystems
 
             // A mounted filesystem path that is a folder is read as one
             if (!string.IsNullOrEmpty(drive!.MountedPath) && Directory.Exists(drive.MountedPath))
-                return new FolderFileSystem(drive.MountedPath!);
+                return new FolderFileSystem(drive.MountedPath!, SystemEnvironment.IsMacOS() ? drive.DevicePath : null);
 
             // Drive letters are kept even if the disc cannot be read as files, to read its first sector
             string devicePath = drive.DevicePath!;
