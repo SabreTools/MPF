@@ -467,7 +467,7 @@
                                   VerticalAlignment="Stretch"
                                   Header="{DynamicResource ProtectionGroupBoxString}">
                             <UniformGrid Columns="2"
-                                         Rows="2">
+                                         Rows="3">
                                 <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource EnableProtectionScanCheckBoxString}"
                                           IsChecked="{Binding ScanForProtection}"
@@ -490,6 +490,12 @@
                                           Content="{DynamicResource HideDriveLettersCheckBoxString}"
                                           IsChecked="{Binding HideDriveLetters}"
                                           ToolTip="Remove drive letters from protection scan output"
+                                          Margin="0,4"/>
+
+                                <CheckBox VerticalAlignment="Center"
+                                          Content="{DynamicResource ScanDumpImageFilesCheckBoxString}"
+                                          IsChecked="{Binding ScanDumpImageFiles}"
+                                          ToolTip="Scan the files inside the dump image instead of the disc in the drive"
                                           Margin="0,4"/>
                             </UniformGrid>
                         </GroupBox>

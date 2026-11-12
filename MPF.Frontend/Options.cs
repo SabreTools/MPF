@@ -149,6 +149,7 @@ namespace MPF.Frontend
             Processing.ProtectionScanning.ScanArchivesForProtection = source.Processing.ProtectionScanning.ScanArchivesForProtection;
             Processing.ProtectionScanning.HideDriveLetters = source.Processing.ProtectionScanning.HideDriveLetters;
             Processing.ProtectionScanning.IncludeDebugProtectionInformation = source.Processing.ProtectionScanning.IncludeDebugProtectionInformation;
+            Processing.ProtectionScanning.ScanDumpImageFiles = source.Processing.ProtectionScanning.ScanDumpImageFiles;
 
             Processing.Login.PullAllInformation = source.Processing.Login.PullAllInformation;
             Processing.Login.RetrieveMatchInformation = source.Processing.Login.RetrieveMatchInformation;
@@ -637,6 +638,12 @@ namespace MPF.Frontend
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public bool IncludeDebugProtectionInformation { get; set; } = false;
+
+        /// <summary>
+        /// Scan the files inside the dump image instead of the disc in the drive
+        /// </summary>
+        /// <remarks>Version 3 and greater</remarks>
+        public bool ScanDumpImageFiles { get; set; } = false;
     }
 
     /// <summary>
