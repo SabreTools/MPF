@@ -6,7 +6,7 @@ using SabreTools.Data.Extensions;
 namespace MPF.Frontend.FileSystems
 {
     /// <summary>
-    /// Files of a disc read from a disc image or an unmounted device, without mounting or extracting it
+    /// Files of a disc read from a disc image, without mounting or extracting it
     /// </summary>
     /// <remarks>
     /// Reads the UDF file system if the disc has one and the ISO 9660 file system otherwise,
@@ -25,7 +25,7 @@ namespace MPF.Frontend.FileSystems
         private const int RawSectorSize = 2352;
 
         /// <summary>
-        /// Path of the disc image or device, null if opened from a stream
+        /// Path of the disc image, null if opened from a stream
         /// </summary>
         public string? SourcePath { get; private set; }
 
@@ -33,12 +33,6 @@ namespace MPF.Frontend.FileSystems
         /// Name of the file system that is read, null if no file system was found
         /// </summary>
         public string? FileSystemName { get; private set; }
-
-        /// <summary>
-        /// Size of the volume of the file system that is read in bytes, as Windows reports it for a mounted disc,
-        /// 0 if no file system was found
-        /// </summary>
-        public long VolumeSize { get; private set; }
 
         /// <inheritdoc/>
         public override string? VolumeLabel => _volumeLabel;
@@ -65,9 +59,9 @@ namespace MPF.Frontend.FileSystems
         }
 
         /// <summary>
-        /// Open a disc image or an unmounted device
+        /// Open a disc image
         /// </summary>
-        /// <param name="path">Path to a disc image (2048 or raw 2352-byte sectors) or device</param>
+        /// <param name="path">Path to a disc image (2048 or raw 2352-byte sectors)</param>
         /// <returns>File system on success, null if the path cannot be opened</returns>
         /// <remarks>A disc without a readable file system still allows reading the first sector</remarks>
         public static ImageFileSystem? Create(string path)
@@ -75,55 +69,13 @@ namespace MPF.Frontend.FileSystems
             Stream? stream = null;
             try
             {
-                if (IsUnixDevice(path))
-                {
-                    string blockDevice = Drive.GetUnixBlockDevice(path);
+                if (!File.Exists(path))
+                    return null;
 
-                    // The device is not opened if udev saw no disc in the drive
-                    if (Drive.ReadUnixDiscPresence(blockDevice, "/sys/class/block", "/run/udev/data") == false)
-                        return null;
-
-                    var device = new FileStream(Drive.OpenUnixDevice(blockDevice), FileAccess.Read, SectorSize);
-                    stream = new VolumeStream(device, GetUnixDeviceLength(blockDevice));
-                    var deviceFileSystem = Open(stream);
-                    deviceFileSystem.SourcePath = path;
-                    return deviceFileSystem;
-                }
-                else if (File.Exists(path))
-                {
-                    stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-                    var imageFileSystem = Create(stream);
-                    imageFileSystem.SourcePath = path;
-                    return imageFileSystem;
-                }
-
-                return null;
-            }
-            catch
-            {
-                stream?.Dispose();
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Open a device that can only be read in whole blocks
-        /// </summary>
-        /// <param name="devicePath">Path to the device</param>
-        /// <param name="length">Length of the device in bytes</param>
-        /// <param name="blockSize">Number of bytes in a block of the device, 2352 for a CD with raw sectors</param>
-        /// <returns>File system on success, null if the device cannot be opened</returns>
-        internal static ImageFileSystem? Create(string devicePath, long length, int blockSize)
-        {
-            Stream? stream = null;
-            try
-            {
-                // Without a buffer of its own, every read of the file stream is one read of whole blocks
-                var device = new FileStream(devicePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1);
-                stream = new VolumeStream(device, length, blockSize);
-                var deviceFileSystem = Create(stream);
-                deviceFileSystem.SourcePath = devicePath;
-                return deviceFileSystem;
+                stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                var imageFileSystem = Create(stream);
+                imageFileSystem.SourcePath = path;
+                return imageFileSystem;
             }
             catch
             {
@@ -406,26 +358,6 @@ namespace MPF.Frontend.FileSystems
         #endregion
 
         #region Opening
-
-        /// <summary>
-        /// Determine if a path is a device on Linux
-        /// </summary>
-        private static bool IsUnixDevice(string path)
-            => Environment.OSVersion.Platform == PlatformID.Unix
-                && path.StartsWith("/dev/", StringComparison.Ordinal);
-
-        /// <summary>
-        /// Get the length of a device on Linux from sysfs
-        /// </summary>
-        /// <returns>Length of the device in bytes, long.MaxValue if unknown</returns>
-        private static long GetUnixDeviceLength(string path)
-        {
-            string sizePath = Path.Combine(Path.Combine("/sys/class/block", Path.GetFileName(path)), "size");
-            if (File.Exists(sizePath) && long.TryParse(File.ReadAllText(sizePath).Trim(), out long sectors) && sectors > 0)
-                return sectors * 512;
-
-            return long.MaxValue;
-        }
 
         /// <summary>
         /// Determine if an image contains raw 2352-byte CD sectors

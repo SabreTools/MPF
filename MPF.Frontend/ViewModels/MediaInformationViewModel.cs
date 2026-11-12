@@ -1209,7 +1209,7 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
-        public bool FullyMatchedIDsVisible => FullyMatchedIDs is not null;
+        public bool FullyMatchedIDsVisible => FullyMatchedIDs is not null && FullyMatchedIDs.Length > 0;
 
         public string? PartiallyMatchedIDs
         {
@@ -1222,7 +1222,7 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
-        public bool PartiallyMatchedIDsVisible => PartiallyMatchedIDs is not null;
+        public bool PartiallyMatchedIDsVisible => PartiallyMatchedIDs is not null && PartiallyMatchedIDs.Length > 0;
 
         public string? Dat
         {
@@ -1424,7 +1424,7 @@ namespace MPF.Frontend.ViewModels
             get => SubmissionInfo.DumpMetadata.SBI;
         }
 
-        public bool SBIVisible => SBI is not null;
+        public bool SBIVisible => !string.IsNullOrEmpty(SBI);
 
         public string? SSHash
         {

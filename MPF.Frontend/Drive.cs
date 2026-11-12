@@ -33,6 +33,13 @@ namespace MPF.Frontend
         public string? DevicePath { get; private set; } = null;
 
         /// <summary>
+        /// Mounted filesystem path
+        /// </summary>
+        /// <remarks>Examples include "D:\" on Windows and "/media/cdrom0" on Unix</remarks>
+        /// TODO: This should not have a public setter
+        public string? MountedPath { get; set; } = null;
+
+        /// <summary>
         /// Represents if the drive has been marked active
         /// </summary>
         public bool MarkedActive { get; private set; } = false;
@@ -71,7 +78,7 @@ namespace MPF.Frontend
                     return field = string.Empty;
 
                 // Deal with non-Windows drive names
-                if (Environment.OSVersion.Platform == PlatformID.Unix)
+                if (!SystemEnvironment.IsWindows())
                 {
                     string volumePath = DevicePath!.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
                     string volumeName = Path.GetFileName(volumePath);
@@ -140,6 +147,7 @@ namespace MPF.Frontend
 
             // Populate the data fields
             DevicePath = driveInfo.Name;
+            MountedPath = driveInfo.Name;
             MarkedActive = driveInfo.IsReady;
             if (MarkedActive)
             {
@@ -147,7 +155,7 @@ namespace MPF.Frontend
                 TotalSize = driveInfo.TotalSize;
 
                 // DriveInfo.VolumeLabel is only available on Windows
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                if (SystemEnvironment.IsWindows())
                     VolumeLabel = driveInfo.VolumeLabel;
                 else
                     VolumeLabel = string.Empty;
@@ -157,6 +165,15 @@ namespace MPF.Frontend
                 DriveFormat = string.Empty;
                 TotalSize = default;
                 VolumeLabel = string.Empty;
+            }
+
+            // If on Linux, try to set the mount point and label (.NET 5 and above)
+            if (SystemEnvironment.IsLinux())
+            {
+                SetMountPoint();
+#if NET6_0_OR_GREATER
+                SetLabel();
+#endif
             }
         }
 
@@ -260,13 +277,6 @@ namespace MPF.Frontend
         {
             var driveInfo = Array.Find(DriveInfo.GetDrives(), d => d?.Name == DevicePath);
             PopulateFromDriveInfo(driveInfo);
-
-            // Optical drives on Linux are not listed by DriveInfo, so udev is asked again if there is a disc and the disc is read again
-            if (DevicePath is not null && SystemEnvironment.IsLinux() && InternalDriveType == Frontend.InternalDriveType.Optical)
-            {
-                MarkedActive = MayContainUnixDisc(DevicePath);
-                PopulateFromUnixDevice(DevicePath);
-            }
         }
 
         /// <inheritdoc/>
@@ -291,11 +301,8 @@ namespace MPF.Frontend
             // nodes below (sysfs on Linux, diskutil on macOS); DriveInfo only exposes mount
             // points (e.g. "/"), which are not dumpable devices, so they are deliberately left
             // out of the DriveInfo query there.
-            bool isUnix = Environment.OSVersion.Platform == PlatformID.Unix;
-            bool isMacOS = SystemEnvironment.IsMacOS();
-
             var desiredDriveTypes = new List<DriveType>() { DriveType.CDRom };
-            if (!ignoreFixedDrives && !isUnix)
+            if (!ignoreFixedDrives && !SystemEnvironment.IsLinux())
             {
                 desiredDriveTypes.Add(DriveType.Fixed);
                 desiredDriveTypes.Add(DriveType.Removable);
@@ -319,18 +326,18 @@ namespace MPF.Frontend
             }
 
             // Apply OS-specific drive adjustments
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            if (SystemEnvironment.IsWindows())
             {
                 MarkWindowsFloppyDrives(drives);
             }
-            else if (isMacOS)
+            else if (SystemEnvironment.IsMacOS())
             {
                 // macOS exposes every storage device through the diskutil command-line tool
                 // rather than the per-category sysfs trees Linux uses, so a single sweep
                 // surfaces optical, floppy, and fixed/removable devices. See Drive.MacOS.cs.
                 drives = AppendMacOSDrives(drives, ignoreFixedDrives);
             }
-            else if (isUnix)
+            else if (SystemEnvironment.IsLinux())
             {
                 // Optical drives are removable dump targets, so surface them regardless of the
                 // fixed-drive toggle. Floppy drives are hidden unless the user opts to show
@@ -347,21 +354,6 @@ namespace MPF.Frontend
             }
 
             return [.. drives];
-        }
-
-        /// <summary>
-        /// Get the name Windows reports for the file system of a disc
-        /// </summary>
-        /// <param name="fileSystemName">Name of the file system read from the disc (e.g. "ISO 9660")</param>
-        /// <returns>"CDFS" for ISO 9660, "UDF" for UDF, empty otherwise</returns>
-        internal static string GetWindowsDriveFormat(string? fileSystemName)
-        {
-            if (fileSystemName == "ISO 9660")
-                return "CDFS";
-            else if (fileSystemName == "UDF")
-                return "UDF";
-
-            return string.Empty;
         }
 
         /// <summary>

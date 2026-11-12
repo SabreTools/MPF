@@ -53,6 +53,7 @@ namespace MPF.Frontend.Test
         [InlineData(InternalProgram.Generic, "Generic")]
         [InlineData(InternalProgram.PS3CFW, "PS3 CFW")]
         [InlineData(InternalProgram.UmdImageCreator, "UmdImageCreator")]
+        [InlineData(InternalProgram.WUDD, "WUDD")]
         [InlineData(InternalProgram.XboxBackupCreator, "XboxBackupCreator")]
         public void LongName_InternalProgram(InternalProgram? prog, string? expected)
         {
@@ -180,6 +181,7 @@ namespace MPF.Frontend.Test
         [InlineData(InternalProgram.Generic, "generic")]
         [InlineData(InternalProgram.PS3CFW, "ps3cfw")]
         [InlineData(InternalProgram.UmdImageCreator, "uic")]
+        [InlineData(InternalProgram.WUDD, "wudd")]
         [InlineData(InternalProgram.XboxBackupCreator, "xbc")]
         public void ShortName_InternalProgram(InternalProgram? prog, string? expected)
         {
@@ -225,6 +227,7 @@ namespace MPF.Frontend.Test
         [InlineData("generic", InternalProgram.Generic)]
         [InlineData("ps3cfw", InternalProgram.PS3CFW)]
         [InlineData("uic", InternalProgram.UmdImageCreator)]
+        [InlineData("wudd", InternalProgram.WUDD)]
         [InlineData("xbc", InternalProgram.XboxBackupCreator)]
         public void ToInternalProgramTest(string? internalProgram, InternalProgram expected)
         {

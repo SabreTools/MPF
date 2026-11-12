@@ -97,7 +97,12 @@ namespace MPF.Check.Features
                 // Now populate an environment
                 Drive? drive = null;
                 if (!string.IsNullOrEmpty(DevicePath))
+                {
                     drive = Drive.Create(null, DevicePath!);
+
+                    // TODO: This should populate the correct thing by default
+                    drive?.MountedPath = DevicePath;
+                }
 
                 var env = new DumpEnvironment(Options,
                     filepath,

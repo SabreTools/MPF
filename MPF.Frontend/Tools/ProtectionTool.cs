@@ -80,7 +80,7 @@ namespace MPF.Frontend.Tools
         /// <returns>True if the drive path is a readable directory, false otherwise</returns>
         /// <remarks>Device paths such as /dev/sr0 or disk2 are not directories</remarks>
         public static bool CanScanDrivePath(Drive? drive)
-            => Directory.Exists(drive?.DevicePath);
+            => Directory.Exists(drive?.MountedPath);
 
         /// <summary>
         /// Run comprehensive protection scans based on both the
@@ -108,12 +108,12 @@ namespace MPF.Frontend.Tools
                 protections.MergeWith(imageProtections);
             }
 
-            // Scan the mounted drive path
+            // Scan the mounted filesystem path
             bool scanDumpImageFiles = options.Processing.ProtectionScanning.ScanDumpImageFiles;
             if (CanScanDrivePath(drive) && !scanDumpImageFiles)
             {
                 resultProgress?.Report(ResultEventArgs.Neutral("Scanning the files of the disc in the drive for protection"));
-                var driveProtections = await RunProtectionScanOnPath(drive!.DevicePath!, options, protectionProgress);
+                var driveProtections = await RunProtectionScanOnPath(drive!.MountedPath!, options, protectionProgress);
                 protections.MergeWith(driveProtections);
                 return protections;
             }
@@ -153,12 +153,12 @@ namespace MPF.Frontend.Tools
         /// Run protection scan on the files of a disc
         /// </summary>
         /// <param name="files">Files of the disc to scan</param>
-        /// <param name="sourcePath">Path of the disc image or device, put in front of the scanned file names</param>
+        /// <param name="sourcePath">Path of the disc image, put in front of the scanned file names</param>
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections, null if the disc has no files</returns>
         /// <remarks>
-        /// The files of a disc image or device are written to a temporary directory and scanned there,
+        /// The files of a disc image are written to a temporary directory and scanned there,
         /// without extracting the whole disc: the scanner identifies a file by its first bytes and only
         /// parses files of known types that it can open as that type, so other files only get the bytes read
         /// to identify and open them and their length (as a sparse file), which keeps their name, size and
@@ -181,10 +181,10 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
-        /// Run protection scan on the files of a disc image or device in a temporary directory
+        /// Run protection scan on the files of a disc image in a temporary directory
         /// </summary>
-        /// <param name="image">Disc image or device to scan</param>
-        /// <param name="sourcePath">Path of the disc image or device, put in front of the scanned file names</param>
+        /// <param name="image">Disc image to scan</param>
+        /// <param name="sourcePath">Path of the disc image, put in front of the scanned file names</param>
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <param name="mirrorPath">Temporary directory to write the files to, removed afterwards</param>
@@ -209,7 +209,7 @@ namespace MPF.Frontend.Tools
 #endif
                 var found = await RunProtectionScanOnPath(mirrorPath, options, progress);
 
-                // Name the scanned files after the disc image or device instead of the temporary directory
+                // Name the scanned files after the disc image instead of the temporary directory
                 Dictionary<string, List<string>> protections = [];
                 foreach (var kvp in found)
                 {
@@ -227,7 +227,7 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Write the files of a disc to a directory, in full only where the scanner parses them
         /// </summary>
-        /// <param name="image">Disc image or device to read</param>
+        /// <param name="image">Disc image to read</param>
         /// <param name="entries">Files and directories of the disc</param>
         /// <param name="mirrorPath">Directory to write to</param>
         /// <returns>Number of files written</returns>
@@ -376,6 +376,10 @@ namespace MPF.Frontend.Tools
             Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
+            // Ignore invalid paths
+            if (string.IsNullOrEmpty(path))
+                return [];
+
 #if NET40
             var found = await Task.Factory.StartNew(() =>
 #else
@@ -412,6 +416,10 @@ namespace MPF.Frontend.Tools
             Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
+            // Ignore invalid paths
+            if (string.IsNullOrEmpty(image))
+                return [];
+
 #if NET40
             var found = await Task.Factory.StartNew(() =>
 #else
@@ -453,6 +461,8 @@ namespace MPF.Frontend.Tools
             // Sanitize context-sensitive protections
             var sanitized = SanitizeContextSensitiveProtections(protections);
 
+            // TODO: Remove trimming when BOS is updated
+
             // Get a list of distinct found protections
 #if NET20
             var protectionValues = new List<string>();
@@ -463,13 +473,15 @@ namespace MPF.Frontend.Tools
 
                 foreach (var prot in value)
                 {
-                    if (!protectionValues.Contains(prot))
-                        protectionValues.Add(prot);
+                    string trimmedProt = prot.Trim();
+                    if (!protectionValues.Contains(trimmedProt))
+                        protectionValues.Add(trimmedProt);
                 }
             }
 #else
             var protectionValues = sanitized
                 .SelectMany(kvp => kvp.Value)
+                .Select(p => p.Trim())
                 .Distinct()
                 .ToList();
 #endif

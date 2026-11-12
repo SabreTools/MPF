@@ -904,12 +904,9 @@ namespace MPF.Processors
                 if (hex is null)
                     return null;
 
-                // Get the starting index to read at most the last 64 bytes (128 characters)
-                int startingIndex = hex.Length >= 128 ? hex.Length - 128 : 0;
-
                 // Separate into blocks of 4 hex digits and newlines
                 var bca = new StringBuilder();
-                for (int i = startingIndex; i < hex.Length; i++)
+                for (int i = 0; i < hex.Length; i++)
                 {
                     bca.Append(hex[i]);
                     if ((i + 1) % 32 == 0)
@@ -1273,6 +1270,7 @@ namespace MPF.Processors
                 "DVD+RW" => PhysicalMediaType.DVD,
                 "DVD+R" => PhysicalMediaType.DVD,
 
+                // TODO: DDCD should be a separate type
                 "DDCD-ROM" => PhysicalMediaType.CDROM,
                 "DDCD-R" => PhysicalMediaType.CDROM,
                 "DDCD-RW" => PhysicalMediaType.CDROM,
@@ -1292,10 +1290,19 @@ namespace MPF.Processors
                 "HD DVD-R DL" => PhysicalMediaType.HDDVD,
                 "HD DVD-RW DL" => PhysicalMediaType.HDDVD,
 
-                "NINTENDO" => PhysicalMediaType.NintendoWiiOpticalDisc, // Maybe also GC?
-                "RESERVED5" => PhysicalMediaType.NintendoWiiOpticalDisc, // Maybe also GC?
+                // Values from PS3/PS4 OEM drives
+                "PS1 CD-ROM" => PhysicalMediaType.CDROM,
+                "PS2 CD-ROM" => PhysicalMediaType.CDROM,
+                "PS2 DVD-ROM" => PhysicalMediaType.DVD,
+                "PS3 DVD-ROM" => PhysicalMediaType.DVD,
+                "PS3 BD-ROM" => PhysicalMediaType.BluRay,
+                "PS4 BD-ROM" => PhysicalMediaType.BluRay,
 
                 "NON STANDARD" => null,
+
+                // These were removed at some point
+                "NINTENDO" => PhysicalMediaType.NintendoWiiOpticalDisc, // Maybe also GC?
+                "RESERVED5" => PhysicalMediaType.NintendoWiiOpticalDisc, // Maybe also GC?
 
                 _ => null,
             };
@@ -1336,7 +1343,7 @@ namespace MPF.Processors
                             copyrightProtectionSystemType = line.Substring("protection system type: ".Length);
 #endif
                             if (copyrightProtectionSystemType == "none" || copyrightProtectionSystemType == "<none>")
-                                copyrightProtectionSystemType = "No";
+                                copyrightProtectionSystemType = "NONE";
                         }
                         else if (line.StartsWith("region management information:"))
                         {
@@ -1366,9 +1373,9 @@ namespace MPF.Processors
                                 {
                                     string normalizedKey = match.Groups[2].Value.Replace(':', ' ');
                                     if (normalizedKey == "none" || normalizedKey == "<none>")
-                                        normalizedKey = "No Title Key";
+                                        normalizedKey = "N/A";
                                     else if (normalizedKey == "<error>")
-                                        normalizedKey = "Error Retrieving Title Key";
+                                        normalizedKey = "(error)";
 
                                     vobKeys += $"{match.Groups[1].Value} Title Key: {normalizedKey}\n";
                                 }
@@ -1396,7 +1403,7 @@ namespace MPF.Processors
             {
                 if (region == "1 2 3 4 5 6 7 8")
                     region = null;
-                if (copyrightProtectionSystemType == "No")
+                if (copyrightProtectionSystemType == "NONE")
                     copyrightProtectionSystemType = null;
             }
 

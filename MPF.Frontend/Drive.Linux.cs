@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
-using Microsoft.Win32.SafeHandles;
-using MPF.Frontend.FileSystems;
+using System.Text.RegularExpressions;
 using SabreTools.IO.Extensions;
 
 namespace MPF.Frontend
@@ -11,16 +9,6 @@ namespace MPF.Frontend
     public partial class Drive
     {
         #region Fields
-
-        /// <summary>
-        /// Flags to open a device on Linux for reading without waiting for a disc (O_RDONLY | O_NONBLOCK | O_CLOEXEC)
-        /// </summary>
-        private const int UnixOpenReadNonBlocking = 0x0000 | 0x0800 | 0x80000;
-
-        /// <summary>
-        /// Advice that a file on Linux is read in random order (POSIX_FADV_RANDOM)
-        /// </summary>
-        private const int UnixAdviceRandom = 1;
 
         /// <summary>
         /// sysfs block-device name prefixes that the fixed-drive enumerator does not surface:
@@ -82,33 +70,16 @@ namespace MPF.Frontend
                 if (!existingNames.Add(devicePath))
                     continue;
 
-                // Mark the drive as active unless udev saw no disc in it, like a drive that is not ready on Windows
+                // Force marking the drive as active if it's found
                 var drive = Create(Frontend.InternalDriveType.Optical, devicePath);
                 if (drive is not null)
                 {
-                    drive.MarkedActive = MayContainUnixDisc(devicePath);
-                    drive.PopulateFromUnixDevice(devicePath);
+                    drive.MarkedActive = true;
                     extra.Add(drive);
                 }
             }
 
             return [.. drives, .. extra];
-        }
-
-        /// <summary>
-        /// Populate the file system and size of the disc in an optical drive on Linux, as Windows reports them
-        /// </summary>
-        /// <param name="devicePath">Block or SCSI generic device path of the drive</param>
-        /// <remarks>DriveInfo does not report them, since the disc is not mounted</remarks>
-        private void PopulateFromUnixDevice(string devicePath)
-        {
-            // This should only run on Linux
-            if (!SystemEnvironment.IsLinux())
-                return;
-
-            using var files = ImageFileSystem.Create(devicePath);
-            DriveFormat = GetWindowsDriveFormat(files?.FileSystemName);
-            TotalSize = files?.VolumeSize ?? default;
         }
 
         /// <summary>
@@ -237,16 +208,65 @@ namespace MPF.Frontend
 
                 long totalSize = ReadUnixBlockDeviceSize(entry);
 
-                result.Add(new Drive
+                var drive = new Drive
                 {
                     InternalDriveType = driveType,
                     DevicePath = Path.Combine(devRoot!, name),
+                    MountedPath = Path.Combine(devRoot, name),
                     TotalSize = totalSize,
-                });
+                };
+                drive.SetMountPoint();
+#if NET6_0_OR_GREATER
+                drive.SetLabel();
+#endif
+
+                result.Add(drive);
             }
 
             return result;
         }
+
+#if NET6_0_OR_GREATER
+        /// <summary>
+        /// Set the label as defined in /dev/disk/by-label/ or from generic SCSI
+        /// </summary>
+        private void SetLabel()
+        {
+            // Try to process the drive as generic SCSI
+            string? label = GetLabelGeneric(DevicePath);
+            if (label is not null)
+            {
+                VolumeLabel = label;
+                return;
+            }
+
+            // Try to process the drive as a block device
+            label = GetLabelLink(DevicePath);
+            if (label is not null)
+                VolumeLabel = label;
+        }
+#endif
+
+        /// <summary>
+        /// Set the mount point as defined in /proc/mounts or from generic SCSI
+        /// </summary>
+        private void SetMountPoint()
+        {
+            // Try to process the drive as generic SCSI
+            string? mountPoint = GetMountPointGeneric(DevicePath);
+            if (mountPoint is not null)
+            {
+                MountedPath = mountPoint;
+                return;
+            }
+
+            // Try to process the drive as a block device
+            mountPoint = GetMountPointMounts(DevicePath);
+            if (mountPoint is not null)
+                MountedPath = mountPoint;
+        }
+
+        #region TODO: Remove when IO is updated
 
         /// <summary>
         /// Check whether a sysfs block-device name is a virtual or non-target device that
@@ -254,7 +274,6 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="name">Block-device name (e.g. "sda", "loop0")</param>
         /// <returns>True when the device should be skipped</returns>
-        /// TODO: Remove when IO is updated
         private static bool IsExcludedUnixBlockDevice(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -269,34 +288,159 @@ namespace MPF.Frontend
             return false;
         }
 
+#if NET6_0_OR_GREATER
         /// <summary>
-        /// Read the sysfs "removable" flag for a block device.
+        /// Get the label based on the block device mapping for generic SCSI
         /// </summary>
-        /// <param name="sysBlockEntry">Path to the device directory under the sysfs block root</param>
-        /// <returns>True when the device reports itself as removable; false otherwise</returns>
-        /// TODO: Remove when IO is updated
-        private static bool ReadUnixRemovableFlag(string sysBlockEntry)
+        /// <param name="devicePath">Device path to check</param>
+        /// <returns>Label for the generic device on success, null otherwise</returns>
+        private static string? GetLabelGeneric(string? devicePath)
         {
-            string removablePath = Path.Combine(sysBlockEntry, "removable");
+            // If the device path is invalid
+            if (devicePath is null)
+                return null;
+
+            // Get the mapped device
+            var mappedDevice = GetMappedDeviceForGeneric(devicePath);
+            if (mappedDevice is null)
+                return null;
+
+            // Return the label for that device
+            return GetLabelLink(mappedDevice);
+        }
+
+        /// <summary>
+        /// Get the label based on the softlinks in /dev/disk/by-label/
+        /// </summary>
+        /// <param name="devicePath">Device path to check</param>
+        /// <returns>Label for the device on success, null otherwise</returns>
+        private static string? GetLabelLink(string? devicePath)
+        {
+            // If the device path is invalid
+            if (devicePath is null)
+                return null;
+
+            // Try looping through the by-label directory
+            string byLabelPath = "/dev/disk/by-label/";
             try
             {
-                if (!File.Exists(removablePath))
-                    return false;
+                if (!Directory.Exists(byLabelPath))
+                    return null;
 
-                return File.ReadAllText(removablePath).Trim() == "1";
+                var entries = Directory.GetFileSystemEntries("/dev/disk/by-label/");
+                foreach (var entry in entries)
+                {
+                    // Ensure the entry is a file
+                    if (!File.Exists(entry))
+                        continue;
+
+                    // Extract the link target from the file
+                    var linkTarget = new FileInfo(entry).LinkTarget;
+                    if (linkTarget is null)
+                        continue;
+
+                    // Reformat the link target based on relative paths
+                    linkTarget = linkTarget.Replace("../../", "/dev/");
+
+                    // If the drive does not match
+                    if (!string.Equals(devicePath, linkTarget))
+                        continue;
+
+                    // Return the mount point
+                    return Path.GetFileName(entry)
+                        .Replace("\\x20", " ") // Replace hex-encoded space characters
+                        .Replace("\\020", " "); // Replace octal-encoded space characters
+                }
+
+                // No matches were found
+                return null;
             }
             catch
             {
-                return false;
+                // Absorb errors for now
+                return null;
+            }
+        }
+#endif
+
+        /// <summary>
+        /// Get the mount point based on the block device mapping for generic SCSI
+        /// </summary>
+        /// <param name="devicePath">Device path to check</param>
+        /// <returns>Mount point for the generic device on success, null otherwise</returns>
+        private static string? GetMountPointGeneric(string? devicePath)
+        {
+            // If the device path is invalid
+            if (devicePath is null)
+                return null;
+
+            // Get the mapped device
+            var mappedDevice = GetMappedDeviceForGeneric(devicePath);
+            if (mappedDevice is null)
+                return null;
+
+            // Return the mount point for that device
+            return GetMountPointMounts(mappedDevice);
+        }
+
+        /// <summary>
+        /// Get the mount point based a mapping to /proc/mounts
+        /// </summary>
+        /// <param name="devicePath">Device path to check</param>
+        /// <returns>Mount point for the device on success, null otherwise</returns>
+        private static string? GetMountPointMounts(string? devicePath)
+        {
+            // If the device path is invalid
+            if (devicePath is null)
+                return null;
+
+            // Try reading the mounts file for information
+            string mountsPath = "/proc/mounts";
+            try
+            {
+                if (!File.Exists(mountsPath))
+                    return null;
+
+                // Read all lines from the mounts file
+                string[] mountsLines = File.ReadAllLines(mountsPath);
+                foreach (string mount in mountsLines)
+                {
+                    // Split the whitespace-separated mount entry line
+#if NETFRAMEWORK || NETSTANDARD
+                    string[] entry = mount.Split(' ');
+#else
+                    string[] entry = mount.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+#endif
+                    if (entry.Length < 2)
+                        continue;
+
+                    // Extract the two required pieces
+                    string entryDevicePath = entry[0];
+                    string entryMountPoint = entry[1];
+
+                    // If the drive does not match
+                    if (!string.Equals(devicePath, entryDevicePath))
+                        continue;
+
+                    // Return the mount point
+                    return entryMountPoint;
+                }
+
+                // No matches were found
+                return null;
+            }
+            catch
+            {
+                // Absorb errors for now
+                return null;
             }
         }
 
         /// <summary>
-        /// Read the device size from sysfs (reported in 512-byte sectors) and convert to bytes.
+        /// Read the device size from sysfs (reported in 512-byte sectors) and convert to bytes
         /// </summary>
         /// <param name="sysBlockEntry">Path to the device directory under the sysfs block root</param>
-        /// <returns>The device size in bytes, or 0 when it cannot be determined</returns>
-        /// TODO: Remove when IO is updated
+        /// <returns>The device size in bytes, 0 on error</returns>
         private static long ReadUnixBlockDeviceSize(string sysBlockEntry)
         {
             string sizePath = Path.Combine(sysBlockEntry, "size");
@@ -305,8 +449,9 @@ namespace MPF.Frontend
                 if (!File.Exists(sizePath))
                     return 0;
 
-                if (long.TryParse(File.ReadAllText(sizePath).Trim(), out long sectors) && sectors > 0)
-                    return sectors * 512L;
+                string sizeString = File.ReadAllText(sizePath).Trim();
+                if (long.TryParse(sizeString, out long sectors) && sectors > 0)
+                    return sectors * 512;
             }
             catch
             {
@@ -317,94 +462,72 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Get the block device of a SCSI generic device on Linux, since only block devices can be read by sector
+        /// Read the sysfs "removable" flag for a block device
         /// </summary>
-        /// <returns>Path of the block device, the given path if it is no SCSI generic device</returns>
-        internal static string GetUnixBlockDevice(string path)
+        /// <param name="sysBlockEntry">Path to the device directory under the sysfs block root</param>
+        /// <returns>True when the device reports itself as removable, false otherwise</returns>
+        private static bool ReadUnixRemovableFlag(string sysBlockEntry)
         {
-            string name = Path.GetFileName(path);
-            if (!name.StartsWith("sg", StringComparison.Ordinal))
-                return path;
-
-            string blockRoot = Path.Combine(Path.Combine(Path.Combine("/sys/class/scsi_generic", name), "device"), "block");
-            string[] blockDevices = IOExtensions.SafeGetFileSystemEntries(blockRoot);
-            if (blockDevices.Length == 0)
-                return path;
-
-            return Path.Combine("/dev", Path.GetFileName(blockDevices[0]));
-        }
-
-        /// <summary>
-        /// Determine if an optical drive on Linux may contain a disc
-        /// </summary>
-        /// <param name="devicePath">Block or SCSI generic device path of the drive</param>
-        /// <returns>False if udev saw no disc in the drive, true otherwise</returns>
-        private static bool MayContainUnixDisc(string devicePath)
-            => ReadUnixDiscPresence(GetUnixBlockDevice(devicePath), "/sys/class/block", "/run/udev/data") != false;
-
-        /// <summary>
-        /// Read whether udev saw a disc in an optical drive
-        /// </summary>
-        /// <param name="devicePath">Device path of the drive (e.g. "/dev/sr0")</param>
-        /// <param name="sysBlockRoot">Root of the sysfs block devices (normally "/sys/class/block")</param>
-        /// <param name="udevDataRoot">Root of the udev database (normally "/run/udev/data")</param>
-        /// <returns>True if udev saw a disc, false if it saw none, null if udev did not check the drive</returns>
-        /// <remarks>
-        /// Opening the device of a drive with an open tray makes the kernel close the tray. udev
-        /// checks an optical drive when a disc is inserted or removed and sets ID_CDROM=1 in the
-        /// entry of the drive, and ID_CDROM_MEDIA=1 while a disc is in it. Reading the entry does
-        /// not access the drive
-        /// </remarks>
-        internal static bool? ReadUnixDiscPresence(string devicePath, string sysBlockRoot, string udevDataRoot)
-        {
+            string removablePath = Path.Combine(sysBlockEntry, "removable");
             try
             {
-                // The entry is named after the major and minor number of the device (e.g. "b11:0")
-                string numberPath = Path.Combine(Path.Combine(sysBlockRoot, Path.GetFileName(devicePath)), "dev");
-                string[] entry = File.ReadAllLines(Path.Combine(udevDataRoot, $"b{File.ReadAllText(numberPath).Trim()}"));
-                if (Array.IndexOf(entry, "E:ID_CDROM=1") < 0)
-                    return null;
+                if (!File.Exists(removablePath))
+                    return false;
 
-                return Array.IndexOf(entry, "E:ID_CDROM_MEDIA=1") >= 0;
+                string removableString = File.ReadAllText(removablePath).Trim();
+                return removableString == "1";
             }
             catch
             {
-                // Without a udev entry for the drive, nothing is known about the disc
-                return null;
+                return false;
             }
         }
 
         /// <summary>
-        /// Open the block device of an optical drive on Linux for reading
+        /// Map a generic (/dev/sg*) device to its corresponding block (/dev/sr*) device
         /// </summary>
-        /// <param name="devicePath">Block device path of the drive (e.g. "/dev/sr0")</param>
-        /// <returns>Handle of the device</returns>
-        /// <remarks>
-        /// Opening the device of a drive with an open tray makes the kernel close the tray, also
-        /// in the seconds before udev noticed that the tray was opened. With O_NONBLOCK, the tray
-        /// stays open and reads fail while there is no disc
-        /// </remarks>
-        internal static SafeFileHandle OpenUnixDevice(string devicePath)
+        /// <param name="devicePath">Device path to check</param>
+        /// <returns>The mapped device path on success, null otherwise</returns>
+        private static string? GetMappedDeviceForGeneric(string? devicePath)
         {
-            int descriptor = open(devicePath, UnixOpenReadNonBlocking);
-            if (descriptor < 0)
-                throw new IOException($"Could not open {devicePath}, error {Marshal.GetLastWin32Error()}");
+            // If the device path is invalid
+            if (devicePath is null)
+                return null;
 
-            // Random access avoids reading ahead into sectors that are slow or impossible to read
-            var handle = new SafeFileHandle(new IntPtr(descriptor), true);
-            posix_fadvise(descriptor, 0, 0, UnixAdviceRandom);
-            return handle;
+#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
+            // If the device does not match the generic pattern
+            if (!Regex.IsMatch(devicePath, @"/dev/sg.+"))
+                return null;
+#pragma warning restore SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
+
+            // Get the SCSI name from the path by trimming `/dev/`
+#if NETFRAMEWORK || NETSTANDARD
+            string scsiName = devicePath.Substring(5);
+#else
+            string scsiName = devicePath[5..];
+#endif
+
+            // Build the path to the block directory
+            string blockDirectory = $"/sys/class/scsi_generic/{scsiName}/device/block/";
+            if (!Directory.Exists(blockDirectory))
+                return null;
+
+            // If there are no block mappings
+            var blockDevices = IOExtensions.SafeGetDirectories(blockDirectory);
+            if (blockDevices.Length == 0)
+                return null;
+
+            // Take the first found block mapping and reformat to `/dev/sr*`
+            string mappedDevice = blockDevices[0];
+#if NETFRAMEWORK || NETSTANDARD
+            mappedDevice = mappedDevice.Substring($"/sys/class/scsi_generic/{scsiName}/device/block/".Length);
+#else
+            mappedDevice = mappedDevice[$"/sys/class/scsi_generic/{scsiName}/device/block/".Length..];
+#endif
+            return $"/dev/{mappedDevice}";
         }
 
         #endregion
-
-        #region Native Interop
-
-        [DllImport("libc", SetLastError = true)]
-        private static extern int open(string pathname, int flags);
-
-        [DllImport("libc")]
-        private static extern int posix_fadvise(int fd, long offset, long len, int advice);
 
         #endregion
     }

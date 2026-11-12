@@ -78,53 +78,27 @@ namespace MPF.Frontend.FileSystems
         public virtual byte[]? ReadFirstBytes(int numBytes) => null;
 
         /// <summary>
-        /// Open the files of a disc from a directory or from a disc image or device
-        /// </summary>
-        /// <param name="path">Directory, disc image or device to open</param>
-        /// <returns>File system on success, null if the path cannot be read</returns>
-        public static DiscFileSystem? Open(string? path)
-        {
-            if (string.IsNullOrEmpty(path))
-                return null;
-
-            if (Directory.Exists(path))
-                return new FolderFileSystem(path!);
-
-            return ImageFileSystem.Create(path!);
-        }
-
-        /// <summary>
         /// Open the files of the disc in a drive
         /// </summary>
         /// <param name="drive">Drive to open</param>
         /// <returns>File system on success, null if the files of the disc cannot be read</returns>
         /// <remarks>
-        /// A drive letter or another directory is read as a directory. On Linux, the disc in an
-        /// optical drive is read from the device without mounting it. On macOS, it is read from
-        /// the directory macOS mounted it at.
+        /// The mounted filesystem path of the drive is read if it is a directory, otherwise a drive
+        /// letter or another directory given as the device path
         /// </remarks>
         public static DiscFileSystem? OpenDrive(Drive? drive)
         {
             if (string.IsNullOrEmpty(drive?.DevicePath))
                 return null;
 
+            // A mounted filesystem path that is a folder is read as one
+            if (!string.IsNullOrEmpty(drive!.MountedPath) && Directory.Exists(drive.MountedPath))
+                return new FolderFileSystem(drive.MountedPath!);
+
             // Drive letters are kept even if the disc cannot be read as files, to read its first sector
-            string devicePath = drive!.DevicePath!;
+            string devicePath = drive.DevicePath!;
             if (Directory.Exists(devicePath) || FolderFileSystem.IsWindowsDriveRoot(devicePath))
                 return new FolderFileSystem(devicePath);
-
-            // Other drives are only read as optical discs, or if the type is unknown (a path given on the command line)
-            if (drive.InternalDriveType is not null && drive.InternalDriveType != InternalDriveType.Optical)
-                return null;
-
-            if (SystemEnvironment.IsLinux())
-                return ImageFileSystem.Create(devicePath);
-
-            if (SystemEnvironment.IsMacOS())
-            {
-                string? mountPoint = Drive.GetMacOSMountPoint(devicePath);
-                return mountPoint is null ? null : new FolderFileSystem(mountPoint);
-            }
 
             return null;
         }

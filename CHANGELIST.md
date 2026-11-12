@@ -20,8 +20,36 @@
 - Set Dreamdump to be executable in bash script, add warning to PS
 - Remove eject reminder from Avalonia Check
 - Clean up program cancellation to be safer
-- Read disc files without mounting (gmipf)
-- Mark empty optical drives as inactive on Linux (gmipf)
+- Ensure the mounted path is checked properly in UI
+- Add more supported Redumper disc profiles
+- Minor SS validation fix
+- Clarify "mounted" parameter for Check CLI
+- Keep selected drive when rescanning or editing parameters (gmipf)
+- Add WUDD processor support
+- Add WUDD images as valid file picker targets
+- Simplify WUDD log file finding slightly
+- Enable Disc ID display for WiiU
+- Disc ID for WiiU is actually internal serial name
+- No longer trim BCA
+- SBI should not be visible if empty
+- Make mounted filesystem path inherent to Drive implementation
+- Ensure mounted path text box disabled on dump start
+- Make PS1 and PS2 SYSTEM.CNF checks case-insensitive
+- Attempt to automatically find mount points for Linux
+- Fix compatibility with older .NET
+- Handle per-drive creation with mount mapping, OS cleanup
+- Be a little clever with generic SCSI mapping
+- Normalize DVD protection fields
+- Move some Linux methods around, add moving notes
+- Check for length of arrays of IDs for visibility
+- Trim protection strings for edge cases
+- Try to map labels to drives in Avalonia in .NET 6 and up
+- Relative paths don't resolve on Linux properly
+- Fix incorrect replacement path
+- Handle space encoding in mount points and volume labels
+- Mount points should be left alone
+- Explicitly ignore unmounted discs for protection scanning
+- Read disc files from the dump image (gmipf)
 
 ### 3.11.1 (2026-10-17)
 

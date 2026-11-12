@@ -39,6 +39,30 @@ namespace MPF.Frontend.Test.FileSystems
         }
 
         [Fact]
+        public void FileExists_UnreadableDirectory_False()
+        {
+            // A directory that cannot be listed is read as missing, like File.Exists does
+            if (OperatingSystem.IsWindows())
+                return;
+
+            string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            string unreadable = Path.Combine(root, "UNREADABLE");
+            Directory.CreateDirectory(unreadable);
+            try
+            {
+                File.SetUnixFileMode(unreadable, UnixFileMode.None);
+                var fileSystem = new FolderFileSystem(root);
+                Assert.False(fileSystem.FileExists("UNREADABLE/MISSING.TXT"));
+                Assert.False(fileSystem.DirectoryExists("UNREADABLE/MISSING"));
+            }
+            finally
+            {
+                File.SetUnixFileMode(unreadable, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+                Directory.Delete(root, true);
+            }
+        }
+
+        [Fact]
         public void GetFiles_HiddenAndOtherCase_Listed()
         {
             // A name starting with a period is hidden on Linux and macOS

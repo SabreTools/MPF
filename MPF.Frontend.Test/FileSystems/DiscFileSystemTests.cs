@@ -24,29 +24,7 @@ namespace MPF.Frontend.Test.FileSystems
 
         #endregion
 
-        #region Open
-
-        [Fact]
-        public void Open_Directory_FolderFileSystem()
-        {
-            using var fileSystem = DiscFileSystem.Open(GetTestPath("FileSystems", "Folder"));
-            Assert.IsType<FolderFileSystem>(fileSystem);
-        }
-
-        [Fact]
-        public void Open_Image_ImageFileSystem()
-        {
-            using var fileSystem = DiscFileSystem.Open(GetTestPath("ProtectionTool", "test.iso"));
-            Assert.IsType<ImageFileSystem>(fileSystem);
-            Assert.True(fileSystem.FileExists("INSTALL/BITPOOL.RSC"));
-        }
-
-        [Fact]
-        public void Open_Missing_Null()
-        {
-            Assert.Null(DiscFileSystem.Open(null));
-            Assert.Null(DiscFileSystem.Open(GetTestPath("FileSystems", "missing.iso")));
-        }
+        #region OpenDrive
 
         [Fact]
         public void OpenDrive_Directory_FolderFileSystem()
@@ -57,11 +35,14 @@ namespace MPF.Frontend.Test.FileSystems
         }
 
         [Fact]
-        public void OpenDrive_NotOptical_Null()
+        public void OpenDrive_MountedPath_FolderFileSystem()
         {
-            // Only optical discs are read from the device
-            var drive = Drive.Create(InternalDriveType.HardDisk, GetTestPath("ProtectionTool", "test.iso"));
-            Assert.Null(DiscFileSystem.OpenDrive(drive));
+            // A mounted filesystem path that is a folder is read instead of the device
+            var drive = Drive.Create(InternalDriveType.Optical, GetTestPath("ProtectionTool", "test.iso"));
+            drive!.MountedPath = GetTestPath("FileSystems", "Folder");
+            using var fileSystem = DiscFileSystem.OpenDrive(drive);
+            var folder = Assert.IsType<FolderFileSystem>(fileSystem);
+            Assert.Equal(drive.MountedPath, folder.Root);
         }
 
         [Fact]

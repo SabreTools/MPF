@@ -57,6 +57,7 @@ namespace MPF.Frontend
         Generic,
         PS3CFW,
         UmdImageCreator,
+        WUDD,
         XboxBackupCreator,
     }
 
