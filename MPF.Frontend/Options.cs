@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 #endif
 using Newtonsoft.Json;
+using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 using AaruDumpSettings = MPF.ExecutionContexts.Aaru.DumpSettings;
 using DiscImageCreatorDumpSettings = MPF.ExecutionContexts.DiscImageCreator.DumpSettings;

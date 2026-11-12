@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.ExecutionContexts;
@@ -61,6 +62,15 @@ namespace MPF.Frontend
         /// Currently selected system
         /// </summary>
         private readonly PhysicalSystem? _system;
+
+        #endregion
+
+        #region Cancellation
+
+        /// <summary>
+        /// Cancellation token for both dumping and protection scanning
+        /// </summary>
+        private CancellationTokenSource _cancellationTokenSource = new();
 
         #endregion
 
@@ -487,10 +497,14 @@ namespace MPF.Frontend
         #region Dumping
 
         /// <summary>
-        /// Cancel an in-progress dumping process
+        /// Cancel an in-progress dumping or protection scanning process
         /// </summary>
         /// <returns>False if there was an exception in killing the program, true otherwise</remarks>
-        public bool CancelDumping() => _executionContext?.KillInternalProgram() ?? true;
+        public bool CancelDumping()
+        {
+            _cancellationTokenSource.Cancel();
+            return _executionContext?.KillInternalProgram() ?? true;
+        }
 
         /// <summary>
         /// Execute the initial invocation of the dumping programs
@@ -500,6 +514,9 @@ namespace MPF.Frontend
         public async Task<ResultEventArgs> Run(PhysicalMediaType? mediaType,
             IProgress<ResultEventArgs>? progress = null)
         {
+            // Reset the cancellation token source
+            _cancellationTokenSource = new CancellationTokenSource();
+
             // If we don't have parameters
             if (_executionContext is null)
                 return ResultEventArgs.Failure("Error! Current configuration is not supported!");
@@ -596,6 +613,8 @@ namespace MPF.Frontend
             if (mediaType is null)
                 return ResultEventArgs.Failure("Could not determine the media type from output files...");
 
+            // TODO: Figure out how to best deal with the cancellation token for Check-only runs
+
             // Extract the information from the output files
             resultProgress.Report(ResultEventArgs.Neutral("Extracting output information from output files..."));
             var submissionInfo = await SubmissionGenerator.ExtractOutputInformation(
@@ -606,7 +625,8 @@ namespace MPF.Frontend
                 _options,
                 _processor,
                 resultProgress,
-                protectionProgress);
+                protectionProgress,
+                _cancellationTokenSource.Token);
             if (submissionInfo is null)
                 return ResultEventArgs.Failure("There was an issue extracting information!");
             else

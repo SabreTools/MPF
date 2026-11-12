@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 #endif
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Processors;
@@ -42,6 +43,7 @@ namespace MPF.Frontend.Tools
         /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>SubmissionInfo populated based on outputs, null on error</returns>
         public static async Task<SubmissionInfo?> ExtractOutputInformation(
             string outputPath,
@@ -51,7 +53,8 @@ namespace MPF.Frontend.Tools
             Options options,
             BaseProcessor processor,
             IProgress<ResultEventArgs>? resultProgress = null,
-            IProgress<ProtectionProgress>? protectionProgress = null)
+            IProgress<ProtectionProgress>? protectionProgress = null,
+            CancellationToken? cancellationToken = null)
         {
             // Split the output path for easier use
             var outputDirectory = Path.GetDirectoryName(outputPath);
@@ -137,7 +140,7 @@ namespace MPF.Frontend.Tools
                         if (drive?.MountedPath is null)
                             resultProgress?.Report(ResultEventArgs.Success("No mounted filesystem path found, protection outputs may be incomplete!"));
 
-                        protections = await ProtectionTool.RunCombinedProtectionScans(basePath, drive, options, protectionProgress);
+                        protections = await ProtectionTool.RunCombinedProtectionScans(basePath, drive, options, protectionProgress, cancellationToken);
                     }
 
                     var protectionString = ProtectionTool.FormatProtections(protections, drive);

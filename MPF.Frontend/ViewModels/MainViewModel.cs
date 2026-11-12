@@ -2112,6 +2112,7 @@ namespace MPF.Frontend.ViewModels
 
             try
             {
+                // TODO: Figure out how to enable cancellation here
                 var protections = await ProtectionTool.RunProtectionScanOnPath(CurrentDrive.DevicePath, Options, progress);
                 var output = ProtectionTool.FormatProtections(protections, CurrentDrive);
 

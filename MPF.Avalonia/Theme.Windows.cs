@@ -4,7 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Styling;
-using MPF.Frontend;
+using SabreTools.IO;
 
 namespace MPF.Avalonia
 {

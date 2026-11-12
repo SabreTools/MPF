@@ -9,6 +9,7 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using MPF.Frontend;
+using SabreTools.IO;
 
 namespace MPF.Avalonia.UserControls
 {

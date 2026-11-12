@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using MPF.Frontend;
 using MPF.Frontend.ViewModels;
+using SabreTools.IO;
 
 namespace MPF.Avalonia.Windows
 {

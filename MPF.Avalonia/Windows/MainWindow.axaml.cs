@@ -16,6 +16,7 @@ using MPF.Avalonia.UserControls;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
 using MPF.Frontend.ViewModels;
+using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Tools;
 using AvaloniaWindowState = Avalonia.Controls.WindowState;

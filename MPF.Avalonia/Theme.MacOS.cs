@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Threading;
-using MPF.Frontend;
+using SabreTools.IO;
 
 namespace MPF.Avalonia
 {

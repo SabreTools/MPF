@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using SabreTools.IO;
 using SabreTools.IO.Extensions;
 
 namespace MPF.Frontend

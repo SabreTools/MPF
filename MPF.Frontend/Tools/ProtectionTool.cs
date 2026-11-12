@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 #endif
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using SabreTools.Collections.Extensions;
@@ -79,26 +80,28 @@ namespace MPF.Frontend.Tools
         /// <param name="drive">Drive object representing the current drive</param>
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         public static async Task<Dictionary<string, List<string>>> RunCombinedProtectionScans(string basePath,
             Drive? drive,
             Options options,
-            IProgress<ProtectionProgress>? protectionProgress = null)
+            IProgress<ProtectionProgress>? progress = null,
+            CancellationToken? cancellationToken = null)
         {
             // Setup the output protections dictionary
             Dictionary<string, List<string>> protections = [];
 
             // Scan the disc image, if possible
-            if (File.Exists($"{basePath}.iso"))
+            if (File.Exists($"{basePath}.iso") && cancellationToken?.IsCancellationRequested != true)
             {
-                var imageProtections = await RunProtectionScanOnImage($"{basePath}.iso", options, protectionProgress);
+                var imageProtections = await RunProtectionScanOnImage($"{basePath}.iso", options, progress, cancellationToken);
                 protections.MergeWith(imageProtections);
             }
-            else if (File.Exists($"{basePath}.bin"))
+            else if (File.Exists($"{basePath}.bin") && cancellationToken?.IsCancellationRequested != true)
             {
-                var imageProtections = await RunProtectionScanOnImage($"{basePath}.bin", options, protectionProgress);
+                var imageProtections = await RunProtectionScanOnImage($"{basePath}.bin", options, progress, cancellationToken);
                 protections.MergeWith(imageProtections);
             }
-            else if (File.Exists($"{basePath}.cue"))
+            else if (File.Exists($"{basePath}.cue") && cancellationToken?.IsCancellationRequested != true)
             {
                 string[] cueLines = File.ReadAllLines($"{basePath}.cue");
                 foreach (string cueLine in cueLines)
@@ -119,18 +122,18 @@ namespace MPF.Frontend.Tools
                     string trackPath = Path.Combine(baseDir, trackName);
 
                     // Scan the track for protections, if it exists
-                    if (File.Exists($"{trackPath}.bin"))
+                    if (File.Exists($"{trackPath}.bin") && cancellationToken?.IsCancellationRequested != true)
                     {
-                        var trackProtections = await RunProtectionScanOnImage($"{trackPath}.bin", options, protectionProgress);
+                        var trackProtections = await RunProtectionScanOnImage($"{trackPath}.bin", options, progress, cancellationToken);
                         protections.MergeWith(trackProtections);
                     }
                 }
             }
 
             // Scan the mounted filesystem path
-            if (drive?.MountedPath is not null)
+            if (drive?.MountedPath is not null && cancellationToken?.IsCancellationRequested != true)
             {
-                var driveProtections = await RunProtectionScanOnPath(drive.MountedPath, options, protectionProgress);
+                var driveProtections = await RunProtectionScanOnPath(drive.MountedPath, options, progress, cancellationToken);
                 protections.MergeWith(driveProtections);
             }
 
@@ -143,10 +146,12 @@ namespace MPF.Frontend.Tools
         /// <param name="path">Path to scan for protection</param>
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
         public static async Task<Dictionary<string, List<string>>> RunProtectionScanOnPath(string path,
             Options options,
-            IProgress<ProtectionProgress>? progress = null)
+            IProgress<ProtectionProgress>? progress = null,
+            CancellationToken? cancellationToken = null)
         {
             // Ignore invalid paths
             if (string.IsNullOrEmpty(path))
@@ -164,7 +169,8 @@ namespace MPF.Frontend.Tools
                     scanPaths: true, // Hardcoded value to avoid issues
                     scanSubdirectories: true, // Hardcoded value to avoid issues
                     options.Processing.ProtectionScanning.IncludeDebugProtectionInformation,
-                    progress);
+                    progress,
+                    cancellationToken);
 
                 return scanner.GetProtections(Path.GetFullPath(path));
             });
@@ -183,10 +189,12 @@ namespace MPF.Frontend.Tools
         /// <param name="image">Image path to scan for protection</param>
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
         public static async Task<Dictionary<string, List<string>>> RunProtectionScanOnImage(string image,
             Options options,
-            IProgress<ProtectionProgress>? progress = null)
+            IProgress<ProtectionProgress>? progress = null,
+            CancellationToken? cancellationToken = null)
         {
             // Ignore invalid paths
             if (string.IsNullOrEmpty(image))
@@ -204,7 +212,8 @@ namespace MPF.Frontend.Tools
                     scanPaths: false, // Disabled for image scanning
                     scanSubdirectories: false, // Disabled for image scanning
                     options.Processing.ProtectionScanning.IncludeDebugProtectionInformation,
-                    progress);
+                    progress,
+                    cancellationToken);
 
                 return scanner.GetProtections(Path.GetFullPath(image));
             });
