@@ -120,6 +120,8 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.Skip] = new StringInput(FlagStrings.Skip),
             [FlagStrings.DumpWriteOffset] = new Int32Input(FlagStrings.DumpWriteOffset),
             [FlagStrings.DumpReadSize] = new Int32Input(FlagStrings.DumpReadSize),
+            [FlagStrings.SpiralDriveDreamcast] = new FlagInput(FlagStrings.SpiralDriveDreamcast),
+            [FlagStrings.SpiralDriveLeadoutSectors] = new Int32Input(FlagStrings.SpiralDriveLeadoutSectors),
             [FlagStrings.OverreadLeadout] = new FlagInput(FlagStrings.OverreadLeadout),
             [FlagStrings.ForceUnscrambled] = new FlagInput(FlagStrings.ForceUnscrambled),
             [FlagStrings.ForceRefine] = new FlagInput(FlagStrings.ForceRefine),
@@ -227,6 +229,8 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.Skip,
                     FlagStrings.DumpWriteOffset,
                     FlagStrings.DumpReadSize,
+                    FlagStrings.SpiralDriveDreamcast,
+                    FlagStrings.SpiralDriveLeadoutSectors,
                     FlagStrings.OverreadLeadout,
                     FlagStrings.ForceUnscrambled,
                     FlagStrings.ForceRefine,
@@ -471,6 +475,7 @@ namespace MPF.ExecutionContexts.Redumper
                     case CommandStrings.Disc:
                     case CommandStrings.Rings:
                     case CommandStrings.Dump:
+                    case CommandStrings.SpiralDump:
                     case CommandStrings.DumpExtra:
                     case CommandStrings.Refine:
                     case CommandStrings.DVDKey:
