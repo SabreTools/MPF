@@ -127,48 +127,42 @@ namespace MPF.Processors
             info.RingCodes.WriteOffset = writeOffset;
 
             // Extract info based generically on PhysicalMediaType
-#pragma warning disable IDE0010
-            switch (mediaType)
+            if (mediaType == PhysicalMediaType.CDROM)
             {
-                // TODO: Can this do GD-ROM?
-                case PhysicalMediaType.CDROM:
-                    info.DumpMetadata.Cuesheet = GenerateCuesheet(sidecar, basePath) ?? string.Empty;
-                    break;
-
-                case PhysicalMediaType.DVD:
-                case PhysicalMediaType.HDDVD:
-                case PhysicalMediaType.BluRay:
-
-                    // TODO: Sync layerbreak finding with other processors
-                    // Deal with the layerbreak
-                    string? layerbreak = null;
-                    if (mediaType == PhysicalMediaType.DVD)
-                    {
-                        layerbreak = GetLayerbreak(sidecar) ?? string.Empty;
-                    }
-                    else if (mediaType == PhysicalMediaType.BluRay)
-                    {
-                        long size = datafile?.Game?[0]?.Rom?[0]?.Size ?? 0;
-                        layerbreak = size > 25_025_314_816 ? "25025314816" : null;
-                    }
-
-                    // If we have a single-layer disc
-                    if (string.IsNullOrEmpty(layerbreak))
-                    {
-                        // Currently no-op
-                    }
-                    // If we have a dual-layer disc
-                    else
-                    {
-                        info.DiscIdentifiers.Layerbreak = long.Parse(layerbreak);
-                    }
-
-                    // TODO: Investigate XGD disc outputs
-                    // TODO: Investigate BD specifics like PIC
-
-                    break;
+                info.DumpMetadata.Cuesheet = GenerateCuesheet(sidecar, basePath) ?? string.Empty;
             }
-#pragma warning restore IDE0010
+            else if (mediaType == PhysicalMediaType.DVD
+                || mediaType == PhysicalMediaType.HDDVD
+                || mediaType == PhysicalMediaType.BluRay
+                || mediaType == PhysicalMediaType.XGD)
+            {
+                // TODO: Sync layerbreak finding with other processors
+                // Deal with the layerbreak
+                string? layerbreak = null;
+                if (mediaType == PhysicalMediaType.DVD)
+                {
+                    layerbreak = GetLayerbreak(sidecar) ?? string.Empty;
+                }
+                else if (mediaType == PhysicalMediaType.BluRay)
+                {
+                    long size = datafile?.Game?[0]?.Rom?[0]?.Size ?? 0;
+                    layerbreak = size > 25_025_314_816 ? "25025314816" : null;
+                }
+
+                // If we have a single-layer disc
+                if (string.IsNullOrEmpty(layerbreak))
+                {
+                    // Currently no-op
+                }
+                // If we have a dual-layer disc
+                else
+                {
+                    info.DiscIdentifiers.Layerbreak = long.Parse(layerbreak);
+                }
+
+                // TODO: Investigate XGD disc outputs
+                // TODO: Investigate BD specifics like PIC
+            }
 
             // TODO: Can we get SecuROM data?
             // TODO: Can we get SS version/ranges?
@@ -226,72 +220,71 @@ namespace MPF.Processors
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
-#pragma warning disable IDE0010
-            switch (mediaType)
+            if (mediaType == PhysicalMediaType.CDROM)
             {
-                case PhysicalMediaType.CDROM:
-                    return [
-                        new($"{outputFilename}.aaruf", OutputFileFlags.Required),
-                        new($"{outputFilename}.cicm.xml", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "cicm"),
-                        new($"{outputFilename}.error.log", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "error_log"),
-                        new($"{outputFilename}.ibg", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "ibg"),
-                        new($"{outputFilename}.log", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "log"),
-                        new($"{outputFilename}.mhddlog.bin", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "mhddlog"),
-                        new($"{outputFilename}.resume.xml", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "resume"),
-                        new($"{outputFilename}.sub.log", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "sub_log"),
-                    ];
-
-                case PhysicalMediaType.DVD:
-                case PhysicalMediaType.HDDVD:
-                case PhysicalMediaType.BluRay:
-                    return [
-                        new($"{outputFilename}.aaruf", OutputFileFlags.Required),
-                        new($"{outputFilename}.cicm.xml", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "cicm"),
-                        new($"{outputFilename}.error.log", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "error_log"),
-                        new($"{outputFilename}.ibg", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "ibg"),
-                        new($"{outputFilename}.log", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "log"),
-                        new($"{outputFilename}.mhddlog.bin", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "mhddlog"),
-                        new($"{outputFilename}.resume.xml", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "resume"),
-                    ];
+                return [
+                    new($"{outputFilename}.aaruf", OutputFileFlags.Required),
+                    new($"{outputFilename}.cicm.xml", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "cicm"),
+                    new($"{outputFilename}.error.log", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "error_log"),
+                    new($"{outputFilename}.ibg", OutputFileFlags.Required
+                        | OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "ibg"),
+                    new($"{outputFilename}.log", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "log"),
+                    new($"{outputFilename}.mhddlog.bin", OutputFileFlags.Required
+                        | OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "mhddlog"),
+                    new($"{outputFilename}.resume.xml", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "resume"),
+                    new($"{outputFilename}.sub.log", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "sub_log"),
+                ];
             }
-#pragma warning restore IDE0010
+            else if (mediaType == PhysicalMediaType.DVD
+                || mediaType == PhysicalMediaType.HDDVD
+                || mediaType == PhysicalMediaType.BluRay
+                || mediaType == PhysicalMediaType.XGD)
+            {
+                return [
+                    new($"{outputFilename}.aaruf", OutputFileFlags.Required),
+                    new($"{outputFilename}.cicm.xml", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "cicm"),
+                    new($"{outputFilename}.error.log", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "error_log"),
+                    new($"{outputFilename}.ibg", OutputFileFlags.Required
+                        | OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "ibg"),
+                    new($"{outputFilename}.log", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "log"),
+                    new($"{outputFilename}.mhddlog.bin", OutputFileFlags.Required
+                        | OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "mhddlog"),
+                    new($"{outputFilename}.resume.xml", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "resume"),
+                ];
+            }
 
             return [];
         }

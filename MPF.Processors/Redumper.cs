@@ -158,85 +158,80 @@ namespace MPF.Processors
             }
 
             // Extract info based generically on PhysicalMediaType
-#pragma warning disable IDE0010
-            switch (mediaType)
+            if (mediaType == PhysicalMediaType.CDROM
+                || mediaType == PhysicalMediaType.GDROM)
             {
-                case PhysicalMediaType.CDROM:
-                case PhysicalMediaType.GDROM:
-                    // Read the cuesheet from the log, falling back to the external file
-                    info.DumpMetadata.Cuesheet = GetCuesheet($"{basePath}.log")
-                        ?? ProcessingTool.GetFullFile($"{basePath}.cue")
+                // Read the cuesheet from the log, falling back to the external file
+                info.DumpMetadata.Cuesheet = GetCuesheet($"{basePath}.log")
+                    ?? ProcessingTool.GetFullFile($"{basePath}.cue")
+                    ?? string.Empty;
+
+                // Attempt to get the error count
+                if (GetErrorCount($"{basePath}.log", out long redumpErrors, out long c2Errors))
+                {
+                    info.DiscIdentifiers.ErrorCount = redumpErrors == -1 ? "Error retrieving error count" : redumpErrors.ToString();
+                    info.DumpingInfo.C2ErrorsCount = c2Errors == -1 ? "Error retrieving error count" : c2Errors.ToString();
+                }
+
+                // Attempt to get extra metadata if it's an audio disc
+                if (IsAudio(info.DumpMetadata.Cuesheet))
+                {
+                    string universalHash = GetUniversalHash($"{basePath}.log") ?? string.Empty;
+                    info.DiscIdentifiers.UniversalHash = universalHash;
+
+                    string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
+                    info.RingCodes.SampleStart = ringNonZeroDataStart!;
+
+                    string ringPerfectAudioOffset = GetRingPerfectAudioOffset($"{basePath}.log") ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.RingPerfectAudioOffset] = ringPerfectAudioOffset!;
+                }
+            }
+            else if (mediaType == PhysicalMediaType.DVD
+                || mediaType == PhysicalMediaType.HDDVD
+                || mediaType == PhysicalMediaType.BluRay
+                || mediaType == PhysicalMediaType.NintendoGameCubeGameDisc
+                || mediaType == PhysicalMediaType.NintendoWiiOpticalDisc
+                || mediaType == PhysicalMediaType.NintendoWiiUOpticalDisc
+                || mediaType == PhysicalMediaType.XGD)
+            {
+                // Deal with the layerbreaks
+                if (GetLayerbreaks($"{basePath}.log", out var layerbreak1, out var layerbreak2, out var layerbreak3))
+                {
+                    info.DiscIdentifiers.Layerbreak = !string.IsNullOrEmpty(layerbreak1) ? long.Parse(layerbreak1) : default;
+                    info.DiscIdentifiers.Layerbreak2 = !string.IsNullOrEmpty(layerbreak2) ? long.Parse(layerbreak2) : default;
+                    info.DiscIdentifiers.Layerbreak3 = !string.IsNullOrEmpty(layerbreak3) ? long.Parse(layerbreak3) : default;
+                }
+
+                // Attempt to get the error count
+                long scsiErrors = GetSCSIErrorCount($"{basePath}.log");
+                info.DiscIdentifiers.ErrorCount = scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString();
+
+                // Get BCA information, if available, for Nintendo discs only
+                if (mediaType == PhysicalMediaType.NintendoGameCubeGameDisc || mediaType == PhysicalMediaType.NintendoWiiOpticalDisc)
+                    info.DumpMetadata.BCA = GetBCA($"{basePath}.bca");
+
+                // Bluray-specific options
+                if (mediaType == PhysicalMediaType.BluRay || mediaType == PhysicalMediaType.NintendoWiiUOpticalDisc)
+                {
+                    int trimLength;
+                    if (info.DiscIdentifiers.Layerbreak3 != default)
+                        trimLength = 520;
+                    else if (info.DiscIdentifiers.Layerbreak2 != default)
+                        trimLength = 392;
+                    else
+                        trimLength = 264;
+
+                    info.DumpMetadata.PIC = GetPIC($"{basePath}.physical", trimLength)
+                        ?? GetPIC($"{basePath}.0.physical", trimLength)
+                        ?? GetPIC($"{basePath}.1.physical", trimLength)
                         ?? string.Empty;
 
-                    // Attempt to get the error count
-                    if (GetErrorCount($"{basePath}.log", out long redumpErrors, out long c2Errors))
-                    {
-                        info.DiscIdentifiers.ErrorCount = redumpErrors == -1 ? "Error retrieving error count" : redumpErrors.ToString();
-                        info.DumpingInfo.C2ErrorsCount = c2Errors == -1 ? "Error retrieving error count" : c2Errors.ToString();
-                    }
-
-                    // Attempt to get extra metadata if it's an audio disc
-                    if (IsAudio(info.DumpMetadata.Cuesheet))
-                    {
-                        string universalHash = GetUniversalHash($"{basePath}.log") ?? string.Empty;
-                        info.DiscIdentifiers.UniversalHash = universalHash;
-
-                        string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
-                        info.RingCodes.SampleStart = ringNonZeroDataStart!;
-
-                        string ringPerfectAudioOffset = GetRingPerfectAudioOffset($"{basePath}.log") ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.RingPerfectAudioOffset] = ringPerfectAudioOffset!;
-                    }
-
-                    break;
-
-                case PhysicalMediaType.DVD:
-                case PhysicalMediaType.HDDVD:
-                case PhysicalMediaType.BluRay:
-                case PhysicalMediaType.NintendoGameCubeGameDisc:
-                case PhysicalMediaType.NintendoWiiOpticalDisc:
-                case PhysicalMediaType.NintendoWiiUOpticalDisc:
-                    // Deal with the layerbreaks
-                    if (GetLayerbreaks($"{basePath}.log", out var layerbreak1, out var layerbreak2, out var layerbreak3))
-                    {
-                        info.DiscIdentifiers.Layerbreak = !string.IsNullOrEmpty(layerbreak1) ? long.Parse(layerbreak1) : default;
-                        info.DiscIdentifiers.Layerbreak2 = !string.IsNullOrEmpty(layerbreak2) ? long.Parse(layerbreak2) : default;
-                        info.DiscIdentifiers.Layerbreak3 = !string.IsNullOrEmpty(layerbreak3) ? long.Parse(layerbreak3) : default;
-                    }
-
-                    // Attempt to get the error count
-                    long scsiErrors = GetSCSIErrorCount($"{basePath}.log");
-                    info.DiscIdentifiers.ErrorCount = scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString();
-
-                    // Get BCA information, if available, for Nintendo discs only
-                    if (mediaType == PhysicalMediaType.NintendoGameCubeGameDisc || mediaType == PhysicalMediaType.NintendoWiiOpticalDisc)
-                        info.DumpMetadata.BCA = GetBCA($"{basePath}.bca");
-
-                    // Bluray-specific options
-                    if (mediaType == PhysicalMediaType.BluRay || mediaType == PhysicalMediaType.NintendoWiiUOpticalDisc)
-                    {
-                        int trimLength = -1;
-                        if (info.DiscIdentifiers.Layerbreak3 != default)
-                            trimLength = 520;
-                        else if (info.DiscIdentifiers.Layerbreak2 != default)
-                            trimLength = 392;
-                        else
-                            trimLength = 264;
-
-                        info.DumpMetadata.PIC = GetPIC($"{basePath}.physical", trimLength)
-                            ?? GetPIC($"{basePath}.0.physical", trimLength)
-                            ?? GetPIC($"{basePath}.1.physical", trimLength)
-                            ?? string.Empty;
-
-                        var di = ProcessingTool.GetDiscInformation($"{basePath}.physical")
-                            ?? ProcessingTool.GetDiscInformation($"{basePath}.0.physical")
-                            ?? ProcessingTool.GetDiscInformation($"{basePath}.1.physical");
-                        info.DumpMetadata.PICIdentifier = ProcessingTool.GetPICIdentifier(di);
-                    }
-
-                    break;
+                    var di = ProcessingTool.GetDiscInformation($"{basePath}.physical")
+                        ?? ProcessingTool.GetDiscInformation($"{basePath}.0.physical")
+                        ?? ProcessingTool.GetDiscInformation($"{basePath}.1.physical");
+                    info.DumpMetadata.PICIdentifier = ProcessingTool.GetPICIdentifier(di);
+                }
             }
-#pragma warning restore IDE0010
 
             // Extract info based specifically on System
             if (System == PhysicalSystem.AppleMacintosh
@@ -303,26 +298,15 @@ namespace MPF.Processors
                     }
                 }
 
-                string? dmiCrc = HashTool.GetFileHash($"{basePath}.dmi", HashType.CRC32);
-                if (dmiCrc is not null)
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = dmiCrc.ToUpperInvariant();
-                string? pfiCrc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
-                if (pfiCrc is not null)
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = pfiCrc.ToUpperInvariant();
-
-                // Only record SS hash if it is valid
-                if (ProcessingTool.IsFixedSS($"{basePath}.ss"))
+                string baseFilename = Path.GetFileName(basePath);
+                info.DumpMetadata.ExtrasDat = GetExtrasDatfile($"{basePath}.log") ?? string.Empty;
+                if (!ProcessingTool.IsFixedSS($"{basePath}.ss") && ProcessingTool.FixSS($"{basePath}.ss", $"{basePath}.fixed.ss"))
                 {
-                    string? ssCrc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
-                    if (ssCrc is not null)
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
-                }
-                else if (ProcessingTool.FixSS($"{basePath}.ss", $"{basePath}.fixed.ss"))
-                {
-                    // Attempt to repair bad .ss file succeeded, hash it
-                    string? ssCrc = HashTool.GetFileHash($"{basePath}.fixed.ss", HashType.CRC32);
-                    if (ssCrc is not null)
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
+                    if (HashTool.GetStandardHashes($"{basePath}.fixed.ss", out long ssSize, out string? ssCrc, out string? ssMd5, out string? ssSha1))
+                    {
+                        string ssHashes = $"<rom name=\"{baseFilename}.fixed.ss\" size=\"{ssSize}\" crc=\"{ssCrc}\" md5=\"{ssMd5}\" sha1=\"{ssSha1}\" />\n";
+                        info.DumpMetadata.ExtrasDat += ssHashes;
+                    }
                 }
 
                 string? ssRanges = ProcessingTool.GetSSRanges($"{basePath}.ss");
@@ -347,7 +331,7 @@ namespace MPF.Processors
             else if (System == PhysicalSystem.NintendoGameCube
                 || System == PhysicalSystem.NintendoWii)
             {
-                if (GetGameCubeWiiInfo($"{basePath}.log", out string? gcVersion, out string? gcSerial, out string? gcTitle, out string? _))
+                if (GetGameCubeWiiInfo($"{basePath}.log", out string? gcVersion, out string? gcSerial, out string? gcTitle, out _))
                 {
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = gcSerial ?? string.Empty;
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalName] = gcTitle ?? string.Empty;
@@ -441,7 +425,7 @@ namespace MPF.Processors
             }
             else if (System == PhysicalSystem.SonyPlayStation)
             {
-                if (GetPlayStation123Info($"{basePath}.log", out string? psxEXEDate, out string? psxSerial, out var _))
+                if (GetPlayStation123Info($"{basePath}.log", out string? psxEXEDate, out string? psxSerial, out _))
                 {
                     info.DiscIdentifiers.EXEDate = psxEXEDate;
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = psxSerial ?? string.Empty;
@@ -474,7 +458,7 @@ namespace MPF.Processors
             }
             else if (System == PhysicalSystem.SonyPlayStation3)
             {
-                if (GetPlayStation123Info($"{basePath}.log", out var _, out string? ps3Serial, out var ps3Version))
+                if (GetPlayStation123Info($"{basePath}.log", out _, out string? ps3Serial, out var ps3Version))
                 {
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
                     info.DiscIdentifiers.Version = ps3Version ?? string.Empty;
@@ -511,232 +495,232 @@ namespace MPF.Processors
             if (!string.IsNullOrEmpty(outputDirectory))
                 basePath = Path.Combine(outputDirectory, basePath);
 
-#pragma warning disable IDE0010
-            switch (mediaType)
+            if (mediaType == PhysicalMediaType.CDROM
+                || mediaType == PhysicalMediaType.GDROM)
             {
-                case PhysicalMediaType.CDROM:
-                case PhysicalMediaType.GDROM:
-                    List<OutputFile> cdrom = [
-                        // .asus is obsolete: newer redumper produces .cache instead
-                        new($"{outputFilename}.asus", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "asus"),
-                        new($"{outputFilename}.atip", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "atip"),
-                        new([$"{outputFilename}.cache", $"{outputFilename}.1.cache"], OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "cache"),
-                        new($"{outputFilename}.2.cache", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "cache_2"),
-                        new($"{outputFilename}.cdtext", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "cdtext"),
-                        new($"{outputFilename}.cue", OutputFileFlags.Required
-                            | OutputFileFlags.Preserve),
-                        new($"{outputFilename}.flip", OutputFileFlags.None),
-                        new($"{outputFilename}.fulltoc", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "fulltoc"),
-                        new($"{outputFilename}.log", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable
-                            | OutputFileFlags.Preserve,
-                            "log"),
-                        new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
-                            DatfileExists),
-                        new($"{outputFilename}.pma", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "pma"),
-                        new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Deleteable),
-                        new($"{outputFilename}.state", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "state"),
-                        new($"{outputFilename}.state.zst", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "state_zst"),
-                        new($"{outputFilename}.subcode", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "subcode"),
-                        new($"{outputFilename}.subcode.zst", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "subcode"),
-                        new($"{outputFilename}.toc", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "toc"),
-                    ];
+                List<OutputFile> cdrom = [
+                    // .asus is obsolete: newer redumper produces .cache instead
+                    new($"{outputFilename}.asus", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "asus"),
+                    new($"{outputFilename}.atip", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "atip"),
+                    new([$"{outputFilename}.cache", $"{outputFilename}.1.cache"], OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "cache"),
+                    new($"{outputFilename}.2.cache", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "cache_2"),
+                    new($"{outputFilename}.cdtext", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "cdtext"),
+                    new($"{outputFilename}.cue", OutputFileFlags.Required
+                        | OutputFileFlags.Preserve),
+                    new($"{outputFilename}.flip", OutputFileFlags.None),
+                    new($"{outputFilename}.fulltoc", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "fulltoc"),
+                    new($"{outputFilename}.log", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable
+                        | OutputFileFlags.Preserve,
+                        "log"),
+                    new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
+                        DatfileExists),
+                    new($"{outputFilename}.pma", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "pma"),
+                    new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Deleteable),
+                    new($"{outputFilename}.state", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "state"),
+                    new($"{outputFilename}.state.zst", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "state_zst"),
+                    new($"{outputFilename}.subcode", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "subcode"),
+                    new($"{outputFilename}.subcode.zst", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "subcode"),
+                    new($"{outputFilename}.toc", OutputFileFlags.Required
+                        | OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "toc"),
+                ];
 
-                    // Include .hash and .skeleton for all files in cuesheet
-                    try
+                // Include .hash and .skeleton for all files in cuesheet
+                try
+                {
+                    // Read the entire cuesheet
+                    string[] cueLines = File.ReadAllLines($"{basePath}.cue");
+
+                    // Track number, assuming 1-based
+                    uint trackNumber = 1;
+                    foreach (string cueLine in cueLines)
                     {
-                        // Read the entire cuesheet
-                        string[] cueLines = File.ReadAllLines($"{basePath}.cue");
+                        // Skip all non-FILE lines
+                        if (!cueLine.StartsWith("FILE"))
+                            continue;
 
-                        // Track number, assuming 1-based
-                        uint trackNumber = 1;
-                        foreach (string cueLine in cueLines)
-                        {
-                            // Skip all non-FILE lines
-                            if (!cueLine.StartsWith("FILE"))
-                                continue;
+                        // Extract the information
+                        var match = Regex.Match(cueLine, @"FILE ""(.*?)"" BINARY");
+                        if (!match.Success || match.Groups.Count == 0)
+                            continue;
 
-                            // Extract the information
-                            var match = Regex.Match(cueLine, @"FILE ""(.*?)"" BINARY");
-                            if (!match.Success || match.Groups.Count == 0)
-                                continue;
+                        // Get the track name from the matches
+                        string trackName = match.Groups[1].Value;
+                        trackName = Path.GetFileNameWithoutExtension(trackName);
 
-                            // Get the track name from the matches
-                            string trackName = match.Groups[1].Value;
-                            trackName = Path.GetFileNameWithoutExtension(trackName);
-
-                            // Add the artifacts
-                            cdrom.Add(new($"{trackName}.hash", OutputFileFlags.Binary
-                                | OutputFileFlags.Zippable,
-                                $"hash_{trackNumber}"));
-                            cdrom.Add(new($"{trackName}.skeleton", OutputFileFlags.Binary
-                                | OutputFileFlags.Zippable,
-                                $"skeleton_{trackNumber}"));
-                            cdrom.Add(new($"{trackName}.skeleton.zst", OutputFileFlags.Binary
-                                | OutputFileFlags.Zippable,
-                                $"skeleton_zst_{trackNumber}"));
-                            trackNumber++;
-                        }
+                        // Add the artifacts
+                        cdrom.Add(new($"{trackName}.hash", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            $"hash_{trackNumber}"));
+                        cdrom.Add(new($"{trackName}.skeleton", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            $"skeleton_{trackNumber}"));
+                        cdrom.Add(new($"{trackName}.skeleton.zst", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            $"skeleton_zst_{trackNumber}"));
+                        trackNumber++;
                     }
-                    catch
-                    {
-                        cdrom.Add(new($"{outputFilename}.hash", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "hash"));
-                        cdrom.Add(new($"{outputFilename}.skeleton", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "skeleton"));
-                        cdrom.Add(new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "skeleton_zst"));
-                    }
+                }
+                catch
+                {
+                    cdrom.Add(new($"{outputFilename}.hash", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "hash"));
+                    cdrom.Add(new($"{outputFilename}.skeleton", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "skeleton"));
+                    cdrom.Add(new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "skeleton_zst"));
+                }
 
-                    return cdrom;
-
-                case PhysicalMediaType.DVD:
-                case PhysicalMediaType.NintendoGameCubeGameDisc:
-                case PhysicalMediaType.NintendoWiiOpticalDisc:
-                    return [
-                        new($"{outputFilename}.bca", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "bca"),
-                        new($"{outputFilename}.dmi", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "dmi"),
-                        new($"{outputFilename}.hash", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "hash"),
-                        new($"{outputFilename}.log", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable
-                            | OutputFileFlags.Preserve,
-                            "log"),
-                        new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
-                            DatfileExists),
-                        new([$"{outputFilename}.manufacturer", $"{outputFilename}.0.manufacturer"], OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "manufacturer_0"),
-                        new($"{outputFilename}.1.manufacturer", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "manufacturer_1"),
-                        new($"{outputFilename}.pfi", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "pfi"),
-                        new([$"{outputFilename}.physical", $"{outputFilename}.0.physical"], OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "physical_0"),
-                        new($"{outputFilename}.1.physical", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "physical_1"),
-                        new([$"{outputFilename}.sdram"], OutputFileFlags.Deleteable),
-                        new($"{outputFilename}.security", System.IsXGD() && !IsManufacturerEmpty($"{basePath}.manufacturer")
-                            ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
-                            : OutputFileFlags.Binary | OutputFileFlags.Zippable,
-                            "security"),
-                        new($"{outputFilename}.skeleton", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "skeleton"),
-                        new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "skeleton_zst"),
-                        new($"{outputFilename}.ss", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "ss"),
-                        new($"{outputFilename}.fixed.ss", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "ss_fixed"),
-                        // ssv1 and ssv2 extensions are obsolete
-                        new($"{outputFilename}.ssv1", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "ssv1"),
-                        new($"{outputFilename}.ssv2", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "ssv2"),
-                        new($"{outputFilename}.state", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "state"),
-                        new($"{outputFilename}.state.zst", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "state_zst"),
-                    ];
-
-                case PhysicalMediaType.HDDVD: // TODO: Confirm that this information outputs
-                case PhysicalMediaType.BluRay:
-                case PhysicalMediaType.NintendoWiiUOpticalDisc:
-                    return [
-                        new($"{outputFilename}.asus", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "asus"),
-                        new($"{outputFilename}.bca", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "bca"),
-                        new($"{outputFilename}.hash", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "hash"),
-                        new($"{outputFilename}.log", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable
-                            | OutputFileFlags.Preserve,
-                            "log"),
-                        new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
-                            DatfileExists),
-                        new([$"{outputFilename}.physical", $"{outputFilename}.0.physical"], OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "physical_0"),
-                        new($"{outputFilename}.1.physical", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "physical_1"),
-                        new($"{outputFilename}.2.physical", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "physical_2"),
-                        new($"{outputFilename}.3.physical", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "physical_3"),
-                        new([$"{outputFilename}.sbram"], OutputFileFlags.Deleteable),
-                        new($"{outputFilename}.skeleton", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "skeleton"),
-                        new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "skeleton_zst"),
-                        new($"{outputFilename}.state", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "state"),
-                        new($"{outputFilename}.state.zst", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "state_zst"),
-                    ];
+                return cdrom;
             }
-#pragma warning restore IDE0010
+            else if (mediaType == PhysicalMediaType.DVD
+                || mediaType == PhysicalMediaType.NintendoGameCubeGameDisc
+                || mediaType == PhysicalMediaType.NintendoWiiOpticalDisc
+                || mediaType == PhysicalMediaType.XGD)
+            {
+                return [
+                    new($"{outputFilename}.bca", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "bca"),
+                    new($"{outputFilename}.dmi", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "dmi"),
+                    new($"{outputFilename}.hash", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "hash"),
+                    new($"{outputFilename}.log", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable
+                        | OutputFileFlags.Preserve,
+                        "log"),
+                    new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
+                        DatfileExists),
+                    new([$"{outputFilename}.manufacturer", $"{outputFilename}.0.manufacturer"], OutputFileFlags.Required
+                        | OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "manufacturer_0"),
+                    new($"{outputFilename}.1.manufacturer", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "manufacturer_1"),
+                    new($"{outputFilename}.pfi", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "pfi"),
+                    new([$"{outputFilename}.physical", $"{outputFilename}.0.physical"], OutputFileFlags.Required
+                        | OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "physical_0"),
+                    new($"{outputFilename}.1.physical", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "physical_1"),
+                    new([$"{outputFilename}.sdram"], OutputFileFlags.Deleteable),
+                    new($"{outputFilename}.security", System.IsXGD() && !IsManufacturerEmpty($"{basePath}.manufacturer")
+                        ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
+                        : OutputFileFlags.Binary | OutputFileFlags.Zippable,
+                        "security"),
+                    new($"{outputFilename}.skeleton", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "skeleton"),
+                    new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "skeleton_zst"),
+                    new($"{outputFilename}.ss", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "ss"),
+                    new($"{outputFilename}.fixed.ss", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "ss_fixed"),
+                    // ssv1 and ssv2 extensions are obsolete
+                    new($"{outputFilename}.ssv1", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "ssv1"),
+                    new($"{outputFilename}.ssv2", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "ssv2"),
+                    new($"{outputFilename}.state", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "state"),
+                    new($"{outputFilename}.state.zst", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "state_zst"),
+                ];
+            }
+            else if (mediaType == PhysicalMediaType.HDDVD // TODO: Confirm that this information outputs
+                || mediaType == PhysicalMediaType.BluRay
+                || mediaType == PhysicalMediaType.NintendoWiiUOpticalDisc)
+            {
+                return [
+                    new($"{outputFilename}.asus", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "asus"),
+                    new($"{outputFilename}.bca", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "bca"),
+                    new($"{outputFilename}.hash", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "hash"),
+                    new($"{outputFilename}.log", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable
+                        | OutputFileFlags.Preserve,
+                        "log"),
+                    new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
+                        DatfileExists),
+                    new([$"{outputFilename}.physical", $"{outputFilename}.0.physical"], OutputFileFlags.Required
+                        | OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "physical_0"),
+                    new($"{outputFilename}.1.physical", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "physical_1"),
+                    new($"{outputFilename}.2.physical", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "physical_2"),
+                    new($"{outputFilename}.3.physical", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "physical_3"),
+                    new([$"{outputFilename}.sbram"], OutputFileFlags.Deleteable),
+                    new($"{outputFilename}.skeleton", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "skeleton"),
+                    new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "skeleton_zst"),
+                    new($"{outputFilename}.state", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "state"),
+                    new($"{outputFilename}.state.zst", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "state_zst"),
+                ];
+            }
 
             return [];
         }
@@ -1547,6 +1531,70 @@ namespace MPF.Processors
                 // Absorb the exception
                 redumpErrors = -1; c2Errors = -1;
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the extras datfile from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Newline-delimited extras datfile if possible, null on error</returns>
+        internal static string? GetExtrasDatfile(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            try
+            {
+                using var sr = File.OpenText(log);
+                return GetExtrasDatfile(sr);
+            }
+            catch
+            {
+                // Absorb the exception
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the extras datfile from the input file, if possible
+        /// </summary>
+        /// <param name="sr">StreamReader representing the input file</param>
+        /// <returns>Newline-delimited extras datfile if possible, null on error</returns>
+        internal static string? GetExtrasDatfile(StreamReader sr)
+        {
+            try
+            {
+                string? datString = null;
+
+                // Find all occurrences of the hash information
+                while (!sr.EndOfStream)
+                {
+                    // Fast forward to the dat line
+                    while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("dat (extra):") == false) ;
+                    if (sr.EndOfStream)
+                        break;
+
+                    // Now that we're at the relevant entries, read each line in and concatenate
+                    datString = string.Empty;
+                    var line = sr.ReadLine()?.Trim();
+                    while (line?.StartsWith("<rom") == true)
+                    {
+                        datString += line + "\n";
+                        if (sr.EndOfStream)
+                            break;
+
+                        line = sr.ReadLine()?.Trim();
+                    }
+                }
+
+                return datString?.TrimEnd('\n');
+            }
+            catch
+            {
+                // Absorb the exception
+                return null;
             }
         }
 

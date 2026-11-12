@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MPF.ExecutionContexts.Aaru;
 using SabreTools.RedumpLib.Data;
 using Xunit;
@@ -8,16 +9,21 @@ namespace MPF.ExecutionContexts.Test
     {
         #region Converters.Extension
 
+        public static readonly List<object?[]> ExtensionTestData =
+        [
+            [null, ".aaruf"],
+            [PhysicalMediaType.CDROM, ".aaruf"],
+            [PhysicalMediaType.GDROM, ".aaruf"],
+            [PhysicalMediaType.DVD, ".aaruf"],
+            [PhysicalMediaType.HDDVD, ".aaruf"],
+            [PhysicalMediaType.BluRay, ".aaruf"],
+            [PhysicalMediaType.FloppyDisk, ".aaruf"],
+            [PhysicalMediaType.HardDisk, ".aaruf"],
+            [PhysicalMediaType.ApertureCard, ".aaruf"],
+        ];
+
         [Theory]
-        [InlineData(null, ".aaruf")]
-        [InlineData(PhysicalMediaType.CDROM, ".aaruf")]
-        [InlineData(PhysicalMediaType.GDROM, ".aaruf")]
-        [InlineData(PhysicalMediaType.DVD, ".aaruf")]
-        [InlineData(PhysicalMediaType.HDDVD, ".aaruf")]
-        [InlineData(PhysicalMediaType.BluRay, ".aaruf")]
-        [InlineData(PhysicalMediaType.FloppyDisk, ".aaruf")]
-        [InlineData(PhysicalMediaType.HardDisk, ".aaruf")]
-        [InlineData(PhysicalMediaType.ApertureCard, ".aaruf")]
+        [MemberData(nameof(ExtensionTestData))]
         public void ExtensionTest(PhysicalMediaType? type, string expected)
         {
             string actual = Converters.Extension(type);

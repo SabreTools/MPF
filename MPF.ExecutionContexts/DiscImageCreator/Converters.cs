@@ -47,20 +47,20 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 CommandStrings.Audio
                     or CommandStrings.CompactDisc
                     or CommandStrings.Data
-                    or CommandStrings.SACD => (PhysicalMediaType?)PhysicalMediaType.CDROM,
+                    or CommandStrings.SACD => PhysicalMediaType.CDROM,
                 CommandStrings.GDROM
-                    or CommandStrings.Swap => (PhysicalMediaType?)PhysicalMediaType.GDROM,
-                CommandStrings.DigitalVideoDisc
-                    or CommandStrings.XBOX
+                    or CommandStrings.Swap => PhysicalMediaType.GDROM,
+                CommandStrings.DigitalVideoDisc => PhysicalMediaType.DVD,
+                CommandStrings.XBOX
                     or CommandStrings.XBOXSwap
                     or CommandStrings.XGD2Swap
-                    or CommandStrings.XGD3Swap => (PhysicalMediaType?)PhysicalMediaType.DVD,
-                CommandStrings.BluRay => (PhysicalMediaType?)PhysicalMediaType.BluRay,
+                    or CommandStrings.XGD3Swap => PhysicalMediaType.XGD,
+                CommandStrings.BluRay => PhysicalMediaType.BluRay,
 
                 // Non-optical
-                CommandStrings.Floppy => (PhysicalMediaType?)PhysicalMediaType.FloppyDisk,
-                CommandStrings.Disk => (PhysicalMediaType?)PhysicalMediaType.HardDisk,
-                CommandStrings.Tape => (PhysicalMediaType?)PhysicalMediaType.DataCartridge,
+                CommandStrings.Floppy => PhysicalMediaType.FloppyDisk,
+                CommandStrings.Disk => PhysicalMediaType.HardDisk,
+                CommandStrings.Tape => PhysicalMediaType.DataCartridge,
                 _ => null,
             };
         }
@@ -72,29 +72,43 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         /// <returns>Valid extension (with leading '.'), null on error</returns>
         public static string? Extension(PhysicalMediaType? type)
         {
-#pragma warning disable IDE0072
-            return type switch
+            if (type == PhysicalMediaType.CDROM
+                || type == PhysicalMediaType.GDROM
+                || type == PhysicalMediaType.Cartridge
+                || type == PhysicalMediaType.HardDisk
+                || type == PhysicalMediaType.CompactFlash
+                || type == PhysicalMediaType.MMC
+                || type == PhysicalMediaType.SDCard
+                || type == PhysicalMediaType.FlashDrive)
             {
-                PhysicalMediaType.CDROM
-                    or PhysicalMediaType.GDROM
-                    or PhysicalMediaType.Cartridge
-                    or PhysicalMediaType.HardDisk
-                    or PhysicalMediaType.CompactFlash
-                    or PhysicalMediaType.MMC
-                    or PhysicalMediaType.SDCard
-                    or PhysicalMediaType.FlashDrive => ".bin",
-                PhysicalMediaType.DVD
-                    or PhysicalMediaType.HDDVD
-                    or PhysicalMediaType.BluRay
-                    or PhysicalMediaType.NintendoWiiOpticalDisc => ".iso",
-                PhysicalMediaType.LaserDisc
-                    or PhysicalMediaType.NintendoGameCubeGameDisc => ".raw",
-                PhysicalMediaType.NintendoWiiUOpticalDisc => ".wud",
-                PhysicalMediaType.FloppyDisk => ".img",
-                PhysicalMediaType.Cassette => ".wav",
-                _ => null,
-            };
-#pragma warning restore IDE0072
+                return ".bin";
+            }
+            else if (type == PhysicalMediaType.DVD
+                || type == PhysicalMediaType.HDDVD
+                || type == PhysicalMediaType.BluRay
+                || type == PhysicalMediaType.NintendoWiiOpticalDisc)
+            {
+                return ".iso";
+            }
+            else if (type == PhysicalMediaType.LaserDisc
+                || type == PhysicalMediaType.NintendoGameCubeGameDisc)
+            {
+                return ".raw";
+            }
+            else if (type == PhysicalMediaType.NintendoWiiUOpticalDisc)
+            {
+                return ".wud";
+            }
+            else if (type == PhysicalMediaType.FloppyDisk)
+            {
+                return ".img";
+            }
+            else if (type == PhysicalMediaType.Cassette)
+            {
+                return ".wav";
+            }
+
+            return null;
         }
 
         #endregion

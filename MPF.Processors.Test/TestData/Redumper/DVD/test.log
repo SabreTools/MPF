@@ -4,3 +4,9 @@
 << GetDiscType >>
     disc type: INVALID
 disc type: DVD
+
+<< GetExtrasDatfile >>
+dat (extra):
+    <rom name="INVALID.dmi" size="12345" crc="00000000" md5="d41d8cd98f00b204e9800998ecf8427e" sha1="da39a3ee5e6b4b0d3255bfef95601890afd80709" />
+    <rom name="INVALID.pfi" size="12345" crc="00000000" md5="d41d8cd98f00b204e9800998ecf8427e" sha1="da39a3ee5e6b4b0d3255bfef95601890afd80709" />
+    <rom name="INVALID.ss" size="12345" crc="00000000" md5="d41d8cd98f00b204e9800998ecf8427e" sha1="da39a3ee5e6b4b0d3255bfef95601890afd80709" />

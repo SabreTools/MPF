@@ -50,6 +50,7 @@
 - Mount points should be left alone
 - Explicitly ignore unmounted discs for protection scanning
 - Update Redumper to build 772
+- Add .NET 11 support
 
 ### 3.11.1 (2026-10-17)
 

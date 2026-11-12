@@ -518,10 +518,6 @@
                                                     IsReadOnly="True"
                                                     Text="{Binding WriteOffset, Mode=OneWay}"
                                                     IsVisible="{Binding WriteOffsetVisible}" />
-                                <controls:UserInput Label="DMI Hash"
-                                                    IsReadOnly="True"
-                                                    Text="{Binding DMIHash, Mode=OneWay}"
-                                                    IsVisible="{Binding DMIHashVisible}" />
                                 <controls:UserInput Label="EDC"
                                                     IsReadOnly="True"
                                                     Text="{Binding EDC, Mode=OneWay}"
@@ -534,6 +530,13 @@
                                                     IsReadOnly="True"
                                                     Text="{Binding EXEDate, Mode=OneWay}"
                                                     IsVisible="{Binding EXEDateVisible}" />
+                                <controls:UserInput Label="Extra Hash Data"
+                                                    IsReadOnly="True"
+                                                    Text="{Binding ExtrasDat, Mode=OneWay}"
+                                                    TextHeight="90"
+                                                    Enter="True"
+                                                    TextWrapping="Wrap"
+                                                    IsVisible="{Binding ExtrasDatVisible}" />
                                 <controls:UserInput Label="Filename"
                                                     IsReadOnly="True"
                                                     Text="{Binding Filename, Mode=OneWay}"
@@ -563,10 +566,6 @@
                                                     Enter="True"
                                                     TextWrapping="Wrap"
                                                     IsVisible="{Binding MultisessionVisible}" />
-                                <controls:UserInput Label="PFI Hash"
-                                                    IsReadOnly="True"
-                                                    Text="{Binding PFIHash, Mode=OneWay}"
-                                                    IsVisible="{Binding PFIHashVisible}" />
                                 <controls:UserInput Label="PIC"
                                                     IsReadOnly="True"
                                                     Text="{Binding PIC, Mode=OneWay}"
@@ -596,10 +595,6 @@
                                                     Enter="True"
                                                     TextWrapping="Wrap"
                                                     IsVisible="{Binding SBIVisible}" />
-                                <controls:UserInput Label="Security Sector Hash"
-                                                    IsReadOnly="True"
-                                                    Text="{Binding SSHash, Mode=OneWay}"
-                                                    IsVisible="{Binding SSHashVisible}" />
                                 <controls:UserInput Label="Security Sector Ranges"
                                                     IsReadOnly="True"
                                                     Text="{Binding SectorRanges, Mode=OneWay}"

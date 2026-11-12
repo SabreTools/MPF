@@ -6,7 +6,6 @@ using System.Linq;
 #endif
 using System.Text.RegularExpressions;
 using MPF.Processors.OutputFiles;
-using SabreTools.Data.Models.Logiqx;
 using SabreTools.Hashing;
 using SabreTools.RedumpLib.Data;
 #if NET462_OR_GREATER || NETCOREAPP
@@ -215,77 +214,72 @@ namespace MPF.Processors
                 VolumeLabels = volLabels;
 
             // Extract info based generically on PhysicalMediaType
-#pragma warning disable IDE0010
-            switch (mediaType)
+            if (mediaType == PhysicalMediaType.CDROM
+                || mediaType == PhysicalMediaType.GDROM) // TODO: Verify GD-ROM outputs this
             {
-                case PhysicalMediaType.CDROM:
-                case PhysicalMediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    info.DumpMetadata.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
+                info.DumpMetadata.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
 
-                    // Audio-only discs will fail if there are any C2 errors, so they would never get here
-                    if (IsAudio(info.DumpMetadata.Cuesheet))
-                    {
-                        info.DiscIdentifiers.ErrorCount = "0";
-                    }
-                    else
-                    {
-                        long errorCount = -1;
-                        if (File.Exists($"{basePath}.img_EdcEcc.txt"))
-                            errorCount = GetErrorCount($"{basePath}.img_EdcEcc.txt");
-                        else if (File.Exists($"{basePath}.img_EccEdc.txt"))
-                            errorCount = GetErrorCount($"{basePath}.img_EccEdc.txt");
+                // Audio-only discs will fail if there are any C2 errors, so they would never get here
+                if (IsAudio(info.DumpMetadata.Cuesheet))
+                {
+                    info.DiscIdentifiers.ErrorCount = "0";
+                }
+                else
+                {
+                    long errorCount = -1;
+                    if (File.Exists($"{basePath}.img_EdcEcc.txt"))
+                        errorCount = GetErrorCount($"{basePath}.img_EdcEcc.txt");
+                    else if (File.Exists($"{basePath}.img_EccEdc.txt"))
+                        errorCount = GetErrorCount($"{basePath}.img_EccEdc.txt");
 
-                        info.DiscIdentifiers.ErrorCount = errorCount == -1 ? "Error retrieving error count" : errorCount.ToString();
-                    }
-
-                    break;
-
-                case PhysicalMediaType.DVD:
-                case PhysicalMediaType.HDDVD:
-                case PhysicalMediaType.BluRay:
-
-                    // Deal with the layerbreaks
-                    if (mediaType == PhysicalMediaType.DVD)
-                    {
-                        string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? string.Empty;
-                        info.DiscIdentifiers.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? long.Parse(layerbreak) : default;
-                    }
-                    else if (mediaType == PhysicalMediaType.BluRay)
-                    {
-                        var di = ProcessingTool.GetDiscInformation($"{basePath}_PIC.bin");
-                        info.DumpMetadata.PICIdentifier = ProcessingTool.GetPICIdentifier(di);
-                        if (ProcessingTool.GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
-                        {
-                            long size = datafile?.Game?[0]?.Rom?[0]?.Size ?? 0;
-
-                            if (layerbreak1 is not null && layerbreak1 * 2048 < size)
-                                info.DiscIdentifiers.Layerbreak = layerbreak1.Value;
-
-                            if (layerbreak2 is not null && layerbreak2 * 2048 < size)
-                                info.DiscIdentifiers.Layerbreak2 = layerbreak2.Value;
-
-                            if (layerbreak3 is not null && layerbreak3 * 2048 < size)
-                                info.DiscIdentifiers.Layerbreak3 = layerbreak3.Value;
-                        }
-                    }
-
-                    // Bluray-specific options
-                    if (mediaType == PhysicalMediaType.BluRay)
-                    {
-                        int trimLength = -1;
-                        if (info.DiscIdentifiers.Layerbreak3 != default)
-                            trimLength = 520;
-                        else if (info.DiscIdentifiers.Layerbreak2 != default)
-                            trimLength = 392;
-                        else
-                            trimLength = 264;
-
-                        info.DumpMetadata.PIC = GetPIC($"{basePath}_PIC.bin", trimLength) ?? string.Empty;
-                    }
-
-                    break;
+                    info.DiscIdentifiers.ErrorCount = errorCount == -1 ? "Error retrieving error count" : errorCount.ToString();
+                }
             }
+            else if (mediaType == PhysicalMediaType.DVD
+                || mediaType == PhysicalMediaType.HDDVD
+                || mediaType == PhysicalMediaType.BluRay
+                || mediaType == PhysicalMediaType.XGD)
+            {
+                // Deal with the layerbreaks
+                if (mediaType == PhysicalMediaType.DVD)
+                {
+                    string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? string.Empty;
+                    info.DiscIdentifiers.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? long.Parse(layerbreak) : default;
+                }
+                else if (mediaType == PhysicalMediaType.BluRay)
+                {
+                    var di = ProcessingTool.GetDiscInformation($"{basePath}_PIC.bin");
+                    info.DumpMetadata.PICIdentifier = ProcessingTool.GetPICIdentifier(di);
+                    if (ProcessingTool.GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
+                    {
+                        long size = datafile?.Game?[0]?.Rom?[0]?.Size ?? 0;
 
+                        if (layerbreak1 is not null && layerbreak1 * 2048 < size)
+                            info.DiscIdentifiers.Layerbreak = layerbreak1.Value;
+
+                        if (layerbreak2 is not null && layerbreak2 * 2048 < size)
+                            info.DiscIdentifiers.Layerbreak2 = layerbreak2.Value;
+
+                        if (layerbreak3 is not null && layerbreak3 * 2048 < size)
+                            info.DiscIdentifiers.Layerbreak3 = layerbreak3.Value;
+                    }
+                }
+
+                // Bluray-specific options
+                if (mediaType == PhysicalMediaType.BluRay)
+                {
+                    int trimLength;
+                    if (info.DiscIdentifiers.Layerbreak3 != default)
+                        trimLength = 520;
+                    else if (info.DiscIdentifiers.Layerbreak2 != default)
+                        trimLength = 392;
+                    else
+                        trimLength = 264;
+
+                    info.DumpMetadata.PIC = GetPIC($"{basePath}_PIC.bin", trimLength) ?? string.Empty;
+                }
+            }
+#pragma warning disable IDE0010
             // Extract info based specifically on PhysicalSystem
             if (System == PhysicalSystem.AppleMacintosh
                 || System == PhysicalSystem.EnhancedCD
@@ -323,50 +317,28 @@ namespace MPF.Processors
                 // If we have the new, external DAT
                 if (File.Exists($"{basePath}_suppl.dat"))
                 {
-                    var suppl = ProcessingTool.GetDatafile($"{basePath}_suppl.dat");
-                    if (GetXGDAuxHashInfo(suppl, out var xgd1DMIHash, out var xgd1PFIHash, out _))
-                    {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
-                        // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
-                        //info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
-                    }
-
-                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd1SS))
+                    info.DumpMetadata.ExtrasDat = ProcessingTool.GetFullFile($"{basePath}_suppl.dat") ?? string.Empty;
+                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out var xgd1SS))
                     {
                         info.DumpMetadata.SectorRanges = xgd1SS ?? string.Empty;
                     }
                 }
                 else
                 {
-                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd1DMIHash, out var xgd1PFIHash, out _, out var xgd1SS))
+                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd1ExtrasDat, out var xgd1SS))
                     {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
-                        // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
-                        //info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
+                        info.DumpMetadata.ExtrasDat = xgd1ExtrasDat ?? string.Empty;
                         info.DumpMetadata.SectorRanges = xgd1SS ?? string.Empty;
                     }
                 }
 
-                string xgd1SSPath = $"{basePath}_SS.bin";
-                string xgd1RawSSPath = $"{basePath}_RawSS.bin";
-                if (File.Exists(xgd1SSPath) && ProcessingTool.IsValidSS(xgd1SSPath))
+                string baseFilename = Path.GetFileName(basePath);
+                if (!ProcessingTool.IsFixedSS($"{basePath}_SS.bin") && ProcessingTool.FixSS($"{basePath}_SS.bin", $"{basePath}_RawSS.bin"))
                 {
-                    // Save untouched SS
-                    try
+                    if (HashTool.GetStandardHashes($"{basePath}_RawSS.bin", out long ssSize, out string? ssCrc, out string? ssMd5, out string? ssSha1))
                     {
-                        if (!File.Exists(xgd1RawSSPath))
-                            File.Copy(xgd1SSPath, xgd1RawSSPath);
-                    }
-                    catch { }
-
-                    // Repair, clean, and validate SS before adding hash to submission info
-                    if (ProcessingTool.FixSS(xgd1SSPath, xgd1SSPath))
-                    {
-                        string? xgd1SSCrc = HashTool.GetFileHash(xgd1SSPath, HashType.CRC32);
-                        if (xgd1SSCrc is not null)
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSCrc.ToUpperInvariant();
+                        string ssHashes = $"<rom name=\"{baseFilename}.fixed.ss\" size=\"{ssSize}\" crc=\"{ssCrc}\" md5=\"{ssMd5}\" sha1=\"{ssSha1}\" />\n";
+                        info.DumpMetadata.ExtrasDat += ssHashes;
                     }
                 }
             }
@@ -387,50 +359,28 @@ namespace MPF.Processors
                 // If we have the new, external DAT
                 if (File.Exists($"{basePath}_suppl.dat"))
                 {
-                    var suppl = ProcessingTool.GetDatafile($"{basePath}_suppl.dat");
-                    if (GetXGDAuxHashInfo(suppl, out var xgd23DMIHash, out var xgd23PFIHash, out _))
-                    {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
-                        // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
-                        //info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
-                    }
-
-                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd23SS))
+                    info.DumpMetadata.ExtrasDat = ProcessingTool.GetFullFile($"{basePath}_suppl.dat") ?? string.Empty;
+                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out var xgd23SS))
                     {
                         info.DumpMetadata.SectorRanges = xgd23SS ?? string.Empty;
                     }
                 }
                 else
                 {
-                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd23DMIHash, out var xgd23PFIHash, out _, out var xgd23SS))
+                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd23ExtrasDat, out var xgd23SS))
                     {
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
-                        // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
-                        //info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
+                        info.DumpMetadata.ExtrasDat = xgd23ExtrasDat ?? string.Empty;
                         info.DumpMetadata.SectorRanges = xgd23SS ?? string.Empty;
                     }
                 }
 
-                string xgd2SSPath = $"{basePath}_SS.bin";
-                string xgd2RawSSPath = $"{basePath}_RawSS.bin";
-                if (File.Exists(xgd2SSPath) && ProcessingTool.IsValidSS(xgd2SSPath))
+                string baseFilename = Path.GetFileName(basePath);
+                if (!ProcessingTool.IsFixedSS($"{basePath}_SS.bin") && ProcessingTool.FixSS($"{basePath}_SS.bin", $"{basePath}_RawSS.bin"))
                 {
-                    // Save untouched SS
-                    try
+                    if (HashTool.GetStandardHashes($"{basePath}_RawSS.bin", out long ssSize, out string? ssCrc, out string? ssMd5, out string? ssSha1))
                     {
-                        if (!File.Exists(xgd2RawSSPath))
-                            File.Copy(xgd2SSPath, xgd2RawSSPath);
-                    }
-                    catch { }
-
-                    // Repair, clean, and validate SS before adding hash to submission info
-                    if (ProcessingTool.FixSS(xgd2SSPath, xgd2SSPath))
-                    {
-                        string? xgd2SSCrc = HashTool.GetFileHash(xgd2SSPath, HashType.CRC32);
-                        if (xgd2SSCrc is not null)
-                            info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd2SSCrc.ToUpperInvariant();
+                        string ssHashes = $"<rom name=\"{baseFilename}.fixed.ss\" size=\"{ssSize}\" crc=\"{ssCrc}\" md5=\"{ssMd5}\" sha1=\"{ssSha1}\" />\n";
+                        info.DumpMetadata.ExtrasDat += ssHashes;
                     }
                 }
             }
@@ -613,285 +563,289 @@ namespace MPF.Processors
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
-            switch (mediaType)
+            if (mediaType == PhysicalMediaType.CDROM)
             {
-                case PhysicalMediaType.CDROM:
-                    return [
-                        new($"{outputFilename}.c2", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "c2"), // Doesn't output on Linux
-                        new($"{outputFilename}.ccd", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "ccd"),
-                        new($"{outputFilename}.cue", OutputFileFlags.Required
-                            | OutputFileFlags.Preserve),
-                        new($"{outputFilename}.dat", OutputFileFlags.Required
-                            | OutputFileFlags.Zippable),
-                        new($"{outputFilename}.img", OutputFileFlags.Deleteable),
-                        new([$"{outputFilename}.img_EdcEcc.txt", $"{outputFilename}.img_EccEdc.txt"], OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "img_edcecc"),
-                        new([$"{outputFilename}.scm", $"{outputFilename}.scmtmp"], OutputFileFlags.Deleteable),
-                        new([$"{outputFilename}.sub", $"{outputFilename}.subtmp"], OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "sub"),
-                        new($"{outputFilename}.toc", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "toc"),
+                return [
+                    new($"{outputFilename}.c2", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "c2"), // Doesn't output on Linux
+                    new($"{outputFilename}.ccd", OutputFileFlags.Required
+                        | OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "ccd"),
+                    new($"{outputFilename}.cue", OutputFileFlags.Required
+                        | OutputFileFlags.Preserve),
+                    new($"{outputFilename}.dat", OutputFileFlags.Required
+                        | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.img", OutputFileFlags.Deleteable),
+                    new([$"{outputFilename}.img_EdcEcc.txt", $"{outputFilename}.img_EccEdc.txt"], OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "img_edcecc"),
+                    new([$"{outputFilename}.scm", $"{outputFilename}.scmtmp"], OutputFileFlags.Deleteable),
+                    new([$"{outputFilename}.sub", $"{outputFilename}.subtmp"], OutputFileFlags.Required
+                        | OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "sub"),
+                    new($"{outputFilename}.toc", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "toc"),
 
-                        new($"{outputFilename}_c2Error.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "c2_error"), // Doesn't output on Linux
-                        new RegexOutputFile(Regex.Escape(outputFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "cmd"),
-                        new($"{outputFilename}_cmd.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "cmd"),
-                        new($"{outputFilename}_disc.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "disc"),
-                        new($"{outputFilename}_drive.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "drive"),
-                        new($"{outputFilename}_img.cue", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "img_cue"),
-                        new($"{outputFilename}_interleave.sub", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "interleave_sub"),
-                        new($"{outputFilename}_mainError.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "main_error"),
-                        new($"{outputFilename}_mainInfo.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "main_info"),
-                        new([$"{outputFilename}_sub.txt", $"{outputFilename}_subReadable.txt"], OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "sub_readable"),
-                        new($"{outputFilename}_subError.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "sub_error"),
-                        new($"{outputFilename}_subInfo.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "sub_info"),
-                        new($"{outputFilename}_subIntention.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "sub_intention"),
-                        new($"{outputFilename}_suppl.dat", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "suppl_dat"),
-                        new($"{outputFilename}_volDesc.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "vol_desc"),
-                        new($"{outputFilename}_with_cdg.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "with_cdg_bin"),
+                    new($"{outputFilename}_c2Error.txt", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "c2_error"), // Doesn't output on Linux
+                    new RegexOutputFile(Regex.Escape(outputFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "cmd"),
+                    new($"{outputFilename}_cmd.txt", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "cmd"),
+                    new($"{outputFilename}_disc.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "disc"),
+                    new($"{outputFilename}_drive.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "drive"),
+                    new($"{outputFilename}_img.cue", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "img_cue"),
+                    new($"{outputFilename}_interleave.sub", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "interleave_sub"),
+                    new($"{outputFilename}_mainError.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "main_error"),
+                    new($"{outputFilename}_mainInfo.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "main_info"),
+                    new([$"{outputFilename}_sub.txt", $"{outputFilename}_subReadable.txt"], OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "sub_readable"),
+                    new($"{outputFilename}_subError.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "sub_error"),
+                    new($"{outputFilename}_subInfo.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "sub_info"),
+                    new($"{outputFilename}_subIntention.txt", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "sub_intention"),
+                    new($"{outputFilename}_suppl.dat", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "suppl_dat"),
+                    new($"{outputFilename}_volDesc.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "vol_desc"),
+                    new($"{outputFilename}_with_cdg.bin", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "with_cdg_bin"),
 
-                        new([$"{outputFilename} (Track 0).sub", $"{outputFilename} (Track 00).sub"], OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "track00_sub"),
-                        new([$"{outputFilename} (Track 1)(-LBA).sub", $"{outputFilename} (Track 01)(-LBA).sub"], OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "track1_lba_sub"),
-                        new([$"{outputFilename} (Track AA).sub", $"{outputFilename} (Lead-out)(Track AA).sub"], OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "track_aa_sub"),
-                    ];
-
+                    new([$"{outputFilename} (Track 0).sub", $"{outputFilename} (Track 00).sub"], OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "track00_sub"),
+                    new([$"{outputFilename} (Track 1)(-LBA).sub", $"{outputFilename} (Track 01)(-LBA).sub"], OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "track1_lba_sub"),
+                    new([$"{outputFilename} (Track AA).sub", $"{outputFilename} (Lead-out)(Track AA).sub"], OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "track_aa_sub"),
+                ];
+            }
+            else if (mediaType == PhysicalMediaType.GDROM)
+            {
                 // TODO: Confirm GD-ROM HD area outputs
-                case PhysicalMediaType.GDROM:
-                    return [
-                        new($"{outputFilename}.dat", OutputFileFlags.Required
-                            | OutputFileFlags.Zippable),
-                        new($"{outputFilename}.toc", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "toc"),
+                return [
+                    new($"{outputFilename}.dat", OutputFileFlags.Required
+                        | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.toc", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "toc"),
 
-                        new RegexOutputFile(Regex.Escape(outputFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "cmd"),
-                        new($"{outputFilename}_cmd.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "cmd"),
-                        new($"{outputFilename}_disc.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "disc"),
-                        new($"{outputFilename}_drive.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "drive"),
-                        new($"{outputFilename}_mainError.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "main_error"),
-                        new($"{outputFilename}_mainInfo.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "main_info"),
-                        new($"{outputFilename}_suppl.dat", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "suppl_dat"),
-                        new($"{outputFilename}_volDesc.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "vol_desc"),
-                    ];
+                    new RegexOutputFile(Regex.Escape(outputFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "cmd"),
+                    new($"{outputFilename}_cmd.txt", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "cmd"),
+                    new($"{outputFilename}_disc.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "disc"),
+                    new($"{outputFilename}_drive.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "drive"),
+                    new($"{outputFilename}_mainError.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "main_error"),
+                    new($"{outputFilename}_mainInfo.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "main_info"),
+                    new($"{outputFilename}_suppl.dat", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "suppl_dat"),
+                    new($"{outputFilename}_volDesc.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "vol_desc"),
+                ];
+            }
+            else if (mediaType == PhysicalMediaType.DVD
+                || mediaType == PhysicalMediaType.NintendoGameCubeGameDisc
+                || mediaType == PhysicalMediaType.NintendoWiiOpticalDisc
+                || mediaType == PhysicalMediaType.XGD)
+            {
+                return [
+                    new($"{outputFilename}.dat", OutputFileFlags.Required
+                        | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.raw", OutputFileFlags.None),
+                    new($"{outputFilename}.toc", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "toc"),
 
-                case PhysicalMediaType.DVD:
-                case PhysicalMediaType.NintendoGameCubeGameDisc:
-                case PhysicalMediaType.NintendoWiiOpticalDisc:
-                    return [
-                        new($"{outputFilename}.dat", OutputFileFlags.Required
-                            | OutputFileFlags.Zippable),
-                        new($"{outputFilename}.raw", OutputFileFlags.None),
-                        new($"{outputFilename}.toc", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "toc"),
+                    new RegexOutputFile(Regex.Escape(outputFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "cmd"),
+                    new($"{outputFilename}_cmd.txt", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "cmd"),
+                    new($"{outputFilename}_CSSKey.txt", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "css_key"),
+                    new($"{outputFilename}_disc.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "disc"),
+                    new($"{outputFilename}_drive.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "drive"),
+                    new($"{outputFilename}_mainError.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "main_error"),
+                    new($"{outputFilename}_mainInfo.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "main_info"),
+                    new($"{outputFilename}_suppl.dat", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "suppl_dat"),
+                    new($"{outputFilename}_volDesc.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "vol_desc"),
 
-                        new RegexOutputFile(Regex.Escape(outputFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "cmd"),
-                        new($"{outputFilename}_cmd.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "cmd"),
-                        new($"{outputFilename}_CSSKey.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "css_key"),
-                        new($"{outputFilename}_disc.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "disc"),
-                        new($"{outputFilename}_drive.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "drive"),
-                        new($"{outputFilename}_mainError.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "main_error"),
-                        new($"{outputFilename}_mainInfo.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "main_info"),
-                        new($"{outputFilename}_suppl.dat", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "suppl_dat"),
-                        new($"{outputFilename}_volDesc.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "vol_desc"),
+                    // TODO: Figure out when these are required
+                    new($"{outputFilename}_DMI.bin", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "dmi"),
+                    new($"{outputFilename}_PFI.bin", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "pfi"),
+                    new($"{outputFilename}_PIC.bin", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "pic"),
+                    new($"{outputFilename}_SS.bin", System.IsXGD()
+                        ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
+                        : OutputFileFlags.Binary | OutputFileFlags.Zippable,
+                        "ss"),
+                    new($"{outputFilename}_RawSS.bin",
+                        OutputFileFlags.Binary | OutputFileFlags.Zippable,
+                        "raw_ss"),
+                ];
+            }
+            else if (mediaType == PhysicalMediaType.HDDVD
+                || mediaType == PhysicalMediaType.BluRay
+                || mediaType == PhysicalMediaType.NintendoWiiUOpticalDisc)
+            {
+                return [
+                    new($"{outputFilename}.dat", OutputFileFlags.Required
+                        | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.raw", OutputFileFlags.None),
+                    new($"{outputFilename}.toc", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "toc"),
 
-                        // TODO: Figure out when these are required
-                        new($"{outputFilename}_DMI.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "dmi"),
-                        new($"{outputFilename}_PFI.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "pfi"),
-                        new($"{outputFilename}_PIC.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "pic"),
-                        new($"{outputFilename}_SS.bin", System.IsXGD()
-                            ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
-                            : OutputFileFlags.Binary | OutputFileFlags.Zippable,
-                            "ss"),
-                        new($"{outputFilename}_RawSS.bin",
-                            OutputFileFlags.Binary | OutputFileFlags.Zippable,
-                            "raw_ss"),
-                    ];
+                    new RegexOutputFile(Regex.Escape(outputFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "cmd"),
+                    new($"{outputFilename}_cmd.txt", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "cmd"),
+                    new($"{outputFilename}_CSSKey.txt", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "css_key"),
+                    new($"{outputFilename}_disc.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "disc"),
+                    new($"{outputFilename}_drive.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "drive"),
+                    new($"{outputFilename}_mainError.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "main_error"),
+                    new($"{outputFilename}_mainInfo.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "main_info"),
+                    new($"{outputFilename}_suppl.dat", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "suppl_dat"),
+                    new($"{outputFilename}_volDesc.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "vol_desc"),
 
-                case PhysicalMediaType.HDDVD:
-                case PhysicalMediaType.BluRay:
-                case PhysicalMediaType.NintendoWiiUOpticalDisc:
-                    return [
-                            new($"{outputFilename}.dat", OutputFileFlags.Required
-                            | OutputFileFlags.Zippable),
-                        new($"{outputFilename}.raw", OutputFileFlags.None),
-                        new($"{outputFilename}.toc", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "toc"),
+                    // TODO: Figure out when these are required
+                    new($"{outputFilename}_DMI.bin", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "dmi"),
+                    new($"{outputFilename}_PFI.bin", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "pfi"),
+                    new($"{outputFilename}_PIC.bin", OutputFileFlags.Binary
+                        | OutputFileFlags.Zippable,
+                        "pic"),
+                ];
+            }
+            else if (mediaType == PhysicalMediaType.FloppyDisk
+                || mediaType == PhysicalMediaType.HardDisk)
+            {
+                // TODO: Determine what outputs come out from a HDD, SD, etc.
+                return [
+                    new($"{outputFilename}.dat", OutputFileFlags.Required
+                        | OutputFileFlags.Zippable),
 
-                        new RegexOutputFile(Regex.Escape(outputFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "cmd"),
-                        new($"{outputFilename}_cmd.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "cmd"),
-                        new($"{outputFilename}_CSSKey.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "css_key"),
-                        new($"{outputFilename}_disc.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "disc"),
-                        new($"{outputFilename}_drive.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "drive"),
-                        new($"{outputFilename}_mainError.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "main_error"),
-                        new($"{outputFilename}_mainInfo.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "main_info"),
-                        new($"{outputFilename}_suppl.dat", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "suppl_dat"),
-                        new($"{outputFilename}_volDesc.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "vol_desc"),
-
-                        // TODO: Figure out when these are required
-                        new($"{outputFilename}_DMI.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "dmi"),
-                        new($"{outputFilename}_PFI.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "pfi"),
-                        new($"{outputFilename}_PIC.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "pic"),
-                    ];
-
-                case PhysicalMediaType.FloppyDisk:
-                case PhysicalMediaType.HardDisk:
-                    // TODO: Determine what outputs come out from a HDD, SD, etc.
-                    return [
-                        new($"{outputFilename}.dat", OutputFileFlags.Required
-                            | OutputFileFlags.Zippable),
-
-                        new RegexOutputFile(Regex.Escape(outputFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "cmd"),
-                        new($"{outputFilename}_cmd.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "cmd"),
-                        new($"{outputFilename}_disc.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "disc"),
-                    ];
+                    new RegexOutputFile(Regex.Escape(outputFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "cmd"),
+                    new($"{outputFilename}_cmd.txt", OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "cmd"),
+                    new($"{outputFilename}_disc.txt", OutputFileFlags.Required
+                        | OutputFileFlags.Artifact
+                        | OutputFileFlags.Zippable,
+                        "disc"),
+                ];
             }
 
             return [];
@@ -2376,47 +2330,15 @@ namespace MPF.Processors
         }
 
         /// <summary>
-        /// Get the XGD auxiliary hash info from the outputted files, if possible
-        /// </summary>
-        /// <param name="suppl">Datafile representing the supplementary hashes</param>
-        /// <param name="dmihash">Extracted DMI.bin CRC32 hash (upper-cased)</param>
-        /// <param name="pfihash">Extracted PFI.bin CRC32 hash (upper-cased)</param>
-        /// <param name="sshash">Extracted SS.bin CRC32 hash (upper-cased)</param>
-        /// <returns>True on successful extraction of info, false otherwise</returns>
-        /// <remarks>Currently only the CRC32 values are returned for each, this may change in the future</remarks>
-        internal static bool GetXGDAuxHashInfo(Datafile? suppl, out string? dmihash, out string? pfihash, out string? sshash)
-        {
-            // Assign values to all outputs first
-            dmihash = null; pfihash = null; sshash = null;
-
-            // If we don't have a valid datafile, we can't do anything
-            if (suppl?.Game is null || suppl.Game.Length == 0)
-                return false;
-
-            // Try to extract the hash information
-            var roms = suppl.Game[0].Rom;
-            if (roms is null || roms.Length == 0)
-                return false;
-
-            dmihash = Array.Find(roms, r => r.Name?.EndsWith("DMI.bin") == true)?.CRC?.ToUpperInvariant();
-            pfihash = Array.Find(roms, r => r.Name?.EndsWith("PFI.bin") == true)?.CRC?.ToUpperInvariant();
-            sshash = Array.Find(roms, r => r.Name?.EndsWith("SS.bin") == true)?.CRC?.ToUpperInvariant();
-
-            return true;
-        }
-
-        /// <summary>
         /// Get the XGD auxiliary info from the outputted files, if possible
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
-        /// <param name="dmihash">Extracted DMI.bin CRC32 hash (upper-cased)</param>
-        /// <param name="pfihash">Extracted PFI.bin CRC32 hash (upper-cased)</param>
-        /// <param name="sshash">Extracted SS.bin CRC32 hash (upper-cased)</param>
+        /// <param name="extrasDat">Extracted extra hashes</param>
         /// <param name="ss">Extracted security sector data</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        internal static bool GetXGDAuxInfo(string disc, out string? dmihash, out string? pfihash, out string? sshash, out string? ss)
+        internal static bool GetXGDAuxInfo(string disc, out string? extrasDat, out string? ss)
         {
-            dmihash = null; pfihash = null; sshash = null; ss = null;
+            extrasDat = null; ss = null;
 
             // If the file doesn't exist, we can't get info from it
             if (string.IsNullOrEmpty(disc))
@@ -2473,18 +2395,12 @@ namespace MPF.Processors
                     // Special File Hashes
                     else if (line.StartsWith("<rom"))
                     {
-                        if (ProcessingTool.GetISOHashValues(line, out long _, out var crc32, out _, out _))
-                        {
-                            if (line.Contains("SS.bin"))
-                                sshash = crc32?.ToUpperInvariant();
-                            else if (line.Contains("PFI.bin"))
-                                pfihash = crc32?.ToUpperInvariant();
-                            else if (line.Contains("DMI.bin"))
-                                dmihash = crc32?.ToUpperInvariant();
-                        }
+                        extrasDat ??= string.Empty;
+                        extrasDat += $"{line}\n";
                     }
                 }
 
+                extrasDat = extrasDat?.TrimEnd('\n');
                 ss = ss?.TrimEnd('\n');
                 return true;
             }

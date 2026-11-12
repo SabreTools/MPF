@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using SabreTools.Data.Models.Logiqx;
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
@@ -1169,69 +1168,6 @@ namespace MPF.Processors.Test
 
         #endregion
 
-        #region GetXGDAuxHashInfo
-
-        [Fact]
-        public void GetXGDAuxHashInfo_Null_Null()
-        {
-            Datafile? suppl = null;
-            bool actual = DiscImageCreator.GetXGDAuxHashInfo(suppl,
-                out string? dmihash,
-                out string? pfihash,
-                out string? sshash);
-
-            Assert.False(actual);
-            Assert.Null(dmihash);
-            Assert.Null(pfihash);
-            Assert.Null(sshash);
-        }
-
-        [Fact]
-        public void GetXGDAuxHashInfo_Invalid_Null()
-        {
-            Datafile? suppl = new();
-            bool actual = DiscImageCreator.GetXGDAuxHashInfo(suppl,
-                out string? dmihash,
-                out string? pfihash,
-                out string? sshash);
-
-            Assert.False(actual);
-            Assert.Null(dmihash);
-            Assert.Null(pfihash);
-            Assert.Null(sshash);
-        }
-
-        [Fact]
-        public void GetXGDAuxHashInfo_Valid_Filled()
-        {
-            Datafile? suppl = new()
-            {
-                Game =
-                [
-                    new Game
-                    {
-                        Rom =
-                        [
-                            new Rom { Name = "DMI.bin", CRC = "00000000" },
-                            new Rom { Name = "PFI.bin", CRC = "00000000" },
-                            new Rom { Name = "SS.bin", CRC = "00000000" },
-                        ],
-                    }
-                ],
-            };
-            bool actual = DiscImageCreator.GetXGDAuxHashInfo(suppl,
-                out string? dmihash,
-                out string? pfihash,
-                out string? sshash);
-
-            Assert.True(actual);
-            Assert.Equal("00000000", dmihash);
-            Assert.Equal("00000000", pfihash);
-            Assert.Equal("00000000", sshash);
-        }
-
-        #endregion
-
         #region GetXGDAuxInfo
 
         [Fact]
@@ -1239,15 +1175,11 @@ namespace MPF.Processors.Test
         {
             string disc = string.Empty;
             bool actual = DiscImageCreator.GetXGDAuxInfo(disc,
-                out string? dmihash,
-                out string? pfihash,
-                out string? sshash,
+                out string? extrasDat,
                 out string? ss);
 
             Assert.False(actual);
-            Assert.Null(dmihash);
-            Assert.Null(pfihash);
-            Assert.Null(sshash);
+            Assert.Null(extrasDat);
             Assert.Null(ss);
         }
 
@@ -1256,33 +1188,29 @@ namespace MPF.Processors.Test
         {
             string disc = "INVALID";
             bool actual = DiscImageCreator.GetXGDAuxInfo(disc,
-                out string? dmihash,
-                out string? pfihash,
-                out string? sshash,
+                out string? extrasDat,
                 out string? ss);
 
             Assert.False(actual);
-            Assert.Null(dmihash);
-            Assert.Null(pfihash);
-            Assert.Null(sshash);
+            Assert.Null(extrasDat);
             Assert.Null(ss);
         }
 
         [Fact]
         public void GetXGDAuxInfo_Valid_Filled()
         {
+            string? expectedExtrasDat = @"<rom name=""SS.bin"" size="""" crc=""00000000"" md5="""" sha1="""" />
+<rom name=""PFI.bin"" size="""" crc=""00000000"" md5="""" sha1="""" />
+<rom name=""DMI.bin"" size="""" crc=""00000000"" md5="""" sha1="""" />";
             string? expectedSs = "0-12345";
+
             string disc = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM", "test_disc.txt");
             bool actual = DiscImageCreator.GetXGDAuxInfo(disc,
-                out string? dmihash,
-                out string? pfihash,
-                out string? sshash,
+                out string? extrasDat,
                 out string? ss);
 
             Assert.True(actual);
-            Assert.Equal("00000000", dmihash);
-            Assert.Equal("00000000", pfihash);
-            Assert.Equal("00000000", sshash);
+            Assert.Equal(expectedExtrasDat, extrasDat);
             Assert.Equal(expectedSs, ss);
         }
 

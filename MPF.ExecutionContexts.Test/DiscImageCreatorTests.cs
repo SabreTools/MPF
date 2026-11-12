@@ -12,29 +12,40 @@ namespace MPF.ExecutionContexts.Test
         #region Converters.Extension
 
         [Theory]
-        [InlineData(null, null)]
-        [InlineData(PhysicalMediaType.CDROM, ".bin")]
-        [InlineData(PhysicalMediaType.GDROM, ".bin")]
-        [InlineData(PhysicalMediaType.Cartridge, ".bin")]
-        [InlineData(PhysicalMediaType.HardDisk, ".bin")]
-        [InlineData(PhysicalMediaType.CompactFlash, ".bin")]
-        [InlineData(PhysicalMediaType.MMC, ".bin")]
-        [InlineData(PhysicalMediaType.SDCard, ".bin")]
-        [InlineData(PhysicalMediaType.FlashDrive, ".bin")]
-        [InlineData(PhysicalMediaType.DVD, ".iso")]
-        [InlineData(PhysicalMediaType.HDDVD, ".iso")]
-        [InlineData(PhysicalMediaType.BluRay, ".iso")]
-        [InlineData(PhysicalMediaType.NintendoWiiOpticalDisc, ".iso")]
-        [InlineData(PhysicalMediaType.LaserDisc, ".raw")]
-        [InlineData(PhysicalMediaType.NintendoGameCubeGameDisc, ".raw")]
-        [InlineData(PhysicalMediaType.NintendoWiiUOpticalDisc, ".wud")]
-        [InlineData(PhysicalMediaType.FloppyDisk, ".img")]
-        [InlineData(PhysicalMediaType.Cassette, ".wav")]
-        [InlineData(PhysicalMediaType.ApertureCard, null)]
+        [MemberData(nameof(GenerateExtensionTestData))]
         public void ExtensionTest(PhysicalMediaType? type, string? expected)
         {
             string? actual = Converters.Extension(type);
             Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Generate a test set for ExtensionTest
+        /// </summary>
+        public static TheoryData<PhysicalMediaType?, string?> GenerateExtensionTestData()
+        {
+            return new TheoryData<PhysicalMediaType?, string?>
+            {
+                { null, null },
+                { PhysicalMediaType.CDROM, ".bin" },
+                { PhysicalMediaType.GDROM, ".bin" },
+                { PhysicalMediaType.Cartridge, ".bin" },
+                { PhysicalMediaType.HardDisk, ".bin" },
+                { PhysicalMediaType.CompactFlash, ".bin" },
+                { PhysicalMediaType.MMC, ".bin" },
+                { PhysicalMediaType.SDCard, ".bin" },
+                { PhysicalMediaType.FlashDrive, ".bin" },
+                { PhysicalMediaType.DVD, ".iso" },
+                { PhysicalMediaType.HDDVD, ".iso" },
+                { PhysicalMediaType.BluRay, ".iso" },
+                { PhysicalMediaType.NintendoWiiOpticalDisc, ".iso" },
+                { PhysicalMediaType.LaserDisc, ".raw" },
+                { PhysicalMediaType.NintendoGameCubeGameDisc, ".raw" },
+                { PhysicalMediaType.NintendoWiiUOpticalDisc, ".wud" },
+                { PhysicalMediaType.FloppyDisk, ".img" },
+                { PhysicalMediaType.Cassette, ".wav" },
+                { PhysicalMediaType.ApertureCard, null },
+            };
         }
 
         #endregion
@@ -83,8 +94,8 @@ namespace MPF.ExecutionContexts.Test
                 { PhysicalSystem.HasbroVideoNowXP, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /a 0 /c2 1000 /q /mr 1000" },
                 { PhysicalSystem.SonyPlayStation, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /c2 1000 /q /mr 1000 /nl /am" },
                 { PhysicalSystem.IBMPCcompatible, PhysicalMediaType.DVD, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /c /q /rr 1000 /sf" },
-                { PhysicalSystem.MicrosoftXbox, PhysicalMediaType.DVD, "/dev/sr0", "filename.bin", 2, "xbox /dev/sr0 \"filename.bin\" 2 /q /rr 1000" },
-                { PhysicalSystem.MicrosoftXbox360, PhysicalMediaType.DVD, "/dev/sr0", "filename.bin", 2, "xbox /dev/sr0 \"filename.bin\" 2 /q /rr 1000" },
+                { PhysicalSystem.MicrosoftXbox, PhysicalMediaType.XGD, "/dev/sr0", "filename.bin", 2, "xbox /dev/sr0 \"filename.bin\" 2 /q /rr 1000" },
+                { PhysicalSystem.MicrosoftXbox360, PhysicalMediaType.XGD, "/dev/sr0", "filename.bin", 2, "xbox /dev/sr0 \"filename.bin\" 2 /q /rr 1000" },
                 { PhysicalSystem.NintendoGameCube, PhysicalMediaType.NintendoGameCubeGameDisc, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /q /raw" },
                 { PhysicalSystem.NintendoWii, PhysicalMediaType.NintendoWiiOpticalDisc, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /q /raw" },
                 { PhysicalSystem.SegaDreamcast, PhysicalMediaType.GDROM, "/dev/sr0", "filename.bin", 2, "gd /dev/sr0 \"filename.bin\" 2 /c2 1000 /q" },

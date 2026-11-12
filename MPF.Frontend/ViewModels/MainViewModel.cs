@@ -560,7 +560,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Current list of supported media types
         /// </summary>
-        public List<Element<PhysicalMediaType>>? MediaTypes
+        public List<PhysicalMediaTypeComboBoxItem>? MediaTypes
         {
             get;
             set
@@ -753,9 +753,11 @@ namespace MPF.Frontend.ViewModels
             {
                 int index = CurrentSystem.MediaTypes.FindIndex(m => m == CurrentPhysicalMediaType);
                 if (CurrentPhysicalMediaType is not null && index == -1)
-                    VerboseLogLn($"Disc of type '{CurrentPhysicalMediaType.LongName()}' found, but the current system does not support it!");
+                    VerboseLogLn($"Disc of type '{CurrentPhysicalMediaType.Name}' found, but the current system does not support it!");
 
-                MediaTypes = CurrentSystem.MediaTypes.ConvertAll(m => new Element<PhysicalMediaType>(m ?? PhysicalMediaType.NONE));
+                MediaTypes = CurrentSystem.MediaTypes
+                    .FindAll(m => m is not null)
+                    .ConvertAll(m => new PhysicalMediaTypeComboBoxItem(m!));
                 PhysicalMediaTypeComboBoxEnabled = MediaTypes.Count > 1;
                 CurrentPhysicalMediaType = index > -1 ? MediaTypes[index] : MediaTypes[0];
             }
@@ -1243,8 +1245,7 @@ namespace MPF.Frontend.ViewModels
 
             // Get reasonable default values based on the current system
             PhysicalMediaType? defaultPhysicalMediaType = (CurrentSystem?.MediaTypes ?? []).Count > 0 ? CurrentSystem!.MediaTypes[0] : PhysicalMediaType.CDROM;
-            if (defaultPhysicalMediaType == PhysicalMediaType.NONE)
-                defaultPhysicalMediaType = PhysicalMediaType.CDROM;
+            defaultPhysicalMediaType ??= PhysicalMediaType.CDROM;
 
             // If the drive is marked active, try to read from it
             if (CurrentDrive.MarkedActive)
@@ -1255,12 +1256,12 @@ namespace MPF.Frontend.ViewModels
                 // If we got either an error or no media, default to the current System default
                 if (detectedPhysicalMediaType is null)
                 {
-                    VerboseLogLn($"Could not detect media type, defaulting to {defaultPhysicalMediaType.LongName()}.");
+                    VerboseLogLn($"Could not detect media type, defaulting to {defaultPhysicalMediaType.Name}.");
                     CurrentPhysicalMediaType = defaultPhysicalMediaType;
                 }
                 else
                 {
-                    VerboseLogLn($"Detected {detectedPhysicalMediaType.LongName()}.");
+                    VerboseLogLn($"Detected {detectedPhysicalMediaType.Name}.");
                     _detectedPhysicalMediaType = detectedPhysicalMediaType;
                     CurrentPhysicalMediaType = detectedPhysicalMediaType;
                 }
@@ -1268,7 +1269,7 @@ namespace MPF.Frontend.ViewModels
             // Otherwise just use the default
             else
             {
-                VerboseLogLn($"Drive marked as empty, defaulting to {defaultPhysicalMediaType.LongName()}.");
+                VerboseLogLn($"Drive marked as empty, defaulting to {defaultPhysicalMediaType.Name}.");
                 CurrentPhysicalMediaType = defaultPhysicalMediaType;
             }
         }
@@ -1514,7 +1515,7 @@ namespace MPF.Frontend.ViewModels
             string systemShort = CurrentSystem?.Code ?? "unknown";
             if (string.IsNullOrEmpty(systemShort))
                 systemShort = "unknown";
-            string mediaLong = CurrentPhysicalMediaType.LongName() ?? "Unknown Media";
+            string mediaLong = CurrentPhysicalMediaType?.Name ?? "Unknown Media";
             if (string.IsNullOrEmpty(mediaLong))
                 mediaLong = "Unknown Media";
             string program = CurrentProgram.ToString() ?? "Unknown Program";
@@ -2057,7 +2058,7 @@ namespace MPF.Frontend.ViewModels
                 PhysicalMediaType? mediaType = _environment.GetPhysicalMediaType();
                 if (mediaType is not null)
                 {
-                    int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
+                    int mediaTypeIndex = MediaTypes.FindIndex(m => m.Value == mediaType);
                     CurrentPhysicalMediaType = mediaTypeIndex > -1 ? MediaTypes[mediaTypeIndex] : MediaTypes[0];
                 }
             }
@@ -2232,13 +2233,13 @@ namespace MPF.Frontend.ViewModels
             }
 
             // If we have an invalid current type, we don't care and return
-            if (CurrentPhysicalMediaType is null || CurrentPhysicalMediaType == PhysicalMediaType.NONE)
+            if (CurrentPhysicalMediaType is null)
                 return;
 
             // Now set the selected item, if possible
             int index = MediaTypes.FindIndex(kvp => kvp.Value == CurrentPhysicalMediaType);
             if (CurrentPhysicalMediaType is not null && index == -1)
-                VerboseLogLn($"Disc of type '{CurrentPhysicalMediaType.LongName()}' found, but the current system does not support it!");
+                VerboseLogLn($"Disc of type '{CurrentPhysicalMediaType.Name}' found, but the current system does not support it!");
 
             CurrentPhysicalMediaType = index > -1 ? MediaTypes[index] : MediaTypes[0];
         }
@@ -2277,7 +2278,7 @@ namespace MPF.Frontend.ViewModels
         private bool ProgramSupportsMedia()
         {
             // If the media type is not set, return false
-            if (CurrentPhysicalMediaType is null || CurrentPhysicalMediaType == PhysicalMediaType.NONE)
+            if (CurrentPhysicalMediaType is null)
                 return false;
 
 #pragma warning disable IDE0072

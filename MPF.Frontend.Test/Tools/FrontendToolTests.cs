@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;
 using Xunit;
@@ -8,16 +9,22 @@ namespace MPF.Frontend.Test.Tools
     {
         #region GetDefaultSpeedForPhysicalMediaType
 
+        public static readonly List<object?[]> GetDefaultSpeedForPhysicalMediaTypeSegmentedTestData =
+        [
+            [null, 72],
+            [PhysicalMediaType.CDROM, 72],
+            [PhysicalMediaType.GDROM, 72],
+            [PhysicalMediaType.DVD, 24],
+            [PhysicalMediaType.NintendoGameCubeGameDisc, 24],
+            [PhysicalMediaType.NintendoWiiOpticalDisc, 24],
+            [PhysicalMediaType.XGD, 24],
+            [PhysicalMediaType.HDDVD, 24],
+            [PhysicalMediaType.BluRay, 16],
+            [PhysicalMediaType.NintendoWiiUOpticalDisc, 16],
+        ];
+
         [Theory]
-        [InlineData(null, 72)]
-        [InlineData(PhysicalMediaType.CDROM, 72)]
-        [InlineData(PhysicalMediaType.GDROM, 72)]
-        [InlineData(PhysicalMediaType.DVD, 24)]
-        [InlineData(PhysicalMediaType.NintendoGameCubeGameDisc, 24)]
-        [InlineData(PhysicalMediaType.NintendoWiiOpticalDisc, 24)]
-        [InlineData(PhysicalMediaType.HDDVD, 24)]
-        [InlineData(PhysicalMediaType.BluRay, 16)]
-        [InlineData(PhysicalMediaType.NintendoWiiUOpticalDisc, 16)]
+        [MemberData(nameof(GetDefaultSpeedForPhysicalMediaTypeSegmentedTestData))]
         public void GetDefaultSpeedForPhysicalMediaTypeSegmentedTest(PhysicalMediaType? mediaType, int expected)
         {
             var options = new Options();

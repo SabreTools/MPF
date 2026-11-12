@@ -363,29 +363,29 @@ namespace MPF.ExecutionContexts.Redumper
                 && PhysicalSystem != PhysicalSystem.SonyPlayStation5
                 && PhysicalSystem != PhysicalSystem.NintendoWiiU)
             {
-#pragma warning disable IDE0010
                 // Enable skeleton for CD and DVD only, by default
-                switch (PhysicalMediaType)
+                if (PhysicalMediaType == PhysicalMediaType.CDROM)
                 {
-                    case SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM:
-                    case SabreTools.RedumpLib.Data.PhysicalMediaType.DVD:
-                    {
-                        this[FlagStrings.Skeleton] = true;
-                        (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
-                    }
-
-                    break;
-
-                    // If the type is unknown, also enable
-                    case null:
-                        this[FlagStrings.Skeleton] = true;
-                        (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
-                        break;
-
-                    default:
-                        break;
+                    this[FlagStrings.Skeleton] = true;
+                    (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
                 }
-#pragma warning restore IDE0010
+                else if (PhysicalMediaType == PhysicalMediaType.DVD)
+                {
+                    this[FlagStrings.Skeleton] = true;
+                    (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
+                }
+                else if (PhysicalMediaType == PhysicalMediaType.XGD)
+                {
+                    this[FlagStrings.Skeleton] = true;
+                    (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
+                }
+
+                // If the type is unknown, also enable
+                else if (PhysicalMediaType == null)
+                {
+                    this[FlagStrings.Skeleton] = true;
+                    (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
+                }
             }
 
             if (dumpSettings.ReadMethod != ReadMethod.NONE)

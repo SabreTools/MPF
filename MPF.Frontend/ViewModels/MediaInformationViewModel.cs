@@ -1277,19 +1277,6 @@ namespace MPF.Frontend.ViewModels
 
         public bool WriteOffsetVisible => WriteOffset is not null;
 
-        public string? DMIHash
-        {
-            get
-            {
-                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.DMIHash, out var value))
-                    return value;
-
-                return null;
-            }
-        }
-
-        public bool DMIHashVisible => DMIHash is not null;
-
         public string? EDC
         {
             get => SubmissionInfo.DiscIdentifiers.EDC is null || SubmissionInfo.DiscIdentifiers.EDC == YesNo.NULL
@@ -1312,6 +1299,13 @@ namespace MPF.Frontend.ViewModels
         }
 
         public bool EXEDateVisible => EXEDate is not null;
+
+        public string? ExtrasDat
+        {
+            get => SubmissionInfo.DumpMetadata.ExtrasDat;
+        }
+
+        public bool ExtrasDatVisible => !string.IsNullOrEmpty(ExtrasDat);
 
         public string? Filename
         {
@@ -1372,19 +1366,6 @@ namespace MPF.Frontend.ViewModels
 
         public bool MultisessionVisible => Multisession is not null;
 
-        public string? PFIHash
-        {
-            get
-            {
-                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.PFIHash, out var value))
-                    return value;
-
-                return null;
-            }
-        }
-
-        public bool PFIHashVisible => PFIHash is not null;
-
         public string? PIC
         {
             get => SubmissionInfo.DumpMetadata.PIC;
@@ -1425,19 +1406,6 @@ namespace MPF.Frontend.ViewModels
         }
 
         public bool SBIVisible => !string.IsNullOrEmpty(SBI);
-
-        public string? SSHash
-        {
-            get
-            {
-                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.SSHash, out var value))
-                    return value;
-
-                return null;
-            }
-        }
-
-        public bool SSHashVisible => SSHash is not null;
 
         public string? SectorRanges
         {

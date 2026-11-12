@@ -1075,77 +1075,86 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             };
 
             // Now sort based on disc type
-#pragma warning disable IDE0010
-            switch (PhysicalMediaType)
+            if (PhysicalMediaType == PhysicalMediaType.CDROM)
             {
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM:
-                    this[FlagStrings.C2Opcode] = true;
-                    this[FlagStrings.MultiSectorRead] = dumpSettings.MultiSectorRead;
-                    if (dumpSettings.MultiSectorRead)
-                        MultiSectorReadValue = dumpSettings.MultiSectorReadValue;
+                this[FlagStrings.C2Opcode] = true;
+                this[FlagStrings.MultiSectorRead] = dumpSettings.MultiSectorRead;
+                if (dumpSettings.MultiSectorRead)
+                    MultiSectorReadValue = dumpSettings.MultiSectorReadValue;
 
-                    if (PhysicalSystem == PhysicalSystem.AppleMacintosh
-                        || PhysicalSystem == PhysicalSystem.IBMPCcompatible)
-                    {
-                        this[FlagStrings.NoFixSubQSecuROM] = true;
-                        this[FlagStrings.ScanFileProtect] = true;
-                        this[FlagStrings.ScanSectorProtect] = dumpSettings.ParanoidMode;
-                        this[FlagStrings.SubchannelReadLevel] = dumpSettings.ParanoidMode;
-                        if (this[FlagStrings.SubchannelReadLevel] == true)
-                            SubchannelReadLevelValue = 2;
-                    }
-                    else if (PhysicalSystem == PhysicalSystem.AtariJaguarCDInteractiveMultimediaSystem)
-                    {
-                        this[FlagStrings.AtariJaguar] = true;
-                    }
-                    else if (PhysicalSystem == PhysicalSystem.HasbroVideoNow
-                        || PhysicalSystem == PhysicalSystem.HasbroVideoNowColor
-                        || PhysicalSystem == PhysicalSystem.HasbroVideoNowJr
-                        || PhysicalSystem == PhysicalSystem.HasbroVideoNowXP)
-                    {
-                        this[FlagStrings.AddOffset] = true;
-                        AddOffsetValue = 0; // Value needed for first run and placeholder after
-                    }
-                    else if (PhysicalSystem == PhysicalSystem.SonyPlayStation)
-                    {
-                        this[FlagStrings.ScanAntiMod] = true;
-                        this[FlagStrings.NoFixSubQLibCrypt] = true;
-                    }
-
-                    break;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.DVD:
-                    this[FlagStrings.CopyrightManagementInformation] = dumpSettings.UseCMIFlag;
-                    this[FlagStrings.ScanFileProtect] = dumpSettings.ParanoidMode;
-                    this[FlagStrings.DVDReread] = true;
-                    break;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.GDROM:
-                    this[FlagStrings.C2Opcode] = true;
-                    break;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.HDDVD:
-                    this[FlagStrings.CopyrightManagementInformation] = dumpSettings.UseCMIFlag;
-                    this[FlagStrings.DVDReread] = true;
-                    break;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.BluRay:
-                    this[FlagStrings.DVDReread] = true;
-                    break;
-
-                // Special Formats
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.NintendoGameCubeGameDisc:
-                    this[FlagStrings.Raw] = true;
-                    break;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.NintendoWiiOpticalDisc:
-                    this[FlagStrings.Raw] = true;
-                    break;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.NintendoWiiUOpticalDisc:
-                    // Currently no defaults set
-                    break;
-
-                // Non-optical
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.FloppyDisk:
-                    // Currently no defaults set
-                    break;
+                if (PhysicalSystem == PhysicalSystem.AppleMacintosh
+                    || PhysicalSystem == PhysicalSystem.IBMPCcompatible)
+                {
+                    this[FlagStrings.NoFixSubQSecuROM] = true;
+                    this[FlagStrings.ScanFileProtect] = true;
+                    this[FlagStrings.ScanSectorProtect] = dumpSettings.ParanoidMode;
+                    this[FlagStrings.SubchannelReadLevel] = dumpSettings.ParanoidMode;
+                    if (this[FlagStrings.SubchannelReadLevel] == true)
+                        SubchannelReadLevelValue = 2;
+                }
+                else if (PhysicalSystem == PhysicalSystem.AtariJaguarCDInteractiveMultimediaSystem)
+                {
+                    this[FlagStrings.AtariJaguar] = true;
+                }
+                else if (PhysicalSystem == PhysicalSystem.HasbroVideoNow
+                    || PhysicalSystem == PhysicalSystem.HasbroVideoNowColor
+                    || PhysicalSystem == PhysicalSystem.HasbroVideoNowJr
+                    || PhysicalSystem == PhysicalSystem.HasbroVideoNowXP)
+                {
+                    this[FlagStrings.AddOffset] = true;
+                    AddOffsetValue = 0; // Value needed for first run and placeholder after
+                }
+                else if (PhysicalSystem == PhysicalSystem.SonyPlayStation)
+                {
+                    this[FlagStrings.ScanAntiMod] = true;
+                    this[FlagStrings.NoFixSubQLibCrypt] = true;
+                }
             }
-#pragma warning restore IDE0010
+            else if (PhysicalMediaType == PhysicalMediaType.DVD)
+            {
+                this[FlagStrings.CopyrightManagementInformation] = dumpSettings.UseCMIFlag;
+                this[FlagStrings.ScanFileProtect] = dumpSettings.ParanoidMode;
+                this[FlagStrings.DVDReread] = true;
+            }
+            else if (PhysicalMediaType == PhysicalMediaType.XGD)
+            {
+                this[FlagStrings.CopyrightManagementInformation] = dumpSettings.UseCMIFlag;
+                this[FlagStrings.ScanFileProtect] = dumpSettings.ParanoidMode;
+                this[FlagStrings.DVDReread] = true;
+            }
+            else if (PhysicalMediaType == PhysicalMediaType.GDROM)
+            {
+                this[FlagStrings.C2Opcode] = true;
+            }
+            else if (PhysicalMediaType == PhysicalMediaType.HDDVD)
+            {
+                this[FlagStrings.CopyrightManagementInformation] = dumpSettings.UseCMIFlag;
+                this[FlagStrings.DVDReread] = true;
+            }
+            else if (PhysicalMediaType == PhysicalMediaType.BluRay)
+            {
+                this[FlagStrings.DVDReread] = true;
+            }
+
+            // Special Formats
+            else if (PhysicalMediaType == PhysicalMediaType.NintendoGameCubeGameDisc)
+            {
+                this[FlagStrings.Raw] = true;
+            }
+            else if (PhysicalMediaType == PhysicalMediaType.NintendoWiiOpticalDisc)
+            {
+                this[FlagStrings.Raw] = true;
+            }
+            else if (PhysicalMediaType == PhysicalMediaType.NintendoWiiUOpticalDisc)
+            {
+                // Currently no defaults set
+            }
+
+            // Non-optical
+            else if (PhysicalMediaType == PhysicalMediaType.FloppyDisk)
+            {
+                // Currently no defaults set
+            }
         }
 
         /// <inheritdoc/>
@@ -1874,58 +1883,69 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 return;
             }
 
-#pragma warning disable IDE0010
-            switch (type)
+            if (type == PhysicalMediaType.CDROM)
             {
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM:
-                    if (system == PhysicalSystem.SuperAudioCD)
-                        BaseCommand = CommandStrings.SACD;
-                    else
-                        BaseCommand = CommandStrings.CompactDisc;
-                    return;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.DVD:
-                    if (system == PhysicalSystem.MicrosoftXbox
-                        || system == PhysicalSystem.MicrosoftXbox360)
-                    {
-                        BaseCommand = CommandStrings.XBOX;
-                        return;
-                    }
-
-                    BaseCommand = CommandStrings.DigitalVideoDisc;
-                    return;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.GDROM:
-                    BaseCommand = CommandStrings.GDROM;
-                    return;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.HDDVD:
-                    BaseCommand = CommandStrings.DigitalVideoDisc;
-                    return;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.BluRay:
-                    BaseCommand = CommandStrings.BluRay;
-                    return;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.NintendoGameCubeGameDisc:
-                    BaseCommand = CommandStrings.DigitalVideoDisc;
-                    return;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.NintendoWiiOpticalDisc:
-                    BaseCommand = CommandStrings.DigitalVideoDisc;
-                    return;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.NintendoWiiUOpticalDisc:
-                    BaseCommand = CommandStrings.BluRay;
-                    return;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.FloppyDisk:
-                    BaseCommand = CommandStrings.Floppy;
-                    return;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.HardDisk:
-                    BaseCommand = CommandStrings.Disk;
-                    return;
-                case SabreTools.RedumpLib.Data.PhysicalMediaType.DataCartridge:
-                    BaseCommand = CommandStrings.Tape;
-                    return;
-
-                default:
-                    BaseCommand = null;
-                    return;
+                if (system == PhysicalSystem.SuperAudioCD)
+                    BaseCommand = CommandStrings.SACD;
+                else
+                    BaseCommand = CommandStrings.CompactDisc;
             }
-#pragma warning restore IDE0010
+            else if (type == PhysicalMediaType.DVD)
+            {
+                if (system == PhysicalSystem.MicrosoftXbox
+                    || system == PhysicalSystem.MicrosoftXbox360)
+                {
+                    BaseCommand = CommandStrings.XBOX;
+                }
+                else
+                {
+                    BaseCommand = CommandStrings.DigitalVideoDisc;
+                }
+            }
+            else if (type == PhysicalMediaType.GDROM)
+            {
+                BaseCommand = CommandStrings.GDROM;
+            }
+            else if (type == PhysicalMediaType.HDDVD)
+            {
+                BaseCommand = CommandStrings.DigitalVideoDisc;
+            }
+            else if (type == PhysicalMediaType.BluRay)
+            {
+                BaseCommand = CommandStrings.BluRay;
+            }
+            else if (type == PhysicalMediaType.NintendoGameCubeGameDisc)
+            {
+                BaseCommand = CommandStrings.DigitalVideoDisc;
+            }
+            else if (type == PhysicalMediaType.NintendoWiiOpticalDisc)
+            {
+                BaseCommand = CommandStrings.DigitalVideoDisc;
+            }
+            else if (type == PhysicalMediaType.NintendoWiiUOpticalDisc)
+            {
+                BaseCommand = CommandStrings.BluRay;
+            }
+            else if (type == PhysicalMediaType.XGD)
+            {
+                BaseCommand = CommandStrings.XBOX;
+            }
+            else if (type == PhysicalMediaType.FloppyDisk)
+            {
+                BaseCommand = CommandStrings.Floppy;
+            }
+            else if (type == PhysicalMediaType.HardDisk)
+            {
+                BaseCommand = CommandStrings.Disk;
+            }
+            else if (type == PhysicalMediaType.DataCartridge)
+            {
+                BaseCommand = CommandStrings.Tape;
+            }
+            else
+            {
+                BaseCommand = null;
+            }
         }
 
         #endregion

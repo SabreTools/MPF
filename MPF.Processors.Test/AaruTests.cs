@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using SabreTools.RedumpLib.Data;
 using Schemas;
@@ -447,140 +448,145 @@ namespace MPF.Processors.Test
 
         #region GetDiscTypeFromStrings
 
+        public static readonly List<object?[]> GetDiscTypeFromStringsTestData =
+        [
+            [null, "ANY", null],
+            ["", "ANY", null],
+            ["INVALID", "ANY", null],
+            ["3\" floppy", "ANY", PhysicalMediaType.FloppyDisk],
+            ["3.5\" floppy", "ANY", PhysicalMediaType.FloppyDisk],
+            ["3.5\" magneto-optical", "ANY", PhysicalMediaType.Floptical],
+            ["3.5\" SyQuest cartridge", "ANY", null],
+            ["3.9\" SyQuest cartridge", "ANY", null],
+            ["5.25\" floppy", "ANY", PhysicalMediaType.FloppyDisk],
+            ["5.25\" magneto-optical", "ANY", PhysicalMediaType.Floptical],
+            ["5.25\" SyQuest cartridge", "ANY", null],
+            ["8\" floppy", "ANY", PhysicalMediaType.FloppyDisk],
+            ["300mm magneto optical", "ANY", PhysicalMediaType.Floptical],
+            ["356mm magneto-optical", "ANY", PhysicalMediaType.Floptical],
+            ["Advanced Digital Recording", "ANY", null],
+            ["Advanced Intelligent Tape", "ANY", null],
+            ["Archival Disc", "ANY", null],
+            ["BeeCard", "ANY", null],
+            ["Blu-ray", "Wii U Optical Disc", PhysicalMediaType.NintendoWiiUOpticalDisc],
+            ["Blu-ray", "ANY", PhysicalMediaType.BluRay],
+            ["Borsu", "ANY", null],
+            ["Compact Cassette", "ANY", PhysicalMediaType.Cassette],
+            ["Compact Disc", "ANY", PhysicalMediaType.CDROM],
+            ["Compact Flash", "ANY", PhysicalMediaType.CompactFlash],
+            ["CompacTape", "ANY", null],
+            ["CRVdisc", "ANY", null],
+            ["Data8", "ANY", null],
+            ["DataPlay", "ANY", null],
+            ["DataStore", "ANY", null],
+            ["DDCD", "ANY", PhysicalMediaType.CDROM],
+            ["DECtape", "ANY", null],
+            ["DemiDiskette", "ANY", null],
+            ["Digital Audio Tape", "ANY", null],
+            ["Digital Data Storage", "ANY", PhysicalMediaType.DataCartridge],
+            ["Digital Linear Tape", "ANY", null],
+            ["DIR", "ANY", null],
+            ["DST", "ANY", null],
+            ["DTF", "ANY", null],
+            ["DTF2", "ANY", null],
+            ["DV tape", "ANY", null],
+            ["DVD", "GameCube Game Disc", PhysicalMediaType.NintendoGameCubeGameDisc],
+            ["DVD", "Wii Optical Disc", PhysicalMediaType.NintendoWiiOpticalDisc],
+            ["DVD", "ANY", PhysicalMediaType.DVD],
+            ["EVD", "ANY", null],
+            ["Exatape", "ANY", null],
+            ["Express Card", "ANY", null],
+            ["FDDVD", "ANY", null],
+            ["Flextra", "ANY", null],
+            ["Floptical", "ANY", PhysicalMediaType.Floptical],
+            ["FVD", "ANY", null],
+            ["GD", "ANY", PhysicalMediaType.GDROM],
+            ["Hard Disk Drive", "ANY", PhysicalMediaType.HardDisk],
+            ["HD DVD", "ANY", PhysicalMediaType.HDDVD],
+            ["HD VMD", "ANY", null],
+            ["HiFD", "ANY", PhysicalMediaType.FloppyDisk],
+            ["HiTC", "ANY", null],
+            ["HuCard", "ANY", PhysicalMediaType.Cartridge],
+            ["HVD", "ANY", null],
+            ["HyperFlex", "ANY", null],
+            ["IBM 3470", "ANY", null],
+            ["IBM 3480", "ANY", null],
+            ["IBM 3490", "ANY", null],
+            ["IBM 3490E", "ANY", null],
+            ["IBM 3592", "ANY", null],
+            ["Iomega Bernoulli Box", "ANY", PhysicalMediaType.IomegaBernoulliDisk],
+            ["Iomega Bernoulli Box II", "ANY", PhysicalMediaType.IomegaBernoulliDisk],
+            ["Iomega Ditto", "ANY", null],
+            ["Iomega Jaz", "ANY", PhysicalMediaType.IomegaJaz],
+            ["Iomega PocketZip", "ANY", PhysicalMediaType.IomegaZip],
+            ["Iomega REV", "ANY", null],
+            ["Iomega ZIP", "ANY", PhysicalMediaType.IomegaZip],
+            ["Kodak Verbatim", "ANY", null],
+            ["LaserDisc", "ANY", PhysicalMediaType.LaserDisc],
+            ["Linear Tape-Open", "ANY", null],
+            ["LT1", "ANY", null],
+            ["Magneto-optical", "ANY", PhysicalMediaType.Floptical],
+            ["Memory Stick", "ANY", PhysicalMediaType.SDCard],
+            ["MiniCard", "ANY", null],
+            ["MiniDisc", "ANY", null],
+            ["MultiMediaCard", "ANY", PhysicalMediaType.SDCard],
+            ["Nintendo 3DS Game Card", "ANY", PhysicalMediaType.Cartridge],
+            ["Nintendo 64 Disk", "ANY", PhysicalMediaType.Nintendo64DD],
+            ["Nintendo 64 Game Pak", "ANY", PhysicalMediaType.Cartridge],
+            ["Nintendo Disk Card", "ANY", PhysicalMediaType.NintendoFamicomDiskSystem],
+            ["Nintendo DS Game Card", "ANY", PhysicalMediaType.Cartridge],
+            ["Nintendo DSi Game Card", "ANY", PhysicalMediaType.Cartridge],
+            ["Nintendo Entertainment System Game Pak", "ANY", PhysicalMediaType.Cartridge],
+            ["Nintendo Famicom Game Pak", "ANY", PhysicalMediaType.Cartridge],
+            ["Nintendo Game Boy Advance Game Pak", "ANY", PhysicalMediaType.Cartridge],
+            ["Nintendo Game Boy Game Pak", "ANY", PhysicalMediaType.Cartridge],
+            ["Nintendo Switch Game Card", "ANY", PhysicalMediaType.Cartridge],
+            ["Optical Disc Archive", "ANY", null],
+            ["Orb", "ANY", null],
+            ["PCMCIA Card", "ANY", null],
+            ["PD650", "ANY", null],
+            ["PlayStation Memory Card", "ANY", null],
+            ["Quarter-inch cartridge", "ANY", PhysicalMediaType.DataCartridge],
+            ["Quarter-inch mini cartridge", "ANY", PhysicalMediaType.DataCartridge],
+            ["QuickDisk", "ANY", null],
+            ["RDX", "ANY", null],
+            ["SACD", "ANY", PhysicalMediaType.DVD],
+            ["Scalable Linear Recording", "ANY", null],
+            ["Secure Digital", "ANY", PhysicalMediaType.SDCard],
+            ["SmartMedia", "ANY", PhysicalMediaType.SDCard],
+            ["Sony Professional Disc", "ANY", null],
+            ["Sony Professional Disc for DATA", "ANY", null],
+            ["STK 4480", "ANY", null],
+            ["STK 4490", "ANY", null],
+            ["STK 9490", "ANY", null],
+            ["STK T-9840", "ANY", null],
+            ["STK T-9940", "ANY", null],
+            ["STK T-10000", "ANY", null],
+            ["Super Advanced Intelligent Tape", "ANY", null],
+            ["Super Digital Linear Tape", "ANY", null],
+            ["Super Nintendo Game Pak", "ANY", PhysicalMediaType.Cartridge],
+            ["Super Nintendo Game Pak (US)", "ANY", PhysicalMediaType.Cartridge],
+            ["SuperDisk", "ANY", PhysicalMediaType.FloppyDisk],
+            ["SVOD", "ANY", null],
+            ["Travan", "ANY", null],
+            ["UDO", "ANY", null],
+            ["UHD144", "ANY", null],
+            ["UMD", "ANY", PhysicalMediaType.UMD],
+            ["Unknown", "ANY", null],
+            ["USB flash drive", "ANY", PhysicalMediaType.FlashDrive],
+            ["VCDHD", "ANY", null],
+            ["VideoFloppy", "ANY", null],
+            ["VideoNow", "ANY", PhysicalMediaType.CDROM],
+            ["VXA", "ANY", PhysicalMediaType.FlashDrive],
+            ["Wafer", "ANY", null],
+            ["xD", "ANY", null],
+            ["XQD", "ANY", null],
+            ["Zoned Hard Disk Drive", "ANY", PhysicalMediaType.HardDisk],
+            ["ZX Microdrive", "ANY", null],
+        ];
+
         [Theory]
-        [InlineData(null, "ANY", null)]
-        [InlineData("", "ANY", null)]
-        [InlineData("INVALID", "ANY", null)]
-        [InlineData("3\" floppy", "ANY", PhysicalMediaType.FloppyDisk)]
-        [InlineData("3.5\" floppy", "ANY", PhysicalMediaType.FloppyDisk)]
-        [InlineData("3.5\" magneto-optical", "ANY", PhysicalMediaType.Floptical)]
-        [InlineData("3.5\" SyQuest cartridge", "ANY", null)]
-        [InlineData("3.9\" SyQuest cartridge", "ANY", null)]
-        [InlineData("5.25\" floppy", "ANY", PhysicalMediaType.FloppyDisk)]
-        [InlineData("5.25\" magneto-optical", "ANY", PhysicalMediaType.Floptical)]
-        [InlineData("5.25\" SyQuest cartridge", "ANY", null)]
-        [InlineData("8\" floppy", "ANY", PhysicalMediaType.FloppyDisk)]
-        [InlineData("300mm magneto optical", "ANY", PhysicalMediaType.Floptical)]
-        [InlineData("356mm magneto-optical", "ANY", PhysicalMediaType.Floptical)]
-        [InlineData("Advanced Digital Recording", "ANY", null)]
-        [InlineData("Advanced Intelligent Tape", "ANY", null)]
-        [InlineData("Archival Disc", "ANY", null)]
-        [InlineData("BeeCard", "ANY", null)]
-        [InlineData("Blu-ray", "Wii U Optical Disc", PhysicalMediaType.NintendoWiiUOpticalDisc)]
-        [InlineData("Blu-ray", "ANY", PhysicalMediaType.BluRay)]
-        [InlineData("Borsu", "ANY", null)]
-        [InlineData("Compact Cassette", "ANY", PhysicalMediaType.Cassette)]
-        [InlineData("Compact Disc", "ANY", PhysicalMediaType.CDROM)]
-        [InlineData("Compact Flash", "ANY", PhysicalMediaType.CompactFlash)]
-        [InlineData("CompacTape", "ANY", null)]
-        [InlineData("CRVdisc", "ANY", null)]
-        [InlineData("Data8", "ANY", null)]
-        [InlineData("DataPlay", "ANY", null)]
-        [InlineData("DataStore", "ANY", null)]
-        [InlineData("DDCD", "ANY", PhysicalMediaType.CDROM)]
-        [InlineData("DECtape", "ANY", null)]
-        [InlineData("DemiDiskette", "ANY", null)]
-        [InlineData("Digital Audio Tape", "ANY", null)]
-        [InlineData("Digital Data Storage", "ANY", PhysicalMediaType.DataCartridge)]
-        [InlineData("Digital Linear Tape", "ANY", null)]
-        [InlineData("DIR", "ANY", null)]
-        [InlineData("DST", "ANY", null)]
-        [InlineData("DTF", "ANY", null)]
-        [InlineData("DTF2", "ANY", null)]
-        [InlineData("DV tape", "ANY", null)]
-        [InlineData("DVD", "GameCube Game Disc", PhysicalMediaType.NintendoGameCubeGameDisc)]
-        [InlineData("DVD", "Wii Optical Disc", PhysicalMediaType.NintendoWiiOpticalDisc)]
-        [InlineData("DVD", "ANY", PhysicalMediaType.DVD)]
-        [InlineData("EVD", "ANY", null)]
-        [InlineData("Exatape", "ANY", null)]
-        [InlineData("Express Card", "ANY", null)]
-        [InlineData("FDDVD", "ANY", null)]
-        [InlineData("Flextra", "ANY", null)]
-        [InlineData("Floptical", "ANY", PhysicalMediaType.Floptical)]
-        [InlineData("FVD", "ANY", null)]
-        [InlineData("GD", "ANY", PhysicalMediaType.GDROM)]
-        [InlineData("Hard Disk Drive", "ANY", PhysicalMediaType.HardDisk)]
-        [InlineData("HD DVD", "ANY", PhysicalMediaType.HDDVD)]
-        [InlineData("HD VMD", "ANY", null)]
-        [InlineData("HiFD", "ANY", PhysicalMediaType.FloppyDisk)]
-        [InlineData("HiTC", "ANY", null)]
-        [InlineData("HuCard", "ANY", PhysicalMediaType.Cartridge)]
-        [InlineData("HVD", "ANY", null)]
-        [InlineData("HyperFlex", "ANY", null)]
-        [InlineData("IBM 3470", "ANY", null)]
-        [InlineData("IBM 3480", "ANY", null)]
-        [InlineData("IBM 3490", "ANY", null)]
-        [InlineData("IBM 3490E", "ANY", null)]
-        [InlineData("IBM 3592", "ANY", null)]
-        [InlineData("Iomega Bernoulli Box", "ANY", PhysicalMediaType.IomegaBernoulliDisk)]
-        [InlineData("Iomega Bernoulli Box II", "ANY", PhysicalMediaType.IomegaBernoulliDisk)]
-        [InlineData("Iomega Ditto", "ANY", null)]
-        [InlineData("Iomega Jaz", "ANY", PhysicalMediaType.IomegaJaz)]
-        [InlineData("Iomega PocketZip", "ANY", PhysicalMediaType.IomegaZip)]
-        [InlineData("Iomega REV", "ANY", null)]
-        [InlineData("Iomega ZIP", "ANY", PhysicalMediaType.IomegaZip)]
-        [InlineData("Kodak Verbatim", "ANY", null)]
-        [InlineData("LaserDisc", "ANY", PhysicalMediaType.LaserDisc)]
-        [InlineData("Linear Tape-Open", "ANY", null)]
-        [InlineData("LT1", "ANY", null)]
-        [InlineData("Magneto-optical", "ANY", PhysicalMediaType.Floptical)]
-        [InlineData("Memory Stick", "ANY", PhysicalMediaType.SDCard)]
-        [InlineData("MiniCard", "ANY", null)]
-        [InlineData("MiniDisc", "ANY", null)]
-        [InlineData("MultiMediaCard", "ANY", PhysicalMediaType.SDCard)]
-        [InlineData("Nintendo 3DS Game Card", "ANY", PhysicalMediaType.Cartridge)]
-        [InlineData("Nintendo 64 Disk", "ANY", PhysicalMediaType.Nintendo64DD)]
-        [InlineData("Nintendo 64 Game Pak", "ANY", PhysicalMediaType.Cartridge)]
-        [InlineData("Nintendo Disk Card", "ANY", PhysicalMediaType.NintendoFamicomDiskSystem)]
-        [InlineData("Nintendo DS Game Card", "ANY", PhysicalMediaType.Cartridge)]
-        [InlineData("Nintendo DSi Game Card", "ANY", PhysicalMediaType.Cartridge)]
-        [InlineData("Nintendo Entertainment System Game Pak", "ANY", PhysicalMediaType.Cartridge)]
-        [InlineData("Nintendo Famicom Game Pak", "ANY", PhysicalMediaType.Cartridge)]
-        [InlineData("Nintendo Game Boy Advance Game Pak", "ANY", PhysicalMediaType.Cartridge)]
-        [InlineData("Nintendo Game Boy Game Pak", "ANY", PhysicalMediaType.Cartridge)]
-        [InlineData("Nintendo Switch Game Card", "ANY", PhysicalMediaType.Cartridge)]
-        [InlineData("Optical Disc Archive", "ANY", null)]
-        [InlineData("Orb", "ANY", null)]
-        [InlineData("PCMCIA Card", "ANY", null)]
-        [InlineData("PD650", "ANY", null)]
-        [InlineData("PlayStation Memory Card", "ANY", null)]
-        [InlineData("Quarter-inch cartridge", "ANY", PhysicalMediaType.DataCartridge)]
-        [InlineData("Quarter-inch mini cartridge", "ANY", PhysicalMediaType.DataCartridge)]
-        [InlineData("QuickDisk", "ANY", null)]
-        [InlineData("RDX", "ANY", null)]
-        [InlineData("SACD", "ANY", PhysicalMediaType.DVD)]
-        [InlineData("Scalable Linear Recording", "ANY", null)]
-        [InlineData("Secure Digital", "ANY", PhysicalMediaType.SDCard)]
-        [InlineData("SmartMedia", "ANY", PhysicalMediaType.SDCard)]
-        [InlineData("Sony Professional Disc", "ANY", null)]
-        [InlineData("Sony Professional Disc for DATA", "ANY", null)]
-        [InlineData("STK 4480", "ANY", null)]
-        [InlineData("STK 4490", "ANY", null)]
-        [InlineData("STK 9490", "ANY", null)]
-        [InlineData("STK T-9840", "ANY", null)]
-        [InlineData("STK T-9940", "ANY", null)]
-        [InlineData("STK T-10000", "ANY", null)]
-        [InlineData("Super Advanced Intelligent Tape", "ANY", null)]
-        [InlineData("Super Digital Linear Tape", "ANY", null)]
-        [InlineData("Super Nintendo Game Pak", "ANY", PhysicalMediaType.Cartridge)]
-        [InlineData("Super Nintendo Game Pak (US)", "ANY", PhysicalMediaType.Cartridge)]
-        [InlineData("SuperDisk", "ANY", PhysicalMediaType.FloppyDisk)]
-        [InlineData("SVOD", "ANY", null)]
-        [InlineData("Travan", "ANY", null)]
-        [InlineData("UDO", "ANY", null)]
-        [InlineData("UHD144", "ANY", null)]
-        [InlineData("UMD", "ANY", PhysicalMediaType.UMD)]
-        [InlineData("Unknown", "ANY", null)]
-        [InlineData("USB flash drive", "ANY", PhysicalMediaType.FlashDrive)]
-        [InlineData("VCDHD", "ANY", null)]
-        [InlineData("VideoFloppy", "ANY", null)]
-        [InlineData("VideoNow", "ANY", PhysicalMediaType.CDROM)]
-        [InlineData("VXA", "ANY", PhysicalMediaType.FlashDrive)]
-        [InlineData("Wafer", "ANY", null)]
-        [InlineData("xD", "ANY", null)]
-        [InlineData("XQD", "ANY", null)]
-        [InlineData("Zoned Hard Disk Drive", "ANY", PhysicalMediaType.HardDisk)]
-        [InlineData("ZX Microdrive", "ANY", null)]
+        [MemberData(nameof(GetDiscTypeFromStringsTestData))]
         public void GetDiscTypeFromStringsTest(string? discType, string? discSubType, PhysicalMediaType? expected)
         {
             var actual = Aaru.GetDiscTypeFromStrings(discType, discSubType);

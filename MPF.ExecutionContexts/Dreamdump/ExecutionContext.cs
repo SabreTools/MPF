@@ -140,7 +140,7 @@ namespace MPF.ExecutionContexts.Dreamdump
         public override string? GetDefaultExtension(PhysicalMediaType? mediaType) => ".bin";
 
         /// <inheritdoc/>
-        public override PhysicalMediaType? GetPhysicalMediaType() => SabreTools.RedumpLib.Data.PhysicalMediaType.GDROM;
+        public override PhysicalMediaType? GetPhysicalMediaType() => PhysicalMediaType.GDROM;
 
         /// <inheritdoc/>
         public override bool IsDumpingCommand() => true;

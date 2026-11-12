@@ -13,20 +13,29 @@ namespace MPF.ExecutionContexts.Redumper
         /// <returns>Valid extension (with leading '.'), null on error</returns>
         public static string? Extension(PhysicalMediaType? type)
         {
-#pragma warning disable IDE0072
-            return type switch
+            if (type == PhysicalMediaType.CDROM
+                || type == PhysicalMediaType.GDROM)
             {
-                PhysicalMediaType.CDROM
-                    or PhysicalMediaType.GDROM => ".bin",
-                PhysicalMediaType.DVD
-                    or PhysicalMediaType.HDDVD
-                    or PhysicalMediaType.BluRay
-                    or PhysicalMediaType.NintendoWiiOpticalDisc => ".iso",
-                PhysicalMediaType.NintendoGameCubeGameDisc => ".raw",
-                PhysicalMediaType.NintendoWiiUOpticalDisc => ".wud",
-                _ => null,
-            };
-#pragma warning restore IDE0072
+                return ".bin";
+            }
+            else if (type == PhysicalMediaType.DVD
+                || type == PhysicalMediaType.HDDVD
+                || type == PhysicalMediaType.BluRay
+                || type == PhysicalMediaType.NintendoWiiOpticalDisc
+                || type == PhysicalMediaType.XGD)
+            {
+                return ".iso";
+            }
+            else if (type == PhysicalMediaType.NintendoGameCubeGameDisc)
+            {
+                return ".raw";
+            }
+            else if (type == PhysicalMediaType.NintendoWiiUOpticalDisc)
+            {
+                return ".wud";
+            }
+
+            return null;
         }
 
         #endregion

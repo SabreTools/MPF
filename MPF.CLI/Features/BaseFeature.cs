@@ -195,21 +195,20 @@ namespace MPF.CLI.Features
 
             if (Options.InternalProgram == InternalProgram.DiscImageCreator
                 && CustomParams is null
-                && (PhysicalMediaType is null || PhysicalMediaType == SabreTools.RedumpLib.Data.PhysicalMediaType.NONE))
+                && PhysicalMediaType is null)
             {
                 Console.Error.WriteLine("Media type is required for DiscImageCreator, exiting...");
                 return false;
             }
 
             // If no media type is provided, use a default
-            if (CustomParams is null && (PhysicalMediaType is null || PhysicalMediaType == SabreTools.RedumpLib.Data.PhysicalMediaType.NONE))
+            if (CustomParams is null && PhysicalMediaType is null)
             {
                 // Get reasonable default values based on the current system
-                PhysicalMediaType = System.MediaTypes.Count > 0 ? System.MediaTypes[0] : SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM;
-                if (PhysicalMediaType == SabreTools.RedumpLib.Data.PhysicalMediaType.NONE)
-                    PhysicalMediaType = SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM;
+                PhysicalMediaType = System.MediaTypes.Count > 0 ? System.MediaTypes[0] : PhysicalMediaType.CDROM;
+                PhysicalMediaType ??= PhysicalMediaType.CDROM;
 
-                Console.WriteLine($"No media type was provided, using {PhysicalMediaType.LongName()} for default parameter creation");
+                Console.WriteLine($"No media type was provided, using {PhysicalMediaType.Name} for default parameter creation");
             }
 
             // Normalize the file path

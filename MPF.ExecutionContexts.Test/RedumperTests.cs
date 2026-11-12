@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MPF.ExecutionContexts.Redumper;
 using SabreTools.RedumpLib.Data;
 using Xunit;
@@ -8,17 +9,22 @@ namespace MPF.ExecutionContexts.Test
     {
         #region Converters.Extension
 
+        public static readonly List<object?[]> ExtensionTestData =
+        [
+            [null, null],
+            [PhysicalMediaType.CDROM, ".bin"],
+            [PhysicalMediaType.GDROM, ".bin"],
+            [PhysicalMediaType.DVD, ".iso"],
+            [PhysicalMediaType.HDDVD, ".iso"],
+            [PhysicalMediaType.BluRay, ".iso"],
+            [PhysicalMediaType.NintendoWiiOpticalDisc, ".iso"],
+            [PhysicalMediaType.NintendoGameCubeGameDisc, ".raw"],
+            [PhysicalMediaType.NintendoWiiUOpticalDisc, ".wud"],
+            [PhysicalMediaType.ApertureCard, null],
+        ];
+
         [Theory]
-        [InlineData(null, null)]
-        [InlineData(PhysicalMediaType.CDROM, ".bin")]
-        [InlineData(PhysicalMediaType.GDROM, ".bin")]
-        [InlineData(PhysicalMediaType.DVD, ".iso")]
-        [InlineData(PhysicalMediaType.HDDVD, ".iso")]
-        [InlineData(PhysicalMediaType.BluRay, ".iso")]
-        [InlineData(PhysicalMediaType.NintendoWiiOpticalDisc, ".iso")]
-        [InlineData(PhysicalMediaType.NintendoGameCubeGameDisc, ".raw")]
-        [InlineData(PhysicalMediaType.NintendoWiiUOpticalDisc, ".wud")]
-        [InlineData(PhysicalMediaType.ApertureCard, null)]
+        [MemberData(nameof(ExtensionTestData))]
         public void ExtensionTest(PhysicalMediaType? type, string? expected)
         {
             string? actual = Converters.Extension(type);

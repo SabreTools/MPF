@@ -298,7 +298,7 @@ namespace MPF.Frontend
         public string? GetFullParameters(PhysicalMediaType? mediaType, int? driveSpeed)
         {
             // Populate with the correct params for inputs (if we're not on the default option)
-            if (_system is not null && mediaType != PhysicalMediaType.NONE)
+            if (_system is not null)
             {
                 // If drive letter is invalid, skip this
                 if (_drive is null)
@@ -363,20 +363,26 @@ namespace MPF.Frontend
         /// <returns>True if the media has variable dumping speeds, false otherwise</returns>
         public static bool DoesSupportDriveSpeed(PhysicalMediaType? mediaType)
         {
-#pragma warning disable IDE0072
-            return mediaType switch
-            {
-                PhysicalMediaType.CDROM
-                    or PhysicalMediaType.DVD
-                    or PhysicalMediaType.GDROM
-                    or PhysicalMediaType.HDDVD
-                    or PhysicalMediaType.BluRay
-                    or PhysicalMediaType.NintendoGameCubeGameDisc
-                    or PhysicalMediaType.NintendoWiiOpticalDisc
-                    or PhysicalMediaType.NintendoWiiUOpticalDisc => true,
-                _ => false,
-            };
-#pragma warning restore IDE0072
+            if (mediaType == PhysicalMediaType.CDROM)
+                return true;
+            else if (mediaType == PhysicalMediaType.DVD)
+                return true;
+            else if (mediaType == PhysicalMediaType.GDROM)
+                return true;
+            else if (mediaType == PhysicalMediaType.HDDVD)
+                return true;
+            else if (mediaType == PhysicalMediaType.BluRay)
+                return true;
+            else if (mediaType == PhysicalMediaType.NintendoGameCubeGameDisc)
+                return true;
+            else if (mediaType == PhysicalMediaType.NintendoWiiOpticalDisc)
+                return true;
+            else if (mediaType == PhysicalMediaType.NintendoWiiUOpticalDisc)
+                return true;
+            else if (mediaType == PhysicalMediaType.XGD)
+                return true;
+
+            return false;
         }
 
         /// <inheritdoc cref="BaseProcessor.FoundAllFiles(PhysicalMediaType?, string?, string)"/>
@@ -424,40 +430,44 @@ namespace MPF.Frontend
             if (_system is null)
                 return ResultEventArgs.Failure("Please select a valid system");
 
-#pragma warning disable IDE0072
-            // If we're on an unsupported type, update the status accordingly
-            return mediaType switch
+            // Null means it will be handled by the program
+            if (mediaType == null)
             {
-                // Null means it will be handled by the program
-                null => ResultEventArgs.Success("Ready to dump"),
+                return ResultEventArgs.Success("Ready to dump");
+            }
 
-                // Fully supported types
-                PhysicalMediaType.BluRay
-                    or PhysicalMediaType.CDROM
-                    or PhysicalMediaType.DVD
-                    or PhysicalMediaType.FloppyDisk
-                    or PhysicalMediaType.HardDisk
-                    or PhysicalMediaType.CompactFlash
-                    or PhysicalMediaType.SDCard
-                    or PhysicalMediaType.FlashDrive
-                    or PhysicalMediaType.HDDVD => ResultEventArgs.Success($"{mediaType.LongName()} ready to dump"),
+            // Fully supported types
+            else if (mediaType == PhysicalMediaType.BluRay
+                || mediaType == PhysicalMediaType.CDROM
+                || mediaType == PhysicalMediaType.DVD
+                || mediaType == PhysicalMediaType.FloppyDisk
+                || mediaType == PhysicalMediaType.HardDisk
+                || mediaType == PhysicalMediaType.CompactFlash
+                || mediaType == PhysicalMediaType.SDCard
+                || mediaType == PhysicalMediaType.FlashDrive
+                || mediaType == PhysicalMediaType.HDDVD)
+            {
+                return ResultEventArgs.Success($"{mediaType.Name} ready to dump");
+            }
 
-                // Partially supported types
-                PhysicalMediaType.GDROM
-                    or PhysicalMediaType.NintendoGameCubeGameDisc
-                    or PhysicalMediaType.NintendoWiiOpticalDisc
-                    or PhysicalMediaType.NintendoWiiUOpticalDisc => ResultEventArgs.Success($"{mediaType.LongName()} partially supported for dumping"),
+            // Partially supported types
+            else if (mediaType == PhysicalMediaType.GDROM
+                || mediaType == PhysicalMediaType.NintendoGameCubeGameDisc
+                || mediaType == PhysicalMediaType.NintendoWiiOpticalDisc
+                || mediaType == PhysicalMediaType.NintendoWiiUOpticalDisc
+                || mediaType == PhysicalMediaType.XGD)
+            {
+                return ResultEventArgs.Success($"{mediaType.Name} partially supported for dumping");
+            }
 
-                // Special case for other supported tools
-                PhysicalMediaType.UMD => ResultEventArgs.Failure($"{mediaType.LongName()} supported for submission info parsing"),
+            // Special case for other supported tools
+            else if (mediaType == PhysicalMediaType.UMD)
+            {
+                ResultEventArgs.Failure($"{mediaType.Name} supported for submission info parsing");
+            }
 
-                // Specifically unknown type
-                PhysicalMediaType.NONE => ResultEventArgs.Failure("Please select a valid media type"),
-
-                // Undumpable but recognized types
-                _ => ResultEventArgs.Failure($"{mediaType.LongName()} media are not supported for dumping"),
-            };
-#pragma warning restore IDE0072
+            // Undumpable but recognized types
+            return ResultEventArgs.Failure($"{mediaType.Name} media are not supported for dumping");
         }
 
         /// <inheritdoc cref="BaseExecutionContext.IsDumpingCommand()"/>

@@ -697,10 +697,6 @@
                                                     IsReadOnly="True"
                                                     Text="{Binding WriteOffset, Mode=OneWay}"
                                                     Visibility="{Binding Path=WriteOffsetVisible, Converter={StaticResource BoolToVis}}"/>
-                                <controls:UserInput Label="DMI Hash"
-                                                    IsReadOnly="True"
-                                                    Text="{Binding DMIHash, Mode=OneWay}"
-                                                    Visibility="{Binding Path=DMIHashVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="EDC"
                                                     IsReadOnly="True"
                                                     Text="{Binding EDC, Mode=OneWay}"
@@ -713,6 +709,15 @@
                                                     IsReadOnly="True"
                                                     Text="{Binding EXEDate, Mode=OneWay}"
                                                     Visibility="{Binding Path=EXEDateVisible, Converter={StaticResource BoolToVis}}"/>
+                                <controls:UserInput Label="Extra Hash Data"
+                                                    IsReadOnly="True"
+                                                    Text="{Binding ExtrasDat, Mode=OneWay}"
+                                                    TextHeight="75"
+                                                    TextWrapping="NoWrap"
+                                                    VerticalContentAlignmentValue="Top"
+                                                    HorizontalScrollBarVisibility="Auto"
+                                                    VerticalScrollBarVisibility="Auto"
+                                                    Visibility="{Binding Path=ExtrasDatVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Filename"
                                                     IsReadOnly="True"
                                                     Text="{Binding Filename, Mode=OneWay}"
@@ -748,10 +753,6 @@
                                                     HorizontalScrollBarVisibility="Auto"
                                                     VerticalScrollBarVisibility="Auto"
                                                     Visibility="{Binding Path=MultisessionVisible, Converter={StaticResource BoolToVis}}"/>
-                                <controls:UserInput Label="PFI Hash"
-                                                    IsReadOnly="True"
-                                                    Text="{Binding PFIHash, Mode=OneWay}"
-                                                    Visibility="{Binding Path=PFIHashVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="PIC"
                                                     IsReadOnly="True"
                                                     Text="{Binding PIC, Mode=OneWay}"
@@ -787,10 +788,6 @@
                                                     HorizontalScrollBarVisibility="Auto"
                                                     VerticalScrollBarVisibility="Auto"
                                                     Visibility="{Binding Path=SBIVisible, Converter={StaticResource BoolToVis}}"/>
-                                <controls:UserInput Label="Security Sector Hash"
-                                                    IsReadOnly="True"
-                                                    Text="{Binding SSHash, Mode=OneWay}"
-                                                    Visibility="{Binding Path=SSHashVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Security Sector Ranges"
                                                     IsReadOnly="True"
                                                     Text="{Binding SectorRanges, Mode=OneWay}"

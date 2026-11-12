@@ -537,46 +537,51 @@ namespace MPF.Processors.Test
 
         #region GetDiscTypeFromProfile
 
+        public static readonly List<object?[]> GetDiscTypeFromProfileTestData =
+        [
+            [null, null],
+            ["", null],
+            ["INVALID", null],
+            ["reserved", null],
+            ["non removable disk", null],
+            ["removable disk", null],
+            ["MO erasable", null],
+            ["MO write once", null],
+            ["AS MO", null],
+            ["CD-ROM", PhysicalMediaType.CDROM],
+            ["CD-R", PhysicalMediaType.CDROM],
+            ["CD-RW", PhysicalMediaType.CDROM],
+            ["DVD-ROM", PhysicalMediaType.DVD],
+            ["DVD-R", PhysicalMediaType.DVD],
+            ["DVD-RAM", PhysicalMediaType.DVD],
+            ["DVD-RW RO", PhysicalMediaType.DVD],
+            ["DVD-RW", PhysicalMediaType.DVD],
+            ["DVD-R DL", PhysicalMediaType.DVD],
+            ["DVD-R DL LJR", PhysicalMediaType.DVD],
+            ["DVD+RW", PhysicalMediaType.DVD],
+            ["DVD+R", PhysicalMediaType.DVD],
+            ["DDCD-ROM", PhysicalMediaType.CDROM],
+            ["DDCD-R", PhysicalMediaType.CDROM],
+            ["DDCD-RW", PhysicalMediaType.CDROM],
+            ["DVD+RW DL", PhysicalMediaType.DVD],
+            ["DVD+R DL", PhysicalMediaType.DVD],
+            ["BD-ROM", PhysicalMediaType.BluRay],
+            ["BD-R", PhysicalMediaType.BluRay],
+            ["BD-R RRM", PhysicalMediaType.BluRay],
+            ["BD-RW", PhysicalMediaType.BluRay],
+            ["HD DVD-ROM", PhysicalMediaType.HDDVD],
+            ["HD DVD-R", PhysicalMediaType.HDDVD],
+            ["HD DVD-RAM", PhysicalMediaType.HDDVD],
+            ["HD DVD-RW", PhysicalMediaType.HDDVD],
+            ["HD DVD-R DL", PhysicalMediaType.HDDVD],
+            ["HD DVD-RW DL", PhysicalMediaType.HDDVD],
+            ["NINTENDO", PhysicalMediaType.NintendoWiiOpticalDisc],
+            ["RESERVED5", PhysicalMediaType.NintendoWiiOpticalDisc],
+            ["NON STANDARD", null],
+        ];
+
         [Theory]
-        [InlineData(null, null)]
-        [InlineData("", null)]
-        [InlineData("INVALID", null)]
-        [InlineData("reserved", null)]
-        [InlineData("non removable disk", null)]
-        [InlineData("removable disk", null)]
-        [InlineData("MO erasable", null)]
-        [InlineData("MO write once", null)]
-        [InlineData("AS MO", null)]
-        [InlineData("CD-ROM", PhysicalMediaType.CDROM)]
-        [InlineData("CD-R", PhysicalMediaType.CDROM)]
-        [InlineData("CD-RW", PhysicalMediaType.CDROM)]
-        [InlineData("DVD-ROM", PhysicalMediaType.DVD)]
-        [InlineData("DVD-R", PhysicalMediaType.DVD)]
-        [InlineData("DVD-RAM", PhysicalMediaType.DVD)]
-        [InlineData("DVD-RW RO", PhysicalMediaType.DVD)]
-        [InlineData("DVD-RW", PhysicalMediaType.DVD)]
-        [InlineData("DVD-R DL", PhysicalMediaType.DVD)]
-        [InlineData("DVD-R DL LJR", PhysicalMediaType.DVD)]
-        [InlineData("DVD+RW", PhysicalMediaType.DVD)]
-        [InlineData("DVD+R", PhysicalMediaType.DVD)]
-        [InlineData("DDCD-ROM", PhysicalMediaType.CDROM)]
-        [InlineData("DDCD-R", PhysicalMediaType.CDROM)]
-        [InlineData("DDCD-RW", PhysicalMediaType.CDROM)]
-        [InlineData("DVD+RW DL", PhysicalMediaType.DVD)]
-        [InlineData("DVD+R DL", PhysicalMediaType.DVD)]
-        [InlineData("BD-ROM", PhysicalMediaType.BluRay)]
-        [InlineData("BD-R", PhysicalMediaType.BluRay)]
-        [InlineData("BD-R RRM", PhysicalMediaType.BluRay)]
-        [InlineData("BD-RW", PhysicalMediaType.BluRay)]
-        [InlineData("HD DVD-ROM", PhysicalMediaType.HDDVD)]
-        [InlineData("HD DVD-R", PhysicalMediaType.HDDVD)]
-        [InlineData("HD DVD-RAM", PhysicalMediaType.HDDVD)]
-        [InlineData("HD DVD-RW", PhysicalMediaType.HDDVD)]
-        [InlineData("HD DVD-R DL", PhysicalMediaType.HDDVD)]
-        [InlineData("HD DVD-RW DL", PhysicalMediaType.HDDVD)]
-        [InlineData("NINTENDO", PhysicalMediaType.NintendoWiiOpticalDisc)]
-        [InlineData("RESERVED5", PhysicalMediaType.NintendoWiiOpticalDisc)]
-        [InlineData("NON STANDARD", null)]
+        [MemberData(nameof(GetDiscTypeFromProfileTestData))]
         public void GetDiscTypeFromProfileTest(string? profile, PhysicalMediaType? expected)
         {
             var actual = Redumper.GetDiscTypeFromProfile(profile);
@@ -662,6 +667,38 @@ namespace MPF.Processors.Test
             Assert.True(actual);
             Assert.Equal(expectedRedumpErrors, redumpErrors);
             Assert.Equal(expectedC2Errors, c2Errors);
+        }
+
+        #endregion
+
+        #region GetExtrasDatfile
+
+        [Fact]
+        public void GetExtrasDatfile_Empty_Null()
+        {
+            string log = string.Empty;
+            string? actual = Redumper.GetExtrasDatfile(log);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetExtrasDatfile_Invalid_Null()
+        {
+            string log = "INVALID";
+            string? actual = Redumper.GetExtrasDatfile(log);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetExtrasDatfile_Valid_Filled()
+        {
+            string? expected = @"<rom name=""INVALID.dmi"" size=""12345"" crc=""00000000"" md5=""d41d8cd98f00b204e9800998ecf8427e"" sha1=""da39a3ee5e6b4b0d3255bfef95601890afd80709"" />
+<rom name=""INVALID.pfi"" size=""12345"" crc=""00000000"" md5=""d41d8cd98f00b204e9800998ecf8427e"" sha1=""da39a3ee5e6b4b0d3255bfef95601890afd80709"" />
+<rom name=""INVALID.ss"" size=""12345"" crc=""00000000"" md5=""d41d8cd98f00b204e9800998ecf8427e"" sha1=""da39a3ee5e6b4b0d3255bfef95601890afd80709"" />";
+
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "DVD", "test.log");
+            string? actual = Redumper.GetExtrasDatfile(log);
+            Assert.Equal(expected, actual);
         }
 
         #endregion

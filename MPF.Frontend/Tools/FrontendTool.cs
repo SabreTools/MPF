@@ -15,29 +15,34 @@ namespace MPF.Frontend.Tools
         /// </summary>
         public static int GetDefaultSpeedForPhysicalMediaType(PhysicalMediaType? mediaType, Options options)
         {
-#pragma warning disable IDE0072
-            return mediaType switch
-            {
-                // CD dump speed
-                PhysicalMediaType.CDROM => options.Dumping.DumpSpeeds.CD,
-                PhysicalMediaType.GDROM => options.Dumping.DumpSpeeds.CD,
+            // CD dump speed
+            if (mediaType == PhysicalMediaType.CDROM)
+                return options.Dumping.DumpSpeeds.CD;
+            else if (mediaType == PhysicalMediaType.GDROM)
+                return options.Dumping.DumpSpeeds.CD;
 
-                // DVD dump speed
-                PhysicalMediaType.DVD => options.Dumping.DumpSpeeds.DVD,
-                PhysicalMediaType.NintendoGameCubeGameDisc => options.Dumping.DumpSpeeds.DVD,
-                PhysicalMediaType.NintendoWiiOpticalDisc => options.Dumping.DumpSpeeds.DVD,
+            // DVD dump speed
+            else if (mediaType == PhysicalMediaType.DVD)
+                return options.Dumping.DumpSpeeds.DVD;
+            else if (mediaType == PhysicalMediaType.NintendoGameCubeGameDisc)
+                return options.Dumping.DumpSpeeds.DVD;
+            else if (mediaType == PhysicalMediaType.NintendoWiiOpticalDisc)
+                return options.Dumping.DumpSpeeds.DVD;
+            else if (mediaType == PhysicalMediaType.XGD)
+                return options.Dumping.DumpSpeeds.DVD;
 
-                // HD-DVD dump speed
-                PhysicalMediaType.HDDVD => options.Dumping.DumpSpeeds.HDDVD,
+            // HD-DVD dump speed
+            else if (mediaType == PhysicalMediaType.HDDVD)
+                return options.Dumping.DumpSpeeds.HDDVD;
 
-                // BD dump speed
-                PhysicalMediaType.BluRay => options.Dumping.DumpSpeeds.Bluray,
-                PhysicalMediaType.NintendoWiiUOpticalDisc => options.Dumping.DumpSpeeds.Bluray,
+            // BD dump speed
+            else if (mediaType == PhysicalMediaType.BluRay)
+                return options.Dumping.DumpSpeeds.Bluray;
+            else if (mediaType == PhysicalMediaType.NintendoWiiUOpticalDisc)
+                return options.Dumping.DumpSpeeds.Bluray;
 
-                // Default
-                _ => options.Dumping.DumpSpeeds.CD,
-            };
-#pragma warning restore IDE0072
+            // Default
+            return options.Dumping.DumpSpeeds.CD;
         }
 
         /// <summary>

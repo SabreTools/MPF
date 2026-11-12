@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This batch file assumes the following:
-# - .NET 10.0 (or newer) SDK is installed and in PATH
+# - .NET 11.0 (or newer) SDK is installed and in PATH
 # - zip is installed and in PATH
 # - wget is installed an in PATH
 # - Git is installed and in PATH
@@ -64,24 +64,24 @@ echo "  Version (-v)                          $HAS_VERSION ($VERSION)"
 echo " "
 
 # Create the build matrix arrays
-AVALONIA_FRAMEWORKS=("net10.0")
+AVALONIA_FRAMEWORKS=("net11.0")
 AVALONIA_RUNTIMES=("win-x86" "win-x64" "win-arm64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
-UI_FRAMEWORKS=("net10.0-windows")
+UI_FRAMEWORKS=("net11.0-windows")
 UI_RUNTIMES=("win-x86" "win-x64")
-CHECK_FRAMEWORKS=("net10.0")
+CHECK_FRAMEWORKS=("net11.0")
 CHECK_RUNTIMES=("win-x86" "win-x64" "win-arm64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
 
 # Use expanded framework lists, if requested
 if [ $USE_ALL = true ]; then
-    AVALONIA_FRAMEWORKS=("net5.0" "net6.0" "net7.0" "net8.0" "net9.0" "net10.0")
-    UI_FRAMEWORKS=("net40" "net452" "net462" "net472" "net48" "netcoreapp3.1" "net5.0-windows" "net6.0-windows" "net7.0-windows" "net8.0-windows" "net9.0-windows" "net10.0-windows")
-    CHECK_FRAMEWORKS=("net20" "net35" "net40" "net452" "net462" "net472" "net48" "netcoreapp3.1" "net5.0" "net6.0" "net7.0" "net8.0" "net9.0" "net10.0")
+    AVALONIA_FRAMEWORKS=("net5.0" "net6.0" "net7.0" "net8.0" "net9.0" "net10.0" "net11.0")
+    UI_FRAMEWORKS=("net40" "net452" "net462" "net472" "net48" "netcoreapp3.1" "net5.0-windows" "net6.0-windows" "net7.0-windows" "net8.0-windows" "net9.0-windows" "net10.0-windows" "net11.0-windows")
+    CHECK_FRAMEWORKS=("net20" "net35" "net40" "net452" "net462" "net472" "net48" "netcoreapp3.1" "net5.0" "net6.0" "net7.0" "net8.0" "net9.0" "net10.0" "net11.0")
 fi
 
 # Create the filter arrays
-SINGLE_FILE_CAPABLE=("net5.0" "net5.0-windows" "net6.0" "net6.0-windows" "net7.0" "net7.0-windows" "net8.0" "net8.0-windows" "net9.0" "net9.0-windows" "net10.0" "net10.0-windows")
-VALID_APPLE_FRAMEWORKS=("net6.0" "net7.0" "net8.0" "net9.0" "net10.0")
-VALID_CROSS_PLATFORM_FRAMEWORKS=("netcoreapp3.1" "net5.0" "net6.0" "net7.0" "net8.0" "net9.0" "net10.0")
+SINGLE_FILE_CAPABLE=("net5.0" "net5.0-windows" "net6.0" "net6.0-windows" "net7.0" "net7.0-windows" "net8.0" "net8.0-windows" "net9.0" "net9.0-windows" "net10.0" "net10.0-windows" "net11.0" "net11.0-windows")
+VALID_APPLE_FRAMEWORKS=("net6.0" "net7.0" "net8.0" "net9.0" "net10.0" "net11.0")
+VALID_CROSS_PLATFORM_FRAMEWORKS=("netcoreapp3.1" "net5.0" "net6.0" "net7.0" "net8.0" "net9.0" "net10.0" "net11.0")
 VALID_CROSS_PLATFORM_RUNTIMES=("win-arm64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
 
 # Download programs step

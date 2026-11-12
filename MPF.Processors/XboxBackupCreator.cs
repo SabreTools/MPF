@@ -89,37 +89,33 @@ namespace MPF.Processors
                 }
             }
 
-            // Hash DMI/PFI
-            string dmiPath = Path.Combine(outputDirectory, "DMI.bin");
-            if (File.Exists(dmiPath))
-                info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = HashTool.GetFileHash(dmiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+            info.DumpMetadata.ExtrasDat = string.Empty;
+            if (HashTool.GetStandardHashes(Path.Combine(outputDirectory, "DMI.bin"), out long dmiSize, out string? dmiCrc, out string? dmiMd5, out string? dmiSha1))
+                info.DumpMetadata.ExtrasDat += $"<rom name=\"DMI.bin\" size=\"{dmiSize}\" crc=\"{dmiCrc}\" md5=\"{dmiMd5}\" sha1=\"{dmiSha1}\" />";
 
-            string pfiPath = Path.Combine(outputDirectory, "PFI.bin");
-            if (File.Exists(pfiPath))
-                info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = HashTool.GetFileHash(pfiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+            if (HashTool.GetStandardHashes(Path.Combine(outputDirectory, "PFI.bin"), out long pfiSize, out string? pfiCrc, out string? pfiMd5, out string? pfiSha1))
+                info.DumpMetadata.ExtrasDat += $"<rom name=\"PFI.bin\" size=\"{pfiSize}\" crc=\"{pfiCrc}\" md5=\"{pfiMd5}\" sha1=\"{pfiSha1}\" />";
 
-            // Deal with SS.bin
-            string ssPath = Path.Combine(outputDirectory, "SS.bin");
-            if (File.Exists(ssPath))
+            // Only record SS hash if it is valid
+            if (ProcessingTool.IsFixedSS(Path.Combine(outputDirectory, "SS.bin")))
             {
-                // Ensure a raw SS is saved (recreate from log if needed)
-                RecreateSS(logPath!, ssPath, Path.Combine(outputDirectory, "RawSS.bin"));
+                // Save security sector ranges
+                string? ranges = ProcessingTool.GetSSRanges(Path.Combine(outputDirectory, "SS.bin"));
+                if (!string.IsNullOrEmpty(ranges))
+                    info.DumpMetadata.SectorRanges = ranges;
 
-                if (ProcessingTool.IsValidSS(ssPath))
-                {
-                    // Save security sector ranges
-                    string? ranges = ProcessingTool.GetSSRanges(ssPath);
-                    if (!string.IsNullOrEmpty(ranges))
-                        info.DumpMetadata.SectorRanges = ranges;
-                }
+                if (HashTool.GetStandardHashes(Path.Combine(outputDirectory, "SS.bin"), out long ssSize, out string? ssCrc, out string? ssMd5, out string? ssSha1))
+                    info.DumpMetadata.ExtrasDat += $"<rom name=\"SS.bin\" size=\"{ssSize}\" crc=\"{ssCrc}\" md5=\"{ssMd5}\" sha1=\"{ssSha1}\" />";
+            }
+            else if (ProcessingTool.FixSS(Path.Combine(outputDirectory, "SS.bin"), Path.Combine(outputDirectory, "SS.fixed.bin")))
+            {
+                // Save security sector ranges
+                string? ranges = ProcessingTool.GetSSRanges(Path.Combine(outputDirectory, "SS.fixed.bin"));
+                if (!string.IsNullOrEmpty(ranges))
+                    info.DumpMetadata.SectorRanges = ranges;
 
-                // Repair and clean SS, only hash SS if successful
-                if (ProcessingTool.FixSS(ssPath, ssPath))
-                {
-                    string? ssCrc = HashTool.GetFileHash(ssPath, HashType.CRC32);
-                    if (ssCrc is not null)
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
-                }
+                if (HashTool.GetStandardHashes(Path.Combine(outputDirectory, "SS.fixed.bin"), out long ssSize, out string? ssCrc, out string? ssMd5, out string? ssSha1))
+                    info.DumpMetadata.ExtrasDat += $"<rom name=\"SS.bin\" size=\"{ssSize}\" crc=\"{ssCrc}\" md5=\"{ssMd5}\" sha1=\"{ssSha1}\" />";
             }
         }
 

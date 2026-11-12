@@ -25,6 +25,7 @@ jobs:
                       8.0.x
                       9.0.x
                       10.0.x
+                      11.0.x
 
             - name: Run tests
               run: dotnet test
@@ -49,17 +50,17 @@ jobs:
 
                       ## UI Builds
 
-                      [Windows x64 - Release Build](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net10.0-windows_win-x64_release.zip)
+                      [Windows x64 - Release Build](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net11.0-windows_win-x64_release.zip)
 
-                      [Windows x64 - Debug Build](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net10.0-windows_win-x64_debug.zip)
+                      [Windows x64 - Debug Build](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net11.0-windows_win-x64_debug.zip)
 
-                      [Linux x64 - Release Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net10.0_linux-x64_release.zip)
+                      [Linux x64 - Release Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_linux-x64_release.zip)
 
-                      [Linux x64 - Debug Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net10.0_linux-x64_debug.zip)
+                      [Linux x64 - Debug Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_linux-x64_debug.zip)
 
-                      [MacOS ARM64 - Release Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net10.0_osx-arm64_release.zip)
+                      [MacOS ARM64 - Release Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_osx-arm64_release.zip)
 
-                      [MacOS ARM64 - Debug Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net10.0_osx-arm64_debug.zip)"
+                      [MacOS ARM64 - Debug Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_osx-arm64_debug.zip)"
                   name: "Rolling Release"
                   prerelease: True
                   replacesArtifacts: True

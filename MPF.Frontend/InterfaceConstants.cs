@@ -40,22 +40,29 @@ namespace MPF.Frontend
         /// <returns>Read-only list of drive speeds</returns>
         public static List<int> GetSpeedsForPhysicalMediaType(PhysicalMediaType? type)
         {
-#pragma warning disable IDE0072
-            return type switch
-            {
-                PhysicalMediaType.CDROM
-                    or PhysicalMediaType.GDROM => CD,
-                PhysicalMediaType.DVD
-                    or PhysicalMediaType.NintendoGameCubeGameDisc
-                    or PhysicalMediaType.NintendoWiiOpticalDisc => DVD,
-                PhysicalMediaType.HDDVD => HDDVD,
-                PhysicalMediaType.BluRay
-                    or PhysicalMediaType.NintendoWiiUOpticalDisc => BD,
+            if (type == PhysicalMediaType.CDROM)
+                return CD;
+            else if (type == PhysicalMediaType.GDROM)
+                return CD;
 
-                // Default to CD speed range
-                _ => CD,
-            };
-#pragma warning restore IDE0072
+            else if (type == PhysicalMediaType.DVD)
+                return DVD;
+            else if (type == PhysicalMediaType.NintendoGameCubeGameDisc)
+                return DVD;
+            else if (type == PhysicalMediaType.NintendoWiiOpticalDisc)
+                return DVD;
+            else if (type == PhysicalMediaType.XGD)
+                return DVD;
+
+            else if (type == PhysicalMediaType.HDDVD)
+                return HDDVD;
+
+            else if (type == PhysicalMediaType.BluRay)
+                return BD;
+            else if (type == PhysicalMediaType.NintendoWiiUOpticalDisc)
+                return BD;
+
+            return CD;
         }
     }
 }
