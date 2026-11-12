@@ -50,6 +50,9 @@
 - Mount points should be left alone
 - Explicitly ignore unmounted discs for protection scanning
 - Update Redumper to build 772
+- Read disc files from the dump image (gmipf)
+- Read disc files from the drive on Linux without mounting (gmipf)
+- Mark empty optical drives as inactive on Linux (gmipf)
 
 ### 3.11.1 (2026-10-17)
 

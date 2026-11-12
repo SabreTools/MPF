@@ -281,10 +281,10 @@ namespace MPF.Check.Features
 
         exit:
             // Now deal with the complex options
-            Options.Processing.ProtectionScanning.ScanForProtection = scan && !string.IsNullOrEmpty(DevicePath);
-            Options.Processing.ProtectionScanning.ScanArchivesForProtection = enableArchives && scan && !string.IsNullOrEmpty(DevicePath);
-            Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = enableDebug && scan && !string.IsNullOrEmpty(DevicePath);
-            Options.Processing.ProtectionScanning.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(DevicePath);
+            Options.Processing.ProtectionScanning.ScanForProtection = scan;
+            Options.Processing.ProtectionScanning.ScanArchivesForProtection = enableArchives && scan;
+            Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = enableDebug && scan;
+            Options.Processing.ProtectionScanning.HideDriveLetters = hideDriveLetters && scan;
 
             return true;
         }
