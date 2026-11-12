@@ -57,6 +57,20 @@ namespace MPF.Frontend.Test.FileSystems
         }
 
         [Fact]
+        public void OpenDrive_MountedOnLinux_ImageFileSystem()
+        {
+            // On Linux a mounted disc is still read from the device, which also has its first sector
+            if (!OperatingSystem.IsLinux())
+                return;
+
+            var drive = Drive.Create(InternalDriveType.Optical, GetTestPath("ProtectionTool", "test.iso"));
+            drive!.MountedPath = GetTestPath("FileSystems", "Folder");
+            using var fileSystem = DiscFileSystem.OpenDrive(drive);
+            Assert.IsType<ImageFileSystem>(fileSystem);
+            Assert.NotNull(fileSystem.ReadFirstBytes(16));
+        }
+
+        [Fact]
         public void OpenDrive_NotOptical_Null()
         {
             // Only optical discs are read from the device

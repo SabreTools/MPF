@@ -100,7 +100,8 @@ namespace MPF.Frontend.FileSystems
         /// <returns>File system on success, null if the files of the disc cannot be read</returns>
         /// <remarks>
         /// A drive letter or another directory is read as a directory. On Linux, the disc in an
-        /// optical drive is read from the device without mounting it. On macOS, it is read from
+        /// optical drive is read from the device, also when it is mounted, so its first sector can
+        /// be read like through the device of a drive letter on Windows. On macOS, it is read from
         /// the directory macOS mounted it at.
         /// </remarks>
         public static DiscFileSystem? OpenDrive(Drive? drive)
