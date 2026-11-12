@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using SabreTools.RedumpLib.Data;
 using Xunit;
@@ -274,29 +273,29 @@ namespace MPF.Frontend.Test
             Assert.Equal(expected, actual);
         }
 
-        public static List<object?[]> GenerateSupportsAntiModchipScansData()
+        public static TheoryData<PhysicalSystem?, bool> GenerateSupportsAntiModchipScansData()
         {
-            var testData = new List<object?[]>() { new object?[] { null, false } };
+            var testData = new TheoryData<PhysicalSystem?, bool> { { null, false } };
             foreach (PhysicalSystem redumpSystem in PhysicalSystem.AllSystems)
             {
                 if (_antiModchipSystems.Contains(redumpSystem))
-                    testData.Add([redumpSystem, true]);
+                    testData.Add(redumpSystem, true);
                 else
-                    testData.Add([redumpSystem, false]);
+                    testData.Add(redumpSystem, false);
             }
 
             return testData;
         }
 
-        public static List<object?[]> GenerateSupportsCopyProtectionScansData()
+        public static TheoryData<PhysicalSystem?, bool> GenerateSupportsCopyProtectionScansData()
         {
-            var testData = new List<object?[]>() { new object?[] { null, false } };
+            var testData = new TheoryData<PhysicalSystem?, bool> { { null, false } };
             foreach (PhysicalSystem redumpSystem in PhysicalSystem.AllSystems)
             {
                 if (_copyProtectionSystems.Contains(redumpSystem))
-                    testData.Add([redumpSystem, true]);
+                    testData.Add(redumpSystem, true);
                 else
-                    testData.Add([redumpSystem, false]);
+                    testData.Add(redumpSystem, false);
             }
 
             return testData;

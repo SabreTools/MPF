@@ -537,55 +537,61 @@ namespace MPF.Processors.Test
 
         #region GetDiscTypeFromProfile
 
-        public static readonly List<object?[]> GetDiscTypeFromProfileTestData =
-        [
-            [null, null],
-            ["", null],
-            ["INVALID", null],
-            ["reserved", null],
-            ["non removable disk", null],
-            ["removable disk", null],
-            ["MO erasable", null],
-            ["MO write once", null],
-            ["AS MO", null],
-            ["CD-ROM", PhysicalMediaType.CDROM],
-            ["CD-R", PhysicalMediaType.CDROM],
-            ["CD-RW", PhysicalMediaType.CDROM],
-            ["DVD-ROM", PhysicalMediaType.DVD],
-            ["DVD-R", PhysicalMediaType.DVD],
-            ["DVD-RAM", PhysicalMediaType.DVD],
-            ["DVD-RW RO", PhysicalMediaType.DVD],
-            ["DVD-RW", PhysicalMediaType.DVD],
-            ["DVD-R DL", PhysicalMediaType.DVD],
-            ["DVD-R DL LJR", PhysicalMediaType.DVD],
-            ["DVD+RW", PhysicalMediaType.DVD],
-            ["DVD+R", PhysicalMediaType.DVD],
-            ["DDCD-ROM", PhysicalMediaType.CDROM],
-            ["DDCD-R", PhysicalMediaType.CDROM],
-            ["DDCD-RW", PhysicalMediaType.CDROM],
-            ["DVD+RW DL", PhysicalMediaType.DVD],
-            ["DVD+R DL", PhysicalMediaType.DVD],
-            ["BD-ROM", PhysicalMediaType.BluRay],
-            ["BD-R", PhysicalMediaType.BluRay],
-            ["BD-R RRM", PhysicalMediaType.BluRay],
-            ["BD-RW", PhysicalMediaType.BluRay],
-            ["HD DVD-ROM", PhysicalMediaType.HDDVD],
-            ["HD DVD-R", PhysicalMediaType.HDDVD],
-            ["HD DVD-RAM", PhysicalMediaType.HDDVD],
-            ["HD DVD-RW", PhysicalMediaType.HDDVD],
-            ["HD DVD-R DL", PhysicalMediaType.HDDVD],
-            ["HD DVD-RW DL", PhysicalMediaType.HDDVD],
-            ["NINTENDO", PhysicalMediaType.NintendoWiiOpticalDisc],
-            ["RESERVED5", PhysicalMediaType.NintendoWiiOpticalDisc],
-            ["NON STANDARD", null],
-        ];
-
         [Theory]
-        [MemberData(nameof(GetDiscTypeFromProfileTestData))]
+        [MemberData(nameof(GenerateGetDiscTypeFromProfileTestData))]
         public void GetDiscTypeFromProfileTest(string? profile, PhysicalMediaType? expected)
         {
             var actual = Redumper.GetDiscTypeFromProfile(profile);
             Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Generate a test set for GetDiscTypeFromStringsTest
+        /// </summary>
+        public static TheoryData<string?, PhysicalMediaType?> GenerateGetDiscTypeFromProfileTestData()
+        {
+            return new TheoryData<string?, PhysicalMediaType?>
+            {
+                { null, null },
+                { "", null },
+                { "INVALID", null },
+                { "reserved", null },
+                { "non removable disk", null },
+                { "removable disk", null },
+                { "MO erasable", null },
+                { "MO write once", null },
+                { "AS MO", null },
+                { "CD-ROM", PhysicalMediaType.CDROM },
+                { "CD-R", PhysicalMediaType.CDROM },
+                { "CD-RW", PhysicalMediaType.CDROM },
+                { "DVD-ROM", PhysicalMediaType.DVD },
+                { "DVD-R", PhysicalMediaType.DVD },
+                { "DVD-RAM", PhysicalMediaType.DVD },
+                { "DVD-RW RO", PhysicalMediaType.DVD },
+                { "DVD-RW", PhysicalMediaType.DVD },
+                { "DVD-R DL", PhysicalMediaType.DVD },
+                { "DVD-R DL LJR", PhysicalMediaType.DVD },
+                { "DVD+RW", PhysicalMediaType.DVD },
+                { "DVD+R", PhysicalMediaType.DVD },
+                { "DDCD-ROM", PhysicalMediaType.CDROM },
+                { "DDCD-R", PhysicalMediaType.CDROM },
+                { "DDCD-RW", PhysicalMediaType.CDROM },
+                { "DVD+RW DL", PhysicalMediaType.DVD },
+                { "DVD+R DL", PhysicalMediaType.DVD },
+                { "BD-ROM", PhysicalMediaType.BluRay },
+                { "BD-R", PhysicalMediaType.BluRay },
+                { "BD-R RRM", PhysicalMediaType.BluRay },
+                { "BD-RW", PhysicalMediaType.BluRay },
+                { "HD DVD-ROM", PhysicalMediaType.HDDVD },
+                { "HD DVD-R", PhysicalMediaType.HDDVD },
+                { "HD DVD-RAM", PhysicalMediaType.HDDVD },
+                { "HD DVD-RW", PhysicalMediaType.HDDVD },
+                { "HD DVD-R DL", PhysicalMediaType.HDDVD },
+                { "HD DVD-RW DL", PhysicalMediaType.HDDVD },
+                { "NINTENDO", PhysicalMediaType.NintendoWiiOpticalDisc },
+                { "RESERVED5", PhysicalMediaType.NintendoWiiOpticalDisc },
+                { "NON STANDARD", null },
+            };
         }
 
         #endregion

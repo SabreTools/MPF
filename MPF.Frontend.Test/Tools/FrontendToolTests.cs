@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;
 using Xunit;
@@ -9,22 +8,8 @@ namespace MPF.Frontend.Test.Tools
     {
         #region GetDefaultSpeedForPhysicalMediaType
 
-        public static readonly List<object?[]> GetDefaultSpeedForPhysicalMediaTypeSegmentedTestData =
-        [
-            [null, 72],
-            [PhysicalMediaType.CDROM, 72],
-            [PhysicalMediaType.GDROM, 72],
-            [PhysicalMediaType.DVD, 24],
-            [PhysicalMediaType.NintendoGameCubeGameDisc, 24],
-            [PhysicalMediaType.NintendoWiiOpticalDisc, 24],
-            [PhysicalMediaType.XGD, 24],
-            [PhysicalMediaType.HDDVD, 24],
-            [PhysicalMediaType.BluRay, 16],
-            [PhysicalMediaType.NintendoWiiUOpticalDisc, 16],
-        ];
-
         [Theory]
-        [MemberData(nameof(GetDefaultSpeedForPhysicalMediaTypeSegmentedTestData))]
+        [MemberData(nameof(GenerateGetDefaultSpeedForPhysicalMediaTypeSegmentedTestData))]
         public void GetDefaultSpeedForPhysicalMediaTypeSegmentedTest(PhysicalMediaType? mediaType, int expected)
         {
             var options = new Options();
@@ -35,6 +20,26 @@ namespace MPF.Frontend.Test.Tools
 
             int actual = FrontendTool.GetDefaultSpeedForPhysicalMediaType(mediaType, options);
             Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Generate a test set for GetDefaultSpeedForPhysicalMediaTypeSegmentedTest
+        /// </summary>
+        public static TheoryData<PhysicalMediaType?, int> GenerateGetDefaultSpeedForPhysicalMediaTypeSegmentedTestData()
+        {
+            return new TheoryData<PhysicalMediaType?, int>
+            {
+                { null, 72 },
+                { PhysicalMediaType.CDROM, 72 },
+                { PhysicalMediaType.GDROM, 72 },
+                { PhysicalMediaType.DVD, 24 },
+                { PhysicalMediaType.NintendoGameCubeGameDisc, 24 },
+                { PhysicalMediaType.NintendoWiiOpticalDisc, 24 },
+                { PhysicalMediaType.XGD, 24 },
+                { PhysicalMediaType.HDDVD, 24 },
+                { PhysicalMediaType.BluRay, 16 },
+                { PhysicalMediaType.NintendoWiiUOpticalDisc, 16 },
+            };
         }
 
         #endregion

@@ -51,6 +51,7 @@
 - Explicitly ignore unmounted discs for protection scanning
 - Update Redumper to build 772
 - Add .NET 11 support
+- Test set generation cleanup from previous commit
 
 ### 3.11.1 (2026-10-17)
 

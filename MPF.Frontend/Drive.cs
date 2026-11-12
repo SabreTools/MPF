@@ -361,7 +361,7 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="driveType">DriveType value to check</param>
         /// <returns>InternalDriveType, if possible, null on error</returns>
-        internal static InternalDriveType? ToInternalDriveType(DriveType driveType)
+        internal static InternalDriveType? ToInternalDriveType(DriveType? driveType)
         {
 #pragma warning disable IDE0072
             return driveType switch

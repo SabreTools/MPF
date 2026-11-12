@@ -26,7 +26,7 @@ namespace MPF.Frontend.Test
         /// <param name="expectNull">True to expect a null mapping, false otherwise</param>
         [Theory]
         [MemberData(nameof(GenerateDriveTypeMappingTestData))]
-        public void ToInternalDriveTypeTest(DriveType driveType, bool expectNull)
+        public void ToInternalDriveTypeTest(DriveType? driveType, bool expectNull)
         {
             var actual = Drive.ToInternalDriveType(driveType);
 
@@ -40,15 +40,15 @@ namespace MPF.Frontend.Test
         /// Generate a test set of DriveType values
         /// </summary>
         /// <returns>MemberData-compatible list of DriveType values</returns>
-        public static List<object?[]> GenerateDriveTypeMappingTestData()
+        public static TheoryData<DriveType?, bool> GenerateDriveTypeMappingTestData()
         {
-            var testData = new List<object?[]>() { new object?[] { null, true } };
+            var testData = new TheoryData<DriveType?, bool>() { { null, true } };
             foreach (DriveType driveType in Enum.GetValues<DriveType>())
             {
                 if (Array.IndexOf(_mappableDriveTypes, driveType) > -1)
-                    testData.Add([driveType, false]);
+                    testData.Add(driveType, false);
                 else
-                    testData.Add([driveType, true]);
+                    testData.Add(driveType, true);
             }
 
             return testData;

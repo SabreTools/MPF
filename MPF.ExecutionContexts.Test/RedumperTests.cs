@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using MPF.ExecutionContexts.Redumper;
 using SabreTools.RedumpLib.Data;
 using Xunit;
@@ -9,26 +8,32 @@ namespace MPF.ExecutionContexts.Test
     {
         #region Converters.Extension
 
-        public static readonly List<object?[]> ExtensionTestData =
-        [
-            [null, null],
-            [PhysicalMediaType.CDROM, ".bin"],
-            [PhysicalMediaType.GDROM, ".bin"],
-            [PhysicalMediaType.DVD, ".iso"],
-            [PhysicalMediaType.HDDVD, ".iso"],
-            [PhysicalMediaType.BluRay, ".iso"],
-            [PhysicalMediaType.NintendoWiiOpticalDisc, ".iso"],
-            [PhysicalMediaType.NintendoGameCubeGameDisc, ".raw"],
-            [PhysicalMediaType.NintendoWiiUOpticalDisc, ".wud"],
-            [PhysicalMediaType.ApertureCard, null],
-        ];
-
         [Theory]
-        [MemberData(nameof(ExtensionTestData))]
+        [MemberData(nameof(GenerateExtensionTestData))]
         public void ExtensionTest(PhysicalMediaType? type, string? expected)
         {
             string? actual = Converters.Extension(type);
             Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Generate a test set for ExtensionTest
+        /// </summary>
+        public static TheoryData<PhysicalMediaType?, string?> GenerateExtensionTestData()
+        {
+            return new TheoryData<PhysicalMediaType?, string?>
+            {
+                { null, null },
+                { PhysicalMediaType.CDROM, ".bin" },
+                { PhysicalMediaType.GDROM, ".bin" },
+                { PhysicalMediaType.DVD, ".iso" },
+                { PhysicalMediaType.HDDVD, ".iso" },
+                { PhysicalMediaType.BluRay, ".iso" },
+                { PhysicalMediaType.NintendoWiiOpticalDisc, ".iso" },
+                { PhysicalMediaType.NintendoGameCubeGameDisc, ".raw" },
+                { PhysicalMediaType.NintendoWiiUOpticalDisc, ".wud" },
+                { PhysicalMediaType.ApertureCard, null },
+            };
         }
 
         #endregion

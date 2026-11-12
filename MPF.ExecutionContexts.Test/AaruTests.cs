@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using MPF.ExecutionContexts.Aaru;
 using SabreTools.RedumpLib.Data;
 using Xunit;
@@ -9,25 +8,31 @@ namespace MPF.ExecutionContexts.Test
     {
         #region Converters.Extension
 
-        public static readonly List<object?[]> ExtensionTestData =
-        [
-            [null, ".aaruf"],
-            [PhysicalMediaType.CDROM, ".aaruf"],
-            [PhysicalMediaType.GDROM, ".aaruf"],
-            [PhysicalMediaType.DVD, ".aaruf"],
-            [PhysicalMediaType.HDDVD, ".aaruf"],
-            [PhysicalMediaType.BluRay, ".aaruf"],
-            [PhysicalMediaType.FloppyDisk, ".aaruf"],
-            [PhysicalMediaType.HardDisk, ".aaruf"],
-            [PhysicalMediaType.ApertureCard, ".aaruf"],
-        ];
-
         [Theory]
-        [MemberData(nameof(ExtensionTestData))]
+        [MemberData(nameof(GenerateExtensionTestData))]
         public void ExtensionTest(PhysicalMediaType? type, string expected)
         {
             string actual = Converters.Extension(type);
             Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Generate a test set for ExtensionTest
+        /// </summary>
+        public static TheoryData<PhysicalMediaType?, string> GenerateExtensionTestData()
+        {
+            return new TheoryData<PhysicalMediaType?, string>
+            {
+                { null, ".aaruf" },
+                { PhysicalMediaType.CDROM, ".aaruf" },
+                { PhysicalMediaType.GDROM, ".aaruf" },
+                { PhysicalMediaType.DVD, ".aaruf" },
+                { PhysicalMediaType.HDDVD, ".aaruf" },
+                { PhysicalMediaType.BluRay, ".aaruf" },
+                { PhysicalMediaType.FloppyDisk, ".aaruf" },
+                { PhysicalMediaType.HardDisk, ".aaruf" },
+                { PhysicalMediaType.ApertureCard, ".aaruf" },
+            };
         }
 
         #endregion

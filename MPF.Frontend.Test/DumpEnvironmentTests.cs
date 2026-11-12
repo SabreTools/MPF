@@ -1,24 +1,12 @@
-﻿using System.Collections.Generic;
-using SabreTools.RedumpLib.Data;
+﻿using SabreTools.RedumpLib.Data;
 using Xunit;
 
 namespace MPF.Frontend.Test
 {
     public class DumpEnvironmentTests
     {
-        public static readonly List<object?[]> ParametersValidSegmentedTestData =
-        [
-            [null, 'D', false, null, false],
-            ["", 'D', false, null, false],
-            ["cd F test.bin 8 /c2 20", 'F', false, PhysicalMediaType.CDROM, true],
-            ["cd F test.bin 8 /c2new 20", 'F', false, PhysicalMediaType.CDROM, true],
-            ["fd A test.img", 'A', true, PhysicalMediaType.FloppyDisk, true],
-            ["dvd X test.iso 8 /raw", 'X', false, PhysicalMediaType.FloppyDisk, false],
-            ["stop D", 'D', false, PhysicalMediaType.DVD, true],
-        ];
-
         [Theory]
-        [MemberData(nameof(ParametersValidSegmentedTestData))]
+        [MemberData(nameof(GenerateParametersValidSegmentedTestData))]
         public void ParametersValidSegmentedTest(string? parameters, char letter, bool isFloppy, PhysicalMediaType? mediaType, bool expected)
         {
             var options = new Options();
@@ -39,6 +27,23 @@ namespace MPF.Frontend.Test
 
             bool actual = env.ParametersValid(mediaType);
             Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Generate a test set for ExtensionTest
+        /// </summary>
+        public static TheoryData<string?, char, bool, PhysicalMediaType?, bool> GenerateParametersValidSegmentedTestData()
+        {
+            return new TheoryData<string?, char, bool, PhysicalMediaType?, bool>
+            {
+                { null, 'D', false, null, false },
+                { "", 'D', false, null, false },
+                { "cd F test.bin 8 /c2 20", 'F', false, PhysicalMediaType.CDROM, true },
+                { "cd F test.bin 8 /c2new 20", 'F', false, PhysicalMediaType.CDROM, true },
+                { "fd A test.img", 'A', true, PhysicalMediaType.FloppyDisk, true },
+                { "dvd X test.iso 8 /raw", 'X', false, PhysicalMediaType.FloppyDisk, false },
+                { "stop D", 'D', false, PhysicalMediaType.DVD, true },
+            };
         }
     }
 }
