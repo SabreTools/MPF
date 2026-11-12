@@ -49,6 +49,7 @@
 - Handle space encoding in mount points and volume labels
 - Mount points should be left alone
 - Explicitly ignore unmounted discs for protection scanning
+- Update Redumper to build 772
 - Read disc files from the dump image (gmipf)
 - Read disc files and the first sector on macOS (gmipf)
 
