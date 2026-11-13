@@ -60,6 +60,7 @@
 - Add .NET 11 workaround for WPF native DLL issue
 - Make release builds a separate flag in publish scripts
 - Make description of rolling release debug-only
+- Fix .NET 11 workaround conditional statement
 
 ### 3.11.1 (2026-10-17)
 

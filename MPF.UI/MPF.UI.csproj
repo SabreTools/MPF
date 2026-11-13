@@ -61,10 +61,10 @@
 
     <!-- .NET 11 workaround, see https://github.com/dotnet/wpf/issues/11842#issuecomment-6787942831 for details -->
     <Target Name="KeepIjwAssembliesOutOfBundle" AfterTargets="ComputeResolvedFilesToPublishList"
-        Condition="'($(PublishSingleFile)' == 'true') AND $(TargetFramework.StartsWith(`net11`))">
+        Condition="'$(PublishSingleFile)' == 'true' AND $(TargetFramework.StartsWith(`net11`))">
         <ItemGroup>
             <ResolvedFileToPublish Update="@(ResolvedFileToPublish)"
-                Condition="'%(Filename)%(Extension)' == 'DirectWriteForwarder.dll' or '%(Filename)%(Extension)' == 'System.Printing.dll'"
+                Condition="'%(Filename)%(Extension)' == 'DirectWriteForwarder.dll' OR '%(Filename)%(Extension)' == 'System.Printing.dll'"
                 ExcludeFromSingleFile="true" />
         </ItemGroup>
     </Target>
