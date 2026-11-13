@@ -19,6 +19,10 @@ param(
     [switch]$INCLUDE_DEBUG,
 
     [Parameter(Mandatory = $false)]
+    [Alias("IncludeRelease")]
+    [switch]$INCLUDE_RELEASE,
+
+    [Parameter(Mandatory = $false)]
     [Alias("IncludePrograms")]
     [switch]$INCLUDE_PROGRAMS,
 
@@ -43,12 +47,13 @@ $COMMIT = git log --pretty=format:"%H" -1
 
 # Output the selected options
 Write-Host "Selected Options:"
-Write-Host "  Use all frameworks (-UseAll)          $USE_ALL"
-Write-Host "  Include debug builds (-IncludeDebug)  $INCLUDE_DEBUG"
-Write-Host "  Include programs (-IncludePrograms)   $INCLUDE_PROGRAMS"
-Write-Host "  No build (-NoBuild)                   $NO_BUILD"
-Write-Host "  No archive (-NoArchive)               $NO_ARCHIVE"
-Write-Host "  Version (-BuildVersion)               $BUILD_VERSION"
+Write-Host "  Use all frameworks (-UseAll)              $USE_ALL"
+Write-Host "  Include debug builds (-IncludeDebug)      $INCLUDE_DEBUG"
+Write-Host "  Include release builds (-IncludeRelease)  $INCLUDE_RELEASE"
+Write-Host "  Include programs (-IncludePrograms)       $INCLUDE_PROGRAMS"
+Write-Host "  No build (-NoBuild)                       $NO_BUILD"
+Write-Host "  No archive (-NoArchive)                   $NO_ARCHIVE"
+Write-Host "  Version (-BuildVersion)                   $BUILD_VERSION"
 Write-Host " "
 
 # Create the build matrix arrays
@@ -190,8 +195,10 @@ function Download-Programs {
                     Copy-Item -Path "$OUTDIR/*" -Destination "MPF.Avalonia/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
                 }
 
-                New-Item -Name "MPF.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX" -Type Directory -ErrorAction SilentlyContinue
-                Copy-Item -Path "$OUTDIR/*" -Destination "MPF.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
+                if ($INCLUDE_RELEASE.IsPresent) {
+                    New-Item -Name "MPF.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX" -Type Directory -ErrorAction SilentlyContinue
+                    Copy-Item -Path "$OUTDIR/*" -Destination "MPF.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
+                }
 
             }
         }
@@ -211,8 +218,10 @@ function Download-Programs {
                     Copy-Item -Path "$OUTDIR/*" -Destination "MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
                 }
 
-                New-Item -Name "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX" -Type Directory -ErrorAction SilentlyContinue
-                Copy-Item -Path "$OUTDIR/*" -Destination "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
+                if ($INCLUDE_RELEASE.IsPresent) {
+                    New-Item -Name "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX" -Type Directory -ErrorAction SilentlyContinue
+                    Copy-Item -Path "$OUTDIR/*" -Destination "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
+                }
 
             }
         }
@@ -232,8 +241,10 @@ function Download-Programs {
                     Copy-Item -Path "$OUTDIR/*" -Destination "MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
                 }
 
-                New-Item -Name "MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX" -Type Directory -ErrorAction SilentlyContinue
-                Copy-Item -Path "$OUTDIR/*" -Destination "MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
+                if ($INCLUDE_RELEASE.IsPresent) {
+                    New-Item -Name "MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX" -Type Directory -ErrorAction SilentlyContinue
+                    Copy-Item -Path "$OUTDIR/*" -Destination "MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
+                }
 
             }
         }
@@ -292,14 +303,22 @@ if (!$NO_BUILD.IsPresent) {
                 if ($INCLUDE_DEBUG.IsPresent) {
                     dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
                 }
-                dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+
+                # Only include Release if set
+                if ($INCLUDE_RELEASE.IsPresent) {
+                    dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+                }
             }
             else {
                 # Only include Debug if set
                 if ($INCLUDE_DEBUG.IsPresent) {
                     dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
                 }
-                dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+
+                # Only include Release if set
+                if ($INCLUDE_RELEASE.IsPresent) {
+                    dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+                }
             }
         }
     }
@@ -328,14 +347,22 @@ if (!$NO_BUILD.IsPresent) {
                 if ($INCLUDE_DEBUG.IsPresent) {
                     dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
                 }
-                dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+
+                # Only include Release if set
+                if ($INCLUDE_RELEASE.IsPresent) {
+                    dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+                }
             }
             else {
                 # Only include Debug if set
                 if ($INCLUDE_DEBUG.IsPresent) {
                     dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
                 }
-                dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+
+                # Only include Release if set
+                if ($INCLUDE_RELEASE.IsPresent) {
+                    dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+                }
             }
         }
     }
@@ -364,14 +391,22 @@ if (!$NO_BUILD.IsPresent) {
                 if ($INCLUDE_DEBUG.IsPresent) {
                     dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
                 }
-                dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+
+                # Only include Release if set
+                if ($INCLUDE_RELEASE.IsPresent) {
+                    dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+                }
             }
             else {
                 # Only include Debug if set
                 if ($INCLUDE_DEBUG.IsPresent) {
                     dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
                 }
-                dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+
+                # Only include Release if set
+                if ($INCLUDE_RELEASE.IsPresent) {
+                    dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+                }
             }
         }
     }
@@ -400,14 +435,22 @@ if (!$NO_BUILD.IsPresent) {
                 if ($INCLUDE_DEBUG.IsPresent) {
                     dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
                 }
-                dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+
+                # Only include Release if set
+                if ($INCLUDE_RELEASE.IsPresent) {
+                    dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+                }
             }
             else {
                 # Only include Debug if set
                 if ($INCLUDE_DEBUG.IsPresent) {
                     dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
                 }
-                dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+
+                # Only include Release if set
+                if ($INCLUDE_RELEASE.IsPresent) {
+                    dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+                }
             }
         }
     }
@@ -458,22 +501,25 @@ if (!$NO_ARCHIVE.IsPresent) {
                     }
                 }
             }
-            
-            Set-Location -Path $BUILD_FOLDER/MPF.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
-            if ($INCLUDE_PROGRAMS.IsPresent) {
-                if ($BUILD_VERSION -ne $null) {
-                    7z a -tzip $BUILD_FOLDER/MPF.Avalonia_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+
+            # Only include Release if set
+            if ($INCLUDE_RELEASE.IsPresent) {
+                Set-Location -Path $BUILD_FOLDER/MPF.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
+                if ($INCLUDE_PROGRAMS.IsPresent) {
+                    if ($BUILD_VERSION -ne $null) {
+                        7z a -tzip $BUILD_FOLDER/MPF.Avalonia_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    }
+                    else {
+                        7z a -tzip $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    }
                 }
                 else {
-                    7z a -tzip $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip *
-                }
-            }
-            else {
-                if ($BUILD_VERSION -ne $null) {
-                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
-                }
-                else {
-                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    if ($BUILD_VERSION -ne $null) {
+                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    }
+                    else {
+                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    }
                 }
             }
         }
@@ -517,22 +563,25 @@ if (!$NO_ARCHIVE.IsPresent) {
                     }
                 }
             }
-            
-            Set-Location -Path $BUILD_FOLDER/MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
-            if ($INCLUDE_PROGRAMS.IsPresent) {
-                if ($BUILD_VERSION -ne $null) {
-                    7z a -tzip $BUILD_FOLDER/MPF.UI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+
+            # Only include Release if set
+            if ($INCLUDE_RELEASE.IsPresent) {
+                Set-Location -Path $BUILD_FOLDER/MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
+                if ($INCLUDE_PROGRAMS.IsPresent) {
+                    if ($BUILD_VERSION -ne $null) {
+                        7z a -tzip $BUILD_FOLDER/MPF.UI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    }
+                    else {
+                        7z a -tzip $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    }
                 }
                 else {
-                    7z a -tzip $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
-                }
-            }
-            else {
-                if ($BUILD_VERSION -ne $null) {
-                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
-                }
-                else {
-                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    if ($BUILD_VERSION -ne $null) {
+                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    }
+                    else {
+                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    }
                 }
             }
         }
@@ -576,22 +625,25 @@ if (!$NO_ARCHIVE.IsPresent) {
                     }
                 }
             }
-            
-            Set-Location -Path $BUILD_FOLDER/MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
-            if ($INCLUDE_PROGRAMS.IsPresent) {
-                if ($BUILD_VERSION -ne $null) {
-                    7z a -tzip $BUILD_FOLDER/MPF.CLI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+
+            # Only include Release if set
+            if ($INCLUDE_RELEASE.IsPresent) {
+                Set-Location -Path $BUILD_FOLDER/MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
+                if ($INCLUDE_PROGRAMS.IsPresent) {
+                    if ($BUILD_VERSION -ne $null) {
+                        7z a -tzip $BUILD_FOLDER/MPF.CLI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    }
+                    else {
+                        7z a -tzip $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    }
                 }
                 else {
-                    7z a -tzip $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
-                }
-            }
-            else {
-                if ($BUILD_VERSION -ne $null) {
-                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
-                }
-                else {
-                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    if ($BUILD_VERSION -ne $null) {
+                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    }
+                    else {
+                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                    }
                 }
             }
         }
@@ -625,12 +677,16 @@ if (!$NO_ARCHIVE.IsPresent) {
                     7z a -tzip $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_debug.zip *
                 }
             }
-            Set-Location -Path $BUILD_FOLDER/MPF.Check/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
-            if ($BUILD_VERSION -ne $null) {
-                7z a -tzip $BUILD_FOLDER/MPF.Check_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
-            }
-            else {
-                7z a -tzip $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_release.zip *
+
+            # Only include Release if set
+            if ($INCLUDE_RELEASE.IsPresent) {
+                Set-Location -Path $BUILD_FOLDER/MPF.Check/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
+                if ($BUILD_VERSION -ne $null) {
+                    7z a -tzip $BUILD_FOLDER/MPF.Check_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
+                else {
+                    7z a -tzip $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
             }
         }
     }

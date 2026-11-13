@@ -58,6 +58,7 @@
 - Add back even more element conversions
 - Tweak text for rolling build description
 - Add .NET 11 workaround for WPF native DLL issue
+- Make release builds a separate flag in publish scripts
 
 ### 3.11.1 (2026-10-17)
 
