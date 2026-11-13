@@ -57,6 +57,7 @@
 - Replace removed media type element conversion
 - Add back even more element conversions
 - Tweak text for rolling build description
+- Add .NET 11 workaround for WPF native DLL issue
 
 ### 3.11.1 (2026-10-17)
 

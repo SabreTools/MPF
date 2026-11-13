@@ -59,6 +59,16 @@
         <ProjectReference Include="..\MPF.Frontend\MPF.Frontend.csproj" />
     </ItemGroup>
 
+    <!-- .NET 11 workaround, see https://github.com/dotnet/wpf/issues/11842#issuecomment-6787942831 for details -->
+    <Target Name="KeepIjwAssembliesOutOfBundle" AfterTargets="ComputeResolvedFilesToPublishList"
+        Condition="'($(PublishSingleFile)' == 'true') AND $(TargetFramework.StartsWith(`net11`))">
+        <ItemGroup>
+            <ResolvedFileToPublish Update="@(ResolvedFileToPublish)"
+                Condition="'%(Filename)%(Extension)' == 'DirectWriteForwarder.dll' or '%(Filename)%(Extension)' == 'System.Printing.dll'"
+                ExcludeFromSingleFile="true" />
+        </ItemGroup>
+    </Target>
+
     <!-- Support for old .NET versions -->
     <ItemGroup Condition="$(TargetFramework.StartsWith(`net3`))">
         <Reference Include="PresentationBuildTasks" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\PresentationBuildTasks.dll" />
