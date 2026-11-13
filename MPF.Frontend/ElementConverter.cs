@@ -20,6 +20,7 @@ namespace MPF.Frontend
         {
             return value switch
             {
+                // Enum-based elements
                 DiscCategory discCategory => new Element<DiscCategory>(discCategory),
                 DreamdumpSectorOrder sectorOrder => new Element<DreamdumpSectorOrder>(sectorOrder),
                 InterfaceLanguage interfaceLanguage => new Element<InterfaceLanguage>(interfaceLanguage),
@@ -28,8 +29,12 @@ namespace MPF.Frontend
                 RedumperReadMethod readMethod => new Element<RedumperReadMethod>(readMethod),
                 RedumperSectorOrder sectorOrder => new Element<RedumperSectorOrder>(sectorOrder),
                 RedumperDriveType driveType => new Element<RedumperDriveType>(driveType),
+
+                // Special handling elements
+                LanguageCode languageCode => new LanguageCodeComboBoxItem(languageCode),
                 PhysicalMediaType mediaType => new PhysicalMediaTypeComboBoxItem(mediaType),
                 PhysicalSystem redumpSystem => new PhysicalSystemComboBoxItem(redumpSystem),
+                RegionCode regionCode => new RegionCodeComboBoxItem(regionCode),
 
                 // Null values are treated as a system value
                 _ => new PhysicalSystemComboBoxItem((PhysicalSystem?)null),
@@ -49,6 +54,7 @@ namespace MPF.Frontend
 
             return element switch
             {
+                // Enum-based elements
                 Element<DiscCategory> dcElement => dcElement.Value,
                 Element<DreamdumpSectorOrder> soElement => soElement.Value,
                 Element<InterfaceLanguage> ilElement => ilElement.Value,
@@ -57,8 +63,14 @@ namespace MPF.Frontend
                 Element<RedumperReadMethod> rmElement => rmElement.Value,
                 Element<RedumperSectorOrder> soElement => soElement.Value,
                 Element<RedumperDriveType> dtElement => dtElement.Value,
+
+                // Special handling elements
+                LanguageCodeComboBoxItem lcElement => lcElement.Value,
                 PhysicalMediaTypeComboBoxItem mtElement => mtElement.Value,
                 PhysicalSystemComboBoxItem rsElement => rsElement.Value,
+                RegionCodeComboBoxItem rcElement => rcElement.Value,
+
+                // Unknown values are treated as null
                 _ => null,
             };
         }
