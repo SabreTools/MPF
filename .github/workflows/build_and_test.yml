@@ -52,6 +52,8 @@ jobs:
 
                       These builds are identical to what would be included in a stable release. No debug symbols are included.
 
+
+
                       [Windows x64](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net11.0-windows_win-x64_release.zip)
 
                       [Linux x64 (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_linux-x64_release.zip)
@@ -60,14 +62,16 @@ jobs:
 
                       ## Debug UI Builds
 
-                      These builds include debug symbols and are useful for tracing issues. This build is not needed if no debugging will be done.
+                      These builds are not the same as the builds included in a stable release. Debug symbols are included.
+
+
 
                       [Windows x64](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net11.0-windows_win-x64_debug.zip)
 
                       [Linux x64 (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_linux-x64_debug.zip)
 
                       [MacOS ARM64 (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_osx-arm64_debug.zip)
-                      
+
                       "
                   name: "Rolling Release"
                   prerelease: True
