@@ -19,7 +19,7 @@ INCLUDE_PROGRAMS=false
 NO_BUILD=false
 NO_ARCHIVE=false
 HAS_VERSION=false
-VERSION="NONE"
+BUILD_VERSION="NONE"
 while getopts "udrpbav:" OPTION; do
     case $OPTION in
     u)
@@ -42,7 +42,7 @@ while getopts "udrpbav:" OPTION; do
         ;;
     v)
         HAS_VERSION=true
-        VERSION=${OPTARG}
+        BUILD_VERSION=${OPTARG}
         ;;
     *)
         echo "Invalid option provided"
@@ -65,7 +65,7 @@ echo "  Include release builds (-r)           $INCLUDE_RELEASE"
 echo "  Include programs (-p)                 $INCLUDE_PROGRAMS"
 echo "  No build (-b)                         $NO_BUILD"
 echo "  No archive (-a)                       $NO_ARCHIVE"
-echo "  Version (-v)                          $HAS_VERSION ($VERSION)"
+echo "  Version (-v)                          $HAS_VERSION ($BUILD_VERSION)"
 echo " "
 
 # Create the build matrix arrays
@@ -309,25 +309,17 @@ if [ $NO_BUILD = false ]; then
 
             # Only .NET 5 and above can publish to a single file
             if [[ $(echo ${SINGLE_FILE_CAPABLE[@]} | fgrep -w $FRAMEWORK) ]]; then
-                # Only include Debug if set
-                if [ $INCLUDE_DEBUG = true ]; then
-                    dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
-                fi
+                EXTRA_OPTS="-p:PublishSingleFile=true"
+            fi
 
-                # Only include Release if set
-                if [ $INCLUDE_RELEASE = true ]; then
-                    dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-                fi
-            else
-                # Only include Debug if set
-                if [ $INCLUDE_DEBUG = true ]; then
-                    dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
-                fi
+            # Only include Debug if set
+            if [ $INCLUDE_DEBUG = true ]; then
+                dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT $EXTRA_OPTS
+            fi
 
-                # Only include Release if set
-                if [ $INCLUDE_RELEASE = true ]; then
-                    dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
-                fi
+            # Only include Release if set
+            if [ $INCLUDE_RELEASE = true ]; then
+                dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false $EXTRA_OPTS
             fi
         done
     done
@@ -356,25 +348,17 @@ if [ $NO_BUILD = false ]; then
 
             # Only .NET 5 and above can publish to a single file
             if [[ $(echo ${SINGLE_FILE_CAPABLE[@]} | fgrep -w $FRAMEWORK) ]]; then
-                # Only include Debug if set
-                if [ $INCLUDE_DEBUG = true ]; then
-                    dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
-                fi
+                EXTRA_OPTS="-p:PublishSingleFile=true"
+            fi
 
-                # Only include Release if set
-                if [ $INCLUDE_RELEASE = true ]; then
-                    dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-                fi
-            else
-                # Only include Debug if set
-                if [ $INCLUDE_DEBUG = true ]; then
-                    dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
-                fi
+            # Only include Debug if set
+            if [ $INCLUDE_DEBUG = true ]; then
+                dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT $EXTRA_OPTS
+            fi
 
-                # Only include Release if set
-                if [ $INCLUDE_RELEASE = true ]; then
-                    dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
-                fi
+            # Only include Release if set
+            if [ $INCLUDE_RELEASE = true ]; then
+                dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false $EXTRA_OPTS
             fi
         done
     done
@@ -403,25 +387,17 @@ if [ $NO_BUILD = false ]; then
 
             # Only .NET 5 and above can publish to a single file
             if [[ $(echo ${SINGLE_FILE_CAPABLE[@]} | fgrep -w $FRAMEWORK) ]]; then
-                # Only include Debug if set
-                if [ $INCLUDE_DEBUG = true ]; then
-                    dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
-                fi
+                EXTRA_OPTS="-p:PublishSingleFile=true"
+            fi
 
-                # Only include Release if set
-                if [ $INCLUDE_RELEASE = true ]; then
-                    dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-                fi
-            else
-                # Only include Debug if set
-                if [ $INCLUDE_DEBUG = true ]; then
-                    dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
-                fi
+            # Only include Debug if set
+            if [ $INCLUDE_DEBUG = true ]; then
+                dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT $EXTRA_OPTS
+            fi
 
-                # Only include Release if set
-                if [ $INCLUDE_RELEASE = true ]; then
-                    dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
-                fi
+            # Only include Release if set
+            if [ $INCLUDE_RELEASE = true ]; then
+                dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false $EXTRA_OPTS
             fi
         done
     done
@@ -450,25 +426,17 @@ if [ $NO_BUILD = false ]; then
 
             # Only .NET 5 and above can publish to a single file
             if [[ $(echo ${SINGLE_FILE_CAPABLE[@]} | fgrep -w $FRAMEWORK) ]]; then
-                # Only include Debug if set
-                if [ $INCLUDE_DEBUG = true ]; then
-                    dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
-                fi
+                EXTRA_OPTS="-p:PublishSingleFile=true"
+            fi
 
-                # Only include Release if set
-                if [ $INCLUDE_RELEASE = true ]; then
-                    dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-                fi
-            else
-                # Only include Debug if set
-                if [ $INCLUDE_DEBUG = true ]; then
-                    dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
-                fi
+            # Only include Debug if set
+            if [ $INCLUDE_DEBUG = true ]; then
+                dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT $EXTRA_OPTS
+            fi
 
-                # Only include Release if set
-                if [ $INCLUDE_RELEASE = true ]; then
-                    dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
-                fi
+            # Only include Release if set
+            if [ $INCLUDE_RELEASE = true ]; then
+                dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false $EXTRA_OPTS
             fi
         done
     done
@@ -476,6 +444,11 @@ fi
 
 # Only create archives if requested
 if [ $NO_ARCHIVE = false ]; then
+    # Only include a version if one exists
+    if [ $HAS_VERSION = true ]; then
+        VERSION_STRING="_$BUILD_VERSION"
+    fi
+
     # Download and extract, if needed
     if [ $INCLUDE_PROGRAMS = true ]; then
         download_programs
@@ -507,17 +480,9 @@ if [ $NO_ARCHIVE = false ]; then
             if [ $INCLUDE_DEBUG = true ]; then
                 cd $BUILD_FOLDER/MPF.Avalonia/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if [ $INCLUDE_PROGRAMS = true ]; then
-                    if [ $HAS_VERSION = true ]; then
-                        zip -r $BUILD_FOLDER/MPF.Avalonia_${VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip .
-                    else
-                        zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip .
-                    fi
+                    zip -r $BUILD_FOLDER/MPF.Avalonia${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip .
                 else
-                    if [ $HAS_VERSION = true ]; then
-                        zip -r $BUILD_FOLDER/MPF.Avalonia_${VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
-                    else
-                        zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
-                    fi
+                    zip -r $BUILD_FOLDER/MPF.Avalonia${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
                 fi
             fi
 
@@ -525,17 +490,9 @@ if [ $NO_ARCHIVE = false ]; then
             if [ $INCLUDE_RELEASE = true ]; then
                 cd $BUILD_FOLDER/MPF.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
                 if [ $INCLUDE_PROGRAMS = true ]; then
-                    if [ $HAS_VERSION = true ]; then
-                        zip -r $BUILD_FOLDER/MPF.Avalonia_${VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip .
-                    else
-                        zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip .
-                    fi
+                    zip -r $BUILD_FOLDER/MPF.Avalonia${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip .
                 else
-                    if [ $HAS_VERSION = true ]; then
-                        zip -r $BUILD_FOLDER/MPF.Avalonia_${VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
-                    else
-                        zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
-                    fi
+                    zip -r $BUILD_FOLDER/MPF.Avalonia${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
                 fi
             fi
         done
@@ -567,17 +524,10 @@ if [ $NO_ARCHIVE = false ]; then
             if [ $INCLUDE_DEBUG = true ]; then
                 cd $BUILD_FOLDER/MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if [ $INCLUDE_PROGRAMS = true ]; then
-                    if [ $HAS_VERSION = true ]; then
-                        zip -r $BUILD_FOLDER/MPF.UI_${VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip .
-                    else
-                        zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip .
-                    fi
+                    zip -r $BUILD_FOLDER/MPF.UI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                fi
                 else
-                    if [ $HAS_VERSION = true ]; then
-                        zip -r $BUILD_FOLDER/MPF.UI_${VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
-                    else
-                        zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
-                    fi
+                    zip -r $BUILD_FOLDER/MPF.UI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
                 fi
             fi
 
@@ -585,17 +535,9 @@ if [ $NO_ARCHIVE = false ]; then
             if [ $INCLUDE_RELEASE = true]; then
                 cd $BUILD_FOLDER/MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
                 if [ $INCLUDE_PROGRAMS = true ]; then
-                    if [ $HAS_VERSION = true ]; then
-                        zip -r $BUILD_FOLDER/MPF.UI_${VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip .
-                    else
-                        zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip .
-                    fi
+                    zip -r $BUILD_FOLDER/MPF.UI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip .
                 else
-                    if [ $HAS_VERSION = true ]; then
-                        zip -r $BUILD_FOLDER/MPF.UI_${VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
-                    else
-                        zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
-                    fi
+                    zip -r $BUILD_FOLDER/MPF.UI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
                 fi
             fi
         done
@@ -627,17 +569,9 @@ if [ $NO_ARCHIVE = false ]; then
             if [ $INCLUDE_DEBUG = true ]; then
                 cd $BUILD_FOLDER/MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if [ $INCLUDE_PROGRAMS = true ]; then
-                    if [ $HAS_VERSION = true ]; then
-                        zip -r $BUILD_FOLDER/MPF.CLI_${VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip .
-                    else
-                        zip -r $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip .
-                    fi
+                    zip -r $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip .
                 else
-                    if [ $HAS_VERSION = true ]; then
-                        zip -r $BUILD_FOLDER/MPF.CLI_${VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
-                    else
-                        zip -r $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
-                    fi
+                    zip -r $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
                 fi
             fi
 
@@ -645,18 +579,9 @@ if [ $NO_ARCHIVE = false ]; then
             if [ $INCLUDE_RELEASE = true ]; then
                 cd $BUILD_FOLDER/MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
                 if [ $INCLUDE_PROGRAMS = true ]; then
-                    if [ $HAS_VERSION = true ]; then
-                        zip -r $BUILD_FOLDER/MPF.CLI_${VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip .
-                    else
-                        zip -r $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip .
-                    fi
+                    zip -r $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip .
                 else
-                    if [ $HAS_VERSION = true ]; then
-                        zip -r $BUILD_FOLDER/MPF.CLI_${VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
-                    else
-                        zip -r $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
-                    fi
-                fi
+                    zip -r $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
             fi
         done
     done
@@ -686,21 +611,13 @@ if [ $NO_ARCHIVE = false ]; then
             # Only include Debug if set
             if [ $INCLUDE_DEBUG = true ]; then
                 cd $BUILD_FOLDER/MPF.Check/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
-                if [ $HAS_VERSION = true ]; then
-                    zip -r $BUILD_FOLDER/MPF.Check_${VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip .
-                else
-                    zip -r $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_debug.zip .
-                fi
+                zip -r $BUILD_FOLDER/MPF.Check${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip .
             fi
 
             # Only include Release if set
             if [ $INCLUDE_RELEASE = true ]; then
                 cd $BUILD_FOLDER/MPF.Check/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
-                if [ $HAS_VERSION = true ]; then
-                    zip -r $BUILD_FOLDER/MPF.Check_${VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip .
-                else
-                    zip -r $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_release.zip .
-                fi
+                zip -r $BUILD_FOLDER/MPF.Check${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip .
             fi
         done
     done

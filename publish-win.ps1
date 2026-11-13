@@ -299,26 +299,17 @@ if (!$NO_BUILD.IsPresent) {
 
             # Only .NET 5 and above can publish to a single file
             if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK) {
-                # Only include Debug if set
-                if ($INCLUDE_DEBUG.IsPresent) {
-                    dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
-                }
-
-                # Only include Release if set
-                if ($INCLUDE_RELEASE.IsPresent) {
-                    dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-                }
+                $EXTRA_OPTS = "-p:PublishSingleFile=true"
             }
-            else {
-                # Only include Debug if set
-                if ($INCLUDE_DEBUG.IsPresent) {
-                    dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
-                }
 
-                # Only include Release if set
-                if ($INCLUDE_RELEASE.IsPresent) {
-                    dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
-                }
+            # Only include Debug if set
+            if ($INCLUDE_DEBUG.IsPresent) {
+                dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT $EXTRA_OPTS
+            }
+
+            # Only include Release if set
+            if ($INCLUDE_RELEASE.IsPresent) {
+                dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false $EXTRA_OPTS
             }
         }
     }
@@ -343,26 +334,17 @@ if (!$NO_BUILD.IsPresent) {
 
             # Only .NET 5 and above can publish to a single file
             if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK) {
-                # Only include Debug if set
-                if ($INCLUDE_DEBUG.IsPresent) {
-                    dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
-                }
-
-                # Only include Release if set
-                if ($INCLUDE_RELEASE.IsPresent) {
-                    dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-                }
+                $EXTRA_OPTS = "-p:PublishSingleFile=true"
             }
-            else {
-                # Only include Debug if set
-                if ($INCLUDE_DEBUG.IsPresent) {
-                    dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
-                }
 
-                # Only include Release if set
-                if ($INCLUDE_RELEASE.IsPresent) {
-                    dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
-                }
+            # Only include Debug if set
+            if ($INCLUDE_DEBUG.IsPresent) {
+                dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT $EXTRA_OPTS
+            }
+
+            # Only include Release if set
+            if ($INCLUDE_RELEASE.IsPresent) {
+                dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false $EXTRA_OPTS
             }
         }
     }
@@ -387,26 +369,17 @@ if (!$NO_BUILD.IsPresent) {
 
             # Only .NET 5 and above can publish to a single file
             if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK) {
-                # Only include Debug if set
-                if ($INCLUDE_DEBUG.IsPresent) {
-                    dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
-                }
-
-                # Only include Release if set
-                if ($INCLUDE_RELEASE.IsPresent) {
-                    dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-                }
+                $EXTRA_OPTS = "-p:PublishSingleFile=true"
             }
-            else {
-                # Only include Debug if set
-                if ($INCLUDE_DEBUG.IsPresent) {
-                    dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
-                }
 
-                # Only include Release if set
-                if ($INCLUDE_RELEASE.IsPresent) {
-                    dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
-                }
+            # Only include Debug if set
+            if ($INCLUDE_DEBUG.IsPresent) {
+                dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT $EXTRA_OPTS
+            }
+
+            # Only include Release if set
+            if ($INCLUDE_RELEASE.IsPresent) {
+                dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false $EXTRA_OPTS
             }
         }
     }
@@ -431,26 +404,17 @@ if (!$NO_BUILD.IsPresent) {
 
             # Only .NET 5 and above can publish to a single file
             if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK) {
-                # Only include Debug if set
-                if ($INCLUDE_DEBUG.IsPresent) {
-                    dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
-                }
-
-                # Only include Release if set
-                if ($INCLUDE_RELEASE.IsPresent) {
-                    dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-                }
+                $EXTRA_OPTS = "-p:PublishSingleFile=true"
             }
-            else {
-                # Only include Debug if set
-                if ($INCLUDE_DEBUG.IsPresent) {
-                    dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
-                }
 
-                # Only include Release if set
-                if ($INCLUDE_RELEASE.IsPresent) {
-                    dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
-                }
+            # Only include Debug if set
+            if ($INCLUDE_DEBUG.IsPresent) {
+                dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT $EXTRA_OPTS
+            }
+
+            # Only include Release if set
+            if ($INCLUDE_RELEASE.IsPresent) {
+                dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false $EXTRA_OPTS
             }
         }
     }
@@ -458,6 +422,11 @@ if (!$NO_BUILD.IsPresent) {
 
 # Only create archives if requested
 if (!$NO_ARCHIVE.IsPresent) {
+     # Only include a version if one exists
+    if ($BUILD_VERSION -ne $null) {
+        $VERSION_STRING = "_$BUILD_VERSION"
+    }
+
     # Download and extract, if needed
     if ($INCLUDE_PROGRAMS.IsPresent) {
         Download-Programs
@@ -485,20 +454,10 @@ if (!$NO_ARCHIVE.IsPresent) {
             if ($INCLUDE_DEBUG.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.Avalonia/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if ($INCLUDE_PROGRAMS.IsPresent) {
-                    if ($BUILD_VERSION -ne $null) {
-                        7z a -tzip $BUILD_FOLDER/MPF.Avalonia_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                    }
-                    else {
-                        7z a -tzip $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                    }
+                    7z a -tzip $BUILD_FOLDER/MPF.Avalonia${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip *
                 }
                 else {
-                    if ($BUILD_VERSION -ne $null) {
-                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                    }
-                    else {
-                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                    }
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip *
                 }
             }
 
@@ -506,20 +465,10 @@ if (!$NO_ARCHIVE.IsPresent) {
             if ($INCLUDE_RELEASE.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
                 if ($INCLUDE_PROGRAMS.IsPresent) {
-                    if ($BUILD_VERSION -ne $null) {
-                        7z a -tzip $BUILD_FOLDER/MPF.Avalonia_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
-                    }
-                    else {
-                        7z a -tzip $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip *
-                    }
+                    7z a -tzip $BUILD_FOLDER/MPF.Avalonia${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip *
                 }
                 else {
-                    if ($BUILD_VERSION -ne $null) {
-                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
-                    }
-                    else {
-                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip *
-                    }
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.Avalonia${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip *
                 }
             }
         }
@@ -547,20 +496,10 @@ if (!$NO_ARCHIVE.IsPresent) {
             if ($INCLUDE_DEBUG.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if ($INCLUDE_PROGRAMS.IsPresent) {
-                    if ($BUILD_VERSION -ne $null) {
-                        7z a -tzip $BUILD_FOLDER/MPF.UI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                    }
-                    else {
-                        7z a -tzip $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                    }
+                    7z a -tzip $BUILD_FOLDER/MPF.UI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip *
                 }
                 else {
-                    if ($BUILD_VERSION -ne $null) {
-                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                    }
-                    else {
-                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                    }
+                   7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip *
                 }
             }
 
@@ -568,20 +507,10 @@ if (!$NO_ARCHIVE.IsPresent) {
             if ($INCLUDE_RELEASE.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
                 if ($INCLUDE_PROGRAMS.IsPresent) {
-                    if ($BUILD_VERSION -ne $null) {
-                        7z a -tzip $BUILD_FOLDER/MPF.UI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
-                    }
-                    else {
-                        7z a -tzip $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
-                    }
+                    7z a -tzip $BUILD_FOLDER/MPF.UI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip *
                 }
                 else {
-                    if ($BUILD_VERSION -ne $null) {
-                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
-                    }
-                    else {
-                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
-                    }
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip *
                 }
             }
         }
@@ -609,20 +538,10 @@ if (!$NO_ARCHIVE.IsPresent) {
             if ($INCLUDE_DEBUG.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if ($INCLUDE_PROGRAMS.IsPresent) {
-                    if ($BUILD_VERSION -ne $null) {
-                        7z a -tzip $BUILD_FOLDER/MPF.CLI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                    }
-                    else {
-                        7z a -tzip $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                    }
+                    7z a -tzip $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip *
                 }
                 else {
-                    if ($BUILD_VERSION -ne $null) {
-                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                    }
-                    else {
-                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                    }
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip *
                 }
             }
 
@@ -630,20 +549,10 @@ if (!$NO_ARCHIVE.IsPresent) {
             if ($INCLUDE_RELEASE.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
                 if ($INCLUDE_PROGRAMS.IsPresent) {
-                    if ($BUILD_VERSION -ne $null) {
-                        7z a -tzip $BUILD_FOLDER/MPF.CLI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
-                    }
-                    else {
-                        7z a -tzip $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
-                    }
+                    7z a -tzip $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip *
                 }
                 else {
-                    if ($BUILD_VERSION -ne $null) {
-                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
-                    }
-                    else {
-                        7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
-                    }
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip *
                 }
             }
         }
@@ -670,23 +579,13 @@ if (!$NO_ARCHIVE.IsPresent) {
             # Only include Debug if set
             if ($INCLUDE_DEBUG.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.Check/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
-                if ($BUILD_VERSION -ne $null) {
-                    7z a -tzip $BUILD_FOLDER/MPF.Check_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                }
-                else {
-                    7z a -tzip $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                }
+                7z a -tzip $BUILD_FOLDER/MPF.Check${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip *
             }
 
             # Only include Release if set
             if ($INCLUDE_RELEASE.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.Check/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
-                if ($BUILD_VERSION -ne $null) {
-                    7z a -tzip $BUILD_FOLDER/MPF.Check_${BUILD_VERSION}_${FRAMEWORK}_${RUNTIME}_release.zip *
-                }
-                else {
-                    7z a -tzip $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_release.zip *
-                }
+                7z a -tzip $BUILD_FOLDER/MPF.Check${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip *
             }
         }
     }
