@@ -581,6 +581,7 @@ if [ $NO_ARCHIVE = false ]; then
                     zip -r $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip .
                 else
                     zip -r $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
+                fi
             fi
         done
     done
