@@ -61,6 +61,7 @@
 - Make release builds a separate flag in publish scripts
 - Make description of rolling release debug-only
 - Fix .NET 11 workaround conditional statement
+- Change test frameworks to .NET 10 and 11 only
 
 ### 3.11.1 (2026-10-17)
 
