@@ -525,7 +525,6 @@ if [ $NO_ARCHIVE = false ]; then
                 cd $BUILD_FOLDER/MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if [ $INCLUDE_PROGRAMS = true ]; then
                     zip -r $BUILD_FOLDER/MPF.UI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip .
-                fi
                 else
                     zip -r $BUILD_FOLDER/MPF.UI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
                 fi
