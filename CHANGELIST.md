@@ -53,6 +53,7 @@
 - Add .NET 11 support
 - Test set generation cleanup from previous commit
 - Start wiring through cancellation token for protection scans
+- Tweak text for rolling build description
 
 ### 3.11.1 (2026-10-17)
 

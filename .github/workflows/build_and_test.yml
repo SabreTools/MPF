@@ -48,19 +48,27 @@ jobs:
                   artifacts: "*.nupkg,*.snupkg,*.zip"
                   body: "Last built commit: ${{ github.sha }}
 
-                      ## UI Builds
+                      ## Release UI Builds
 
-                      [Windows x64 - Release Build](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net11.0-windows_win-x64_release.zip)
+                      These builds are identical to what would be included in a stable release. No debug symbols are included.
 
-                      [Windows x64 - Debug Build](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net11.0-windows_win-x64_debug.zip)
+                      [Windows x64](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net11.0-windows_win-x64_release.zip)
 
-                      [Linux x64 - Release Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_linux-x64_release.zip)
+                      [Linux x64 (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_linux-x64_release.zip)
 
-                      [Linux x64 - Debug Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_linux-x64_debug.zip)
+                      [MacOS ARM64 (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_osx-arm64_release.zip)
 
-                      [MacOS ARM64 - Release Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_osx-arm64_release.zip)
+                      ## Debug UI Builds
 
-                      [MacOS ARM64 - Debug Build (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_osx-arm64_debug.zip)"
+                      These builds include debug symbols and are useful for tracing issues. This build is not needed if no debugging will be done.
+
+                      [Windows x64](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net11.0-windows_win-x64_debug.zip)
+
+                      [Linux x64 (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_linux-x64_debug.zip)
+
+                      [MacOS ARM64 (EXPERIMENTAL)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.Avalonia_net11.0_osx-arm64_debug.zip)
+                      
+                      "
                   name: "Rolling Release"
                   prerelease: True
                   replacesArtifacts: True
