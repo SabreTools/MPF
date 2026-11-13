@@ -28,6 +28,7 @@ namespace MPF.Frontend
                 RedumperReadMethod readMethod => new Element<RedumperReadMethod>(readMethod),
                 RedumperSectorOrder sectorOrder => new Element<RedumperSectorOrder>(sectorOrder),
                 RedumperDriveType driveType => new Element<RedumperDriveType>(driveType),
+                PhysicalMediaType mediaType => new PhysicalMediaTypeComboBoxItem(mediaType),
                 PhysicalSystem redumpSystem => new PhysicalSystemComboBoxItem(redumpSystem),
 
                 // Null values are treated as a system value
@@ -56,6 +57,7 @@ namespace MPF.Frontend
                 Element<RedumperReadMethod> rmElement => rmElement.Value,
                 Element<RedumperSectorOrder> soElement => soElement.Value,
                 Element<RedumperDriveType> dtElement => dtElement.Value,
+                PhysicalMediaTypeComboBoxItem mtElement => mtElement.Value,
                 PhysicalSystemComboBoxItem rsElement => rsElement.Value,
                 _ => null,
             };

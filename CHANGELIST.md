@@ -54,6 +54,7 @@
 - Test set generation cleanup from previous commit
 - Start wiring through cancellation token for protection scans
 - Tweak text for rolling build description
+- Replace removed media type element conversion
 
 ### 3.11.1 (2026-10-17)
 
