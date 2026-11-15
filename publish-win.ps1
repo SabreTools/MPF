@@ -72,7 +72,6 @@ if ($USE_ALL.IsPresent) {
 }
 
 # Create the filter arrays
-$SINGLE_FILE_CAPABLE = @('net5.0', 'net5.0-windows', 'net6.0', 'net6.0-windows', 'net7.0', 'net7.0-windows', 'net8.0', 'net8.0-windows', 'net9.0', 'net9.0-windows', 'net10.0', 'net10.0-windows', 'net11.0', 'net11.0-windows')
 $VALID_APPLE_FRAMEWORKS = @('net6.0', 'net7.0', 'net8.0', 'net9.0', 'net10.0', 'net11.0')
 $VALID_CROSS_PLATFORM_FRAMEWORKS = @('netcoreapp3.1', 'net5.0', 'net6.0', 'net7.0', 'net8.0', 'net9.0', 'net10.0', 'net11.0')
 $VALID_CROSS_PLATFORM_RUNTIMES = @('win-arm64', 'linux-x64', 'linux-arm64', 'osx-x64', 'osx-arm64')
@@ -276,8 +275,8 @@ if (!$NO_BUILD.IsPresent) {
     dotnet restore
 
     # Create Nuget Packages
-    dotnet pack MPF.ExecutionContexts/MPF.ExecutionContexts.csproj --output $BUILD_FOLDER
-    dotnet pack MPF.Processors/MPF.Processors.csproj --output $BUILD_FOLDER
+    dotnet pack MPF.ExecutionContexts/MPF.ExecutionContexts.csproj --output $BUILD_FOLDER -c Debug
+    dotnet pack MPF.Processors/MPF.Processors.csproj --output $BUILD_FOLDER -c Debug
 
     # Build Avalonia
     foreach ($FRAMEWORK in $AVALONIA_FRAMEWORKS) {

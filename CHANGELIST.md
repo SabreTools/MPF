@@ -67,6 +67,7 @@
 - Fix extremely small oversight
 - Make extras DAT more universal
 - Add some publishing modifications to csproj
+- Pack needs to be debug for symbols
 
 ### 3.11.1 (2026-10-17)
 
