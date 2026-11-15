@@ -22,6 +22,12 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
 
+    <!-- Publishing Modifications -->
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <DebugSymbols>false</DebugSymbols>
+        <DebugType>None</DebugType>
+    </PropertyGroup>
+
     <ItemGroup>
         <InternalsVisibleTo Include="MPF.Frontend.Test" />
     </ItemGroup>

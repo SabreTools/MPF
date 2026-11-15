@@ -297,19 +297,14 @@ if (!$NO_BUILD.IsPresent) {
                 continue
             }
 
-            # Only .NET 5 and above can publish to a single file
-            if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK) {
-                $EXTRA_OPTS = "-p:PublishSingleFile=true"
-            }
-
             # Only include Debug if set
             if ($INCLUDE_DEBUG.IsPresent) {
-                dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT $EXTRA_OPTS
+                dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --version-suffix $COMMIT
             }
 
             # Only include Release if set
             if ($INCLUDE_RELEASE.IsPresent) {
-                dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false $EXTRA_OPTS
+                dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --version-suffix $COMMIT
             }
         }
     }
@@ -332,28 +327,23 @@ if (!$NO_BUILD.IsPresent) {
                 continue
             }
 
-            # Only .NET 5 and above can publish to a single file
-            if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK) {
-                $EXTRA_OPTS = "-p:PublishSingleFile=true"
-            }
-
             # Only include Debug if set
             if ($INCLUDE_DEBUG.IsPresent) {
-                dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT $EXTRA_OPTS
+                dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --version-suffix $COMMIT
             }
 
             # Only include Release if set
             if ($INCLUDE_RELEASE.IsPresent) {
-                dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false $EXTRA_OPTS
+                dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --version-suffix $COMMIT
             }
         }
     }
 
-    # Build CLI
+    # Build Check and CLI
     foreach ($FRAMEWORK in $CHECK_FRAMEWORKS) {
         foreach ($RUNTIME in $CHECK_RUNTIMES) {
             # Output the current build
-            Write-Host "===== Build CLI - $FRAMEWORK, $RUNTIME ====="
+            Write-Host "===== Build Check and CLI - $FRAMEWORK, $RUNTIME ====="
 
             # If we have an invalid combination of framework and runtime
             if ($VALID_CROSS_PLATFORM_FRAMEWORKS -notcontains $FRAMEWORK -and $VALID_CROSS_PLATFORM_RUNTIMES -contains $RUNTIME) {
@@ -367,54 +357,16 @@ if (!$NO_BUILD.IsPresent) {
                 continue
             }
 
-            # Only .NET 5 and above can publish to a single file
-            if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK) {
-                $EXTRA_OPTS = "-p:PublishSingleFile=true"
-            }
-
             # Only include Debug if set
             if ($INCLUDE_DEBUG.IsPresent) {
-                dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT $EXTRA_OPTS
+                dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --version-suffix $COMMIT
+                dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --version-suffix $COMMIT
             }
 
             # Only include Release if set
             if ($INCLUDE_RELEASE.IsPresent) {
-                dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false $EXTRA_OPTS
-            }
-        }
-    }
-
-    # Build Check
-    foreach ($FRAMEWORK in $CHECK_FRAMEWORKS) {
-        foreach ($RUNTIME in $CHECK_RUNTIMES) {
-            # Output the current build
-            Write-Host "===== Build Check - $FRAMEWORK, $RUNTIME ====="
-
-            # If we have an invalid combination of framework and runtime
-            if ($VALID_CROSS_PLATFORM_FRAMEWORKS -notcontains $FRAMEWORK -and $VALID_CROSS_PLATFORM_RUNTIMES -contains $RUNTIME) {
-                Write-Host "Skipped due to invalid combination"
-                continue
-            }
-
-            # If we have Apple silicon but an unsupported framework
-            if ($VALID_APPLE_FRAMEWORKS -notcontains $FRAMEWORK -and $RUNTIME -eq 'osx-arm64') {
-                Write-Host "Skipped due to no Apple Silicon support"
-                continue
-            }
-
-            # Only .NET 5 and above can publish to a single file
-            if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK) {
-                $EXTRA_OPTS = "-p:PublishSingleFile=true"
-            }
-
-            # Only include Debug if set
-            if ($INCLUDE_DEBUG.IsPresent) {
-                dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT $EXTRA_OPTS
-            }
-
-            # Only include Release if set
-            if ($INCLUDE_RELEASE.IsPresent) {
-                dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false $EXTRA_OPTS
+                dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --version-suffix $COMMIT
+                dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --version-suffix $COMMIT
             }
         }
     }
