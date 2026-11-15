@@ -68,6 +68,7 @@
 - Make extras DAT more universal
 - Add some publishing modifications to csproj
 - Pack needs to be debug for symbols
+- Ensure SelfContained on WPF runs on supported RIDs
 
 ### 3.11.1 (2026-10-17)
 
