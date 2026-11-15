@@ -19,7 +19,7 @@ namespace MPF.Frontend.Test.Tools
                     Comments = "This is a comments line\n[T:ISBN] ISBN Value",
                     CommentsSpecialFields = new Dictionary<SiteCode, string>()
                     {
-                        [SiteCode.VolumeLabel] = "VOLUME_LABEL",
+                        [SiteCode.ISSN] = "ISSN Value",
                     },
 
                     Contents = "This is a contents line\n[T:GF] Game Footage",
@@ -59,7 +59,7 @@ namespace MPF.Frontend.Test.Tools
                     Comments = null,
                     CommentsSpecialFields = new Dictionary<SiteCode, string>()
                     {
-                        [SiteCode.VolumeLabel] = "VOLUME_LABEL",
+                        [SiteCode.ISSN] = "ISSN Value",
                     },
 
                     Contents = null,

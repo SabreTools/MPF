@@ -108,7 +108,7 @@ namespace MPF.Frontend.Tools
             // Add the volume label to comments, if possible or necessary
             string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor.VolumeLabels);
             if (volLabels is not null)
-                info.DumpMetadata.CommentsSpecialFields[SiteCode.VolumeLabel] = volLabels;
+                info.DiscIdentifiers.VolumeLabel = volLabels;
 
             // Extract info based generically on PhysicalMediaType
             ProcessPhysicalMediaType(info, mediaType, options.Processing.MediaInformation.AddPlaceholders);
@@ -964,11 +964,13 @@ namespace MPF.Frontend.Tools
                 if (isDiscImageCreator)
                     info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", kp2Exe);
 
-                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
+                if (string.IsNullOrEmpty(info.DiscIdentifiers.InternalSerial))
+                    info.DiscIdentifiers.InternalSerial = PhysicalTool.GetPlayStationSerial(drive);
+
                 info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, kp2Exe, fixTwoDigitYear: true);
 
-                if (CommentFieldExists(info, SiteCode.InternalSerialName, out kp2Exe))
-                    info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(kp2Exe)];
+                if (string.IsNullOrEmpty(info.DiscIdentifiers.InternalSerial))
+                    info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(info.DiscIdentifiers.InternalSerial)];
 
                 SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
             }
@@ -1035,7 +1037,8 @@ namespace MPF.Frontend.Tools
             else if (system == PhysicalSystem.NintendoGameCube
                 || system == PhysicalSystem.NintendoWii)
             {
-                SetCommentFieldIfNotExists(info, SiteCode.CoverID, null, (_) => addPlaceholders ? RequiredIfExistsValue : string.Empty);
+                if (!CommentFieldExists(info, SiteCode.CoverID, out _))
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.CoverID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
             }
             else if (system == PhysicalSystem.SegaChihiro)
             {
@@ -1073,11 +1076,13 @@ namespace MPF.Frontend.Tools
                 if (isDiscImageCreator)
                     info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps1Exe, psx: true);
 
-                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
+                if (string.IsNullOrEmpty(info.DiscIdentifiers.InternalSerial))
+                    info.DiscIdentifiers.InternalSerial = PhysicalTool.GetPlayStationSerial(drive);
+
                 info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, ps1Exe, fixTwoDigitYear: true);
 
-                if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps1Exe))
-                    info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(ps1Exe)];
+                if (!string.IsNullOrEmpty(info.DiscIdentifiers.InternalSerial))
+                    info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(info.DiscIdentifiers.InternalSerial)];
             }
             else if (system == PhysicalSystem.SonyPlayStation2)
             {
@@ -1087,11 +1092,13 @@ namespace MPF.Frontend.Tools
                 if (isDiscImageCreator)
                     info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps2Exe);
 
-                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
+                if (string.IsNullOrEmpty(info.DiscIdentifiers.InternalSerial))
+                    info.DiscIdentifiers.InternalSerial = PhysicalTool.GetPlayStationSerial(drive);
+
                 info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, ps2Exe, fixTwoDigitYear: true);
 
-                if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps2Exe))
-                    info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(ps2Exe)];
+                if (!string.IsNullOrEmpty(info.DiscIdentifiers.InternalSerial))
+                    info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(info.DiscIdentifiers.InternalSerial)];
 
                 SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
             }
@@ -1100,19 +1107,25 @@ namespace MPF.Frontend.Tools
                 info.DiscIdentifiers.DiscKey ??= addPlaceholders ? RequiredIfCFW : string.Empty;
                 info.DiscIdentifiers.DiscID ??= addPlaceholders ? RequiredIfCFW : string.Empty;
 
-                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation3Serial);
+                 if (string.IsNullOrEmpty(info.DiscIdentifiers.InternalSerial))
+                    info.DiscIdentifiers.InternalSerial = PhysicalTool.GetPlayStation3Serial(drive);
+
                 SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation3Version);
                 SetContentFieldIfNotExists(info, SiteCode.Patches, drive, FormatPlayStation3FirmwareVersion);
             }
             else if (system == PhysicalSystem.SonyPlayStation4)
             {
-                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation4Serial);
+                 if (string.IsNullOrEmpty(info.DiscIdentifiers.InternalSerial))
+                    info.DiscIdentifiers.InternalSerial = PhysicalTool.GetPlayStation4Serial(drive);
+
                 SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation4Version);
                 SetContentFieldIfNotExists(info, SiteCode.Games, drive, PhysicalTool.GetPlayStation4PkgInfo);
             }
             else if (system == PhysicalSystem.SonyPlayStation5)
             {
-                SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation5Serial);
+                 if (string.IsNullOrEmpty(info.DiscIdentifiers.InternalSerial))
+                    info.DiscIdentifiers.InternalSerial = PhysicalTool.GetPlayStation5Serial(drive);
+
                 SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation5Version);
                 SetContentFieldIfNotExists(info, SiteCode.Games, drive, PhysicalTool.GetPlayStation5PkgInfo);
             }
@@ -1158,21 +1171,6 @@ namespace MPF.Frontend.Tools
 
             // The value is valid
             return true;
-        }
-
-        /// <summary>
-        /// Set a comment field if it doesn't already have a value
-        /// </summary>
-        private static void SetCommentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive, Func<Drive?, string?> valueFunc)
-        {
-            // If the field has a valid value, skip
-            if (CommentFieldExists(info, key, out _))
-                return;
-
-            // Set the value
-            string? value = valueFunc(drive);
-            if (value is not null)
-                info.DumpMetadata.CommentsSpecialFields[key] = value;
         }
 
         /// <summary>

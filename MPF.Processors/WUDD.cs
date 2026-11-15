@@ -41,7 +41,7 @@ namespace MPF.Processors
             info.DumpMetadata.Dat = ProcessingTool.GenerateDatfile(datafile);
 
             // Get disc ID
-            info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = GetDiscID(logPath) ?? string.Empty;
+            info.DiscIdentifiers.InternalSerial = GetDiscID(logPath) ?? string.Empty;
 
             // Get disc key
             info.DiscIdentifiers.DiscKey = GetDiscKey($"{basePath}.key");

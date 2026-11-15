@@ -258,7 +258,7 @@ namespace MPF.Processors
                 if (GetPlayStation123Info($"{basePath}.log", out string? kp2EXEDate, out string? kp2Serial, out string? kp2Version))
                 {
                     info.DiscIdentifiers.EXEDate = kp2EXEDate;
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = kp2Serial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = kp2Serial ?? string.Empty;
                     info.DiscIdentifiers.Version = kp2Version ?? string.Empty;
                 }
             }
@@ -322,7 +322,7 @@ namespace MPF.Processors
                         out string? serial,
                         out _,
                         out string? version) ?? string.Empty;
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = serial ?? string.Empty;
                     info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
                     // TODO: Support region setting from parsed value
                     info.DiscIdentifiers.Version = version ?? string.Empty;
@@ -333,7 +333,7 @@ namespace MPF.Processors
             {
                 if (GetGameCubeWiiInfo($"{basePath}.log", out string? gcVersion, out string? gcSerial, out string? gcTitle, out _))
                 {
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = gcSerial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = gcSerial ?? string.Empty;
                     info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalName] = gcTitle ?? string.Empty;
 
                     if (!redumpCompat)
@@ -347,7 +347,7 @@ namespace MPF.Processors
             else if (System == PhysicalSystem.SegaMegaCDSegaCD)
             {
                 info.DumpMetadata.Header = GetSegaCDHeader($"{basePath}.log", out var scdBuildDate, out var scdSerial, out _) ?? string.Empty;
-                info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
+                info.DiscIdentifiers.InternalSerial = scdSerial ?? string.Empty;
                 info.DiscIdentifiers.EXEDate = scdBuildDate ?? string.Empty;
                 // TODO: Support region setting from parsed value
             }
@@ -360,7 +360,7 @@ namespace MPF.Processors
                         out string? serial,
                         out _,
                         out string? version) ?? string.Empty;
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = serial ?? string.Empty;
                     info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
                     // TODO: Support region setting from parsed value
                     info.DiscIdentifiers.Version = version ?? string.Empty;
@@ -375,7 +375,7 @@ namespace MPF.Processors
                         out string? serial,
                         out _,
                         out string? version) ?? string.Empty;
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = serial ?? string.Empty;
                     info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
                     // TODO: Support region setting from parsed value
                     info.DiscIdentifiers.Version = version ?? string.Empty;
@@ -390,7 +390,7 @@ namespace MPF.Processors
                         out string? serial,
                         out _,
                         out string? version) ?? string.Empty;
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = serial ?? string.Empty;
                     info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
                     // TODO: Support region setting from parsed value
                     info.DiscIdentifiers.Version = version ?? string.Empty;
@@ -405,7 +405,7 @@ namespace MPF.Processors
                         out string? serial,
                         out _,
                         out string? version) ?? string.Empty;
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = serial ?? string.Empty;
                     info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
                     // TODO: Support region setting from parsed value
                     info.DiscIdentifiers.Version = version ?? string.Empty;
@@ -418,7 +418,7 @@ namespace MPF.Processors
                                         out string? saturnSerial,
                                         out _,
                                         out string? saturnVersion) ?? string.Empty;
-                info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
+                info.DiscIdentifiers.InternalSerial = saturnSerial ?? string.Empty;
                 info.DiscIdentifiers.EXEDate = saturnBuildDate ?? string.Empty;
                 // TODO: Support region setting from parsed value
                 info.DiscIdentifiers.Version = saturnVersion ?? string.Empty;
@@ -428,7 +428,7 @@ namespace MPF.Processors
                 if (GetPlayStation123Info($"{basePath}.log", out string? psxEXEDate, out string? psxSerial, out _))
                 {
                     info.DiscIdentifiers.EXEDate = psxEXEDate;
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = psxSerial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = psxSerial ?? string.Empty;
                 }
 
                 info.DiscIdentifiers.EDC = GetPlayStationEDCStatus($"{basePath}.log").ToYesNo();
@@ -448,7 +448,7 @@ namespace MPF.Processors
                 if (GetPlayStation123Info($"{basePath}.log", out string? ps2EXEDate, out string? ps2Serial, out var ps2Version))
                 {
                     info.DiscIdentifiers.EXEDate = ps2EXEDate;
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps2Serial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = ps2Serial ?? string.Empty;
                     info.DiscIdentifiers.Version = ps2Version ?? string.Empty;
                 }
 
@@ -460,7 +460,7 @@ namespace MPF.Processors
             {
                 if (GetPlayStation123Info($"{basePath}.log", out _, out string? ps3Serial, out var ps3Version))
                 {
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = ps3Serial ?? string.Empty;
                     info.DiscIdentifiers.Version = ps3Version ?? string.Empty;
                 }
             }
@@ -468,7 +468,7 @@ namespace MPF.Processors
             {
                 if (GetPlayStation45Info($"{basePath}.log", out string? ps4Serial, out var ps4Version, out var ps4ContentIds))
                 {
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps4Serial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = ps4Serial ?? string.Empty;
                     info.DiscIdentifiers.Version = ps4Version ?? string.Empty;
                     info.DumpMetadata.ContentsSpecialFields[SiteCode.Games] = ps4ContentIds ?? string.Empty;
                 }
@@ -477,7 +477,7 @@ namespace MPF.Processors
             {
                 if (GetPlayStation45Info($"{basePath}.log", out string? ps5Serial, out var ps5Version, out var ps5ContentIds))
                 {
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps5Serial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = ps5Serial ?? string.Empty;
                     info.DiscIdentifiers.Version = ps5Version ?? string.Empty;
                     info.DumpMetadata.ContentsSpecialFields[SiteCode.Games] = ps5ContentIds ?? string.Empty;
                 }

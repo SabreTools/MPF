@@ -57,7 +57,7 @@ namespace MPF.Processors
             if (GetGameCubeWiiInformation($"{basePath}-dumpinfo.txt", out RegionCode? region, out var version, out var internalName, out var serial))
             {
                 info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalName] = internalName ?? string.Empty;
-                info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                info.DiscIdentifiers.InternalSerial = serial ?? string.Empty;
                 if (!redumpCompat)
                 {
                     info.DiscIdentifiers.Version = version ?? info.DiscIdentifiers.Version;

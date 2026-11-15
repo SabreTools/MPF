@@ -62,7 +62,7 @@ namespace MPF.Processors
                                         out string? serial,
                                         out _,
                                         out string? version) ?? string.Empty;
-            info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+            info.DiscIdentifiers.InternalSerial = serial ?? string.Empty;
             info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
             // TODO: Support region setting from parsed value
             info.DiscIdentifiers.Version = version ?? string.Empty;

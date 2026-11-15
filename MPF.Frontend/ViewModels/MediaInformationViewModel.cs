@@ -1342,13 +1342,7 @@ namespace MPF.Frontend.ViewModels
 
         public string? InternalSerialName
         {
-            get
-            {
-                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.InternalSerialName, out var value))
-                    return value;
-
-                return null;
-            }
+            get => SubmissionInfo.DiscIdentifiers.InternalSerial;
         }
 
         public bool InternalSerialNameVisible => InternalSerialName is not null;
@@ -1436,13 +1430,7 @@ namespace MPF.Frontend.ViewModels
 
         public string? VolumeLabel
         {
-            get
-            {
-                if (SubmissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(SiteCode.VolumeLabel, out var value))
-                    return value;
-
-                return null;
-            }
+            get => SubmissionInfo.DiscIdentifiers.VolumeLabel;
         }
 
         public bool VolumeLabelVisible => VolumeLabel is not null;

@@ -46,7 +46,7 @@ namespace MPF.Processors
             {
                 info.DiscIdentity.Title = title ?? string.Empty;
                 info.DiscIdentity.Category = category ?? DiscCategory.Games;
-                info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                info.DiscIdentifiers.InternalSerial = serial ?? string.Empty;
                 info.DiscIdentifiers.Version = version ?? string.Empty;
                 info.DumpMetadata.ContentsSpecialFields[SiteCode.Patches] = $"PSP Firmware {firmwareVersion}";
 

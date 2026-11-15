@@ -69,6 +69,7 @@
 - Add some publishing modifications to csproj
 - Pack needs to be debug for symbols
 - Ensure SelfContained on WPF runs on supported RIDs
+- Update RedumpLib to 3.5.1
 
 ### 3.11.1 (2026-10-17)
 

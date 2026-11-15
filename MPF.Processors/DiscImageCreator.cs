@@ -400,7 +400,7 @@ namespace MPF.Processors
                         out var date))
                     {
                         // Ensure internal serial is pulled from local data
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.DiscIdentifiers.InternalSerial = serial ?? string.Empty;
                         info.DiscIdentifiers.Version = version ?? string.Empty;
                         info.DiscIdentifiers.EXEDate = date ?? string.Empty;
                     }
@@ -417,7 +417,7 @@ namespace MPF.Processors
                 if (GetSegaCDBuildInfo(info.DumpMetadata.Header, out var scdSerial, out var fixedDate))
                 {
                     // Ensure internal serial is pulled from local data
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = scdSerial ?? string.Empty;
                     info.DiscIdentifiers.EXEDate = fixedDate ?? string.Empty;
                 }
             }
@@ -437,7 +437,7 @@ namespace MPF.Processors
                         out var date))
                     {
                         // Ensure internal serial is pulled from local data
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.DiscIdentifiers.InternalSerial = serial ?? string.Empty;
                         info.DiscIdentifiers.Version = version ?? string.Empty;
                         info.DiscIdentifiers.EXEDate = date ?? string.Empty;
                     }
@@ -459,7 +459,7 @@ namespace MPF.Processors
                         out var date))
                     {
                         // Ensure internal serial is pulled from local data
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.DiscIdentifiers.InternalSerial = serial ?? string.Empty;
                         info.DiscIdentifiers.Version = version ?? string.Empty;
                         info.DiscIdentifiers.EXEDate = date ?? string.Empty;
                     }
@@ -481,7 +481,7 @@ namespace MPF.Processors
                         out var date))
                     {
                         // Ensure internal serial is pulled from local data
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.DiscIdentifiers.InternalSerial = serial ?? string.Empty;
                         info.DiscIdentifiers.Version = version ?? string.Empty;
                         info.DiscIdentifiers.EXEDate = date ?? string.Empty;
                     }
@@ -503,7 +503,7 @@ namespace MPF.Processors
                         out var date))
                     {
                         // Ensure internal serial is pulled from local data
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.DiscIdentifiers.InternalSerial = serial ?? string.Empty;
                         info.DiscIdentifiers.Version = version ?? string.Empty;
                         info.DiscIdentifiers.EXEDate = date ?? string.Empty;
                     }
@@ -520,7 +520,7 @@ namespace MPF.Processors
                 if (GetSaturnBuildInfo(info.DumpMetadata.Header, out var saturnSerial, out var saturnVersion, out var buildDate))
                 {
                     // Ensure internal serial is pulled from local data
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = saturnSerial ?? string.Empty;
                     info.DiscIdentifiers.Version = saturnVersion ?? string.Empty;
                     info.DiscIdentifiers.EXEDate = buildDate ?? string.Empty;
                 }
@@ -549,7 +549,7 @@ namespace MPF.Processors
             {
                 if (GetPlayStation3Info($"{basePath}_disc.txt", out string? ps3Serial, out string? ps3Version, out string? ps3FirmwareVersion))
                 {
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
+                    info.DiscIdentifiers.InternalSerial = ps3Serial ?? string.Empty;
                     info.DiscIdentifiers.Version = ps3Version ?? string.Empty;
                     if (ps3FirmwareVersion is not null)
                         info.DumpMetadata.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {ps3FirmwareVersion}";
