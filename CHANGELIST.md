@@ -65,6 +65,7 @@
 - Simplify publishing logic
 - Fix extremely small oversight
 - Fix extremely small oversight
+- Make extras DAT more universal
 
 ### 3.11.1 (2026-10-17)
 

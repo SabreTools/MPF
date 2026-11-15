@@ -199,6 +199,8 @@ namespace MPF.Processors
             // Get the Datafile information
             var datafile = ProcessingTool.GetDatafile($"{basePath}.dat");
             info.DumpMetadata.Dat = ProcessingTool.GenerateDatfile(datafile);
+            var extrasDatafile = ProcessingTool.GetDatafile($"{basePath}_suppl.dat");
+            info.DumpMetadata.ExtrasDat = ProcessingTool.GenerateDatfile(extrasDatafile);
 
             // Get the write offset, if it exists
             string? writeOffset = GetWriteOffset($"{basePath}_disc.txt");
@@ -317,7 +319,6 @@ namespace MPF.Processors
                 // If we have the new, external DAT
                 if (File.Exists($"{basePath}_suppl.dat"))
                 {
-                    info.DumpMetadata.ExtrasDat = ProcessingTool.GetFullFile($"{basePath}_suppl.dat") ?? string.Empty;
                     if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out var xgd1SS))
                     {
                         info.DumpMetadata.SectorRanges = xgd1SS ?? string.Empty;
@@ -359,7 +360,6 @@ namespace MPF.Processors
                 // If we have the new, external DAT
                 if (File.Exists($"{basePath}_suppl.dat"))
                 {
-                    info.DumpMetadata.ExtrasDat = ProcessingTool.GetFullFile($"{basePath}_suppl.dat") ?? string.Empty;
                     if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out var xgd23SS))
                     {
                         info.DumpMetadata.SectorRanges = xgd23SS ?? string.Empty;

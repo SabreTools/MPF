@@ -105,6 +105,7 @@ namespace MPF.Processors
 
             // Get the Datafile information
             info.DumpMetadata.Dat = GetDatfile($"{basePath}.log");
+            info.DumpMetadata.ExtrasDat = GetExtrasDatfile($"{basePath}.log");
 
             // Get the write offset, if it exists
             string? writeOffset = GetWriteOffset($"{basePath}.log");
@@ -299,7 +300,6 @@ namespace MPF.Processors
                 }
 
                 string baseFilename = Path.GetFileName(basePath);
-                info.DumpMetadata.ExtrasDat = GetExtrasDatfile($"{basePath}.log") ?? string.Empty;
                 if (!ProcessingTool.IsFixedSS($"{basePath}.ss") && ProcessingTool.FixSS($"{basePath}.ss", $"{basePath}.fixed.ss"))
                 {
                     if (HashTool.GetStandardHashes($"{basePath}.fixed.ss", out long ssSize, out string? ssCrc, out string? ssMd5, out string? ssSha1))
