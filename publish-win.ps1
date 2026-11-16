@@ -467,53 +467,11 @@ if (!$NO_ARCHIVE.IsPresent) {
         }
     }
 
-    # Create CLI archives
+    # Create Check and CLI archives
     foreach ($FRAMEWORK in $CHECK_FRAMEWORKS) {
         foreach ($RUNTIME in $CHECK_RUNTIMES) {
             # Output the current build
-            Write-Host "===== Archive CLI - $FRAMEWORK, $RUNTIME ====="
-
-            # If we have an invalid combination of framework and runtime
-            if ($VALID_CROSS_PLATFORM_FRAMEWORKS -notcontains $FRAMEWORK -and $VALID_CROSS_PLATFORM_RUNTIMES -contains $RUNTIME) {
-                Write-Host "Skipped due to invalid combination"
-                continue
-            }
-
-            # If we have Apple silicon but an unsupported framework
-            if ($VALID_APPLE_FRAMEWORKS -notcontains $FRAMEWORK -and $RUNTIME -eq 'osx-arm64') {
-                Write-Host "Skipped due to no Apple Silicon support"
-                continue
-            }
-
-            # Only include Debug if set
-            if ($INCLUDE_DEBUG.IsPresent) {
-                Set-Location -Path $BUILD_FOLDER/MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
-                if ($INCLUDE_PROGRAMS.IsPresent) {
-                    7z a -tzip $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                }
-                else {
-                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip *
-                }
-            }
-
-            # Only include Release if set
-            if ($INCLUDE_RELEASE.IsPresent) {
-                Set-Location -Path $BUILD_FOLDER/MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
-                if ($INCLUDE_PROGRAMS.IsPresent) {
-                    7z a -tzip $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip *
-                }
-                else {
-                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip *
-                }
-            }
-        }
-    }
-
-    # Create Check archives
-    foreach ($FRAMEWORK in $CHECK_FRAMEWORKS) {
-        foreach ($RUNTIME in $CHECK_RUNTIMES) {
-            # Output the current build
-            Write-Host "===== Archive Check - $FRAMEWORK, $RUNTIME ====="
+            Write-Host "===== Archive Check and CLI - $FRAMEWORK, $RUNTIME ====="
 
             # If we have an invalid combination of framework and runtime
             if ($VALID_CROSS_PLATFORM_FRAMEWORKS -notcontains $FRAMEWORK -and $VALID_CROSS_PLATFORM_RUNTIMES -contains $RUNTIME) {
@@ -531,12 +489,28 @@ if (!$NO_ARCHIVE.IsPresent) {
             if ($INCLUDE_DEBUG.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.Check/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 7z a -tzip $BUILD_FOLDER/MPF.Check${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip *
+
+                Set-Location -Path $BUILD_FOLDER/MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
+                if ($INCLUDE_PROGRAMS.IsPresent) {
+                    7z a -tzip $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                }
+                else {
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                }
             }
 
             # Only include Release if set
             if ($INCLUDE_RELEASE.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.Check/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
                 7z a -tzip $BUILD_FOLDER/MPF.Check${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip *
+
+                Set-Location -Path $BUILD_FOLDER/MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
+                if ($INCLUDE_PROGRAMS.IsPresent) {
+                    7z a -tzip $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
+                else {
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip *
+                }
             }
         }
     }

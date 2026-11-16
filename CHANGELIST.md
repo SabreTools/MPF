@@ -70,6 +70,7 @@
 - Pack needs to be debug for symbols
 - Ensure SelfContained on WPF runs on supported RIDs
 - Update RedumpLib to 3.5.1
+- Slight simplification to publishing scripts
 
 ### 3.11.1 (2026-10-17)
 

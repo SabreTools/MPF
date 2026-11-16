@@ -352,7 +352,7 @@ if [ $NO_BUILD = false ]; then
         done
     done
 
-    # Build Check and  CLI
+    # Build Check and CLI
     for FRAMEWORK in "${CHECK_FRAMEWORKS[@]}"; do
         for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
             # Output the current build
@@ -489,55 +489,11 @@ if [ $NO_ARCHIVE = false ]; then
         done
     done
 
-    # Create CLI archives
+    # Create Check and CLI archives
     for FRAMEWORK in "${CHECK_FRAMEWORKS[@]}"; do
         for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
             # Output the current build
-            echo "===== Archive CLI - $FRAMEWORK, $RUNTIME ====="
-
-            # If we have an invalid combination of framework and runtime
-            if [[ ! $(echo ${VALID_CROSS_PLATFORM_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
-                if [[ $(echo ${VALID_CROSS_PLATFORM_RUNTIMES[@]} | fgrep -w $RUNTIME) ]]; then
-                    echo "Skipped due to invalid combination"
-                    continue
-                fi
-            fi
-
-            # If we have Apple silicon but an unsupported framework
-            if [[ ! $(echo ${VALID_APPLE_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
-                if [ $RUNTIME = "osx-arm64" ]; then
-                    echo "Skipped due to no Apple Silicon support"
-                    continue
-                fi
-            fi
-
-            # Only include Debug if set
-            if [ $INCLUDE_DEBUG = true ]; then
-                cd $BUILD_FOLDER/MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
-                if [ $INCLUDE_PROGRAMS = true ]; then
-                    zip -r $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip .
-                else
-                    zip -r $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
-                fi
-            fi
-
-            # Only include Release if set
-            if [ $INCLUDE_RELEASE = true ]; then
-                cd $BUILD_FOLDER/MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
-                if [ $INCLUDE_PROGRAMS = true ]; then
-                    zip -r $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip .
-                else
-                    zip -r $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
-                fi
-            fi
-        done
-    done
-
-    # Create Check archives
-    for FRAMEWORK in "${CHECK_FRAMEWORKS[@]}"; do
-        for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
-            # Output the current build
-            echo "===== Archive Check - $FRAMEWORK, $RUNTIME ====="
+            echo "===== Archive Check and CLI - $FRAMEWORK, $RUNTIME ====="
 
             # If we have an invalid combination of framework and runtime
             if [[ ! $(echo ${VALID_CROSS_PLATFORM_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
@@ -559,12 +515,26 @@ if [ $NO_ARCHIVE = false ]; then
             if [ $INCLUDE_DEBUG = true ]; then
                 cd $BUILD_FOLDER/MPF.Check/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 zip -r $BUILD_FOLDER/MPF.Check${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip .
+
+                cd $BUILD_FOLDER/MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
+                if [ $INCLUDE_PROGRAMS = true ]; then
+                    zip -r $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                else
+                    zip -r $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
+                fi
             fi
 
             # Only include Release if set
             if [ $INCLUDE_RELEASE = true ]; then
                 cd $BUILD_FOLDER/MPF.Check/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
                 zip -r $BUILD_FOLDER/MPF.Check${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip .
+
+                cd $BUILD_FOLDER/MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
+                if [ $INCLUDE_PROGRAMS = true ]; then
+                    zip -r $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip .
+                else
+                    zip -r $BUILD_FOLDER/MPF.CLI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
+                fi
             fi
         done
     done
