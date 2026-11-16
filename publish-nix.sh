@@ -114,14 +114,14 @@ function download_programs() {
     DL_MAP["Creator_win-x86"]="https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
 
     # Dreamdump
-    DL_MAP["Dreamdump_linux-arm64"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_linux_arm64"
-    DL_MAP["Dreamdump_linux-x64"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_linux_amd64"
-    #DL_MAP["Dreamdump_linux-x86"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_linux_386"
+    DL_MAP["Dreamdump_linux-arm64"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.2/dreamdump-_linux_arm64"
+    DL_MAP["Dreamdump_linux-x64"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.2/dreamdump-_linux_amd64"
+    #DL_MAP["Dreamdump_linux-x86"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.2/dreamdump-_linux_386"
     DL_MAP["Dreamdump_osx-arm64"]=""
     DL_MAP["Dreamdump_osx-x64"]=""
     DL_MAP["Dreamdump_win-arm64"]=""
-    DL_MAP["Dreamdump_win-x64"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_win_amd64.exe"
-    DL_MAP["Dreamdump_win-x86"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_win7_386.exe"
+    DL_MAP["Dreamdump_win-x64"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.2/dreamdump-_win_amd64.exe"
+    DL_MAP["Dreamdump_win-x86"]="https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.2/dreamdump-_win7_386.exe"
 
     # Redumper
     DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b772/redumper-b772-linux-arm64.zip"

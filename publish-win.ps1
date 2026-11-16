@@ -101,14 +101,14 @@ function Download-Programs {
         "Creator_win-x64"       = "https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
 
         # Dreamdump
-        "Dreamdump_linux-arm64" = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_linux_arm64"
-        "Dreamdump_linux-x64"   = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_linux_amd64"
-        #"Dreamdump_linux-x86"    = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_linux_386"
+        "Dreamdump_linux-arm64" = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.2/dreamdump-_linux_arm64"
+        "Dreamdump_linux-x64"   = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.2/dreamdump-_linux_amd64"
+        #"Dreamdump_linux-x86"    = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.2/dreamdump-_linux_386"
         "Dreamdump_osx-arm64"   = ""
         "Dreamdump_osx-x64"     = ""
         "Dreamdump_win-arm64"   = ""
-        "Dreamdump_win-x86"     = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_win7_386.exe"
-        "Dreamdump_win-x64"     = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.0/dreamdump-_win_amd64.exe"
+        "Dreamdump_win-x86"     = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.2/dreamdump-_win7_386.exe"
+        "Dreamdump_win-x64"     = "https://codeberg.org/MoriGM/dreamdump/releases/download/0.6.2/dreamdump-_win_amd64.exe"
 
         # Redumper
         "Redumper_linux-arm64"  = "https://github.com/superg/redumper/releases/download/b772/redumper-b772-linux-arm64.zip"
