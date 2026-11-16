@@ -65,15 +65,6 @@ namespace MPF.Frontend
 
         #endregion
 
-        #region Cancellation
-
-        /// <summary>
-        /// Cancellation token for both dumping and protection scanning
-        /// </summary>
-        private CancellationTokenSource _cancellationTokenSource = new();
-
-        #endregion
-
         #region Passthrough Fields
 
         /// <inheritdoc cref="BaseExecutionContext.InputPath"/>
@@ -500,11 +491,7 @@ namespace MPF.Frontend
         /// Cancel an in-progress dumping or protection scanning process
         /// </summary>
         /// <returns>False if there was an exception in killing the program, true otherwise</remarks>
-        public bool CancelDumping()
-        {
-            _cancellationTokenSource.Cancel();
-            return _executionContext?.KillInternalProgram() ?? true;
-        }
+        public bool CancelDumping() => _executionContext?.KillInternalProgram() ?? true;
 
         /// <summary>
         /// Execute the initial invocation of the dumping programs
@@ -514,9 +501,6 @@ namespace MPF.Frontend
         public async Task<ResultEventArgs> Run(PhysicalMediaType? mediaType,
             IProgress<ResultEventArgs>? progress = null)
         {
-            // Reset the cancellation token source
-            _cancellationTokenSource = new CancellationTokenSource();
-
             // If we don't have parameters
             if (_executionContext is null)
                 return ResultEventArgs.Failure("Error! Current configuration is not supported!");
@@ -566,12 +550,14 @@ namespace MPF.Frontend
         /// <param name="protectionProgress">Optional protection progress callback</param>
         /// <param name="processUserInfo">Optional user prompt to deal with submission information</param>
         /// <param name="seedInfo">A seed SubmissionInfo object that contains user data</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>Result instance with the outcome</returns>
         public async Task<ResultEventArgs> VerifyAndSaveDumpOutput(
             IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null,
             ProcessUserInfoDelegate? processUserInfo = null,
-            SubmissionInfo? seedInfo = null)
+            SubmissionInfo? seedInfo = null,
+            CancellationToken? cancellationToken = null)
         {
             if (_processor is null)
                 return ResultEventArgs.Failure("Error! Current configuration is not supported!");
@@ -626,7 +612,7 @@ namespace MPF.Frontend
                 _processor,
                 resultProgress,
                 protectionProgress,
-                _cancellationTokenSource.Token);
+                cancellationToken);
             if (submissionInfo is null)
                 return ResultEventArgs.Failure("There was an issue extracting information!");
             else

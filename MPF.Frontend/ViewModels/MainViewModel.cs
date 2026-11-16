@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Frontend.ComboBoxItems;
@@ -60,6 +61,11 @@ namespace MPF.Frontend.ViewModels
         /// Detected media type, distinct from the selected one
         /// </summary>
         private PhysicalMediaType? _detectedPhysicalMediaType;
+
+        /// <summary>
+        /// Cancellation token source for dumps
+        /// </summary>
+        private CancellationTokenSource _cancellationTokenSource;
 
         /// <summary>
         /// Current dumping environment
@@ -627,6 +633,7 @@ namespace MPF.Frontend.ViewModels
         public MainViewModel()
         {
             _options = OptionsLoader.LoadFromConfig(out _);
+            _cancellationTokenSource = new();
 
             StartStopButtonText = StartDumpingValue;
             LogPanelExpanded = Options.GUI.OpenLogWindowAtStartup;
@@ -1001,6 +1008,7 @@ namespace MPF.Frontend.ViewModels
             {
                 VerboseLogLn("Requesting cancellation of dumping process...");
                 _ = _environment?.CancelDumping();
+                _cancellationTokenSource.Cancel();
                 CopyProtectScanButtonEnabled = true;
             }
         }
@@ -2395,6 +2403,9 @@ namespace MPF.Frontend.ViewModels
                 {
                     ErrorLogLn(result.Message);
                     Status = "Execution failed!";
+
+                    // Reset the cancellation token
+                    _cancellationTokenSource = new();
                     return;
                 }
 
@@ -2406,6 +2417,9 @@ namespace MPF.Frontend.ViewModels
                 {
                     SuccessLogLn("No dumping command was run, submission information will not be gathered.");
                     Status = "Execution complete!";
+
+                    // Reset the cancellation token
+                    _cancellationTokenSource = new();
                     return;
                 }
 
@@ -2413,7 +2427,8 @@ namespace MPF.Frontend.ViewModels
                 result = await _environment.VerifyAndSaveDumpOutput(
                     resultProgress: resultProgress,
                     protectionProgress: protectionProgress,
-                    processUserInfo: _processUserInfo);
+                    processUserInfo: _processUserInfo,
+                    cancellationToken: _cancellationTokenSource.Token);
 
                 if (result == false)
                     ErrorLogLn(result.Message);
@@ -2427,6 +2442,9 @@ namespace MPF.Frontend.ViewModels
             {
                 // Re-allow quick exiting
                 AskBeforeQuit = false;
+
+                // Reset the cancellation token
+                _cancellationTokenSource = new();
 
                 // Reset all UI elements
                 EnableAllUIElements();

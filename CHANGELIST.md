@@ -71,6 +71,7 @@
 - Ensure SelfContained on WPF runs on supported RIDs
 - Update RedumpLib to 3.5.1
 - Slight simplification to publishing scripts
+- Fix issue with cancellation tokens, wire through CLI applications
 
 ### 3.11.1 (2026-10-17)
 

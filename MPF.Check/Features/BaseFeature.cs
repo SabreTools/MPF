@@ -1,6 +1,7 @@
 
 using System;
 using System.IO;
+using System.Threading;
 #if NET40
 using System.Threading.Tasks;
 #endif
@@ -33,6 +34,11 @@ namespace MPF.Check.Features
         /// Path to the device to scan
         /// </summary>
         public string? DevicePath { get; protected set; }
+
+        /// <summary>
+        /// Cancellation token source for cancelling a scan
+        /// </summary>
+        private readonly CancellationTokenSource _cancellationTokenSource = new();
 
         #endregion
 
@@ -70,6 +76,9 @@ namespace MPF.Check.Features
         /// <inheritdoc/>
         public override bool Execute()
         {
+            // Register handler for console cancellation
+            Console.CancelKeyPress += CancelScan;
+
             // Validate a system type is provided
             if (System is null)
             {
@@ -112,8 +121,11 @@ namespace MPF.Check.Features
                 env.SetProcessor();
 
                 // Finally, attempt to do the output dance
-                var result = env.VerifyAndSaveDumpOutput(processUserInfo: ProcessUserInfo, seedInfo: Seed)
-                    .ConfigureAwait(false).GetAwaiter().GetResult();
+                var result = env.VerifyAndSaveDumpOutput(
+                    processUserInfo: ProcessUserInfo,
+                    seedInfo: Seed,
+                    cancellationToken: _cancellationTokenSource.Token)
+                        .ConfigureAwait(false).GetAwaiter().GetResult();
                 Console.WriteLine(result.Message);
             }
 
@@ -184,5 +196,11 @@ namespace MPF.Check.Features
             // TODO: Implement some sort of CLI-based processing of user information
             return null;
         }
+
+        /// <summary>
+        /// Cancel an existing scan by capturing a cancel key press
+        /// </summary>
+        private void CancelScan(object? sender, ConsoleCancelEventArgs e)
+            => _cancellationTokenSource.Cancel();
     }
 }
