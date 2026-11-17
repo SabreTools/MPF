@@ -45,7 +45,7 @@ namespace MPF.Frontend.Test
             var testData = new TheoryData<DriveType?, bool>() { { null, true } };
             foreach (DriveType driveType in Enum.GetValues<DriveType>())
             {
-                if (Array.IndexOf(_mappableDriveTypes, driveType) > -1)
+                if (Array.Exists(_mappableDriveTypes, d => d == driveType))
                     testData.Add(driveType, false);
                 else
                     testData.Add(driveType, true);

@@ -73,6 +73,7 @@
 - Slight simplification to publishing scripts
 - Fix issue with cancellation tokens, wire through CLI applications
 - Update Dreamdump to 0.6.2
+- Replace some Array.IndexOf with Array.Exists
 
 ### 3.11.1 (2026-10-17)
 

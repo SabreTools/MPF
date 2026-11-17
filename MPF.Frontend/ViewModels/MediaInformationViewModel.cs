@@ -1672,9 +1672,9 @@ namespace MPF.Frontend.ViewModels
         {
             // Ensure that all existing values are checked
             if (SubmissionInfo.RegionsAndLanguages.Regions is not null)
-                Regions.ForEach(r => r.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Regions, r) > -1);
+                Regions.ForEach(cbi => cbi.IsChecked = Array.Exists(SubmissionInfo.RegionsAndLanguages.Regions, r => cbi.Value == r));
             if (SubmissionInfo.RegionsAndLanguages.Languages is not null)
-                Languages.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Languages, l) > -1);
+                Languages.ForEach(cbi => cbi.IsChecked = Array.Exists(SubmissionInfo.RegionsAndLanguages.Languages, l => cbi.Value == l));
 
             // Add handlers for all of the checkboxes
             Regions.ForEach(r => r.Checked += OnRegionChecked);
