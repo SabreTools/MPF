@@ -77,6 +77,7 @@
 - Update RedumpLib to 3.5.2
 - Update RedumpLib to 3.5.3
 - Move some default placeholders around
+- Update RedumpLib to 3.6.1
 
 ### 3.11.1 (2026-10-17)
 
