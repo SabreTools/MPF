@@ -159,6 +159,9 @@ namespace MPF.Frontend.Tools
 
             // Set fields that may have automatic filling otherwise
             info.DiscIdentity.Category ??= DiscCategory.Games;
+            info.DiscIdentifiers.DiscSerials ??= options.Processing.MediaInformation.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
+            info.DiscIdentifiers.Editions ??= options.Processing.MediaInformation.AddPlaceholders ? "(VERIFY THIS) Original" : string.Empty;
+            info.DiscIdentifiers.Barcodes ??= options.Processing.MediaInformation.AddPlaceholders ? OptionalValue : string.Empty;
             info.DiscIdentifiers.Version ??= options.Processing.MediaInformation.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
 
             // Comments and contents have odd handling
@@ -409,12 +412,6 @@ namespace MPF.Frontend.Tools
                 {
                     Regions = null,
                     Languages = null,
-                },
-                DiscIdentifiers = new DiscIdentifiersSection()
-                {
-                    DiscSerials = addPlaceholders ? RequiredIfExistsValue : string.Empty,
-                    Editions = addPlaceholders ? "(VERIFY THIS) Original" : string.Empty,
-                    Barcodes = addPlaceholders ? OptionalValue : string.Empty,
                 },
                 DumpMetadata = new DumpMetadataSection()
                 {

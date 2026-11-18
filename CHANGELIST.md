@@ -76,6 +76,7 @@
 - Replace some Array.IndexOf with Array.Exists
 - Update RedumpLib to 3.5.2
 - Update RedumpLib to 3.5.3
+- Move some default placeholders around
 
 ### 3.11.1 (2026-10-17)
 
