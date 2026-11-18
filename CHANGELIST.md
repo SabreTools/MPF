@@ -75,6 +75,7 @@
 - Update Dreamdump to 0.6.2
 - Replace some Array.IndexOf with Array.Exists
 - Update RedumpLib to 3.5.2
+- Update RedumpLib to 3.5.3
 
 ### 3.11.1 (2026-10-17)
 

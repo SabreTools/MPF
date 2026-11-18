@@ -259,7 +259,7 @@ namespace MPF.Frontend.Tools
                     continue;
                 }
 
-                var foundIds = await wc.ValidateSingleTrack(info, sha1);
+                var foundIds = await wc.ValidateSingleTrackApi(info, sha1);
                 if (foundIds is null)
                 {
                     resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.info"));
@@ -310,7 +310,7 @@ namespace MPF.Frontend.Tools
             if (info.PartiallyMatchedIDs.Count == 0 && info.DiscIdentifiers?.UniversalHash is not null)
             {
                 string sha1 = info.DiscIdentifiers.UniversalHash;
-                var foundIds = await wc.ValidateUniversalHash(info);
+                var foundIds = await wc.ValidateUniversalHashApi(info);
                 if (foundIds is null)
                     resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.info"));
                 else if (foundIds.Count == 0)
@@ -363,7 +363,7 @@ namespace MPF.Frontend.Tools
             // Use the fully-matched ID to grab a bunch of info from it
             // Fill in the fields from the existing ID
             resultProgress?.Report(ResultEventArgs.Neutral($"Filling fields from existing ID {fullyMatchedIdsList[0]}..."));
-            _ = await Builder.FillFromId(wc, info, fullyMatchedIdsList[0], options.Processing.Login.PullAllInformation);
+            _ = await Builder.FillFromIdApi(wc, info, fullyMatchedIdsList[0], options.Processing.Login.PullAllInformation);
             resultProgress?.Report(ResultEventArgs.Success("Information filling complete!"));
 
             // Set the fully matched ID to the current
