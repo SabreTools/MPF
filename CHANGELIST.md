@@ -78,6 +78,7 @@
 - Update RedumpLib to 3.5.3
 - Move some default placeholders around
 - Update RedumpLib to 3.6.1
+- Update the .NET 11 workaround
 
 ### 3.11.1 (2026-10-17)
 
