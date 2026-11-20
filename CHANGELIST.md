@@ -82,6 +82,7 @@
 - Reorganize publishing-related csproj items
 - Try one more DLL
 - Update MPF.Check help text
+- Update RedumpLib to 3.6.2
 
 ### 3.11.1 (2026-10-17)
 

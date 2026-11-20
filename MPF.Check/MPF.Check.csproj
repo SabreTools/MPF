@@ -57,7 +57,7 @@
 
     <ItemGroup>
         <PackageReference Include="SabreTools.CommandLine" Version="1.6.0" />
-        <PackageReference Include="SabreTools.RedumpLib" Version="3.6.1" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="3.6.2" />
     </ItemGroup>
 
 </Project>
