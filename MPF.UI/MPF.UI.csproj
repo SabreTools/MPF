@@ -17,7 +17,7 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <UseWindowsForms>true</UseWindowsForms>
         <UseWPF>true</UseWPF>
-        <VersionPrefix>3.11.1</VersionPrefix>
+        <VersionPrefix>3.12.0</VersionPrefix>
 
         <!-- Publishing -->
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
