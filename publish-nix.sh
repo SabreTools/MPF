@@ -478,7 +478,7 @@ if [ $NO_ARCHIVE = false ]; then
             fi
 
             # Only include Release if set
-            if [ $INCLUDE_RELEASE = true]; then
+            if [ $INCLUDE_RELEASE = true ]; then
                 cd $BUILD_FOLDER/MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
                 if [ $INCLUDE_PROGRAMS = true ]; then
                     zip -r $BUILD_FOLDER/MPF.UI${VERSION_STRING}_${FRAMEWORK}_${RUNTIME}_release.zip .

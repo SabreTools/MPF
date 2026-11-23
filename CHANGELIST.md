@@ -83,6 +83,7 @@
 - Try one more DLL
 - Update MPF.Check help text
 - Update RedumpLib to 3.6.2
+- Fix misplaced bracket in publish script
 
 ### 3.11.1 (2026-10-17)
 
