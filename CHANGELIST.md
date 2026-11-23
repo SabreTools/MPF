@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Trim trailing directory separator when building output paths
+
 ### 3.12.0 (2026-11-23)
 
 - Tweak link naming for rolling build description

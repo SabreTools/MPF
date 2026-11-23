@@ -1572,6 +1572,14 @@ namespace MPF.Frontend.ViewModels
             string label = GetFormattedVolumeLabel(CurrentDrive) ?? CurrentSystem?.Name ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
             string defaultFilename = $"{label}{extension}";
 
+            // Trim trailing path separators, if needed
+#if NETCOREAPP3_1_OR_GREATER
+            defaultOutputPath = Path.TrimEndingDirectorySeparator(defaultOutputPath);
+#else
+            if (Path.GetPathRoot(defaultOutputPath) != defaultOutputPath)
+                defaultOutputPath = defaultOutputPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+#endif
+
             // If no path exists, set one using default values
             if (string.IsNullOrEmpty(OutputPath))
             {
