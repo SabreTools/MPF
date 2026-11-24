@@ -420,7 +420,7 @@ namespace MPF.Frontend.Tools
                 SubmissionControls = new SubmissionControlsSection()
                 {
                     LogsArchiveURL = addPlaceholders ? RequiredValue : string.Empty,
-                    SubmissionComment = addPlaceholders ? OptionalValue : string.Empty,
+                    SubmissionComment = string.Empty,
                 },
                 DumpingInfo = new DumpingInfoSection()
                 {

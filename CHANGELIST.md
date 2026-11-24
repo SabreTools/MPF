@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Trim trailing directory separator when building output paths
+- Remove placeholder from submission comment
 
 ### 3.12.0 (2026-11-23)
 
