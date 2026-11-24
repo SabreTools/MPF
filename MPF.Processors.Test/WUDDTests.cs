@@ -136,30 +136,6 @@ namespace MPF.Processors.Test
 
         #endregion
 
-        #region GenerateArtifacts
-
-        [Fact]
-        public void GenerateArtifacts_Invalid_Empty()
-        {
-            string? outputDirectory = null;
-            string outputFilename = string.Empty;
-            var processor = new WUDD(PhysicalSystem.NintendoWiiU);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.NintendoWiiUOpticalDisc, outputDirectory, outputFilename);
-            Assert.Empty(actual);
-        }
-
-        [Fact]
-        public void GenerateArtifacts_Valid_Filled()
-        {
-            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "WUDD", "NintendoWiiUOpticalDisc");
-            string outputFilename = "test.wud";
-            var processor = new WUDD(PhysicalSystem.NintendoWiiU);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.NintendoWiiUOpticalDisc, outputDirectory, outputFilename);
-            Assert.Equal(2, actual.Count);
-        }
-
-        #endregion
-
         #region GetDeleteableFilePaths
 
         [Fact]

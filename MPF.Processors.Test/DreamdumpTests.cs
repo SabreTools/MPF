@@ -105,30 +105,6 @@ namespace MPF.Processors.Test
 
         #endregion
 
-        #region GenerateArtifacts
-
-        [Fact]
-        public void GenerateArtifacts_Invalid_Empty()
-        {
-            string? outputDirectory = null;
-            string outputFilename = string.Empty;
-            var processor = new Dreamdump(PhysicalSystem.SegaDreamcast);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.GDROM, outputDirectory, outputFilename);
-            Assert.Empty(actual);
-        }
-
-        [Fact]
-        public void GenerateArtifacts_Valid_Filled()
-        {
-            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Dreamdump", "GDROM");
-            string outputFilename = "test.cue";
-            var processor = new Dreamdump(PhysicalSystem.SegaDreamcast);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.GDROM, outputDirectory, outputFilename);
-            Assert.Equal(2, actual.Count);
-        }
-
-        #endregion
-
         #region GetDeleteableFilePaths
 
         [Fact]

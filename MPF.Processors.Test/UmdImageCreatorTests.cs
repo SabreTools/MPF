@@ -137,30 +137,6 @@ namespace MPF.Processors.Test
 
         #endregion
 
-        #region GenerateArtifacts
-
-        [Fact]
-        public void GenerateArtifacts_Invalid_Empty()
-        {
-            string? outputDirectory = null;
-            string outputFilename = string.Empty;
-            var processor = new UmdImageCreator(PhysicalSystem.SonyPlayStationPortable);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.UMD, outputDirectory, outputFilename);
-            Assert.Empty(actual);
-        }
-
-        [Fact]
-        public void GenerateArtifacts_Valid_Filled()
-        {
-            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD");
-            string outputFilename = "test.iso";
-            var processor = new UmdImageCreator(PhysicalSystem.SonyPlayStationPortable);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.UMD, outputDirectory, outputFilename);
-            Assert.Equal(6, actual.Count);
-        }
-
-        #endregion
-
         #region GetDeleteableFilePaths
 
         [Fact]

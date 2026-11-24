@@ -376,13 +376,6 @@
 
                                         <CheckBox Grid.Row="4"
                                                   Grid.Column="0"
-                                                  Content="{DynamicResource IncludeArtifactsCheckBoxString}"
-                                                  IsChecked="{Binding IncludeArtifacts}"
-                                                  IsEnabled="{Binding OutputSubmissionJSON}"
-                                                  ToolTip.Tip="Include log files in serialized JSON data [NOT RECOMMENDED TO USE]" />
-
-                                        <CheckBox Grid.Row="4"
-                                                  Grid.Column="1"
                                                   Content="{DynamicResource CompressLogFilesCheckBoxString}"
                                                   IsChecked="{Binding CompressLogFiles}"
                                                   ToolTip.Tip="Compress output log files to reduce space" />

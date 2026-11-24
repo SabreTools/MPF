@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -683,8 +682,8 @@ namespace MPF.Frontend
             // Write the JSON output, if required
             if (_options.Processing.OutputSubmissionJSON)
             {
-                resultProgress.Report(ResultEventArgs.Neutral($"Writing submission information JSON file{(_options.Processing.IncludeArtifacts ? " with artifacts" : string.Empty)}..."));
-                bool jsonSuccess = WriteOutputData(outputDirectory, filenameSuffix, submissionInfo, _options.Processing.IncludeArtifacts);
+                resultProgress.Report(ResultEventArgs.Neutral($"Writing submission information JSON file..."));
+                bool jsonSuccess = WriteOutputData(outputDirectory, filenameSuffix, submissionInfo);
                 if (jsonSuccess)
                     resultProgress.Report(ResultEventArgs.Success("Writing complete!"));
                 else
@@ -862,9 +861,8 @@ namespace MPF.Frontend
         /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="info">SubmissionInfo object representing the JSON to write out to the file</param>
-        /// <param name="includedArtifacts">True if artifacts were included, false otherwise</param>
         /// <returns>True on success, false on error</returns>
-        private static bool WriteOutputData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info, bool includedArtifacts)
+        private static bool WriteOutputData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info)
         {
             // Check to see if the input is valid
             if (info is null)
@@ -883,28 +881,13 @@ namespace MPF.Frontend
                 else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                     path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json");
 
-                // Ensure the extension is correct for the output
-                if (includedArtifacts)
-                    path += ".gz";
-
                 // Create and open the output file
                 using var fs = File.Create(path);
 
                 // Create the JSON serializer
                 var serializer = new JsonSerializer { Formatting = Formatting.Indented };
-
-                // If we included artifacts, write to a GZip-compressed file
-                if (includedArtifacts)
-                {
-                    using var gs = new GZipStream(fs, CompressionMode.Compress);
-                    using var sw = new StreamWriter(gs, Encoding.UTF8);
-                    serializer.Serialize(sw, info);
-                }
-                else
-                {
-                    using var sw = new StreamWriter(fs, Encoding.UTF8);
-                    serializer.Serialize(sw, info);
-                }
+                using var sw = new StreamWriter(fs, Encoding.UTF8);
+                serializer.Serialize(sw, info);
             }
             catch
             {

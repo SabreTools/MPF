@@ -415,18 +415,12 @@
                                           Margin="0,4"/>
 
                                 <CheckBox VerticalAlignment="Center"
-                                          Content="{DynamicResource IncludeArtifactsCheckBoxString}"
-                                          IsChecked="{Binding IncludeArtifacts}"
-                                          IsEnabled="{Binding OutputSubmissionJSON}"
-                                          ToolTip="Include log files in serialized JSON data [NOT RECOMMENDED TO USE]"
-                                          ToolTipService.ShowOnDisabled="True"
-                                          Margin="0,4"/>
-
-                                <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource CompressLogFilesCheckBoxString}"
                                           IsChecked="{Binding CompressLogFiles}"
                                           ToolTip="Compress output log files to reduce space"
                                           Margin="0,4"/>
+                                <Label/>
+                                <!-- Empty label for padding -->
 
                                 <Label VerticalAlignment="Center"
                                        Content="{DynamicResource LogCompressionLabelString}"

@@ -85,8 +85,6 @@ namespace MPF.Frontend.Tools
 
             // Get specific tool output handling
             processor.GenerateSubmissionInfo(info, mediaType, basePath, options.Processing.MediaInformation.EnableRedumpCompatibility);
-            if (options.Processing.IncludeArtifacts)
-                info.Artifacts = processor.GenerateArtifacts(mediaType, outputDirectory, outputFilename);
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.DumpMetadata.Dat))

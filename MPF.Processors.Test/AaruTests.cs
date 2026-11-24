@@ -174,30 +174,6 @@ namespace MPF.Processors.Test
 
         #endregion
 
-        #region GenerateArtifacts
-
-        [Fact]
-        public void GenerateArtifacts_Invalid_Empty()
-        {
-            string? outputDirectory = null;
-            string outputFilename = string.Empty;
-            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Empty(actual);
-        }
-
-        [Fact]
-        public void GenerateArtifacts_Valid_Filled()
-        {
-            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
-            string outputFilename = "test.aaruf";
-            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Equal(7, actual.Count);
-        }
-
-        #endregion
-
         #region GetDeleteableFilePaths
 
         [Fact]

@@ -87,7 +87,6 @@
     <x:String x:Key="ShowEjectReminderCheckBoxString">Lembrar de ejetar o disco</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">Adicionar sufixo ao ficheiro</x:String>
     <x:String x:Key="OutputSubmissionJSONCheckBoxString">Gerar JSON de submissão</x:String>
-    <x:String x:Key="IncludeArtifactsCheckBoxString">[DEPURAÇÃO] Incluir artefactos</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">Comprimir ficheiros log</x:String>
     <x:String x:Key="LogCompressionLabelString">Compressão do log:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Apagar ficheiros desnecessários</x:String>

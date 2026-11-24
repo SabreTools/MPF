@@ -381,67 +381,6 @@ namespace MPF.Processors
             return false;
         }
 
-        /// <summary>
-        /// Generate artifacts and return them as a dictionary
-        /// </summary>
-        /// <param name="mediaType">Media type for controlling expected file sets</param>
-        /// <param name="outputDirectory">Output folder to use as the base path</param>
-        /// <param name="outputFilename">Output filename to use as the base path</param>
-        /// <returns>Dictiionary of artifact keys to Base64-encoded values, if possible</param>
-        /// <remarks>Assumes filename has an extension</remarks>
-        public Dictionary<string, string> GenerateArtifacts(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
-        {
-            // Get the list of output files
-            var outputFiles = GetOutputFiles(mediaType, outputDirectory, outputFilename);
-            if (outputFiles.Count == 0)
-                return [];
-
-            try
-            {
-                // Create the artifacts dictionary
-                var artifacts = new Dictionary<string, string>();
-
-                // Only try to create artifacts for files that exist
-                foreach (var outputFile in outputFiles)
-                {
-                    // Skip non-artifact files
-                    if (!outputFile.IsArtifact || outputFile.ArtifactKey is null)
-                        continue;
-
-                    // Skip non-existent files
-                    if (!outputFile.Exists(outputDirectory ?? string.Empty))
-                        continue;
-
-                    // Skip non-existent files
-                    foreach (var filePath in outputFile.GetPaths(outputDirectory ?? string.Empty))
-                    {
-                        // Get binary artifacts as a byte array
-                        if (outputFile.IsBinaryArtifact)
-                        {
-                            byte[] data = File.ReadAllBytes(filePath);
-                            string str = Convert.ToBase64String(data);
-                            artifacts[outputFile.ArtifactKey] = str;
-                        }
-                        else
-                        {
-                            string? data = ProcessingTool.GetFullFile(filePath);
-                            string str = ProcessingTool.GetBase64(data) ?? string.Empty;
-                            artifacts[outputFile.ArtifactKey] = str;
-                        }
-
-                        break;
-                    }
-                }
-
-                return artifacts;
-            }
-            catch
-            {
-                // Any issues shouldn't stop processing
-                return [];
-            }
-        }
-
 #if NET462_OR_GREATER || NETCOREAPP
         /// <summary>
         /// Try to add a set of files to an existing archive

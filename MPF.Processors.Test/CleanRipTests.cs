@@ -218,30 +218,6 @@ namespace MPF.Processors.Test
 
         #endregion
 
-        #region GenerateArtifacts
-
-        [Fact]
-        public void GenerateArtifacts_Invalid_Empty()
-        {
-            string? outputDirectory = null;
-            string outputFilename = string.Empty;
-            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.DVD, outputDirectory, outputFilename);
-            Assert.Empty(actual);
-        }
-
-        [Fact]
-        public void GenerateArtifacts_Valid_Filled()
-        {
-            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
-            string outputFilename = "test.iso";
-            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.DVD, outputDirectory, outputFilename);
-            Assert.Equal(2, actual.Count);
-        }
-
-        #endregion
-
         #region GetDeleteableFilePaths
 
         [Fact]

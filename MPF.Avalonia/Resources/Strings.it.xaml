@@ -86,7 +86,6 @@
     <x:String x:Key="ShowEjectReminderCheckBoxString">Mostra Promemoria Espulsione</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">Aggiungi Suffisso Nome File</x:String>
     <x:String x:Key="OutputSubmissionJSONCheckBoxString">Genera JSON di Invio</x:String>
-    <x:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] Includi Artifacts</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">Comprimi File Log</x:String>
     <x:String x:Key="LogCompressionLabelString">Compressione Log:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Elimina File Non Necessari</x:String>

@@ -136,30 +136,6 @@ namespace MPF.Processors.Test
 
         #endregion
 
-        #region GenerateArtifacts
-
-        [Fact]
-        public void GenerateArtifacts_Invalid_Empty()
-        {
-            string? outputDirectory = null;
-            string outputFilename = string.Empty;
-            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
-            Assert.Empty(actual);
-        }
-
-        [Fact]
-        public void GenerateArtifacts_Valid_Filled()
-        {
-            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay");
-            string outputFilename = "test.iso";
-            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
-            Assert.Equal(2, actual.Count);
-        }
-
-        #endregion
-
         #region GetDeleteableFilePaths
 
         [Fact]

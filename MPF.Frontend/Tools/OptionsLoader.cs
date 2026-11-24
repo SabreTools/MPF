@@ -393,7 +393,6 @@ namespace MPF.Frontend.Tools
             options.Processing.CompressLogFiles = GetBooleanSetting(source, "CompressLogFiles", true);
             options.Processing.CreateIRDAfterDumping = GetBooleanSetting(source, "CreateIRDAfterDumping", false);
             options.Processing.DeleteUnnecessaryFiles = GetBooleanSetting(source, "DeleteUnnecessaryFiles", false);
-            options.Processing.IncludeArtifacts = GetBooleanSetting(source, "IncludeArtifacts", false);
             valueString = GetStringSetting(source, "LogCompression", LogCompression.DeflateMaximum.ToString());
             options.Processing.LogCompression = valueString.ToLogCompression();
             options.Processing.OutputSubmissionJSON = GetBooleanSetting(source, "OutputSubmissionJSON", false);
@@ -473,7 +472,6 @@ namespace MPF.Frontend.Tools
                 { "IgnoreFixedDrives", options.GUI.IgnoreFixedDrives.ToString() },
                 { "AddFilenameSuffix", options.Processing.AddFilenameSuffix.ToString() },
                 { "OutputSubmissionJSON", options.Processing.OutputSubmissionJSON.ToString() },
-                { "IncludeArtifacts", options.Processing.IncludeArtifacts.ToString() },
                 { "CompressLogFiles", options.Processing.CompressLogFiles.ToString() },
                 { "LogCompression", options.Processing.LogCompression.ToString() },
                 { "DeleteUnnecessaryFiles", options.Processing.DeleteUnnecessaryFiles.ToString() },

@@ -164,7 +164,6 @@ namespace MPF.Frontend
             Processing.CompressLogFiles = source.Processing.CompressLogFiles;
             Processing.CreateIRDAfterDumping = source.Processing.CreateIRDAfterDumping;
             Processing.DeleteUnnecessaryFiles = source.Processing.DeleteUnnecessaryFiles;
-            Processing.IncludeArtifacts = source.Processing.IncludeArtifacts;
             Processing.LogCompression = source.Processing.LogCompression;
             Processing.OutputSubmissionJSON = source.Processing.OutputSubmissionJSON;
             Processing.ShowDiscEjectReminder = source.Processing.ShowDiscEjectReminder;
@@ -575,12 +574,6 @@ namespace MPF.Frontend
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public bool DeleteUnnecessaryFiles { get; set; } = false;
-
-        /// <summary>
-        /// Include log files in serialized JSON data
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool IncludeArtifacts { get; set; } = false;
 
         /// <summary>
         /// Compression type used during log compression

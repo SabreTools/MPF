@@ -87,7 +87,6 @@
     <x:String x:Key="ShowEjectReminderCheckBoxString">Нагадувати витягнути диск</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">Додавати суфікс файлу</x:String>
     <x:String x:Key="OutputSubmissionJSONCheckBoxString">Створити JSON для подання в систему</x:String>
-    <x:String x:Key="IncludeArtifactsCheckBoxString">[ДЕБАГ] Увімкнути артефакти</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">Стискати звіти</x:String>
     <x:String x:Key="LogCompressionLabelString">Компресія звітів:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Видалити непотрібні файли</x:String>

@@ -87,7 +87,6 @@
     <system:String x:Key="ShowEjectReminderCheckBoxString">배출 알림 표시</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">파일명 접미사 추가</system:String>
     <system:String x:Key="OutputSubmissionJSONCheckBoxString">제출 JSON 출력</system:String>
-    <system:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] 아티팩트 포함</system:String>
     <system:String x:Key="CompressLogFilesCheckBoxString">로그 파일 압축</system:String>
     <system:String x:Key="LogCompressionLabelString">로그 압축:</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">불필요한 파일 삭제</system:String>

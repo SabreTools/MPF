@@ -88,7 +88,6 @@
     <system:String x:Key="ShowEjectReminderCheckBoxString">zh0w 3j3c7 R3m1nd3r</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">4dd F113n4m3 zuff1x</system:String>
     <system:String x:Key="OutputSubmissionJSONCheckBoxString">0u7pu7 zu8m1zz10n Jz0N</system:String>
-    <system:String x:Key="IncludeArtifactsCheckBoxString">[D38U9] 1nc1ud3 4r71f4c7z</system:String>
     <system:String x:Key="CompressLogFilesCheckBoxString">C0mpr3zz 109 F113z</system:String>
     <system:String x:Key="LogCompressionLabelString">109 C0mpr3zz10n:</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">D31373 Unn3c3zz4ry F113z</system:String>

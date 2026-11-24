@@ -27,9 +27,6 @@ namespace MPF.Check.Features
         private const string _archivesName = "archives";
         internal readonly FlagInput ArchivesInput = new(_archivesName, "--archives", "Enable scanning archives (requires --scan)");
 
-        private const string _artifactsName = "artifacts";
-        internal readonly FlagInput ArtifactsInput = new(_artifactsName, "--artifacts", "Include artifacts in JSON (requires --json)");
-
         private const string _attemptCountName = "attempt-count";
         internal readonly Int32Input AttemptCountInput = new(_attemptCountName, "--attempt-count", "Set web client attempt count (must be greater than 0)");
 
@@ -56,9 +53,6 @@ namespace MPF.Check.Features
 
         private const string _noArchivesName = "no-archives";
         internal readonly FlagInput NoArchivesInput = new(_noArchivesName, "--no-archives", "Disable scanning archives (requires --scan)");
-
-        private const string _noArtifactsName = "no-artifacts";
-        internal readonly FlagInput NoArtifactsInput = new(_noArtifactsName, "--no-artifacts", "Omit artifacts in JSON (requires --json)");
 
         private const string _noCreateIrdName = "no-create-ird";
         internal readonly FlagInput NoCreateIrdInput = new(_noCreateIrdName, "--no-create-ird", "Disable create IRD from output files (PS3 only)");
@@ -142,8 +136,6 @@ namespace MPF.Check.Features
             Add(NoSuffixInput);
             Add(JsonInput);
             Add(NoJsonInput);
-            Add(ArtifactsInput);
-            Add(NoArtifactsInput);
             Add(ZipInput);
             Add(NoZipInput);
             Add(LogCompressionInput);
@@ -189,7 +181,6 @@ namespace MPF.Check.Features
                 Options.Processing.AddFilenameSuffix = false;
                 Options.Processing.CreateIRDAfterDumping = false;
                 Options.Processing.OutputSubmissionJSON = false;
-                Options.Processing.IncludeArtifacts = false;
                 Options.Processing.CompressLogFiles = false;
                 Options.Processing.LogCompression = LogCompression.DeflateMaximum;
                 Options.Processing.DeleteUnnecessaryFiles = false;
@@ -282,12 +273,6 @@ namespace MPF.Check.Features
                     Options.Processing.OutputSubmissionJSON = true;
                 else if (NoJsonInput.ProcessInput(args, ref index))
                     Options.Processing.OutputSubmissionJSON = false;
-
-                // Include JSON artifacts
-                else if (ArtifactsInput.ProcessInput(args, ref index))
-                    Options.Processing.IncludeArtifacts = true;
-                else if (NoArtifactsInput.ProcessInput(args, ref index))
-                    Options.Processing.IncludeArtifacts = false;
 
                 // Compress log and extraneous files
                 else if (ZipInput.ProcessInput(args, ref index))

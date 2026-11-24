@@ -64,7 +64,6 @@ namespace MPF.Check.Features
             Options.Processing.AddFilenameSuffix = false;
             Options.Processing.CreateIRDAfterDumping = false;
             Options.Processing.OutputSubmissionJSON = false;
-            Options.Processing.IncludeArtifacts = false;
             Options.Processing.CompressLogFiles = false;
             Options.Processing.LogCompression = LogCompression.DeflateMaximum;
             Options.Processing.DeleteUnnecessaryFiles = false;
@@ -175,8 +174,6 @@ namespace MPF.Check.Features
             Console.WriteLine("    --no-suffix                Disable adding filename suffix");
             Console.WriteLine("-j, --json                     Enable submission JSON output");
             Console.WriteLine("    --no-json                  Disable submission JSON output");
-            Console.WriteLine("    --artifacts                Include artifacts in JSON (requires --json)");
-            Console.WriteLine("    --no-artifacts             Omit artifacts in JSON (requires --json)");
             Console.WriteLine("-z, --zip                      Enable log file compression");
             Console.WriteLine("    --no-zip                   Disable log file compression");
             Console.WriteLine("    --log-compression          Set the log compression type (requires compression enabled)");

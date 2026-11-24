@@ -210,30 +210,6 @@ namespace MPF.Processors.Test
 
         #endregion
 
-        #region GenerateArtifacts
-
-        [Fact]
-        public void GenerateArtifacts_Invalid_Empty()
-        {
-            string? outputDirectory = null;
-            string outputFilename = string.Empty;
-            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Empty(actual);
-        }
-
-        [Fact]
-        public void GenerateArtifacts_Valid_Filled()
-        {
-            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
-            string outputFilename = "test.cue";
-            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Equal(10, actual.Count);
-        }
-
-        #endregion
-
         #region GetDeleteableFilePaths
 
         [Fact]

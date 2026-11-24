@@ -256,30 +256,6 @@ namespace MPF.Processors.Test
 
         #endregion
 
-        #region GenerateArtifacts
-
-        [Fact]
-        public void GenerateArtifacts_Invalid_Empty()
-        {
-            string? outputDirectory = null;
-            string outputFilename = string.Empty;
-            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Empty(actual);
-        }
-
-        [Fact]
-        public void GenerateArtifacts_Valid_Filled()
-        {
-            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM");
-            string outputFilename = "test.cue";
-            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
-            var actual = processor.GenerateArtifacts(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Equal(23, actual.Count);
-        }
-
-        #endregion
-
         #region GetDeleteableFilePaths
 
         [Fact]

@@ -92,7 +92,6 @@
     <x:String x:Key="ShowEjectReminderCheckBoxString">Auswurferinnerung anzeigen</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">Dateinamensuffix hinzufügen</x:String>
     <x:String x:Key="OutputSubmissionJSONCheckBoxString">JSON-Ausgabe für Einreichung</x:String>
-    <x:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] Artefakte einbeziehen</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">Protokolldateien komprimieren</x:String>
     <x:String x:Key="LogCompressionLabelString">Protokollkompression:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Unnötige Dateien löschen</x:String>

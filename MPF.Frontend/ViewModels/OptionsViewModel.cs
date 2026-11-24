@@ -430,17 +430,6 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
-        /// <inheritdoc cref="ProcessingSettings.IncludeArtifacts"/>
-        public bool IncludeArtifacts
-        {
-            get => Options.Processing.IncludeArtifacts;
-            set
-            {
-                Options.Processing.IncludeArtifacts = value;
-                TriggerPropertyChanged(nameof(IncludeArtifacts));
-            }
-        }
-
         /// <inheritdoc cref="ProtectionScanningSettings.IncludeDebugProtectionInformation"/>
         public bool IncludeDebugProtectionInformation
         {

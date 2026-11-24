@@ -86,7 +86,6 @@
     <x:String x:Key="ShowEjectReminderCheckBoxString">Показывать напоминание о извлечении</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">Добавлять суффикс к имени файла</x:String>
     <x:String x:Key="OutputSubmissionJSONCheckBoxString">Создавать JSON для отправки</x:String>
-    <x:String x:Key="IncludeArtifactsCheckBoxString">[ОТЛАДКА] Включать артефакты</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">Сжимать файлы логов</x:String>
     <x:String x:Key="LogCompressionLabelString">Сжатие логов:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Удалять лишние файлы</x:String>

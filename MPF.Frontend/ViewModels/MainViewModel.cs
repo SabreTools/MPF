@@ -986,11 +986,6 @@ namespace MPF.Frontend.ViewModels
                     Firmware = "1.23",
                     ReportedDiscType = "CD-R",
                 },
-
-                Artifacts = new Dictionary<string, string>()
-                {
-                    ["Sample Artifact"] = "Sample Data",
-                },
             };
         }
 

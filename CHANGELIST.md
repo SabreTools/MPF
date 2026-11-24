@@ -4,6 +4,7 @@
 - Remove placeholder from submission comment
 - Remove "Add Placeholders" option
 - Enable submission JSON output by default
+- Remove artifacts from JSON output
 
 ### 3.12.0 (2026-11-23)
 
