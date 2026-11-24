@@ -877,17 +877,22 @@
                                     <TextBlock Text="{DynamicResource RetrievalGroupBoxString}"
                                                FontWeight="Bold" />
 
-                                    <CheckBox Grid.Row="0"
-                                              Grid.Column="0"
-                                              Content="{DynamicResource RetrieveMatchInformationCheckBoxString}"
-                                              IsChecked="{Binding RetrieveMatchInformation}"
-                                              ToolTip.Tip="Attempts to retrieve match information from Redump" />
+                                    <Grid ColumnDefinitions="*,*"
+                                          ColumnSpacing="16"
+                                          RowSpacing="4"
+                                          RowDefinitions="Auto">
+                                        <CheckBox Grid.Row="0"
+                                                  Grid.Column="0"
+                                                  Content="{DynamicResource RetrieveMatchInformationCheckBoxString}"
+                                                  IsChecked="{Binding RetrieveMatchInformation}"
+                                                  ToolTip.Tip="Attempts to retrieve match information from Redump" />
 
-                                    <CheckBox Grid.Row="0"
-                                              Grid.Column="1"
-                                              Content="{DynamicResource PullAllInformationCheckBoxString}"
-                                              IsChecked="{Binding PullAllInformation}"
-                                              ToolTip.Tip="Instead of pulling a safe subset of data after dumping, enable pulling all comment and content data" />
+                                        <CheckBox Grid.Row="0"
+                                                  Grid.Column="1"
+                                                  Content="{DynamicResource PullAllInformationCheckBoxString}"
+                                                  IsChecked="{Binding PullAllInformation}"
+                                                  ToolTip.Tip="Instead of pulling a safe subset of data after dumping, enable pulling all comment and content data" />
+                                    </Grid>
                                 </StackPanel>
                             </Border>
 

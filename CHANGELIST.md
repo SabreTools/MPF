@@ -11,6 +11,7 @@
 - Move "pull all information" setting, cleanup resources
 - Rename login info and web access to "Internet Access"
 - Rearrange internal order for internet access settings
+- Wrap internet settings in grid for Avalonia
 
 ### 3.12.0 (2026-11-23)
 
