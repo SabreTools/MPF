@@ -380,8 +380,8 @@ namespace MPF.Frontend.Tools
             options.Processing.ProtectionScanning.HideDriveLetters = GetBooleanSetting(source, "HideDriveLetters", false);
             options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = GetBooleanSetting(source, "IncludeDebugProtectionInformation", false);
 
-            options.Processing.InternetAccess.PullAllInformation = GetBooleanSetting(source, "PullAllInformation", false);
             options.Processing.InternetAccess.RetrieveMatchInformation = GetBooleanSetting(source, "RetrieveMatchInformation", true);
+            options.Processing.InternetAccess.PullAllInformation = GetBooleanSetting(source, "PullAllInformation", false);
             options.Processing.InternetAccess.AttemptCount = GetInt32Setting(source, "AttemptCount", 3);
             options.Processing.InternetAccess.TimeoutSeconds = GetInt32Setting(source, "TimeoutSeconds", 30);
 
@@ -464,7 +464,6 @@ namespace MPF.Frontend.Tools
 
                 { "ScanForProtection", options.Processing.ProtectionScanning.ScanForProtection.ToString() },
                 { "PromptForDiscInformation", options.Processing.MediaInformation.PromptForDiscInformation.ToString() },
-                { "PullAllInformation", options.Processing.InternetAccess.PullAllInformation.ToString() },
                 { "EnableTabsInInputFields", options.Processing.MediaInformation.EnableTabsInInputFields.ToString() },
                 { "EnableRedumpCompatibility", options.Processing.MediaInformation.EnableRedumpCompatibility.ToString() },
                 { "ShowDiscEjectReminder", options.Processing.ShowDiscEjectReminder.ToString() },
@@ -486,6 +485,7 @@ namespace MPF.Frontend.Tools
                 { "ToolConsoleAutoClose", options.GUI.ToolConsoleAutoClose.ToString() },
 
                 { "RetrieveMatchInformation", options.Processing.InternetAccess.RetrieveMatchInformation.ToString() },
+                { "PullAllInformation", options.Processing.InternetAccess.PullAllInformation.ToString() },
                 { "AttemptCount", options.Processing.InternetAccess.AttemptCount.ToString() },
                 { "TimeoutSeconds", options.Processing.InternetAccess.TimeoutSeconds.ToString() },
             };

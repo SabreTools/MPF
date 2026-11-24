@@ -10,6 +10,7 @@
 - Transition away from some "Login" naming
 - Move "pull all information" setting, cleanup resources
 - Rename login info and web access to "Internet Access"
+- Rearrange internal order for internet access settings
 
 ### 3.12.0 (2026-11-23)
 

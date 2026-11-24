@@ -50,8 +50,8 @@ namespace MPF.Check.Features
                 Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
                 // Internet Access Information
-                Options.Processing.InternetAccess.PullAllInformation = false;
                 Options.Processing.InternetAccess.RetrieveMatchInformation = true;
+                Options.Processing.InternetAccess.PullAllInformation = false;
                 Options.Processing.InternetAccess.AttemptCount = 3;
                 Options.Processing.InternetAccess.TimeoutSeconds = 30;
 

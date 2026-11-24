@@ -151,8 +151,8 @@ namespace MPF.Frontend
             Processing.ProtectionScanning.HideDriveLetters = source.Processing.ProtectionScanning.HideDriveLetters;
             Processing.ProtectionScanning.IncludeDebugProtectionInformation = source.Processing.ProtectionScanning.IncludeDebugProtectionInformation;
 
-            Processing.InternetAccess.PullAllInformation = source.Processing.InternetAccess.PullAllInformation;
             Processing.InternetAccess.RetrieveMatchInformation = source.Processing.InternetAccess.RetrieveMatchInformation;
+            Processing.InternetAccess.PullAllInformation = source.Processing.InternetAccess.PullAllInformation;
             Processing.InternetAccess.AttemptCount = source.Processing.InternetAccess.AttemptCount;
             Processing.InternetAccess.TimeoutSeconds = source.Processing.InternetAccess.TimeoutSeconds;
 
@@ -625,16 +625,16 @@ namespace MPF.Frontend
     public class InternetAccessSettings
     {
         /// <summary>
-        /// Pull all information from online sources if signed in
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool PullAllInformation { get; set; } = false;
-
-        /// <summary>
         /// Enable retrieving match information from Redump
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public bool RetrieveMatchInformation { get; set; } = true;
+
+        /// <summary>
+        /// Pull all possible information from online sources
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool PullAllInformation { get; set; } = false;
 
         /// <summary>
         /// Maximum attempt count for any operation

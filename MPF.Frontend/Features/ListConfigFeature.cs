@@ -131,8 +131,8 @@ namespace MPF.Frontend.Features
 
             // Internet Access Information
             Console.WriteLine("Internet Access Information:");
-            Console.WriteLine($"  Pull All Information = {options.Processing.InternetAccess.PullAllInformation}");
             Console.WriteLine($"  Retrieve Match Information = {options.Processing.InternetAccess.RetrieveMatchInformation}");
+            Console.WriteLine($"  Pull All Information = {options.Processing.InternetAccess.PullAllInformation}");
             Console.WriteLine($"  Web client attempt count = {options.Processing.InternetAccess.AttemptCount}");
             Console.WriteLine($"  Web client timeout in seconds = {options.Processing.InternetAccess.TimeoutSeconds}");
             Console.WriteLine();
