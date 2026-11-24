@@ -82,7 +82,6 @@
     <system:String x:Key="DumpingTabString">Dump1n9</system:String>
     <system:String x:Key="DumpingGroupBoxString">Dump1n9</system:String>
     <system:String x:Key="ShowDiscInfoCheckBoxString">zh0w D1zc 1nf0</system:String>
-    <system:String x:Key="PullAllInformationCheckBoxString">Pu11 411 1nf0rm4710n</system:String>
     <system:String x:Key="EnableTabInputCheckBoxString">3n4813 748 1npu7</system:String>
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">3n4813 R3dump C0mp47181117y</system:String>
     <system:String x:Key="ShowEjectReminderCheckBoxString">zh0w 3j3c7 R3m1nd3r</system:String>
@@ -134,10 +133,7 @@
     <system:String x:Key="LoginInfoTabString">1091n 1nf0</system:String>
     <system:String x:Key="RetrievalGroupBoxString">R37r13v41</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">R37r13v3 M47ch 1nf0rm4710n</system:String>
-    <system:String x:Key="RedumpGroupBoxString">r3dump.0rg</system:String>
-    <system:String x:Key="UsernameLabelString">Uz3rn4m3</system:String>
-    <system:String x:Key="PasswordLabelString">P4zzw0rd</system:String>
-    <system:String x:Key="TestLoginButtonString">73z7 1091n</system:String>
+    <system:String x:Key="PullAllInformationCheckBoxString">Pu11 411 1nf0rm4710n</system:String>
 
     <!-- Check Dump Window -->
     <system:String x:Key="CheckDumpTitleString">Ch3ck 3x1z71n9 Dump</system:String>

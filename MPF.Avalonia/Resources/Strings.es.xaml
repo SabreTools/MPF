@@ -80,7 +80,6 @@
     <x:String x:Key="DumpingTabString">Volcado</x:String>
     <x:String x:Key="DumpingGroupBoxString">Volcado</x:String>
     <x:String x:Key="ShowDiscInfoCheckBoxString">Mostrar información del disco</x:String>
-    <x:String x:Key="PullAllInformationCheckBoxString">Obtener toda la información</x:String>
     <x:String x:Key="EnableTabInputCheckBoxString">Habilitar entrada con Tab</x:String>
     <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Habilitar compatibilidad con Redump</x:String>
     <x:String x:Key="ShowEjectReminderCheckBoxString">Mostrar recordatorio de expulsión</x:String>
@@ -129,10 +128,7 @@
     <x:String x:Key="LoginInfoTabString">Información de acceso</x:String>
     <x:String x:Key="RetrievalGroupBoxString">Recuperación</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">Recuperar información de coincidencias</x:String>
-    <x:String x:Key="RedumpGroupBoxString">redump.info</x:String>
-    <x:String x:Key="UsernameLabelString">Usuario</x:String>
-    <x:String x:Key="PasswordLabelString">Contraseña</x:String>
-    <x:String x:Key="TestLoginButtonString">Probar acceso</x:String>
+    <x:String x:Key="PullAllInformationCheckBoxString">Obtener toda la información</x:String>
 
     <!-- Check Dump Window -->
     <x:String x:Key="CheckDumpTitleString">Comprobar volcado existente</x:String>

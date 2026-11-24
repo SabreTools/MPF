@@ -81,7 +81,6 @@
     <system:String x:Key="DumpingTabString">덤핑</system:String>
     <system:String x:Key="DumpingGroupBoxString">덤핑</system:String>
     <system:String x:Key="ShowDiscInfoCheckBoxString">디스크 정보 표시</system:String>
-    <system:String x:Key="PullAllInformationCheckBoxString">모든 정보 가져오기</system:String>
     <system:String x:Key="EnableTabInputCheckBoxString">탭 입력 활성화</system:String>
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Redump 호환성 활성화</system:String>
     <system:String x:Key="ShowEjectReminderCheckBoxString">배출 알림 표시</system:String>
@@ -130,10 +129,7 @@
     <system:String x:Key="LoginInfoTabString">로그인 정보</system:String>
     <system:String x:Key="RetrievalGroupBoxString">검색</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">일치 정보 가져오기</system:String>
-    <system:String x:Key="RedumpGroupBoxString">redump.info</system:String>
-    <system:String x:Key="UsernameLabelString">사용자 이름</system:String>
-    <system:String x:Key="PasswordLabelString">비밀번호</system:String>
-    <system:String x:Key="TestLoginButtonString">로그인 테스트</system:String>
+    <system:String x:Key="PullAllInformationCheckBoxString">모든 정보 가져오기</system:String>
 
     <!-- Check Dump Window -->
     <system:String x:Key="CheckDumpTitleString">체크 기존 덤프</system:String>

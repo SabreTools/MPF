@@ -80,7 +80,6 @@
     <x:String x:Key="DumpingTabString">ダンプ</x:String>
     <x:String x:Key="DumpingGroupBoxString">ダンプ設定</x:String>
     <x:String x:Key="ShowDiscInfoCheckBoxString">ディスク情報を表示</x:String>
-    <x:String x:Key="PullAllInformationCheckBoxString">すべての情報を取得</x:String>
     <x:String x:Key="EnableTabInputCheckBoxString">タブ入力を有効にする</x:String>
     <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Redump 互換を有効にする</x:String>
     <x:String x:Key="ShowEjectReminderCheckBoxString">排出リマインダーを表示</x:String>
@@ -129,10 +128,7 @@
     <x:String x:Key="LoginInfoTabString">ログイン情報</x:String>
     <x:String x:Key="RetrievalGroupBoxString">情報取得</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">一致情報を取得</x:String>
-    <x:String x:Key="RedumpGroupBoxString">redump.info</x:String>
-    <x:String x:Key="UsernameLabelString">ユーザー名</x:String>
-    <x:String x:Key="PasswordLabelString">パスワード</x:String>
-    <x:String x:Key="TestLoginButtonString">ログインをテスト</x:String>
+    <x:String x:Key="PullAllInformationCheckBoxString">すべての情報を取得</x:String>
 
     <!-- Check Dump Window -->
     <x:String x:Key="CheckDumpTitleString">既存ダンプの確認</x:String>

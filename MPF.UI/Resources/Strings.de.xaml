@@ -81,7 +81,6 @@
     <system:String x:Key="DumpingTabString">Dumping</system:String>
     <system:String x:Key="DumpingGroupBoxString">Dumping</system:String>
     <system:String x:Key="ShowDiscInfoCheckBoxString">Disc-Informationen anzeigen</system:String>
-    <system:String x:Key="PullAllInformationCheckBoxString">Alle Informationen abrufen</system:String>
     <system:String x:Key="EnableTabInputCheckBoxString">Tab-Eingabe aktivieren</system:String>
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Redump-Kompatibilität aktivieren</system:String>
     <system:String x:Key="ShowEjectReminderCheckBoxString">Auswurferinnerung anzeigen</system:String>
@@ -130,10 +129,7 @@
     <system:String x:Key="LoginInfoTabString">Login-Informationen</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Abruf</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Übereinstimmung informationen abrufen</system:String>
-    <system:String x:Key="RedumpGroupBoxString">redump.info</system:String>
-    <system:String x:Key="UsernameLabelString">Benutzername</system:String>
-    <system:String x:Key="PasswordLabelString">Passwort</system:String>
-    <system:String x:Key="TestLoginButtonString">Login testen</system:String>
+    <system:String x:Key="PullAllInformationCheckBoxString">Alle Informationen abrufen</system:String>
 
     <!-- Check Dump Window -->
     <system:String x:Key="CheckDumpTitleString">Vorhandenen Dump prüfen</system:String>

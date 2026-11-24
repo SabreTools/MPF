@@ -80,7 +80,6 @@
     <x:String x:Key="DumpingTabString">Дамп</x:String>
     <x:String x:Key="DumpingGroupBoxString">Дамп</x:String>
     <x:String x:Key="ShowDiscInfoCheckBoxString">Показать информацию о диске</x:String>
-    <x:String x:Key="PullAllInformationCheckBoxString">Извлечь всю информацию</x:String>
     <x:String x:Key="EnableTabInputCheckBoxString">Разрешить ввод через вкладки</x:String>
     <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Совместимость с Redump</x:String>
     <x:String x:Key="ShowEjectReminderCheckBoxString">Показывать напоминание о извлечении</x:String>
@@ -129,10 +128,7 @@
     <x:String x:Key="LoginInfoTabString">Данные входа</x:String>
     <x:String x:Key="RetrievalGroupBoxString">Получение</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">Получать совпадающую информацию</x:String>
-    <x:String x:Key="RedumpGroupBoxString">redump.info</x:String>
-    <x:String x:Key="UsernameLabelString">Имя пользователя</x:String>
-    <x:String x:Key="PasswordLabelString">Пароль</x:String>
-    <x:String x:Key="TestLoginButtonString">Проверить</x:String>
+    <x:String x:Key="PullAllInformationCheckBoxString">Извлечь всю информацию</x:String>
 
     <!-- Check Dump Window -->
     <x:String x:Key="CheckDumpTitleString">Проверка дампа</x:String>

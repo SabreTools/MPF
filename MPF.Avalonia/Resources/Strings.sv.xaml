@@ -80,7 +80,6 @@
     <x:String x:Key="DumpingTabString">Dumpning</x:String>
     <x:String x:Key="DumpingGroupBoxString">Dumpning</x:String>
     <x:String x:Key="ShowDiscInfoCheckBoxString">Visa skivinformation</x:String>
-    <x:String x:Key="PullAllInformationCheckBoxString">Hämta all information</x:String>
     <x:String x:Key="EnableTabInputCheckBoxString">Aktivera Tab-inmatning</x:String>
     <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Aktivera Redump-kompatibilitet</x:String>
     <x:String x:Key="ShowEjectReminderCheckBoxString">Visa påminnelse om urtagning</x:String>
@@ -129,10 +128,7 @@
     <x:String x:Key="LoginInfoTabString">Inloggningsinfo</x:String>
     <x:String x:Key="RetrievalGroupBoxString">Hämtning</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">Hämta matchningsinformation från Redump.org</x:String>
-    <x:String x:Key="RedumpGroupBoxString">redump.info</x:String>
-    <x:String x:Key="UsernameLabelString">Användarnamn</x:String>
-    <x:String x:Key="PasswordLabelString">Lösenord</x:String>
-    <x:String x:Key="TestLoginButtonString">Testa</x:String>
+    <x:String x:Key="PullAllInformationCheckBoxString">Hämta all information</x:String>
 
     <!-- Check Dump Window -->
     <x:String x:Key="CheckDumpTitleString">Kontrollera befintlig Dump</x:String>

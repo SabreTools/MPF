@@ -81,7 +81,6 @@
     <x:String x:Key="DumpingTabString">Dumps</x:String>
     <x:String x:Key="DumpingGroupBoxString">Dumps</x:String>
     <x:String x:Key="ShowDiscInfoCheckBoxString">Mostrar info do disco</x:String>
-    <x:String x:Key="PullAllInformationCheckBoxString">Buscar toda a informação</x:String>
     <x:String x:Key="EnableTabInputCheckBoxString">Ativar escrita de tabs</x:String>
     <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Ativar compatibilidade com Redump</x:String>
     <x:String x:Key="ShowEjectReminderCheckBoxString">Lembrar de ejetar o disco</x:String>
@@ -134,10 +133,7 @@
     <x:String x:Key="LoginInfoTabString">Info de login</x:String>
     <x:String x:Key="RetrievalGroupBoxString">Obtenção</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">Obter info quando corresponde</x:String>
-    <x:String x:Key="RedumpGroupBoxString">redump.info</x:String>
-    <x:String x:Key="UsernameLabelString">Utilizador</x:String>
-    <x:String x:Key="PasswordLabelString">Palavra-passe</x:String>
-    <x:String x:Key="TestLoginButtonString">Testar login</x:String>
+    <x:String x:Key="PullAllInformationCheckBoxString">Buscar toda a informação</x:String>
 
     <!-- Check Dump Window -->
     <x:String x:Key="CheckDumpTitleString">Verificar dump existente</x:String>

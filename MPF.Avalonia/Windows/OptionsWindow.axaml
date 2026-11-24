@@ -340,36 +340,30 @@
 
                                         <CheckBox Grid.Row="1"
                                                   Grid.Column="0"
-                                                  Content="{DynamicResource PullAllInformationCheckBoxString}"
-                                                  IsChecked="{Binding PullAllInformation}"
-                                                  ToolTip.Tip="Instead of pulling a safe subset of data after dumping, enable pulling all comment and content data" />
-
-                                        <CheckBox Grid.Row="1"
-                                                  Grid.Column="1"
                                                   Content="{DynamicResource EnableTabInputCheckBoxString}"
                                                   IsChecked="{Binding EnableTabsInInputFields}"
                                                   ToolTip.Tip="Enable entering tabs in supported input fields instead of tab navigation" />
 
-                                        <CheckBox Grid.Row="2"
-                                                  Grid.Column="0"
+                                        <CheckBox Grid.Row="1"
+                                                  Grid.Column="1"
                                                   Content="{DynamicResource EnableRedumpCompatibilityCheckBoxString}"
                                                   IsChecked="{Binding EnableRedumpCompatibility}"
                                                   ToolTip.Tip="Enable limiting outputs to only those supported by Redump" />
 
                                         <CheckBox Grid.Row="2"
-                                                  Grid.Column="1"
+                                                  Grid.Column="0"
                                                   Content="{DynamicResource ShowEjectReminderCheckBoxString}"
                                                   IsChecked="{Binding ShowDiscEjectReminder}"
                                                   ToolTip.Tip="Enable showing the disc eject reminder after information is gathered" />
 
-                                        <CheckBox Grid.Row="3"
-                                                  Grid.Column="0"
+                                        <CheckBox Grid.Row="2"
+                                                  Grid.Column="1"
                                                   Content="{DynamicResource AddFilenameSuffixCheckBoxString}"
                                                   IsChecked="{Binding AddFilenameSuffix}"
                                                   ToolTip.Tip="Enable appending the output filename to the generated files" />
 
                                         <CheckBox Grid.Row="3"
-                                                  Grid.Column="1"
+                                                  Grid.Column="0"
                                                   Content="{DynamicResource CompressLogFilesCheckBoxString}"
                                                   IsChecked="{Binding CompressLogFiles}"
                                                   ToolTip.Tip="Compress output log files to reduce space" />
@@ -888,6 +882,12 @@
                                               Content="{DynamicResource RetrieveMatchInformationCheckBoxString}"
                                               IsChecked="{Binding RetrieveMatchInformation}"
                                               ToolTip.Tip="Attempts to retrieve match information from Redump" />
+
+                                    <CheckBox Grid.Row="0"
+                                              Grid.Column="1"
+                                              Content="{DynamicResource PullAllInformationCheckBoxString}"
+                                              IsChecked="{Binding PullAllInformation}"
+                                              ToolTip.Tip="Instead of pulling a safe subset of data after dumping, enable pulling all comment and content data" />
                                 </StackPanel>
                             </Border>
 

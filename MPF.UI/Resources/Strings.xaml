@@ -87,7 +87,6 @@
     <system:String x:Key="DumpingGroupBoxString">Dumping</system:String>
     <system:String x:Key="UseRelativePathsCheckBoxString">Use Relative Paths</system:String>
     <system:String x:Key="ShowDiscInfoCheckBoxString">Show Disc Info</system:String>
-    <system:String x:Key="PullAllInformationCheckBoxString">Pull All Information</system:String>
     <system:String x:Key="EnableTabInputCheckBoxString">Enable Tab Input</system:String>
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Enable Redump Compatibility</system:String>
     <system:String x:Key="ShowEjectReminderCheckBoxString">Show Eject Reminder</system:String>
@@ -140,10 +139,7 @@
     <system:String x:Key="LoginInfoTabString">Login Info</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Retrieval</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Retrieve Match Information</system:String>
-    <system:String x:Key="RedumpGroupBoxString">redump.info</system:String>
-    <system:String x:Key="UsernameLabelString">Username</system:String>
-    <system:String x:Key="PasswordLabelString">Password</system:String>
-    <system:String x:Key="TestLoginButtonString">Test Login</system:String>
+    <system:String x:Key="PullAllInformationCheckBoxString">Pull All Information</system:String>
 
     <!-- Check Dump Window -->
     <system:String x:Key="CheckDumpTitleString">Check Existing Dump</system:String>

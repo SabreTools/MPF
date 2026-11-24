@@ -82,7 +82,6 @@
     <system:String x:Key="DumpingTabString">Дамп</system:String>
     <system:String x:Key="DumpingGroupBoxString">Дамп</system:String>
     <system:String x:Key="ShowDiscInfoCheckBoxString">Показати інформацію по диску</system:String>
-    <system:String x:Key="PullAllInformationCheckBoxString">Завантажити всю інформацію</system:String>
     <system:String x:Key="EnableTabInputCheckBoxString">Увімкнути закладки</system:String>
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Увімкнути сумісність з Redump</system:String>
     <system:String x:Key="ShowEjectReminderCheckBoxString">Нагадувати витягнути диск</system:String>
@@ -135,10 +134,7 @@
     <system:String x:Key="LoginInfoTabString">Інформація для входу</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Завантаження</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Завантажити онлайн інформацію</system:String>
-    <system:String x:Key="RedumpGroupBoxString">redump.info</system:String>
-    <system:String x:Key="UsernameLabelString">Ім'я</system:String>
-    <system:String x:Key="PasswordLabelString">Пароль</system:String>
-    <system:String x:Key="TestLoginButtonString">Протестувати вхід</system:String>
+    <system:String x:Key="PullAllInformationCheckBoxString">Завантажити всю інформацію</system:String>
 
     <!-- Check Dump Window -->
     <system:String x:Key="CheckDumpTitleString">Перевірити існуючий дамп</system:String>

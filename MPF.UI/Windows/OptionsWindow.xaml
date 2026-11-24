@@ -379,12 +379,6 @@
                                           Margin="0,4"/>
 
                                 <CheckBox VerticalAlignment="Center"
-                                          Content="{DynamicResource PullAllInformationCheckBoxString}"
-                                          IsChecked="{Binding PullAllInformation}"
-                                          ToolTip="Instead of pulling a safe subset of data after dumping, enable pulling all comment and content data"
-                                          Margin="0,4"/>
-
-                                <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource EnableTabInputCheckBoxString}"
                                           IsChecked="{Binding EnableTabsInInputFields}"
                                           ToolTip="Enable entering tabs in supported input fields instead of tab navigation"
@@ -413,6 +407,8 @@
                                           IsChecked="{Binding CompressLogFiles}"
                                           ToolTip="Compress output log files to reduce space"
                                           Margin="0,4"/>
+                                <Label/>
+                                <!-- Empty label for padding -->
 
                                 <Label VerticalAlignment="Center"
                                        Content="{DynamicResource LogCompressionLabelString}"
@@ -846,12 +842,18 @@
                                   HorizontalAlignment="Stretch"
                                   VerticalAlignment="Stretch"
                                   Header="{DynamicResource RetrievalGroupBoxString}">
-                            <UniformGrid Columns="1"
+                            <UniformGrid Columns="2"
                                          Rows="1">
                                 <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource RetrieveMatchInformationCheckBoxString}"
                                           IsChecked="{Binding RetrieveMatchInformation}"
                                           ToolTip="Attempts to retrieve match information from Redump"
+                                          Margin="0,4"/>
+
+                                <CheckBox VerticalAlignment="Center"
+                                          Content="{DynamicResource PullAllInformationCheckBoxString}"
+                                          IsChecked="{Binding PullAllInformation}"
+                                          ToolTip="Instead of pulling a safe subset of data after dumping, enable pulling all comment and content data"
                                           Margin="0,4"/>
                             </UniformGrid>
                         </GroupBox>
