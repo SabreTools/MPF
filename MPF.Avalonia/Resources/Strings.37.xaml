@@ -86,7 +86,6 @@
     <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">3n4813 R3dump C0mp47181117y</x:String>
     <x:String x:Key="ShowEjectReminderCheckBoxString">zh0w 3j3c7 R3m1nd3r</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">4dd F113n4m3 zuff1x</x:String>
-    <x:String x:Key="OutputSubmissionJSONCheckBoxString">0u7pu7 zu8m1zz10n Jz0N</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">C0mpr3zz 109 F113z</x:String>
     <x:String x:Key="LogCompressionLabelString">109 C0mpr3zz10n:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">D31373 Unn3c3zz4ry F113z</x:String>

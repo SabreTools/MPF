@@ -679,16 +679,13 @@ namespace MPF.Frontend
                 }
             }
 
-            // Write the JSON output, if required
-            if (_options.Processing.OutputSubmissionJSON)
-            {
-                resultProgress.Report(ResultEventArgs.Neutral($"Writing submission information JSON file..."));
-                bool jsonSuccess = WriteOutputData(outputDirectory, filenameSuffix, submissionInfo);
-                if (jsonSuccess)
-                    resultProgress.Report(ResultEventArgs.Success("Writing complete!"));
-                else
-                    resultProgress.Report(ResultEventArgs.Failure("Writing could not complete!"));
-            }
+            // Write the JSON output
+            resultProgress.Report(ResultEventArgs.Neutral($"Writing submission information JSON file..."));
+            bool jsonSuccess = WriteOutputData(outputDirectory, filenameSuffix, submissionInfo);
+            if (jsonSuccess)
+                resultProgress.Report(ResultEventArgs.Success("Writing complete!"));
+            else
+                resultProgress.Report(ResultEventArgs.Failure("Writing could not complete!"));
 
             // Compress the logs, if required
             if (_options.Processing.CompressLogFiles)

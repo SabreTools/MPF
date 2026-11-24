@@ -15,11 +15,10 @@ namespace MPF.Processors.Test
             string? filenameSuffix = null;
             var actual = BaseProcessor.GetGeneratedFilenames(filenameSuffix);
 
-            Assert.Equal(4, actual.Count);
+            Assert.Equal(3, actual.Count);
             Assert.Equal("!protectionInfo.txt", actual[0]);
             Assert.Equal("!submissionInfo.json", actual[1]);
-            Assert.Equal("!submissionInfo.json.gz", actual[2]);
-            Assert.Equal("!submissionInfo.txt", actual[3]);
+            Assert.Equal("!submissionInfo.txt", actual[2]);
         }
 
         [Fact]
@@ -28,11 +27,10 @@ namespace MPF.Processors.Test
             string? filenameSuffix = string.Empty;
             var actual = BaseProcessor.GetGeneratedFilenames(filenameSuffix);
 
-            Assert.Equal(4, actual.Count);
+            Assert.Equal(3, actual.Count);
             Assert.Equal("!protectionInfo.txt", actual[0]);
             Assert.Equal("!submissionInfo.json", actual[1]);
-            Assert.Equal("!submissionInfo.json.gz", actual[2]);
-            Assert.Equal("!submissionInfo.txt", actual[3]);
+            Assert.Equal("!submissionInfo.txt", actual[2]);
         }
 
         [Fact]
@@ -41,11 +39,10 @@ namespace MPF.Processors.Test
             string? filenameSuffix = "suffix";
             var actual = BaseProcessor.GetGeneratedFilenames(filenameSuffix);
 
-            Assert.Equal(4, actual.Count);
+            Assert.Equal(3, actual.Count);
             Assert.Equal("!protectionInfo_suffix.txt", actual[0]);
             Assert.Equal("!submissionInfo_suffix.json", actual[1]);
-            Assert.Equal("!submissionInfo_suffix.json.gz", actual[2]);
-            Assert.Equal("!submissionInfo_suffix.txt", actual[3]);
+            Assert.Equal("!submissionInfo_suffix.txt", actual[2]);
         }
 
         #endregion
@@ -81,7 +78,7 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "BaseProcessor");
             var actual = BaseProcessor.GetGeneratedFilePaths(outputDirectory, filenameSuffix: null);
-            Assert.Equal(4, actual.Count);
+            Assert.Equal(3, actual.Count);
         }
 
         #endregion

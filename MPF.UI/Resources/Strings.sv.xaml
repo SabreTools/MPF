@@ -86,7 +86,6 @@
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Aktivera Redump-kompatibilitet</system:String>
     <system:String x:Key="ShowEjectReminderCheckBoxString">Visa påminnelse om urtagning</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">Lägg till filnamnstillägg</system:String>
-    <system:String x:Key="OutputSubmissionJSONCheckBoxString">Generera JSON för Submission</system:String>
     <system:String x:Key="CompressLogFilesCheckBoxString">Komprimera loggfiler</system:String>
     <system:String x:Key="LogCompressionLabelString">Loggkomprimering:</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Ta bort onödiga filer</system:String>

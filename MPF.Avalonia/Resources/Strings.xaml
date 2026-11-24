@@ -97,7 +97,6 @@
     <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Enable Redump Compatibility</x:String>
     <x:String x:Key="ShowEjectReminderCheckBoxString">Show Eject Reminder</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">Add Filename Suffix</x:String>
-    <x:String x:Key="OutputSubmissionJSONCheckBoxString">Output Submission JSON</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">Compress Log Files</x:String>
     <x:String x:Key="LogCompressionLabelString">Log Compression:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Delete Unnecessary Files</x:String>

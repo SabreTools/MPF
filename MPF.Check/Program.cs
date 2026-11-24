@@ -166,8 +166,6 @@ namespace MPF.Check
             commandSet.Add(mainFeature.HideDriveLettersInput);
             commandSet.Add(mainFeature.SuffixInput);
             commandSet.Add(mainFeature.NoSuffixInput);
-            commandSet.Add(mainFeature.JsonInput);
-            commandSet.Add(mainFeature.NoJsonInput);
             commandSet.Add(mainFeature.ZipInput);
             commandSet.Add(mainFeature.NoZipInput);
             commandSet.Add(mainFeature.LogCompressionInput);

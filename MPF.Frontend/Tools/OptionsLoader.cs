@@ -395,7 +395,6 @@ namespace MPF.Frontend.Tools
             options.Processing.DeleteUnnecessaryFiles = GetBooleanSetting(source, "DeleteUnnecessaryFiles", false);
             valueString = GetStringSetting(source, "LogCompression", LogCompression.DeflateMaximum.ToString());
             options.Processing.LogCompression = valueString.ToLogCompression();
-            options.Processing.OutputSubmissionJSON = GetBooleanSetting(source, "OutputSubmissionJSON", false);
             options.Processing.ShowDiscEjectReminder = GetBooleanSetting(source, "ShowDiscEjectReminder", true);
 
             return options;
@@ -471,7 +470,6 @@ namespace MPF.Frontend.Tools
                 { "ShowDiscEjectReminder", options.Processing.ShowDiscEjectReminder.ToString() },
                 { "IgnoreFixedDrives", options.GUI.IgnoreFixedDrives.ToString() },
                 { "AddFilenameSuffix", options.Processing.AddFilenameSuffix.ToString() },
-                { "OutputSubmissionJSON", options.Processing.OutputSubmissionJSON.ToString() },
                 { "CompressLogFiles", options.Processing.CompressLogFiles.ToString() },
                 { "LogCompression", options.Processing.LogCompression.ToString() },
                 { "DeleteUnnecessaryFiles", options.Processing.DeleteUnnecessaryFiles.ToString() },

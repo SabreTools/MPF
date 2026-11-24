@@ -85,7 +85,6 @@
     <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Redump 互換を有効にする</x:String>
     <x:String x:Key="ShowEjectReminderCheckBoxString">排出リマインダーを表示</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">ファイル名にサフィックスを追加</x:String>
-    <x:String x:Key="OutputSubmissionJSONCheckBoxString">送信用 JSON を出力</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">ログファイルを圧縮</x:String>
     <x:String x:Key="LogCompressionLabelString">ログ圧縮:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">不要ファイルを削除</x:String>

@@ -94,7 +94,6 @@ namespace MPF.CLI.Features
             // Post-Information Options
             Options.Processing.AddFilenameSuffix = false;
             Options.Processing.CreateIRDAfterDumping = false;
-            Options.Processing.OutputSubmissionJSON = false;
             Options.Processing.CompressLogFiles = false;
             Options.Processing.LogCompression = LogCompression.DeflateMaximum;
             Options.Processing.DeleteUnnecessaryFiles = false;

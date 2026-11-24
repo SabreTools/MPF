@@ -6,6 +6,7 @@
 - Enable submission JSON output by default
 - Remove artifacts from JSON output
 - Remove all traces of artifact generation
+- Remove ability to disable JSON output
 
 ### 3.12.0 (2026-11-23)
 

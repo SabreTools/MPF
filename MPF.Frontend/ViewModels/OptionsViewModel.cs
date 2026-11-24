@@ -474,17 +474,6 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
-        /// <inheritdoc cref="ProcessingSettings.OutputSubmissionJSON"/>
-        public bool OutputSubmissionJSON
-        {
-            get => Options.Processing.OutputSubmissionJSON;
-            set
-            {
-                Options.Processing.OutputSubmissionJSON = value;
-                TriggerPropertyChanged(nameof(OutputSubmissionJSON));
-            }
-        }
-
         /// <inheritdoc cref="MediaInformationSettings.PromptForDiscInformation"/>
         public bool PromptForDiscInformation
         {

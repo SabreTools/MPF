@@ -165,7 +165,6 @@ namespace MPF.Frontend
             Processing.CreateIRDAfterDumping = source.Processing.CreateIRDAfterDumping;
             Processing.DeleteUnnecessaryFiles = source.Processing.DeleteUnnecessaryFiles;
             Processing.LogCompression = source.Processing.LogCompression;
-            Processing.OutputSubmissionJSON = source.Processing.OutputSubmissionJSON;
             Processing.ShowDiscEjectReminder = source.Processing.ShowDiscEjectReminder;
         }
 
@@ -580,12 +579,6 @@ namespace MPF.Frontend
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public LogCompression LogCompression { get; set; } = LogCompression.DeflateMaximum;
-
-        /// <summary>
-        /// Output the compressed JSON version of the submission info
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool OutputSubmissionJSON { get; set; } = true;
 
         /// <summary>
         /// Show disc eject reminder before the media information window is shown

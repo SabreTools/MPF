@@ -85,7 +85,6 @@
     <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Redump 호환성 활성화</x:String>
     <x:String x:Key="ShowEjectReminderCheckBoxString">배출 알림 표시</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">파일명 접미사 추가</x:String>
-    <x:String x:Key="OutputSubmissionJSONCheckBoxString">제출 JSON 출력</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">로그 파일 압축</x:String>
     <x:String x:Key="LogCompressionLabelString">로그 압축:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">불필요한 파일 삭제</x:String>

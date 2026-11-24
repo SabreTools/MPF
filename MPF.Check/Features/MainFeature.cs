@@ -42,9 +42,6 @@ namespace MPF.Check.Features
         private const string _hideDriveLettersName = "hide-drive-letters";
         internal readonly FlagInput HideDriveLettersInput = new(_hideDriveLettersName, "--hide-drive-letters", "Hide drive letters from scan output (requires --scan)");
 
-        private const string _jsonName = "json";
-        internal readonly FlagInput JsonInput = new(_jsonName, ["-j", "--json"], "Enable submission JSON output");
-
         private const string _loadSeedName = "load-seed";
         internal readonly StringInput LoadSeedInput = new(_loadSeedName, "--load-seed", "Load a seed submission JSON for user information");
 
@@ -62,9 +59,6 @@ namespace MPF.Check.Features
 
         private const string _noDeleteName = "no-delete";
         internal readonly FlagInput NoDeleteInput = new(_noDeleteName, ["--no-delete"], "Disable unnecessary file deletion");
-
-        private const string _noJsonName = "no-json";
-        internal readonly FlagInput NoJsonInput = new(_noJsonName, ["--no-json"], "Disable submission JSON output");
 
         private const string _noPullAllName = "no-pull-all";
         internal readonly FlagInput NoPullAllInput = new(_noPullAllName, "--no-pull-all", "Do not pull all information from online sources");
@@ -134,8 +128,6 @@ namespace MPF.Check.Features
             Add(HideDriveLettersInput);
             Add(SuffixInput);
             Add(NoSuffixInput);
-            Add(JsonInput);
-            Add(NoJsonInput);
             Add(ZipInput);
             Add(NoZipInput);
             Add(LogCompressionInput);
@@ -180,7 +172,6 @@ namespace MPF.Check.Features
                 // Post-Information Options
                 Options.Processing.AddFilenameSuffix = false;
                 Options.Processing.CreateIRDAfterDumping = false;
-                Options.Processing.OutputSubmissionJSON = false;
                 Options.Processing.CompressLogFiles = false;
                 Options.Processing.LogCompression = LogCompression.DeflateMaximum;
                 Options.Processing.DeleteUnnecessaryFiles = false;
@@ -267,12 +258,6 @@ namespace MPF.Check.Features
                     Options.Processing.AddFilenameSuffix = true;
                 else if (NoSuffixInput.ProcessInput(args, ref index))
                     Options.Processing.AddFilenameSuffix = false;
-
-                // Output submission JSON
-                else if (JsonInput.ProcessInput(args, ref index))
-                    Options.Processing.OutputSubmissionJSON = true;
-                else if (NoJsonInput.ProcessInput(args, ref index))
-                    Options.Processing.OutputSubmissionJSON = false;
 
                 // Compress log and extraneous files
                 else if (ZipInput.ProcessInput(args, ref index))

@@ -85,7 +85,6 @@
     <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Activer la compatibilité Redump</x:String>
     <x:String x:Key="ShowEjectReminderCheckBoxString">Afficher le rappel d’éjection</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">Ajouter un suffixe au nom de fichier</x:String>
-    <x:String x:Key="OutputSubmissionJSONCheckBoxString">Sortie JSON pour soumission</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">Compresser les fichiers journaux</x:String>
     <x:String x:Key="LogCompressionLabelString">Compression du journal :</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Supprimer les fichiers inutiles</x:String>

@@ -493,7 +493,6 @@ namespace MPF.Processors
             return [
                 $"{protectionInfoBase}{filenameSuffix}.txt",
                 $"{submissionInfoBase}{filenameSuffix}.json",
-                $"{submissionInfoBase}{filenameSuffix}.json.gz",
                 $"{submissionInfoBase}{filenameSuffix}.txt",
             ];
         }

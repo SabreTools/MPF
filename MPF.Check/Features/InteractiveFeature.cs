@@ -58,7 +58,6 @@ namespace MPF.Check.Features
                 // Post-Information Options
                 Options.Processing.AddFilenameSuffix = false;
                 Options.Processing.CreateIRDAfterDumping = false;
-                Options.Processing.OutputSubmissionJSON = false;
                 Options.Processing.CompressLogFiles = false;
                 Options.Processing.LogCompression = LogCompression.DeflateMaximum;
                 Options.Processing.DeleteUnnecessaryFiles = false;
@@ -97,10 +96,9 @@ namespace MPF.Check.Features
             Console.WriteLine($"C) Debug protection scan output (Currently '{enableDebug}')");
             Console.WriteLine($"D) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
             Console.WriteLine($"E) Hide filename suffix (Currently '{Options.Processing.AddFilenameSuffix}')");
-            Console.WriteLine($"F) Output submission JSON (Currently '{Options.Processing.OutputSubmissionJSON}')");
-            Console.WriteLine($"G) Compress logs (Currently '{Options.Processing.CompressLogFiles}')");
-            Console.WriteLine($"H) Log compression (Currently '{Options.Processing.LogCompression.LongName()}')");
-            Console.WriteLine($"I) Delete unnecessary files (Currently '{Options.Processing.DeleteUnnecessaryFiles}')");
+            Console.WriteLine($"F) Compress logs (Currently '{Options.Processing.CompressLogFiles}')");
+            Console.WriteLine($"G) Log compression (Currently '{Options.Processing.LogCompression.LongName()}')");
+            Console.WriteLine($"H) Delete unnecessary files (Currently '{Options.Processing.DeleteUnnecessaryFiles}')");
             Console.WriteLine();
             Console.WriteLine($"Q) Exit the program");
             Console.WriteLine($"X) Start checking");
@@ -152,17 +150,13 @@ namespace MPF.Check.Features
                     goto root;
                 case "f":
                 case "F":
-                    Options.Processing.OutputSubmissionJSON = !Options.Processing.OutputSubmissionJSON;
+                    Options.Processing.CompressLogFiles = !Options.Processing.CompressLogFiles;
                     goto root;
                 case "g":
                 case "G":
-                    Options.Processing.CompressLogFiles = !Options.Processing.CompressLogFiles;
-                    goto root;
+                    goto logCompression;
                 case "h":
                 case "H":
-                    goto logCompression;
-                case "i":
-                case "I":
                     Options.Processing.DeleteUnnecessaryFiles = !Options.Processing.DeleteUnnecessaryFiles;
                     goto root;
 

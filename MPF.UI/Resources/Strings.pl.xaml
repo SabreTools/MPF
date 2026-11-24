@@ -86,7 +86,6 @@
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Włącz kompatybilność z Redump</system:String>
     <system:String x:Key="ShowEjectReminderCheckBoxString">Pokaż przypomnienie o wysunięciu</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">Dodaj sufiks nazwy pliku</system:String>
-    <system:String x:Key="OutputSubmissionJSONCheckBoxString">Wyjście JSON dla zgłoszeń</system:String>
     <system:String x:Key="CompressLogFilesCheckBoxString">Kompresuj pliki logów</system:String>
     <system:String x:Key="LogCompressionLabelString">Kompresja logów:</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Usuń niepotrzebne pliki</system:String>
