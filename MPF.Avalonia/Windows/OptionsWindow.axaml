@@ -368,14 +368,14 @@
                                                   IsChecked="{Binding CompressLogFiles}"
                                                   ToolTip.Tip="Compress output log files to reduce space" />
 
-                                        <CheckBox Grid.Row="4"
-                                                  Grid.Column="0"
+                                        <CheckBox Grid.Row="3"
+                                                  Grid.Column="1"
                                                   Content="{DynamicResource DeleteUnnecessaryFilesCheckBoxString}"
                                                   IsChecked="{Binding DeleteUnnecessaryFiles}"
                                                   ToolTip.Tip="Delete unnecesary output files to reduce space" />
 
                                         <CheckBox Grid.Row="4"
-                                                  Grid.Column="1"
+                                                  Grid.Column="0"
                                                   Content="{DynamicResource CreatePS3IRDAfterDumpingCheckBoxString}"
                                                   IsChecked="{Binding CreateIRDAfterDumping}"
                                                   ToolTip.Tip="Automatically creates an IRD file after dumping a PS3 disc" />

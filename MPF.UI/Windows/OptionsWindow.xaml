@@ -407,8 +407,6 @@
                                           IsChecked="{Binding CompressLogFiles}"
                                           ToolTip="Compress output log files to reduce space"
                                           Margin="0,4"/>
-                                <Label/>
-                                <!-- Empty label for padding -->
 
                                 <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource DeleteUnnecessaryFilesCheckBoxString}"
