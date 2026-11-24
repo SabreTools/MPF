@@ -71,7 +71,6 @@ namespace MPF.Frontend.Test
         [InlineData(LogCompression.Store, "ZIP using Store")]
         [InlineData(LogCompression.DeflateDefault, "ZIP using Deflate (Level 5)")]
         [InlineData(LogCompression.DeflateMaximum, "ZIP using Deflate (Level 9)")]
-        // [InlineData(LogCompression.Zstd19, "ZIP using Zstd (Level 19)")]
         public void LongName_LogCompression(LogCompression? comp, string? expected)
         {
             string? actual = comp.LongName();

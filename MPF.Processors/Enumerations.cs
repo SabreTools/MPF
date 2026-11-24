@@ -19,11 +19,6 @@ namespace MPF.Processors
         /// PKZIP using DEFLATE level 9
         /// </summary>
         DeflateMaximum,
-
-        /// <summary>
-        /// PKZIP using Zstd level 19
-        /// </summary>
-        // Zstd19,
     }
 
     /// <summary>

@@ -188,7 +188,6 @@ namespace MPF.Frontend
                 LogCompression.Store => "ZIP using Store",
                 LogCompression.DeflateDefault => "ZIP using Deflate (Level 5)",
                 LogCompression.DeflateMaximum => "ZIP using Deflate (Level 9)",
-                //LogCompression.Zstd19 => "ZIP using Zstd (Level 19)",
 
                 _ => "Unknown",
             };
@@ -477,8 +476,6 @@ namespace MPF.Frontend
                 "deflatemaximum"
                     or "max"
                     or "maximum" => LogCompression.DeflateMaximum,
-                // "zstd"
-                //     or "zstd19" => LogCompression.Zstd19,
 
                 _ => LogCompression.DeflateDefault,
             };
