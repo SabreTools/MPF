@@ -5,6 +5,7 @@
 - Remove "Add Placeholders" option
 - Enable submission JSON output by default
 - Remove artifacts from JSON output
+- Remove all traces of artifact generation
 
 ### 3.12.0 (2026-11-23)
 

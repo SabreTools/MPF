@@ -19,11 +19,6 @@ namespace MPF.Processors.OutputFiles
         public string[] Filenames { get; private set; }
 
         /// <summary>
-        /// Key used when creating an artifact
-        /// </summary>
-        public string? ArtifactKey { get; private set; }
-
-        /// <summary>
         /// Indicates if the file is required
         /// </summary>
         public bool IsRequired
@@ -34,38 +29,6 @@ namespace MPF.Processors.OutputFiles
                 return (_flags & OutputFileFlags.Required) != 0;
 #else
                 return _flags.HasFlag(OutputFileFlags.Required);
-#endif
-            }
-        }
-
-        /// <summary>
-        /// Indicates if the file is an artifact
-        /// </summary>
-        public bool IsArtifact
-        {
-            get
-            {
-#if NET20 || NET35
-                return (_flags & OutputFileFlags.Artifact) != 0
-                    || (_flags & OutputFileFlags.Binary) != 0;
-#else
-                return _flags.HasFlag(OutputFileFlags.Artifact)
-                    || _flags.HasFlag(OutputFileFlags.Binary);
-#endif
-            }
-        }
-
-        /// <summary>
-        /// Indicates if the file is a binary artifact
-        /// </summary>
-        public bool IsBinaryArtifact
-        {
-            get
-            {
-#if NET20 || NET35
-                return (_flags & OutputFileFlags.Binary) != 0;
-#else
-                return _flags.HasFlag(OutputFileFlags.Binary);
 #endif
             }
         }
@@ -131,43 +94,16 @@ namespace MPF.Processors.OutputFiles
         }
 
         /// <summary>
-        /// Create an OutputFile with a single filename
-        /// </summary>
-        public OutputFile(string filename, OutputFileFlags flags, string artifactKey)
-            : this([filename], flags, artifactKey)
-        {
-        }
-
-        /// <summary>
         /// Create an OutputFile with set of filenames
         /// </summary>
         public OutputFile(string[] filenames, OutputFileFlags flags)
         {
             Filenames = filenames;
-            ArtifactKey = null;
             _flags = flags;
 
             // Validate the inputs
             if (filenames.Length == 0)
                 throw new ArgumentException($"{nameof(filenames)} must contain at least one value");
-            if (IsArtifact && string.IsNullOrEmpty(ArtifactKey))
-                throw new ArgumentException($"{nameof(flags)} should not contain the Artifact or Binary flag");
-        }
-
-        /// <summary>
-        /// Create an OutputFile with set of filenames
-        /// </summary>
-        public OutputFile(string[] filenames, OutputFileFlags flags, string artifactKey)
-        {
-            Filenames = filenames;
-            ArtifactKey = artifactKey;
-            _flags = flags;
-
-            // Validate the inputs
-            if (filenames.Length == 0)
-                throw new ArgumentException($"{nameof(filenames)} must contain at least one value");
-            if (IsArtifact && string.IsNullOrEmpty(ArtifactKey))
-                throw new ArgumentException($"{nameof(flags)} should not contain the Artifact or Binary flag");
         }
 
         /// <summary>

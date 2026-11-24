@@ -23,26 +23,10 @@ namespace MPF.Processors.OutputFiles
         }
 
         /// <summary>
-        /// Create an OutputFile with a single filename
-        /// </summary>
-        public RegexOutputFile(string filename, OutputFileFlags flags, string artifactKey)
-            : base([filename], flags, artifactKey)
-        {
-        }
-
-        /// <summary>
         /// Create an OutputFile with set of filenames
         /// </summary>
         public RegexOutputFile(string[] filenames, OutputFileFlags flags)
             : base(filenames, flags)
-        {
-        }
-
-        /// <summary>
-        /// Create an OutputFile with set of filenames
-        /// </summary>
-        public RegexOutputFile(string[] filenames, OutputFileFlags flags, string artifactKey)
-            : base(filenames, flags, artifactKey)
         {
         }
 

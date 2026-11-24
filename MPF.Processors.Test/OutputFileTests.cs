@@ -12,16 +12,14 @@ namespace MPF.Processors.Test
         [Theory]
         [InlineData(OutputFileFlags.None, false)]
         [InlineData(OutputFileFlags.Required, true)]
-        [InlineData(OutputFileFlags.Artifact, false)]
-        [InlineData(OutputFileFlags.Binary, false)]
         [InlineData(OutputFileFlags.Deleteable, false)]
         [InlineData(OutputFileFlags.Zippable, false)]
         [InlineData(OutputFileFlags.Preserve, false)]
         public void IsRequiredTest(OutputFileFlags flags, bool expected)
         {
-            var of = new OutputFile("file", flags, "key");
-            var cof = new CustomOutputFile("file", flags, "key", File.Exists);
-            var rof = new RegexOutputFile("file", flags, "key");
+            var of = new OutputFile("file", flags);
+            var cof = new CustomOutputFile("file", flags, File.Exists);
+            var rof = new RegexOutputFile("file", flags);
 
             Assert.Equal(expected, of.IsRequired);
             Assert.Equal(expected, cof.IsRequired);
@@ -31,54 +29,14 @@ namespace MPF.Processors.Test
         [Theory]
         [InlineData(OutputFileFlags.None, false)]
         [InlineData(OutputFileFlags.Required, false)]
-        [InlineData(OutputFileFlags.Artifact, true)]
-        [InlineData(OutputFileFlags.Binary, true)]
-        [InlineData(OutputFileFlags.Deleteable, false)]
-        [InlineData(OutputFileFlags.Zippable, false)]
-        [InlineData(OutputFileFlags.Preserve, false)]
-        public void IsArtifactTest(OutputFileFlags flags, bool expected)
-        {
-            var of = new OutputFile("file", flags, "key");
-            var cof = new CustomOutputFile("file", flags, "key", File.Exists);
-            var rof = new RegexOutputFile("file", flags, "key");
-
-            Assert.Equal(expected, of.IsArtifact);
-            Assert.Equal(expected, cof.IsArtifact);
-            Assert.Equal(expected, rof.IsArtifact);
-        }
-
-        [Theory]
-        [InlineData(OutputFileFlags.None, false)]
-        [InlineData(OutputFileFlags.Required, false)]
-        [InlineData(OutputFileFlags.Artifact, false)]
-        [InlineData(OutputFileFlags.Binary, true)]
-        [InlineData(OutputFileFlags.Deleteable, false)]
-        [InlineData(OutputFileFlags.Zippable, false)]
-        [InlineData(OutputFileFlags.Preserve, false)]
-        public void IsBinaryArtifactTest(OutputFileFlags flags, bool expected)
-        {
-            var of = new OutputFile("file", flags, "key");
-            var cof = new CustomOutputFile("file", flags, "key", File.Exists);
-            var rof = new RegexOutputFile("file", flags, "key");
-
-            Assert.Equal(expected, of.IsBinaryArtifact);
-            Assert.Equal(expected, cof.IsBinaryArtifact);
-            Assert.Equal(expected, rof.IsBinaryArtifact);
-        }
-
-        [Theory]
-        [InlineData(OutputFileFlags.None, false)]
-        [InlineData(OutputFileFlags.Required, false)]
-        [InlineData(OutputFileFlags.Artifact, false)]
-        [InlineData(OutputFileFlags.Binary, false)]
         [InlineData(OutputFileFlags.Deleteable, true)]
         [InlineData(OutputFileFlags.Zippable, false)]
         [InlineData(OutputFileFlags.Preserve, false)]
         public void IsDeleteableTest(OutputFileFlags flags, bool expected)
         {
-            var of = new OutputFile("file", flags, "key");
-            var cof = new CustomOutputFile("file", flags, "key", File.Exists);
-            var rof = new RegexOutputFile("file", flags, "key");
+            var of = new OutputFile("file", flags);
+            var cof = new CustomOutputFile("file", flags, File.Exists);
+            var rof = new RegexOutputFile("file", flags);
 
             Assert.Equal(expected, of.IsDeleteable);
             Assert.Equal(expected, cof.IsDeleteable);
@@ -88,16 +46,14 @@ namespace MPF.Processors.Test
         [Theory]
         [InlineData(OutputFileFlags.None, false)]
         [InlineData(OutputFileFlags.Required, false)]
-        [InlineData(OutputFileFlags.Artifact, false)]
-        [InlineData(OutputFileFlags.Binary, false)]
         [InlineData(OutputFileFlags.Deleteable, false)]
         [InlineData(OutputFileFlags.Zippable, true)]
         [InlineData(OutputFileFlags.Preserve, true)]
         public void IsZippableTest(OutputFileFlags flags, bool expected)
         {
-            var of = new OutputFile("file", flags, "key");
-            var cof = new CustomOutputFile("file", flags, "key", File.Exists);
-            var rof = new RegexOutputFile("file", flags, "key");
+            var of = new OutputFile("file", flags);
+            var cof = new CustomOutputFile("file", flags, File.Exists);
+            var rof = new RegexOutputFile("file", flags);
 
             Assert.Equal(expected, of.IsZippable);
             Assert.Equal(expected, cof.IsZippable);
@@ -107,16 +63,14 @@ namespace MPF.Processors.Test
         [Theory]
         [InlineData(OutputFileFlags.None, false)]
         [InlineData(OutputFileFlags.Required, false)]
-        [InlineData(OutputFileFlags.Artifact, false)]
-        [InlineData(OutputFileFlags.Binary, false)]
         [InlineData(OutputFileFlags.Deleteable, false)]
         [InlineData(OutputFileFlags.Zippable, false)]
         [InlineData(OutputFileFlags.Preserve, true)]
         public void IsPreservedTest(OutputFileFlags flags, bool expected)
         {
-            var of = new OutputFile("file", flags, "key");
-            var cof = new CustomOutputFile("file", flags, "key", File.Exists);
-            var rof = new RegexOutputFile("file", flags, "key");
+            var of = new OutputFile("file", flags);
+            var cof = new CustomOutputFile("file", flags, File.Exists);
+            var rof = new RegexOutputFile("file", flags);
 
             Assert.Equal(expected, of.IsPreserved);
             Assert.Equal(expected, cof.IsPreserved);
@@ -131,9 +85,9 @@ namespace MPF.Processors.Test
         public void Exists_Empty_False()
         {
             string outputDirectory = string.Empty;
-            var of = new OutputFile("pic.bin", OutputFileFlags.None, "key");
-            var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, "key", File.Exists);
-            var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None, "key");
+            var of = new OutputFile("pic.bin", OutputFileFlags.None);
+            var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, File.Exists);
+            var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None);
 
             bool ofActual = of.Exists(outputDirectory);
             bool cofActual = cof.Exists(outputDirectory);
@@ -148,9 +102,9 @@ namespace MPF.Processors.Test
         public void Exists_Invalid_False()
         {
             string outputDirectory = "INVALID";
-            var of = new OutputFile("pic.bin", OutputFileFlags.None, "key");
-            var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, "key", File.Exists);
-            var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None, "key");
+            var of = new OutputFile("pic.bin", OutputFileFlags.None);
+            var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, File.Exists);
+            var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None);
 
             bool ofActual = of.Exists(outputDirectory);
             bool cofActual = cof.Exists(outputDirectory);
@@ -165,9 +119,9 @@ namespace MPF.Processors.Test
         public void Exists_Valid_True()
         {
             string outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "BaseProcessor");
-            var of = new OutputFile("pic.bin", OutputFileFlags.None, "key");
-            var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, "key", File.Exists);
-            var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None, "key");
+            var of = new OutputFile("pic.bin", OutputFileFlags.None);
+            var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, File.Exists);
+            var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None);
 
             bool ofActual = of.Exists(outputDirectory);
             bool cofActual = cof.Exists(outputDirectory);
@@ -186,9 +140,9 @@ namespace MPF.Processors.Test
         public void GetPaths_Empty_Empty()
         {
             string outputDirectory = string.Empty;
-            var of = new OutputFile("pic.bin", OutputFileFlags.None, "key");
-            var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, "key", File.Exists);
-            var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None, "key");
+            var of = new OutputFile("pic.bin", OutputFileFlags.None);
+            var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, File.Exists);
+            var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None);
 
             var ofActual = of.GetPaths(outputDirectory);
             var cofActual = cof.GetPaths(outputDirectory);
@@ -203,9 +157,9 @@ namespace MPF.Processors.Test
         public void GetPaths_Invalid_Empty()
         {
             string outputDirectory = "INVALID";
-            var of = new OutputFile("pic.bin", OutputFileFlags.None, "key");
-            var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, "key", File.Exists);
-            var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None, "key");
+            var of = new OutputFile("pic.bin", OutputFileFlags.None);
+            var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, File.Exists);
+            var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None);
 
             var ofActual = of.GetPaths(outputDirectory);
             var cofActual = cof.GetPaths(outputDirectory);
@@ -220,9 +174,9 @@ namespace MPF.Processors.Test
         public void GetPaths_Valid_Filled()
         {
             string outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "BaseProcessor");
-            var of = new OutputFile("pic.bin", OutputFileFlags.None, "key");
-            var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, "key", File.Exists);
-            var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None, "key");
+            var of = new OutputFile("pic.bin", OutputFileFlags.None);
+            var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, File.Exists);
+            var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None);
 
             var ofActual = of.GetPaths(outputDirectory);
             var cofActual = cof.GetPaths(outputDirectory);

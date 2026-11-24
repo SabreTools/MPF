@@ -27,28 +27,10 @@ namespace MPF.Processors.OutputFiles
         }
 
         /// <summary>
-        /// Create an OutputFile with a single filename
-        /// </summary>
-        public CustomOutputFile(string filename, OutputFileFlags flags, string artifactKey, Func<string, bool> existsFunc)
-            : base([filename], flags, artifactKey)
-        {
-            _existsFunc = existsFunc;
-        }
-
-        /// <summary>
         /// Create an OutputFile with set of filenames
         /// </summary>
         public CustomOutputFile(string[] filenames, OutputFileFlags flags, Func<string, bool> existsFunc)
             : base(filenames, flags)
-        {
-            _existsFunc = existsFunc;
-        }
-
-        /// <summary>
-        /// Create an OutputFile with set of filenames
-        /// </summary>
-        public CustomOutputFile(string[] filenames, OutputFileFlags flags, string artifactKey, Func<string, bool> existsFunc)
-            : base(filenames, flags, artifactKey)
         {
             _existsFunc = existsFunc;
         }

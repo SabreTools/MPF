@@ -68,28 +68,12 @@ namespace MPF.Processors
             return [
                 new($"{outputFilename}.iso", OutputFileFlags.Required),
 
-                new($"{outputFilename}_disc.txt", OutputFileFlags.Required
-                    | OutputFileFlags.Artifact
-                    | OutputFileFlags.Zippable,
-                    "disc"),
-                new($"{outputFilename}_drive.txt", OutputFileFlags.Artifact
-                    | OutputFileFlags.Zippable,
-                    "drive"),
-                new($"{outputFilename}_mainError.txt", OutputFileFlags.Required
-                    | OutputFileFlags.Artifact
-                    | OutputFileFlags.Zippable,
-                    "main_error"),
-                new($"{outputFilename}_mainInfo.txt", OutputFileFlags.Required
-                    | OutputFileFlags.Artifact
-                    | OutputFileFlags.Zippable,
-                    "main_info"),
-                new($"{outputFilename}_PFI.bin", OutputFileFlags.Binary
-                    | OutputFileFlags.Zippable,
-                    "pfi"),
-                new($"{outputFilename}_volDesc.txt", OutputFileFlags.Required
-                    | OutputFileFlags.Artifact
-                    | OutputFileFlags.Zippable,
-                    "vol_desc"),
+                new($"{outputFilename}_disc.txt", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                new($"{outputFilename}_drive.txt", OutputFileFlags.Zippable),
+                new($"{outputFilename}_mainError.txt", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                new($"{outputFilename}_mainInfo.txt", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                new($"{outputFilename}_PFI.bin", OutputFileFlags.Zippable),
+                new($"{outputFilename}_volDesc.txt", OutputFileFlags.Required | OutputFileFlags.Zippable),
             ];
         }
 

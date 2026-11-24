@@ -126,30 +126,14 @@ namespace MPF.Processors
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
             return [
-                new($"{outputFilename}.dvd", OutputFileFlags.Artifact
-                    | OutputFileFlags.Zippable,
-                    "dvd"),
+                new($"{outputFilename}.dvd", OutputFileFlags.Zippable),
                 new($"{outputFilename}.iso", OutputFileFlags.Required),
 
-                new("DMI.bin", OutputFileFlags.Required
-                    | OutputFileFlags.Binary
-                    | OutputFileFlags.Zippable,
-                    "dmi"),
-                new RegexOutputFile("[lL]og\\.txt", OutputFileFlags.Required
-                    | OutputFileFlags.Artifact
-                    | OutputFileFlags.Zippable,
-                    "log"),
-                new("PFI.bin", OutputFileFlags.Required
-                    | OutputFileFlags.Binary
-                    | OutputFileFlags.Zippable,
-                    "pfi"),
-                new("RawSS.bin", OutputFileFlags.Binary
-                    | OutputFileFlags.Zippable,
-                    "raw_ss"),
-                new("SS.bin", OutputFileFlags.Required
-                    | OutputFileFlags.Binary
-                    | OutputFileFlags.Zippable,
-                    "ss"),
+                new("DMI.bin", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                new RegexOutputFile("[lL]og\\.txt", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                new("PFI.bin", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                new("RawSS.bin", OutputFileFlags.Zippable),
+                new("SS.bin", OutputFileFlags.Required | OutputFileFlags.Zippable),
             ];
         }
 
@@ -491,6 +475,7 @@ namespace MPF.Processors
             }
         }
 
+#pragma warning disable IDE0051 // Remove unused private members
         /// <summary>
         /// Recreate a RawSS.bin file from XBC log and write it to a file
         /// </summary>
@@ -513,6 +498,7 @@ namespace MPF.Processors
             File.WriteAllBytes(rawSS, ss);
             return true;
         }
+#pragma warning restore IDE0051 // Remove unused private members
 
         /// <summary>
         /// Recreate an SS.bin byte array from an XBC log.

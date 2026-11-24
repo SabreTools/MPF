@@ -220,33 +220,13 @@ namespace MPF.Processors
             {
                 return [
                     new($"{outputFilename}.aaruf", OutputFileFlags.Required),
-                    new($"{outputFilename}.cicm.xml", OutputFileFlags.Required
-                        | OutputFileFlags.Artifact
-                        | OutputFileFlags.Zippable,
-                        "cicm"),
-                    new($"{outputFilename}.error.log", OutputFileFlags.Artifact
-                        | OutputFileFlags.Zippable,
-                        "error_log"),
-                    new($"{outputFilename}.ibg", OutputFileFlags.Required
-                        | OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "ibg"),
-                    new($"{outputFilename}.log", OutputFileFlags.Required
-                        | OutputFileFlags.Artifact
-                        | OutputFileFlags.Zippable,
-                        "log"),
-                    new($"{outputFilename}.mhddlog.bin", OutputFileFlags.Required
-                        | OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "mhddlog"),
-                    new($"{outputFilename}.resume.xml", OutputFileFlags.Required
-                        | OutputFileFlags.Artifact
-                        | OutputFileFlags.Zippable,
-                        "resume"),
-                    new($"{outputFilename}.sub.log", OutputFileFlags.Required
-                        | OutputFileFlags.Artifact
-                        | OutputFileFlags.Zippable,
-                        "sub_log"),
+                    new($"{outputFilename}.cicm.xml", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.error.log", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.ibg", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.log", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.mhddlog.bin", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.resume.xml", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.sub.log", OutputFileFlags.Required | OutputFileFlags.Zippable),
                 ];
             }
             else if (mediaType == PhysicalMediaType.DVD
@@ -256,29 +236,12 @@ namespace MPF.Processors
             {
                 return [
                     new($"{outputFilename}.aaruf", OutputFileFlags.Required),
-                    new($"{outputFilename}.cicm.xml", OutputFileFlags.Required
-                        | OutputFileFlags.Artifact
-                        | OutputFileFlags.Zippable,
-                        "cicm"),
-                    new($"{outputFilename}.error.log", OutputFileFlags.Artifact
-                        | OutputFileFlags.Zippable,
-                        "error_log"),
-                    new($"{outputFilename}.ibg", OutputFileFlags.Required
-                        | OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "ibg"),
-                    new($"{outputFilename}.log", OutputFileFlags.Required
-                        | OutputFileFlags.Artifact
-                        | OutputFileFlags.Zippable,
-                        "log"),
-                    new($"{outputFilename}.mhddlog.bin", OutputFileFlags.Required
-                        | OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "mhddlog"),
-                    new($"{outputFilename}.resume.xml", OutputFileFlags.Required
-                        | OutputFileFlags.Artifact
-                        | OutputFileFlags.Zippable,
-                        "resume"),
+                    new($"{outputFilename}.cicm.xml", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.error.log", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.ibg", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.log", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.mhddlog.bin", OutputFileFlags.Required | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.resume.xml", OutputFileFlags.Required | OutputFileFlags.Zippable),
                 ];
             }
 

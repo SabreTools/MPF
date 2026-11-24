@@ -55,13 +55,8 @@ namespace MPF.Processors
 
             return [
                 new($"{outputFilename}.wud", OutputFileFlags.Required),
-                new RegexOutputFile ([$"{outputFilename}.txt", @"\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}\.txt"], OutputFileFlags.Required
-                    | OutputFileFlags.Artifact
-                    | OutputFileFlags.Zippable,
-                    "log"),
-                new ($"{outputFilename}.key", OutputFileFlags.Binary
-                    | OutputFileFlags.Zippable,
-                    "key"),
+                new RegexOutputFile ([$"{outputFilename}.txt", @"\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}\.txt"], OutputFileFlags.Required | OutputFileFlags.Zippable),
+                new ($"{outputFilename}.key", OutputFileFlags.Zippable),
             ];
         }
 

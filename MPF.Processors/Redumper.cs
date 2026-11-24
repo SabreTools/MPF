@@ -500,54 +500,23 @@ namespace MPF.Processors
             {
                 List<OutputFile> cdrom = [
                     // .asus is obsolete: newer redumper produces .cache instead
-                    new($"{outputFilename}.asus", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "asus"),
-                    new($"{outputFilename}.atip", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "atip"),
-                    new([$"{outputFilename}.cache", $"{outputFilename}.1.cache"], OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "cache"),
-                    new($"{outputFilename}.2.cache", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "cache_2"),
-                    new($"{outputFilename}.cdtext", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "cdtext"),
-                    new($"{outputFilename}.cue", OutputFileFlags.Required
-                        | OutputFileFlags.Preserve),
+                    new($"{outputFilename}.asus", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.atip", OutputFileFlags.Zippable),
+                    new([$"{outputFilename}.cache", $"{outputFilename}.1.cache"], OutputFileFlags.Zippable),
+                    new($"{outputFilename}.2.cache", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.cdtext", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.cue", OutputFileFlags.Required | OutputFileFlags.Preserve),
                     new($"{outputFilename}.flip", OutputFileFlags.None),
-                    new($"{outputFilename}.fulltoc", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "fulltoc"),
-                    new($"{outputFilename}.log", OutputFileFlags.Required
-                        | OutputFileFlags.Artifact
-                        | OutputFileFlags.Zippable
-                        | OutputFileFlags.Preserve,
-                        "log"),
-                    new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
-                        DatfileExists),
-                    new($"{outputFilename}.pma", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "pma"),
+                    new($"{outputFilename}.fulltoc", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.log", OutputFileFlags.Required | OutputFileFlags.Zippable | OutputFileFlags.Preserve),
+                    new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required, DatfileExists),
+                    new($"{outputFilename}.pma", OutputFileFlags.Zippable),
                     new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Deleteable),
-                    new($"{outputFilename}.state", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "state"),
-                    new($"{outputFilename}.state.zst", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "state_zst"),
-                    new($"{outputFilename}.subcode", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "subcode"),
-                    new($"{outputFilename}.subcode.zst", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "subcode"),
-                    new($"{outputFilename}.toc", OutputFileFlags.Required
-                        | OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "toc"),
+                    new($"{outputFilename}.state", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.state.zst", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.subcode", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.subcode.zst", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.toc", OutputFileFlags.Required | OutputFileFlags.Zippable),
                 ];
 
                 // Include .hash and .skeleton for all files in cuesheet
@@ -574,29 +543,17 @@ namespace MPF.Processors
                         trackName = Path.GetFileNameWithoutExtension(trackName);
 
                         // Add the artifacts
-                        cdrom.Add(new($"{trackName}.hash", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            $"hash_{trackNumber}"));
-                        cdrom.Add(new($"{trackName}.skeleton", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            $"skeleton_{trackNumber}"));
-                        cdrom.Add(new($"{trackName}.skeleton.zst", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            $"skeleton_zst_{trackNumber}"));
+                        cdrom.Add(new($"{trackName}.hash", OutputFileFlags.Zippable));
+                        cdrom.Add(new($"{trackName}.skeleton", OutputFileFlags.Zippable));
+                        cdrom.Add(new($"{trackName}.skeleton.zst", OutputFileFlags.Zippable));
                         trackNumber++;
                     }
                 }
                 catch
                 {
-                    cdrom.Add(new($"{outputFilename}.hash", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "hash"));
-                    cdrom.Add(new($"{outputFilename}.skeleton", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "skeleton"));
-                    cdrom.Add(new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "skeleton_zst"));
+                    cdrom.Add(new($"{outputFilename}.hash", OutputFileFlags.Zippable));
+                    cdrom.Add(new($"{outputFilename}.skeleton", OutputFileFlags.Zippable));
+                    cdrom.Add(new($"{outputFilename}.skeleton.zst", OutputFileFlags.Zippable));
                 }
 
                 return cdrom;
@@ -607,69 +564,29 @@ namespace MPF.Processors
                 || mediaType == PhysicalMediaType.XGD)
             {
                 return [
-                    new($"{outputFilename}.bca", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "bca"),
-                    new($"{outputFilename}.dmi", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "dmi"),
-                    new($"{outputFilename}.hash", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "hash"),
-                    new($"{outputFilename}.log", OutputFileFlags.Required
-                        | OutputFileFlags.Artifact
-                        | OutputFileFlags.Zippable
-                        | OutputFileFlags.Preserve,
-                        "log"),
-                    new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
-                        DatfileExists),
-                    new([$"{outputFilename}.manufacturer", $"{outputFilename}.0.manufacturer"], OutputFileFlags.Required
-                        | OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "manufacturer_0"),
-                    new($"{outputFilename}.1.manufacturer", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "manufacturer_1"),
-                    new($"{outputFilename}.pfi", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "pfi"),
-                    new([$"{outputFilename}.physical", $"{outputFilename}.0.physical"], OutputFileFlags.Required
-                        | OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "physical_0"),
-                    new($"{outputFilename}.1.physical", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "physical_1"),
+                    new($"{outputFilename}.bca", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.dmi", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.hash", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.log", OutputFileFlags.Required | OutputFileFlags.Zippable | OutputFileFlags.Preserve),
+                    new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required, DatfileExists),
+                    new([$"{outputFilename}.manufacturer", $"{outputFilename}.0.manufacturer"], OutputFileFlags.Required | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.1.manufacturer", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.pfi", OutputFileFlags.Zippable),
+                    new([$"{outputFilename}.physical", $"{outputFilename}.0.physical"], OutputFileFlags.Required | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.1.physical", OutputFileFlags.Zippable),
                     new([$"{outputFilename}.sdram"], OutputFileFlags.Deleteable),
                     new($"{outputFilename}.security", System.IsXGD() && !IsManufacturerEmpty($"{basePath}.manufacturer")
-                        ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
-                        : OutputFileFlags.Binary | OutputFileFlags.Zippable,
-                        "security"),
-                    new($"{outputFilename}.skeleton", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "skeleton"),
-                    new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "skeleton_zst"),
-                    new($"{outputFilename}.ss", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "ss"),
-                    new($"{outputFilename}.fixed.ss", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "ss_fixed"),
+                        ? OutputFileFlags.Required | OutputFileFlags.Zippable
+                        : OutputFileFlags.Zippable),
+                    new($"{outputFilename}.skeleton", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.skeleton.zst", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.ss", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.fixed.ss", OutputFileFlags.Zippable),
                     // ssv1 and ssv2 extensions are obsolete
-                    new($"{outputFilename}.ssv1", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "ssv1"),
-                    new($"{outputFilename}.ssv2", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "ssv2"),
-                    new($"{outputFilename}.state", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "state"),
-                    new($"{outputFilename}.state.zst", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "state_zst"),
+                    new($"{outputFilename}.ssv1", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.ssv2", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.state", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.state.zst", OutputFileFlags.Zippable),
                 ];
             }
             else if (mediaType == PhysicalMediaType.HDDVD // TODO: Confirm that this information outputs
@@ -677,48 +594,20 @@ namespace MPF.Processors
                 || mediaType == PhysicalMediaType.NintendoWiiUOpticalDisc)
             {
                 return [
-                    new($"{outputFilename}.asus", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "asus"),
-                    new($"{outputFilename}.bca", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "bca"),
-                    new($"{outputFilename}.hash", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "hash"),
-                    new($"{outputFilename}.log", OutputFileFlags.Required
-                        | OutputFileFlags.Artifact
-                        | OutputFileFlags.Zippable
-                        | OutputFileFlags.Preserve,
-                        "log"),
-                    new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
-                        DatfileExists),
-                    new([$"{outputFilename}.physical", $"{outputFilename}.0.physical"], OutputFileFlags.Required
-                        | OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "physical_0"),
-                    new($"{outputFilename}.1.physical", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "physical_1"),
-                    new($"{outputFilename}.2.physical", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "physical_2"),
-                    new($"{outputFilename}.3.physical", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "physical_3"),
+                    new($"{outputFilename}.asus", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.bca", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.hash", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.log", OutputFileFlags.Required | OutputFileFlags.Zippable | OutputFileFlags.Preserve),
+                    new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required, DatfileExists),
+                    new([$"{outputFilename}.physical", $"{outputFilename}.0.physical"], OutputFileFlags.Required | OutputFileFlags.Zippable),
+                    new($"{outputFilename}.1.physical", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.2.physical", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.3.physical", OutputFileFlags.Zippable),
                     new([$"{outputFilename}.sbram"], OutputFileFlags.Deleteable),
-                    new($"{outputFilename}.skeleton", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "skeleton"),
-                    new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "skeleton_zst"),
-                    new($"{outputFilename}.state", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "state"),
-                    new($"{outputFilename}.state.zst", OutputFileFlags.Binary
-                        | OutputFileFlags.Zippable,
-                        "state_zst"),
+                    new($"{outputFilename}.skeleton", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.skeleton.zst", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.state", OutputFileFlags.Zippable),
+                    new($"{outputFilename}.state.zst", OutputFileFlags.Zippable),
                 ];
             }
 

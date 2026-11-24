@@ -73,16 +73,10 @@ namespace MPF.Processors
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
             return [
-                new($"{outputFilename}.bca", OutputFileFlags.Required
-                    | OutputFileFlags.Binary
-                    | OutputFileFlags.Zippable,
-                    "bca"),
+                new($"{outputFilename}.bca", OutputFileFlags.Required | OutputFileFlags.Zippable),
                 new([$"{outputFilename}.iso", $"{outputFilename}.part0.iso"], OutputFileFlags.Required),
 
-                new($"{outputFilename}-dumpinfo.txt", OutputFileFlags.Required
-                    | OutputFileFlags.Artifact
-                    | OutputFileFlags.Zippable,
-                    "dumpinfo"),
+                new($"{outputFilename}-dumpinfo.txt", OutputFileFlags.Required | OutputFileFlags.Zippable),
             ];
         }
 

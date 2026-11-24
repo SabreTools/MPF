@@ -80,21 +80,12 @@ namespace MPF.Processors
                 basePath = Path.Combine(outputDirectory, basePath);
 
             return [
-                new($"{outputFilename}.cue", OutputFileFlags.Required
-                    | OutputFileFlags.Preserve),
-                new($"{outputFilename}.gdi", OutputFileFlags.Required
-                    | OutputFileFlags.Preserve),
-                new($"{outputFilename}.log", OutputFileFlags.Required
-                    | OutputFileFlags.Artifact
-                    | OutputFileFlags.Zippable
-                    | OutputFileFlags.Preserve,
-                    "log"),
-                new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
-                    DatfileExists),
+                new($"{outputFilename}.cue", OutputFileFlags.Required | OutputFileFlags.Preserve),
+                new($"{outputFilename}.gdi", OutputFileFlags.Required | OutputFileFlags.Preserve),
+                new($"{outputFilename}.log", OutputFileFlags.Required | OutputFileFlags.Zippable | OutputFileFlags.Preserve),
+                new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required, DatfileExists),
                 new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Deleteable),
-                new($"{outputFilename}.subq", OutputFileFlags.Binary
-                    | OutputFileFlags.Zippable,
-                    "subq"),
+                new($"{outputFilename}.subq", OutputFileFlags.Zippable),
 
                 // 44990-55279
                 new($"{outputFilename}-44990-55279.hash", OutputFileFlags.Zippable),
