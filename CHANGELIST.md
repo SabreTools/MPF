@@ -7,6 +7,7 @@
 - Remove artifacts from JSON output
 - Remove all traces of artifact generation
 - Remove ability to disable JSON output
+- Transition away from some "Login" naming
 
 ### 3.12.0 (2026-11-23)
 

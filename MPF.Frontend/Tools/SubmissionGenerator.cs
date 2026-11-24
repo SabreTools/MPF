@@ -172,15 +172,15 @@ namespace MPF.Frontend.Tools
             IProgress<ResultEventArgs>? resultProgress = null)
         {
             // If information should not be pulled at all
-            if (!options.Processing.Login.RetrieveMatchInformation)
+            if (!options.Processing.WebAccess.RetrieveMatchInformation)
                 return false;
 
             // Reset the partially matched IDs
             info.PartiallyMatchedIDs = [];
 
-            // Login to redump.info, if possible
-            int attemptCount = options.Processing.Login.AttemptCount;
-            int timeoutSeconds = options.Processing.Login.TimeoutSeconds;
+            // Connect to redump.info, if possible
+            int attemptCount = options.Processing.WebAccess.AttemptCount;
+            int timeoutSeconds = options.Processing.WebAccess.TimeoutSeconds;
             var wc = new Client
             {
                 AttemptCount = attemptCount > 0 ? attemptCount : 3,
@@ -351,7 +351,7 @@ namespace MPF.Frontend.Tools
             // Use the fully-matched ID to grab a bunch of info from it
             // Fill in the fields from the existing ID
             resultProgress?.Report(ResultEventArgs.Neutral($"Filling fields from existing ID {fullyMatchedIdsList[0]}..."));
-            _ = await Builder.FillFromIdApi(wc, info, fullyMatchedIdsList[0], options.Processing.Login.PullAllInformation);
+            _ = await Builder.FillFromIdApi(wc, info, fullyMatchedIdsList[0], options.Processing.WebAccess.PullAllInformation);
             resultProgress?.Report(ResultEventArgs.Success("Information filling complete!"));
 
             // Set the fully matched ID to the current

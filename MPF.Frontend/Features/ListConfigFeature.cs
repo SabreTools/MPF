@@ -129,12 +129,12 @@ namespace MPF.Frontend.Features
             Console.WriteLine($"  Include Debug Protection Information = {options.Processing.ProtectionScanning.IncludeDebugProtectionInformation}");
             Console.WriteLine();
 
-            // Web Login Information
-            Console.WriteLine("Web Login Information:");
-            Console.WriteLine($"  Pull All Information = {options.Processing.Login.PullAllInformation}");
-            Console.WriteLine($"  Retrieve Match Information = {options.Processing.Login.RetrieveMatchInformation}");
-            Console.WriteLine($"  Web client attempt count = {options.Processing.Login.AttemptCount}");
-            Console.WriteLine($"  Web client timeout in seconds = {options.Processing.Login.TimeoutSeconds}");
+            // Web Access Information
+            Console.WriteLine("Web Access Information:");
+            Console.WriteLine($"  Pull All Information = {options.Processing.WebAccess.PullAllInformation}");
+            Console.WriteLine($"  Retrieve Match Information = {options.Processing.WebAccess.RetrieveMatchInformation}");
+            Console.WriteLine($"  Web client attempt count = {options.Processing.WebAccess.AttemptCount}");
+            Console.WriteLine($"  Web client timeout in seconds = {options.Processing.WebAccess.TimeoutSeconds}");
             Console.WriteLine();
 
             // Media Information

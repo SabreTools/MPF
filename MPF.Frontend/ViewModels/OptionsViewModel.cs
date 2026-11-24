@@ -485,13 +485,13 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
-        /// <inheritdoc cref="SiteLoginSettings.PullAllInformation"/>
+        /// <inheritdoc cref="WebAccessSettings.PullAllInformation"/>
         public bool PullAllInformation
         {
-            get => Options.Processing.Login.PullAllInformation;
+            get => Options.Processing.WebAccess.PullAllInformation;
             set
             {
-                Options.Processing.Login.PullAllInformation = value;
+                Options.Processing.WebAccess.PullAllInformation = value;
                 TriggerPropertyChanged(nameof(PullAllInformation));
             }
         }
@@ -606,13 +606,13 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
-        /// <inheritdoc cref="SiteLoginSettings.RetrieveMatchInformation"/>
+        /// <inheritdoc cref="WebAccessSettings.RetrieveMatchInformation"/>
         public bool RetrieveMatchInformation
         {
-            get => Options.Processing.Login.RetrieveMatchInformation;
+            get => Options.Processing.WebAccess.RetrieveMatchInformation;
             set
             {
-                Options.Processing.Login.RetrieveMatchInformation = value;
+                Options.Processing.WebAccess.RetrieveMatchInformation = value;
                 TriggerPropertyChanged(nameof(RetrieveMatchInformation));
             }
         }

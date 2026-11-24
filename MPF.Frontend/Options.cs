@@ -151,10 +151,10 @@ namespace MPF.Frontend
             Processing.ProtectionScanning.HideDriveLetters = source.Processing.ProtectionScanning.HideDriveLetters;
             Processing.ProtectionScanning.IncludeDebugProtectionInformation = source.Processing.ProtectionScanning.IncludeDebugProtectionInformation;
 
-            Processing.Login.PullAllInformation = source.Processing.Login.PullAllInformation;
-            Processing.Login.RetrieveMatchInformation = source.Processing.Login.RetrieveMatchInformation;
-            Processing.Login.AttemptCount = source.Processing.Login.AttemptCount;
-            Processing.Login.TimeoutSeconds = source.Processing.Login.TimeoutSeconds;
+            Processing.WebAccess.PullAllInformation = source.Processing.WebAccess.PullAllInformation;
+            Processing.WebAccess.RetrieveMatchInformation = source.Processing.WebAccess.RetrieveMatchInformation;
+            Processing.WebAccess.AttemptCount = source.Processing.WebAccess.AttemptCount;
+            Processing.WebAccess.TimeoutSeconds = source.Processing.WebAccess.TimeoutSeconds;
 
             Processing.MediaInformation.EnableRedumpCompatibility = source.Processing.MediaInformation.EnableRedumpCompatibility;
             Processing.MediaInformation.EnableTabsInInputFields = source.Processing.MediaInformation.EnableTabsInInputFields;
@@ -528,13 +528,13 @@ namespace MPF.Frontend
 
         #endregion
 
-        #region Site Login
+        #region Web Access
 
         /// <summary>
-        /// Site login information for retrieval
+        /// Web access settings
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public SiteLoginSettings Login { get; set; } = new SiteLoginSettings();
+        public WebAccessSettings WebAccess { get; set; } = new WebAccessSettings();
 
         #endregion
 
@@ -622,7 +622,7 @@ namespace MPF.Frontend
     /// <summary>
     /// Settings related to site logins
     /// </summary>
-    public class SiteLoginSettings
+    public class WebAccessSettings
     {
         /// <summary>
         /// Pull all information from online sources if signed in
