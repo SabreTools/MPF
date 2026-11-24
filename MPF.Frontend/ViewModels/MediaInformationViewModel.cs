@@ -1463,6 +1463,55 @@ namespace MPF.Frontend.ViewModels
 
         #endregion
 
+        #region Dumping Info (Moderation-only)
+
+        public string? FrontendVersion
+        {
+            get => SubmissionInfo.DumpingInfo.FrontendVersion;
+        }
+
+        public string? DumpingProgram
+        {
+            get => SubmissionInfo.DumpingInfo.DumpingProgram;
+        }
+
+        public string? DumpingDate
+        {
+            get => SubmissionInfo.DumpingInfo.DumpingDate;
+        }
+
+        public string? DumpingParameters
+        {
+            get => SubmissionInfo.DumpingInfo.DumpingParameters;
+        }
+
+        public string? Manufacturer
+        {
+            get => SubmissionInfo.DumpingInfo.Manufacturer;
+        }
+
+        public string? Model
+        {
+            get => SubmissionInfo.DumpingInfo.Model;
+        }
+
+        public string? Firmware
+        {
+            get => SubmissionInfo.DumpingInfo.Firmware;
+        }
+
+        public string? ReportedDiscType
+        {
+            get => SubmissionInfo.DumpingInfo.ReportedDiscType;
+        }
+
+        public string? C2ErrorsCount
+        {
+            get => SubmissionInfo.DumpingInfo.C2ErrorsCount;
+        }
+
+        #endregion
+
         #endregion
 
         #region Selection Lists

@@ -15,6 +15,7 @@
 - Remove remnants of Zstd zips in code
 - Remove compression level choice, use DEFLATE level 9
 - Empty spot no longer needed in Options window
+- Add "Dumping Info" data to media information view model
 
 ### 3.12.0 (2026-11-23)
 
