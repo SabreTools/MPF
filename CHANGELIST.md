@@ -3,6 +3,7 @@
 - Trim trailing directory separator when building output paths
 - Remove placeholder from submission comment
 - Remove "Add Placeholders" option
+- Enable submission JSON output by default
 
 ### 3.12.0 (2026-11-23)
 

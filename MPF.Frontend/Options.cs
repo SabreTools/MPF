@@ -592,7 +592,7 @@ namespace MPF.Frontend
         /// Output the compressed JSON version of the submission info
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public bool OutputSubmissionJSON { get; set; } = false;
+        public bool OutputSubmissionJSON { get; set; } = true;
 
         /// <summary>
         /// Show disc eject reminder before the media information window is shown
