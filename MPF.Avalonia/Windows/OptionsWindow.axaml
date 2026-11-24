@@ -325,7 +325,7 @@
                                     <Grid ColumnDefinitions="*,*"
                                           ColumnSpacing="16"
                                           RowSpacing="4"
-                                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                                          RowDefinitions="Auto,Auto,Auto,Auto,Auto">
                                         <CheckBox Grid.Row="0"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource UseRelativePathsCheckBoxString}"
@@ -368,27 +368,13 @@
                                                   IsChecked="{Binding CompressLogFiles}"
                                                   ToolTip.Tip="Compress output log files to reduce space" />
 
-                                        <TextBlock Grid.Row="4"
-                                                   Grid.Column="0"
-                                                   Text="{DynamicResource LogCompressionLabelString}"
-                                                   HorizontalAlignment="Right"
-                                                   VerticalAlignment="Center" />
-                                        <ComboBox x:Name="LogCompressionComboBox"
-                                                  Grid.Row="4"
-                                                  Grid.Column="1"
-                                                  Width="220"
-                                                  HorizontalAlignment="Left"
-                                                  ItemsSource="{Binding LogCompressions}"
-                                                  SelectedItem="{Binding LogCompression, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                                  IsEnabled="{Binding CompressLogFiles}" />
-
-                                        <CheckBox Grid.Row="5"
+                                        <CheckBox Grid.Row="4"
                                                   Grid.Column="0"
                                                   Content="{DynamicResource DeleteUnnecessaryFilesCheckBoxString}"
                                                   IsChecked="{Binding DeleteUnnecessaryFiles}"
                                                   ToolTip.Tip="Delete unnecesary output files to reduce space" />
 
-                                        <CheckBox Grid.Row="5"
+                                        <CheckBox Grid.Row="4"
                                                   Grid.Column="1"
                                                   Content="{DynamicResource CreatePS3IRDAfterDumpingCheckBoxString}"
                                                   IsChecked="{Binding CreateIRDAfterDumping}"

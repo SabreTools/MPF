@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using SabreTools.RedumpLib.Data;
 using Xunit;
-using LogCompression = MPF.Processors.LogCompression;
 using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
 using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
@@ -62,23 +61,6 @@ namespace MPF.Frontend.Test
             if (prog is not null)
             {
                 actual = EnumExtensions.GetLongName(prog);
-                Assert.Equal(expected, actual);
-            }
-        }
-
-        [Theory]
-        [InlineData(null, "Unknown")]
-        [InlineData(LogCompression.Store, "ZIP using Store")]
-        [InlineData(LogCompression.DeflateDefault, "ZIP using Deflate (Level 5)")]
-        [InlineData(LogCompression.DeflateMaximum, "ZIP using Deflate (Level 9)")]
-        public void LongName_LogCompression(LogCompression? comp, string? expected)
-        {
-            string? actual = comp.LongName();
-            Assert.Equal(expected, actual);
-
-            if (comp is not null)
-            {
-                actual = EnumExtensions.GetLongName(comp);
                 Assert.Equal(expected, actual);
             }
         }

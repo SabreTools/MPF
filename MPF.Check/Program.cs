@@ -168,7 +168,6 @@ namespace MPF.Check
             commandSet.Add(mainFeature.NoSuffixInput);
             commandSet.Add(mainFeature.ZipInput);
             commandSet.Add(mainFeature.NoZipInput);
-            commandSet.Add(mainFeature.LogCompressionInput);
             commandSet.Add(mainFeature.DeleteInput);
             commandSet.Add(mainFeature.NoDeleteInput);
 

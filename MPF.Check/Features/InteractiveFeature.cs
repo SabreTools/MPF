@@ -4,7 +4,6 @@ using MPF.Frontend;
 using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Tools;
-using LogCompression = MPF.Processors.LogCompression;
 
 namespace MPF.Check.Features
 {
@@ -59,7 +58,6 @@ namespace MPF.Check.Features
                 Options.Processing.AddFilenameSuffix = false;
                 Options.Processing.CreateIRDAfterDumping = false;
                 Options.Processing.CompressLogFiles = false;
-                Options.Processing.LogCompression = LogCompression.DeflateMaximum;
                 Options.Processing.DeleteUnnecessaryFiles = false;
             }
 
@@ -97,8 +95,7 @@ namespace MPF.Check.Features
             Console.WriteLine($"D) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
             Console.WriteLine($"E) Hide filename suffix (Currently '{Options.Processing.AddFilenameSuffix}')");
             Console.WriteLine($"F) Compress logs (Currently '{Options.Processing.CompressLogFiles}')");
-            Console.WriteLine($"G) Log compression (Currently '{Options.Processing.LogCompression.LongName()}')");
-            Console.WriteLine($"H) Delete unnecessary files (Currently '{Options.Processing.DeleteUnnecessaryFiles}')");
+            Console.WriteLine($"G) Delete unnecessary files (Currently '{Options.Processing.DeleteUnnecessaryFiles}')");
             Console.WriteLine();
             Console.WriteLine($"Q) Exit the program");
             Console.WriteLine($"X) Start checking");
@@ -154,9 +151,6 @@ namespace MPF.Check.Features
                     goto root;
                 case "g":
                 case "G":
-                    goto logCompression;
-                case "h":
-                case "H":
                     Options.Processing.DeleteUnnecessaryFiles = !Options.Processing.DeleteUnnecessaryFiles;
                     goto root;
 
@@ -242,21 +236,6 @@ namespace MPF.Check.Features
             Console.WriteLine("Input the device or filesystem path and press Enter:");
             Console.Write("> ");
             DevicePath = Console.ReadLine();
-            goto root;
-
-        logCompression:
-            Console.WriteLine();
-            Console.WriteLine("Options:");
-            foreach (var compressionType in (LogCompression[])Enum.GetValues(typeof(LogCompression)))
-            {
-                Console.WriteLine($"{compressionType.ToString().ToLowerInvariant(),-15} => {compressionType.LongName()}");
-            }
-
-            Console.WriteLine();
-            Console.WriteLine("Input the log compression type and press Enter:");
-            Console.Write("> ");
-            result = Console.ReadLine();
-            Options.Processing.LogCompression = result.ToLogCompression();
             goto root;
 
         exit:

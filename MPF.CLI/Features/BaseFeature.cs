@@ -9,7 +9,6 @@ using MPF.Frontend;
 using MPF.Frontend.Tools;
 using SabreTools.IO.Extensions;
 using SabreTools.RedumpLib.Data;
-using LogCompression = MPF.Processors.LogCompression;
 
 namespace MPF.CLI.Features
 {
@@ -95,7 +94,6 @@ namespace MPF.CLI.Features
             Options.Processing.AddFilenameSuffix = false;
             Options.Processing.CreateIRDAfterDumping = false;
             Options.Processing.CompressLogFiles = false;
-            Options.Processing.LogCompression = LogCompression.DeflateMaximum;
             Options.Processing.DeleteUnnecessaryFiles = false;
 
         }

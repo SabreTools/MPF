@@ -85,7 +85,6 @@
     <x:String x:Key="ShowEjectReminderCheckBoxString">排出リマインダーを表示</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">ファイル名にサフィックスを追加</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">ログファイルを圧縮</x:String>
-    <x:String x:Key="LogCompressionLabelString">ログ圧縮:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">不要ファイルを削除</x:String>
     <x:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">ダンプ後に PS3 IRD を作成</x:String>
     <x:String x:Key="ProtectionGroupBoxString">プロテクト</x:String>

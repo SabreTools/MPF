@@ -80,15 +80,12 @@ namespace MPF.Processors
         /// Compress log files to save space
         /// </summary>
         /// <param name="mediaType">Media type for controlling expected file sets</param>
-        /// <param name="logCompression">Compression type to use for logs</param>
         /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <param name="filenameSuffix">Output filename to use as the base path</param>
-        /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <returns>True if the process succeeded, false otherwise</returns>
         /// <remarks>Assumes filename has an extension</remarks>
         public bool CompressLogFiles(PhysicalMediaType? mediaType,
-            LogCompression logCompression,
             string? outputDirectory,
             string outputFilename,
             string? filenameSuffix,
@@ -134,20 +131,7 @@ namespace MPF.Processors
 
                 List<string> successful = AddToArchive(zf, zippableFiles, outputDirectory);
                 _ = AddToArchive(zf, generatedFiles, outputDirectory);
-
-                switch (logCompression)
-                {
-                    case LogCompression.Store:
-                        zf.SaveTo(archiveName, new ZipWriterOptions(CompressionType.None) { UseZip64 = true });
-                        break;
-                    case LogCompression.DeflateMaximum:
-                        zf.SaveTo(archiveName, new ZipWriterOptions(CompressionType.Deflate, CompressionLevel.BestCompression) { UseZip64 = true });
-                        break;
-                    case LogCompression.DeflateDefault:
-                    default:
-                        zf.SaveTo(archiveName, new ZipWriterOptions(CompressionType.Deflate, CompressionLevel.Default) { UseZip64 = true });
-                        break;
-                }
+                zf.SaveTo(archiveName, new ZipWriterOptions(CompressionType.Deflate, CompressionLevel.BestCompression) { UseZip64 = true });
 
                 // Dispose the archive
                 zf?.Dispose();

@@ -365,7 +365,7 @@
                                   VerticalAlignment="Stretch"
                                   Header="{DynamicResource DumpingGroupBoxString}">
                             <UniformGrid Columns="2"
-                                         Rows="7">
+                                         Rows="5">
                                 <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource UseRelativePathsCheckBoxString}"
                                           IsChecked="{Binding UseRelativePaths}"
@@ -409,18 +409,6 @@
                                           Margin="0,4"/>
                                 <Label/>
                                 <!-- Empty label for padding -->
-
-                                <Label VerticalAlignment="Center"
-                                       Content="{DynamicResource LogCompressionLabelString}"
-                                       HorizontalAlignment="Right"/>
-                                <ComboBox x:Name="LogCompressionComboBox"
-                                          Height="22"
-                                          Width="200"
-                                          HorizontalAlignment="Left"
-                                          ItemsSource="{Binding LogCompressions}"
-                                          SelectedItem="{Binding LogCompression, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                          Style="{DynamicResource CustomComboBoxStyle}"
-                                          IsEnabled="{Binding CompressLogFiles}"/>
 
                                 <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource DeleteUnnecessaryFilesCheckBoxString}"

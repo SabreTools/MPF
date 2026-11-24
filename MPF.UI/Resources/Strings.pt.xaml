@@ -87,7 +87,6 @@
     <system:String x:Key="ShowEjectReminderCheckBoxString">Lembrar de ejetar o disco</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">Adicionar sufixo ao ficheiro</system:String>
     <system:String x:Key="CompressLogFilesCheckBoxString">Comprimir ficheiros log</system:String>
-    <system:String x:Key="LogCompressionLabelString">Compressão do log:</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Apagar ficheiros desnecessários</system:String>
     <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Criar IRD PS3 após o dump</system:String>
     <system:String x:Key="ProtectionGroupBoxString">Proteção</system:String>

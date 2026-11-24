@@ -85,7 +85,6 @@
     <x:String x:Key="ShowEjectReminderCheckBoxString">Visa påminnelse om urtagning</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">Lägg till filnamnstillägg</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">Komprimera loggfiler</x:String>
-    <x:String x:Key="LogCompressionLabelString">Loggkomprimering:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Ta bort onödiga filer</x:String>
     <x:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Skapa PS3 IRD efter dumpning</x:String>
     <x:String x:Key="ProtectionGroupBoxString">Kopieringsskydd</x:String>

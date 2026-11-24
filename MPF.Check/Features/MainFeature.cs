@@ -4,7 +4,6 @@ using MPF.Frontend.Tools;
 using SabreTools.CommandLine.Inputs;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Tools;
-using LogCompression = MPF.Processors.LogCompression;
 
 namespace MPF.Check.Features
 {
@@ -44,9 +43,6 @@ namespace MPF.Check.Features
 
         private const string _loadSeedName = "load-seed";
         internal readonly StringInput LoadSeedInput = new(_loadSeedName, "--load-seed", "Load a seed submission JSON for user information");
-
-        private const string _logCompressionName = "log-compression";
-        internal readonly StringInput LogCompressionInput = new(_logCompressionName, "--log-compression", "Set the log compression type (requires compression enabled)");
 
         private const string _noArchivesName = "no-archives";
         internal readonly FlagInput NoArchivesInput = new(_noArchivesName, "--no-archives", "Disable scanning archives (requires --scan)");
@@ -130,7 +126,6 @@ namespace MPF.Check.Features
             Add(NoSuffixInput);
             Add(ZipInput);
             Add(NoZipInput);
-            Add(LogCompressionInput);
             Add(DeleteInput);
             Add(NoDeleteInput);
         }
@@ -173,7 +168,6 @@ namespace MPF.Check.Features
                 Options.Processing.AddFilenameSuffix = false;
                 Options.Processing.CreateIRDAfterDumping = false;
                 Options.Processing.CompressLogFiles = false;
-                Options.Processing.LogCompression = LogCompression.DeflateMaximum;
                 Options.Processing.DeleteUnnecessaryFiles = false;
             }
             else
@@ -200,10 +194,6 @@ namespace MPF.Check.Features
                     Options.Processing.CreateIRDAfterDumping = true;
                 else if (NoCreateIrdInput.ProcessInput(args, ref index))
                     Options.Processing.CreateIRDAfterDumping = false;
-
-                // Set the log compression type (requires compression enabled)
-                else if (LogCompressionInput.ProcessInput(args, ref index))
-                    Options.Processing.LogCompression = LogCompressionInput.Value.ToLogCompression();
 
                 // Retrieve online match information
                 else if (RetrieveInput.ProcessInput(args, ref index))

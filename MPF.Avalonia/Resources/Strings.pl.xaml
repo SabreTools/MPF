@@ -85,7 +85,6 @@
     <x:String x:Key="ShowEjectReminderCheckBoxString">Pokaż przypomnienie o wysunięciu</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">Dodaj sufiks nazwy pliku</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">Kompresuj pliki logów</x:String>
-    <x:String x:Key="LogCompressionLabelString">Kompresja logów:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Usuń niepotrzebne pliki</x:String>
     <x:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Utwórz PS3 IRD po dumpingu</x:String>
     <x:String x:Key="ProtectionGroupBoxString">Zabezpieczenia</x:String>

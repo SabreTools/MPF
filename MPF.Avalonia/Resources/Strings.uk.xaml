@@ -86,7 +86,6 @@
     <x:String x:Key="ShowEjectReminderCheckBoxString">Нагадувати витягнути диск</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">Додавати суфікс файлу</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">Стискати звіти</x:String>
-    <x:String x:Key="LogCompressionLabelString">Компресія звітів:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Видалити непотрібні файли</x:String>
     <x:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Створити PS3 IRD після дампу</x:String>
     <x:String x:Key="ProtectionGroupBoxString">Protection</x:String>

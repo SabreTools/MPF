@@ -13,6 +13,7 @@
 - Rearrange internal order for internet access settings
 - Wrap internet settings in grid for Avalonia
 - Remove remnants of Zstd zips in code
+- Remove compression level choice, use DEFLATE level 9
 
 ### 3.12.0 (2026-11-23)
 

@@ -150,7 +150,6 @@ namespace MPF.Frontend.Features
             Console.WriteLine($"  Compress Log Files = {options.Processing.CompressLogFiles}");
             Console.WriteLine($"  Create IRD After Dumping = {options.Processing.CreateIRDAfterDumping}");
             Console.WriteLine($"  Delete Unnecessary Files = {options.Processing.DeleteUnnecessaryFiles}");
-            Console.WriteLine($"  Log Compression = {options.Processing.LogCompression.LongName()}");
             Console.WriteLine($"  Show Disc Eject Reminder = {options.Processing.ShowDiscEjectReminder}");
             Console.WriteLine();
 

@@ -8,7 +8,6 @@ using SabreTools.RedumpLib.Data;
 using AaruDumpSettings = MPF.ExecutionContexts.Aaru.DumpSettings;
 using DiscImageCreatorDumpSettings = MPF.ExecutionContexts.DiscImageCreator.DumpSettings;
 using DreamdumpDumpSettings = MPF.ExecutionContexts.Dreamdump.DumpSettings;
-using LogCompression = MPF.Processors.LogCompression;
 using RedumperDumpSettings = MPF.ExecutionContexts.Redumper.DumpSettings;
 
 namespace MPF.Frontend
@@ -164,7 +163,6 @@ namespace MPF.Frontend
             Processing.CompressLogFiles = source.Processing.CompressLogFiles;
             Processing.CreateIRDAfterDumping = source.Processing.CreateIRDAfterDumping;
             Processing.DeleteUnnecessaryFiles = source.Processing.DeleteUnnecessaryFiles;
-            Processing.LogCompression = source.Processing.LogCompression;
             Processing.ShowDiscEjectReminder = source.Processing.ShowDiscEjectReminder;
         }
 
@@ -573,12 +571,6 @@ namespace MPF.Frontend
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public bool DeleteUnnecessaryFiles { get; set; } = false;
-
-        /// <summary>
-        /// Compression type used during log compression
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public LogCompression LogCompression { get; set; } = LogCompression.DeflateMaximum;
 
         /// <summary>
         /// Show disc eject reminder before the media information window is shown

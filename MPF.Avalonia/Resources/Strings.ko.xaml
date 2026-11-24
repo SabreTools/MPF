@@ -85,7 +85,6 @@
     <x:String x:Key="ShowEjectReminderCheckBoxString">배출 알림 표시</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">파일명 접미사 추가</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">로그 파일 압축</x:String>
-    <x:String x:Key="LogCompressionLabelString">로그 압축:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">불필요한 파일 삭제</x:String>
     <x:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">덤핑 후 PS3 IRD 생성</x:String>
     <x:String x:Key="ProtectionGroupBoxString">보호</x:String>

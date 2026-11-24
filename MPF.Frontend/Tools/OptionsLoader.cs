@@ -6,7 +6,6 @@ using SabreTools.RedumpLib.Data;
 using AaruConstants = MPF.ExecutionContexts.Aaru.SettingConstants;
 using DiscImageCreatorConstants = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
 using DreamdumpConstants = MPF.ExecutionContexts.Dreamdump.SettingConstants;
-using LogCompression = MPF.Processors.LogCompression;
 using RedumperConstants = MPF.ExecutionContexts.Redumper.SettingConstants;
 
 namespace MPF.Frontend.Tools
@@ -393,8 +392,6 @@ namespace MPF.Frontend.Tools
             options.Processing.CompressLogFiles = GetBooleanSetting(source, "CompressLogFiles", true);
             options.Processing.CreateIRDAfterDumping = GetBooleanSetting(source, "CreateIRDAfterDumping", false);
             options.Processing.DeleteUnnecessaryFiles = GetBooleanSetting(source, "DeleteUnnecessaryFiles", false);
-            valueString = GetStringSetting(source, "LogCompression", LogCompression.DeflateMaximum.ToString());
-            options.Processing.LogCompression = valueString.ToLogCompression();
             options.Processing.ShowDiscEjectReminder = GetBooleanSetting(source, "ShowDiscEjectReminder", true);
 
             return options;
@@ -470,7 +467,6 @@ namespace MPF.Frontend.Tools
                 { "IgnoreFixedDrives", options.GUI.IgnoreFixedDrives.ToString() },
                 { "AddFilenameSuffix", options.Processing.AddFilenameSuffix.ToString() },
                 { "CompressLogFiles", options.Processing.CompressLogFiles.ToString() },
-                { "LogCompression", options.Processing.LogCompression.ToString() },
                 { "DeleteUnnecessaryFiles", options.Processing.DeleteUnnecessaryFiles.ToString() },
                 { "CreateIRDAfterDumping", options.Processing.CreateIRDAfterDumping.ToString() },
 

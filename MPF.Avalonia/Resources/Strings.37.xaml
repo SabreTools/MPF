@@ -86,7 +86,6 @@
     <x:String x:Key="ShowEjectReminderCheckBoxString">zh0w 3j3c7 R3m1nd3r</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">4dd F113n4m3 zuff1x</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">C0mpr3zz 109 F113z</x:String>
-    <x:String x:Key="LogCompressionLabelString">109 C0mpr3zz10n:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">D31373 Unn3c3zz4ry F113z</x:String>
     <x:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Cr3473 Pz3 1RD 4f73r Dump1n9</x:String>
     <x:String x:Key="ProtectionGroupBoxString">Pr073c710n</x:String>

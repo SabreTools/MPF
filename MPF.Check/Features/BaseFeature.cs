@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 #endif
 using MPF.Frontend;
 using SabreTools.RedumpLib.Data;
-using LogCompression = MPF.Processors.LogCompression;
 
 namespace MPF.Check.Features
 {
@@ -64,7 +63,6 @@ namespace MPF.Check.Features
             Options.Processing.AddFilenameSuffix = false;
             Options.Processing.CreateIRDAfterDumping = false;
             Options.Processing.CompressLogFiles = false;
-            Options.Processing.LogCompression = LogCompression.DeflateMaximum;
             Options.Processing.DeleteUnnecessaryFiles = false;
         }
 

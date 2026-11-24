@@ -3,7 +3,6 @@ using System.ComponentModel;
 using MPF.Frontend.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
 using DreamdumpSectorOrder = MPF.ExecutionContexts.Dreamdump.SectorOrder;
-using LogCompression = MPF.Processors.LogCompression;
 using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
 using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
@@ -452,17 +451,6 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
-        /// <inheritdoc cref="ProcessingSettings.LogCompression"/>
-        public LogCompression LogCompression
-        {
-            get => Options.Processing.LogCompression;
-            set
-            {
-                Options.Processing.LogCompression = value;
-                TriggerPropertyChanged(nameof(LogCompression));
-            }
-        }
-
         /// <inheritdoc cref="GuiSettings.OpenLogWindowAtStartup"/>
         public bool OpenLogWindowAtStartup
         {
@@ -714,11 +702,6 @@ namespace MPF.Frontend.ViewModels
         /// List of available interface languages
         /// </summary>
         public static List<Element<InterfaceLanguage>> InterfaceLanguages => Element<InterfaceLanguage>.GenerateElements();
-
-        /// <summary>
-        /// List of available log compression methods
-        /// </summary>
-        public static List<Element<LogCompression>> LogCompressions => Element<LogCompression>.GenerateElements();
 
         /// <summary>
         /// Current list of supported Redumper read methods

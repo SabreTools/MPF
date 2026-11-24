@@ -92,7 +92,6 @@
     <system:String x:Key="ShowEjectReminderCheckBoxString">Show Eject Reminder</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">Add Filename Suffix</system:String>
     <system:String x:Key="CompressLogFilesCheckBoxString">Compress Log Files</system:String>
-    <system:String x:Key="LogCompressionLabelString">Log Compression:</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Delete Unnecessary Files</system:String>
     <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Create PS3 IRD After Dumping</system:String>
     <system:String x:Key="ProtectionGroupBoxString">Protection</system:String>

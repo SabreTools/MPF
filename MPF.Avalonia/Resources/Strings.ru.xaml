@@ -85,7 +85,6 @@
     <x:String x:Key="ShowEjectReminderCheckBoxString">Показывать напоминание о извлечении</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">Добавлять суффикс к имени файла</x:String>
     <x:String x:Key="CompressLogFilesCheckBoxString">Сжимать файлы логов</x:String>
-    <x:String x:Key="LogCompressionLabelString">Сжатие логов:</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Удалять лишние файлы</x:String>
     <x:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Создать PS3 IRD после дампа</x:String>
     <x:String x:Key="ProtectionGroupBoxString">Защита</x:String>
