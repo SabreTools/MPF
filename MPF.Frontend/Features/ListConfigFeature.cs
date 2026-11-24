@@ -139,7 +139,6 @@ namespace MPF.Frontend.Features
 
             // Media Information
             Console.WriteLine("Media Information:");
-            Console.WriteLine($"  Add Placeholders = {options.Processing.MediaInformation.AddPlaceholders}");
             Console.WriteLine($"  Enable Redump Compatibility = {options.Processing.MediaInformation.EnableRedumpCompatibility}");
             Console.WriteLine($"  Enable Tabs in Input Fields = {options.Processing.MediaInformation.EnableTabsInInputFields}");
             Console.WriteLine($"  Prompt for Media Information = {options.Processing.MediaInformation.PromptForDiscInformation}");

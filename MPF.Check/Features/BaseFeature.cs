@@ -60,9 +60,6 @@ namespace MPF.Check.Features
             Options.Processing.Login.PullAllInformation = false;
             Options.Processing.Login.RetrieveMatchInformation = true;
 
-            // Media Information
-            Options.Processing.MediaInformation.AddPlaceholders = true;
-
             // Post-Information Options
             Options.Processing.AddFilenameSuffix = false;
             Options.Processing.CreateIRDAfterDumping = false;
@@ -157,8 +154,6 @@ namespace MPF.Check.Features
             Console.WriteLine("Check Options:");
             Console.WriteLine("-u, --use <program>            Override configured dumping program name [REQUIRED]");
             Console.WriteLine("    --load-seed <path>         Load a seed submission JSON for user information");
-            Console.WriteLine("    --placeholders             Enable placeholder values in submission info");
-            Console.WriteLine("    --no-placeholders          Disable placeholder values in submission info");
             Console.WriteLine("    --create-ird               Create IRD from output files (PS3 only)");
             Console.WriteLine("    --no-create-ird            Disable create IRD from output files (PS3 only)");
             Console.WriteLine("    --retrieve                 Enable retrieving match information from online sources");

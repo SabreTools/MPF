@@ -156,7 +156,6 @@ namespace MPF.Frontend
             Processing.Login.AttemptCount = source.Processing.Login.AttemptCount;
             Processing.Login.TimeoutSeconds = source.Processing.Login.TimeoutSeconds;
 
-            Processing.MediaInformation.AddPlaceholders = source.Processing.MediaInformation.AddPlaceholders;
             Processing.MediaInformation.EnableRedumpCompatibility = source.Processing.MediaInformation.EnableRedumpCompatibility;
             Processing.MediaInformation.EnableTabsInInputFields = source.Processing.MediaInformation.EnableTabsInInputFields;
             Processing.MediaInformation.PromptForDiscInformation = source.Processing.MediaInformation.PromptForDiscInformation;
@@ -497,12 +496,6 @@ namespace MPF.Frontend
     /// </summary>
     public class MediaInformationSettings
     {
-        /// <summary>
-        /// Add placeholder values in the submission info
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool AddPlaceholders { get; set; } = true;
-
         /// <summary>
         /// Limit outputs to Redump-supported values only
         /// </summary>

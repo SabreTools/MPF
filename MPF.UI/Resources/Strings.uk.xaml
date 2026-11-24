@@ -86,7 +86,6 @@
     <system:String x:Key="EnableTabInputCheckBoxString">Увімкнути закладки</system:String>
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Увімкнути сумісність з Redump</system:String>
     <system:String x:Key="ShowEjectReminderCheckBoxString">Нагадувати витягнути диск</system:String>
-    <system:String x:Key="AddPlaceholdersCheckBoxString">Заповняти поля за замовчуванням</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">Додавати суфікс файлу</system:String>
     <system:String x:Key="OutputSubmissionJSONCheckBoxString">Створити JSON для подання в систему</system:String>
     <system:String x:Key="IncludeArtifactsCheckBoxString">[ДЕБАГ] Увімкнути артефакти</system:String>

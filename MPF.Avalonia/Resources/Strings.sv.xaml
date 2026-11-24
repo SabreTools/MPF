@@ -84,7 +84,6 @@
     <x:String x:Key="EnableTabInputCheckBoxString">Aktivera Tab-inmatning</x:String>
     <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Aktivera Redump-kompatibilitet</x:String>
     <x:String x:Key="ShowEjectReminderCheckBoxString">Visa påminnelse om urtagning</x:String>
-    <x:String x:Key="AddPlaceholdersCheckBoxString">Lägg till platshållare</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">Lägg till filnamnstillägg</x:String>
     <x:String x:Key="OutputSubmissionJSONCheckBoxString">Generera JSON för Submission</x:String>
     <x:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] Inkludera artefakter</x:String>

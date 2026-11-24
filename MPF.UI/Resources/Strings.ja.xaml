@@ -85,7 +85,6 @@
     <system:String x:Key="EnableTabInputCheckBoxString">タブ入力を有効にする</system:String>
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Redump 互換を有効にする</system:String>
     <system:String x:Key="ShowEjectReminderCheckBoxString">排出リマインダーを表示</system:String>
-    <system:String x:Key="AddPlaceholdersCheckBoxString">プレースホルダーを追加</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">ファイル名にサフィックスを追加</system:String>
     <system:String x:Key="OutputSubmissionJSONCheckBoxString">送信用 JSON を出力</system:String>
     <system:String x:Key="IncludeArtifactsCheckBoxString">【デバッグ】成果物を含める</system:String>

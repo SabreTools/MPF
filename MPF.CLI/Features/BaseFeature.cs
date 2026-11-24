@@ -91,9 +91,6 @@ namespace MPF.CLI.Features
             Options.Processing.Login.PullAllInformation = false;
             Options.Processing.Login.RetrieveMatchInformation = true;
 
-            // Media Information
-            Options.Processing.MediaInformation.AddPlaceholders = true;
-
             // Post-Information Options
             Options.Processing.AddFilenameSuffix = false;
             Options.Processing.CreateIRDAfterDumping = false;

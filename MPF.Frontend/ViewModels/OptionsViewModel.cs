@@ -111,17 +111,6 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
-        /// <inheritdoc cref="MediaInformationSettings.AddPlaceholders"/>
-        public bool AddPlaceholders
-        {
-            get => Options.Processing.MediaInformation.AddPlaceholders;
-            set
-            {
-                Options.Processing.MediaInformation.AddPlaceholders = value;
-                TriggerPropertyChanged(nameof(AddPlaceholders));
-            }
-        }
-
         /// <inheritdoc cref="Options.CheckForUpdatesOnStartup"/>
         public bool CheckForUpdatesOnStartup
         {

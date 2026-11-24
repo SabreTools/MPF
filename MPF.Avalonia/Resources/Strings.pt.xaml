@@ -85,7 +85,6 @@
     <x:String x:Key="EnableTabInputCheckBoxString">Ativar escrita de tabs</x:String>
     <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Ativar compatibilidade com Redump</x:String>
     <x:String x:Key="ShowEjectReminderCheckBoxString">Lembrar de ejetar o disco</x:String>
-    <x:String x:Key="AddPlaceholdersCheckBoxString">Adicionar espaço reservado</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">Adicionar sufixo ao ficheiro</x:String>
     <x:String x:Key="OutputSubmissionJSONCheckBoxString">Gerar JSON de submissão</x:String>
     <x:String x:Key="IncludeArtifactsCheckBoxString">[DEPURAÇÃO] Incluir artefactos</x:String>

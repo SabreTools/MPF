@@ -147,8 +147,6 @@ namespace MPF.Check
             // Check Options
             commandSet.Add(mainFeature.UseInput);
             commandSet.Add(mainFeature.LoadSeedInput);
-            commandSet.Add(mainFeature.PlaceholdersInput);
-            commandSet.Add(mainFeature.NoPlaceholdersInput);
             commandSet.Add(mainFeature.CreateIrdInput);
             commandSet.Add(mainFeature.NoCreateIrdInput);
             commandSet.Add(mainFeature.RetrieveInput);

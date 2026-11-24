@@ -21,15 +21,6 @@ namespace MPF.Frontend.Tools
     /// </summary>
     internal static class SubmissionGenerator
     {
-        #region Constants
-
-        private const string RequiredValue = "(REQUIRED)";
-        private const string RequiredIfCFW = "(REQUIRED, IF CFW)";
-        private const string RequiredIfExistsValue = "(REQUIRED, IF EXISTS)";
-        private const string OptionalValue = "(OPTIONAL)";
-
-        #endregion
-
         #region Extraction and Filling
 
         /// <summary>
@@ -90,7 +81,7 @@ namespace MPF.Frontend.Tools
 #endif
 
             // Create the default submission info
-            SubmissionInfo info = CreateDefaultSubmissionInfo(processor, system, mediaType, options.Processing.MediaInformation.AddPlaceholders);
+            SubmissionInfo info = CreateDefaultSubmissionInfo(processor, system, mediaType);
 
             // Get specific tool output handling
             processor.GenerateSubmissionInfo(info, mediaType, basePath, options.Processing.MediaInformation.EnableRedumpCompatibility);
@@ -111,10 +102,10 @@ namespace MPF.Frontend.Tools
                 info.DiscIdentifiers.VolumeLabel = volLabels;
 
             // Extract info based generically on PhysicalMediaType
-            ProcessPhysicalMediaType(info, mediaType, options.Processing.MediaInformation.AddPlaceholders);
+            ProcessPhysicalMediaType(info, mediaType);
 
             // Extract info based specifically on PhysicalSystem
-            ProcessSystem(info, system, drive, options.Processing.MediaInformation.AddPlaceholders, processor is DiscImageCreator, basePath);
+            ProcessSystem(info, system, drive, processor is DiscImageCreator, basePath);
 
             // Run anti-modchip check, if necessary
             // TODO: Reenable when anti-modchip documentation is updated
@@ -159,16 +150,12 @@ namespace MPF.Frontend.Tools
 
             // Set fields that may have automatic filling otherwise
             info.DiscIdentity.Category ??= DiscCategory.Games;
-            info.DiscIdentifiers.DiscSerials ??= options.Processing.MediaInformation.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
-            info.DiscIdentifiers.Editions ??= options.Processing.MediaInformation.AddPlaceholders ? "(VERIFY THIS) Original" : string.Empty;
-            info.DiscIdentifiers.Barcodes ??= options.Processing.MediaInformation.AddPlaceholders ? OptionalValue : string.Empty;
-            info.DiscIdentifiers.Version ??= options.Processing.MediaInformation.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
-
-            // Comments and contents have odd handling
-            if (string.IsNullOrEmpty(info.DumpMetadata.Comments))
-                info.DumpMetadata.Comments = options.Processing.MediaInformation.AddPlaceholders ? OptionalValue : string.Empty;
-            if (string.IsNullOrEmpty(info.DumpMetadata.Contents))
-                info.DumpMetadata.Contents = options.Processing.MediaInformation.AddPlaceholders ? OptionalValue : string.Empty;
+            info.DiscIdentifiers.DiscSerials ??= string.Empty;
+            info.DiscIdentifiers.Editions ??= "(VERIFY THIS) Original";
+            info.DiscIdentifiers.Barcodes ??= string.Empty;
+            info.DiscIdentifiers.Version ??= string.Empty;
+            info.DumpMetadata.Comments ??= string.Empty;
+            info.DumpMetadata.Contents ??= string.Empty;
 
             // Normalize the disc type with all current information
             info.NormalizeDiscType();
@@ -392,8 +379,7 @@ namespace MPF.Frontend.Tools
         /// </summary>
         private static SubmissionInfo CreateDefaultSubmissionInfo(BaseProcessor processor,
             PhysicalSystem? system,
-            PhysicalMediaType? mediaType,
-            bool addPlaceholders)
+            PhysicalMediaType? mediaType)
         {
             // Create the template object
             var info = new SubmissionInfo()
@@ -403,10 +389,10 @@ namespace MPF.Frontend.Tools
                     System = system,
                     Media = mediaType.ToMediaType(),
                     Category = null,
-                    Title = addPlaceholders ? RequiredValue : string.Empty,
-                    ForeignTitle = addPlaceholders ? OptionalValue : string.Empty,
-                    DiscNumber = addPlaceholders ? OptionalValue : string.Empty,
-                    DiscTitle = addPlaceholders ? OptionalValue : string.Empty,
+                    Title = string.Empty,
+                    ForeignTitle = string.Empty,
+                    DiscNumber = string.Empty,
+                    DiscTitle = string.Empty,
                 },
                 RegionsAndLanguages = new RegionsAndLanguagesSection()
                 {
@@ -415,11 +401,12 @@ namespace MPF.Frontend.Tools
                 },
                 DumpMetadata = new DumpMetadataSection()
                 {
+                    Comments = string.Empty,
                     Contents = string.Empty,
                 },
                 SubmissionControls = new SubmissionControlsSection()
                 {
-                    LogsArchiveURL = addPlaceholders ? RequiredValue : string.Empty,
+                    LogsArchiveURL = string.Empty,
                     SubmissionComment = string.Empty,
                 },
                 DumpingInfo = new DumpingInfoSection()
@@ -627,22 +614,22 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Processes default data based on media type
         /// </summary>
-        private static bool ProcessPhysicalMediaType(SubmissionInfo info, PhysicalMediaType? mediaType, bool addPlaceholders)
+        private static bool ProcessPhysicalMediaType(SubmissionInfo info, PhysicalMediaType? mediaType)
         {
             if (mediaType == PhysicalMediaType.CDROM
                 || mediaType == PhysicalMediaType.GDROM)
             {
-                info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.Layer0MasteringCode = string.Empty;
+                info.RingCodes.Layer0MasteringSID = string.Empty;
+                info.RingCodes.Layer0Toolstamps = string.Empty;
+                info.RingCodes.Layer0MouldSIDs = string.Empty;
+                info.RingCodes.Layer0AdditionalMoulds = string.Empty;
 
-                info.RingCodes.LabelSideMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideMasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideToolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideMouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideAdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.LabelSideMasteringCode = string.Empty;
+                info.RingCodes.LabelSideMasteringSID = string.Empty;
+                info.RingCodes.LabelSideToolstamps = string.Empty;
+                info.RingCodes.LabelSideMouldSIDs = string.Empty;
+                info.RingCodes.LabelSideAdditionalMoulds = string.Empty;
             }
             else if (mediaType == PhysicalMediaType.DVD
                 || mediaType == PhysicalMediaType.HDDVD
@@ -652,197 +639,197 @@ namespace MPF.Frontend.Tools
                 // If we have a single-layer disc
                 if (info.DiscIdentifiers.Layerbreak == default)
                 {
-                    info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MasteringCode = string.Empty;
+                    info.RingCodes.Layer0MasteringSID = string.Empty;
+                    info.RingCodes.Layer0Toolstamps = string.Empty;
+                    info.RingCodes.Layer0MouldSIDs = string.Empty;
+                    info.RingCodes.Layer0AdditionalMoulds = string.Empty;
                 }
                 // If we have a dual-layer disc
                 else if (info.DiscIdentifiers.Layerbreak2 == default)
                 {
-                    info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MasteringCode = string.Empty;
+                    info.RingCodes.Layer0MasteringSID = string.Empty;
+                    info.RingCodes.Layer0Toolstamps = string.Empty;
+                    info.RingCodes.Layer0MouldSIDs = string.Empty;
+                    info.RingCodes.Layer0AdditionalMoulds = string.Empty;
 
-                    info.RingCodes.Layer1MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer1MasteringCode = string.Empty;
+                    info.RingCodes.Layer1MasteringSID = string.Empty;
+                    info.RingCodes.Layer1Toolstamps = string.Empty;
                 }
                 // If we have a triple-layer disc
                 else if (info.DiscIdentifiers.Layerbreak3 == default)
                 {
-                    info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MasteringCode = string.Empty;
+                    info.RingCodes.Layer0MasteringSID = string.Empty;
+                    info.RingCodes.Layer0Toolstamps = string.Empty;
+                    info.RingCodes.Layer0MouldSIDs = string.Empty;
+                    info.RingCodes.Layer0AdditionalMoulds = string.Empty;
 
-                    info.RingCodes.Layer1MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer1MasteringCode = string.Empty;
+                    info.RingCodes.Layer1MasteringSID = string.Empty;
+                    info.RingCodes.Layer1Toolstamps = string.Empty;
 
-                    info.RingCodes.Layer2MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer2MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer2Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer2MasteringCode = string.Empty;
+                    info.RingCodes.Layer2MasteringSID = string.Empty;
+                    info.RingCodes.Layer2Toolstamps = string.Empty;
                 }
                 // If we have a quad-layer disc
                 else
                 {
-                    info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MasteringCode = string.Empty;
+                    info.RingCodes.Layer0MasteringSID = string.Empty;
+                    info.RingCodes.Layer0Toolstamps = string.Empty;
+                    info.RingCodes.Layer0MouldSIDs = string.Empty;
+                    info.RingCodes.Layer0AdditionalMoulds = string.Empty;
 
-                    info.RingCodes.Layer1MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer1MasteringCode = string.Empty;
+                    info.RingCodes.Layer1MasteringSID = string.Empty;
+                    info.RingCodes.Layer1Toolstamps = string.Empty;
 
-                    info.RingCodes.Layer2MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer2MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer2Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer2MasteringCode = string.Empty;
+                    info.RingCodes.Layer2MasteringSID = string.Empty;
+                    info.RingCodes.Layer2Toolstamps = string.Empty;
 
-                    info.RingCodes.Layer3MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer3MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer3Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer3MasteringCode = string.Empty;
+                    info.RingCodes.Layer3MasteringSID = string.Empty;
+                    info.RingCodes.Layer3Toolstamps = string.Empty;
                 }
 
-                info.RingCodes.LabelSideMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideMasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideToolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideMouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideAdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.LabelSideMasteringCode = string.Empty;
+                info.RingCodes.LabelSideMasteringSID = string.Empty;
+                info.RingCodes.LabelSideToolstamps = string.Empty;
+                info.RingCodes.LabelSideMouldSIDs = string.Empty;
+                info.RingCodes.LabelSideAdditionalMoulds = string.Empty;
             }
             else if (mediaType == PhysicalMediaType.NintendoGameCubeGameDisc)
             {
-                info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.Layer0MasteringCode = string.Empty;
+                info.RingCodes.Layer0MasteringSID = string.Empty;
+                info.RingCodes.Layer0Toolstamps = string.Empty;
+                info.RingCodes.Layer0MouldSIDs = string.Empty;
+                info.RingCodes.Layer0AdditionalMoulds = string.Empty;
 
-                info.RingCodes.LabelSideMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideMasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideToolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideMouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideAdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.LabelSideMasteringCode = string.Empty;
+                info.RingCodes.LabelSideMasteringSID = string.Empty;
+                info.RingCodes.LabelSideToolstamps = string.Empty;
+                info.RingCodes.LabelSideMouldSIDs = string.Empty;
+                info.RingCodes.LabelSideAdditionalMoulds = string.Empty;
 
-                info.DumpMetadata.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DumpMetadata.BCA ??= string.Empty;
             }
             else if (mediaType == PhysicalMediaType.NintendoWiiOpticalDisc)
             {
                 // If we have a single-layer disc
                 if (info.DiscIdentifiers.Layerbreak == default)
                 {
-                    info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MasteringCode = string.Empty;
+                    info.RingCodes.Layer0MasteringSID = string.Empty;
+                    info.RingCodes.Layer0Toolstamps = string.Empty;
+                    info.RingCodes.Layer0MouldSIDs = string.Empty;
+                    info.RingCodes.Layer0AdditionalMoulds = string.Empty;
                 }
                 // If we have a dual-layer disc
                 else
                 {
-                    info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MasteringCode = string.Empty;
+                    info.RingCodes.Layer0MasteringSID = string.Empty;
+                    info.RingCodes.Layer0Toolstamps = string.Empty;
+                    info.RingCodes.Layer0MouldSIDs = string.Empty;
+                    info.RingCodes.Layer0AdditionalMoulds = string.Empty;
 
-                    info.RingCodes.Layer1MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer1MasteringCode = string.Empty;
+                    info.RingCodes.Layer1MasteringSID = string.Empty;
+                    info.RingCodes.Layer1Toolstamps = string.Empty;
                 }
 
-                info.RingCodes.LabelSideMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideMasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideToolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideMouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideAdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.LabelSideMasteringCode = string.Empty;
+                info.RingCodes.LabelSideMasteringSID = string.Empty;
+                info.RingCodes.LabelSideToolstamps = string.Empty;
+                info.RingCodes.LabelSideMouldSIDs = string.Empty;
+                info.RingCodes.LabelSideAdditionalMoulds = string.Empty;
 
-                info.DumpMetadata.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DumpMetadata.BCA ??= string.Empty;
             }
             else if (mediaType == PhysicalMediaType.NintendoWiiUOpticalDisc)
             {
                 // If we have a single-layer disc
                 if (info.DiscIdentifiers.Layerbreak == default)
                 {
-                    info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MasteringCode = string.Empty;
+                    info.RingCodes.Layer0MasteringSID = string.Empty;
+                    info.RingCodes.Layer0Toolstamps = string.Empty;
+                    info.RingCodes.Layer0MouldSIDs = string.Empty;
+                    info.RingCodes.Layer0AdditionalMoulds = string.Empty;
                 }
                 // If we have a dual-layer disc
                 else
                 {
-                    info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MasteringCode = string.Empty;
+                    info.RingCodes.Layer0MasteringSID = string.Empty;
+                    info.RingCodes.Layer0Toolstamps = string.Empty;
+                    info.RingCodes.Layer0MouldSIDs = string.Empty;
+                    info.RingCodes.Layer0AdditionalMoulds = string.Empty;
 
-                    info.RingCodes.Layer1MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer1MasteringCode = string.Empty;
+                    info.RingCodes.Layer1MasteringSID = string.Empty;
+                    info.RingCodes.Layer1Toolstamps = string.Empty;
                 }
 
-                info.RingCodes.LabelSideMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideMasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideToolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideMouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideAdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.LabelSideMasteringCode = string.Empty;
+                info.RingCodes.LabelSideMasteringSID = string.Empty;
+                info.RingCodes.LabelSideToolstamps = string.Empty;
+                info.RingCodes.LabelSideMouldSIDs = string.Empty;
+                info.RingCodes.LabelSideAdditionalMoulds = string.Empty;
 
-                info.DiscIdentifiers.DiscKey = addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.DiscKey = string.Empty;
             }
             else if (mediaType == PhysicalMediaType.UMD)
             {
                 // Both single- and dual-layer discs have two "layers" for the ring
-                info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.Layer0MasteringCode = string.Empty;
+                info.RingCodes.Layer0MasteringSID = string.Empty;
+                info.RingCodes.Layer0Toolstamps = string.Empty;
+                info.RingCodes.Layer0MouldSIDs = string.Empty;
+                info.RingCodes.Layer0AdditionalMoulds = string.Empty;
 
-                info.RingCodes.Layer1MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.Layer1MasteringCode = string.Empty;
+                info.RingCodes.Layer1MasteringSID = string.Empty;
+                info.RingCodes.Layer1Toolstamps = string.Empty;
 
-                info.RingCodes.LabelSideMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideMasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideToolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideMouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideAdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.LabelSideMasteringCode = string.Empty;
+                info.RingCodes.LabelSideMasteringSID = string.Empty;
+                info.RingCodes.LabelSideToolstamps = string.Empty;
+                info.RingCodes.LabelSideMouldSIDs = string.Empty;
+                info.RingCodes.LabelSideAdditionalMoulds = string.Empty;
             }
             else
             {
                 // Allow all possible fields for unknown media types
-                info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.Layer0MasteringCode = string.Empty;
+                info.RingCodes.Layer0MasteringSID = string.Empty;
+                info.RingCodes.Layer0Toolstamps = string.Empty;
+                info.RingCodes.Layer0MouldSIDs = string.Empty;
+                info.RingCodes.Layer0AdditionalMoulds = string.Empty;
 
-                info.RingCodes.Layer1MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.Layer1MasteringCode = string.Empty;
+                info.RingCodes.Layer1MasteringSID = string.Empty;
+                info.RingCodes.Layer1Toolstamps = string.Empty;
 
-                info.RingCodes.Layer2MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer2MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer2Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.Layer2MasteringCode = string.Empty;
+                info.RingCodes.Layer2MasteringSID = string.Empty;
+                info.RingCodes.Layer2Toolstamps = string.Empty;
 
-                info.RingCodes.Layer3MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer3MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.Layer3Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.Layer3MasteringCode = string.Empty;
+                info.RingCodes.Layer3MasteringSID = string.Empty;
+                info.RingCodes.Layer3Toolstamps = string.Empty;
 
-                info.RingCodes.LabelSideMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideMasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideToolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideMouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                info.RingCodes.LabelSideAdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.RingCodes.LabelSideMasteringCode = string.Empty;
+                info.RingCodes.LabelSideMasteringSID = string.Empty;
+                info.RingCodes.LabelSideToolstamps = string.Empty;
+                info.RingCodes.LabelSideMouldSIDs = string.Empty;
+                info.RingCodes.LabelSideAdditionalMoulds = string.Empty;
             }
 
             return true;
@@ -851,7 +838,11 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Processes default data based on system type
         /// </summary>
-        private static bool ProcessSystem(SubmissionInfo info, PhysicalSystem? system, Drive? drive, bool addPlaceholders, bool isDiscImageCreator, string basePath)
+        private static bool ProcessSystem(SubmissionInfo info,
+            PhysicalSystem? system,
+            Drive? drive,
+            bool isDiscImageCreator,
+            string basePath)
         {
             if (system == PhysicalSystem.AcornArchimedesAndRiscPC)
             {
@@ -866,7 +857,7 @@ namespace MPF.Frontend.Tools
             }
             else if (system == PhysicalSystem.BandaiPlaydiaQuickInteractiveSystem)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
                 info.RegionsAndLanguages.Regions ??= [RegionCode.Japan];
             }
             else if (system == PhysicalSystem.BDVideo)
@@ -880,7 +871,7 @@ namespace MPF.Frontend.Tools
                 else if (bdProtection is not null)
                     info.DumpMetadata.Protection += $"\n{bdProtection}";
                 else
-                    info.DumpMetadata.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.DumpMetadata.Protection ??= string.Empty;
 
                 // Determine if BEE is set
                 bool busEncryptionEnabled = PhysicalTool.GetBusEncryptionEnabled(drive);
@@ -891,27 +882,27 @@ namespace MPF.Frontend.Tools
             }
             else if (system == PhysicalSystem.CommodoreAmigaCD)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.CommodoreAmigaCD32)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
                 info.RegionsAndLanguages.Regions ??= [RegionCode.Europe];
             }
             else if (system == PhysicalSystem.CommodoreAmigaCDTV)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
                 info.RegionsAndLanguages.Regions ??= [RegionCode.Europe];
             }
             else if (system == PhysicalSystem.DVDVideo
                 || system == PhysicalSystem.HDDVDVideo)
             {
                 info.DiscIdentity.Category ??= DiscCategory.Video;
-                info.DumpMetadata.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.DumpMetadata.Protection ??= string.Empty;
             }
             else if (system == PhysicalSystem.FujitsuFMTownsSeries)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
                 info.RegionsAndLanguages.Regions ??= [RegionCode.Japan];
             }
             else if (system == PhysicalSystem.FujitsuFMTownsMarty)
@@ -943,15 +934,15 @@ namespace MPF.Frontend.Tools
             }
             else if (system == PhysicalSystem.IncredibleTechnologiesEagle)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.KonamieAmusement)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.KonamiFireBeat)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.KonamiPython2)
             {
@@ -973,30 +964,30 @@ namespace MPF.Frontend.Tools
             }
             else if (system == PhysicalSystem.KonamiSystemGV)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.KonamiSystem573)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.KonamiTwinkle)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.MattelHyperScan)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.MicrosoftXbox
                 || system == PhysicalSystem.MicrosoftXbox360)
             {
                 if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = string.Empty;
             }
             else if (system == PhysicalSystem.MicrosoftXboxOne)
             {
                 if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = string.Empty;
 
                 info.DumpMetadata.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
                 info.DumpMetadata.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
@@ -1004,18 +995,18 @@ namespace MPF.Frontend.Tools
             else if (system == PhysicalSystem.MicrosoftXboxSeriesXS)
             {
                 if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = string.Empty;
 
                 info.DumpMetadata.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
                 info.DumpMetadata.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
             }
             else if (system == PhysicalSystem.NamcoSegaNintendoTriforce)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.NavisoftNaviken)
             {
-                info.DiscIdentifiers.EXEDate = addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate = string.Empty;
                 info.RegionsAndLanguages.Regions ??= [RegionCode.Japan];
             }
             else if (system == PhysicalSystem.NECPC88Series)
@@ -1024,7 +1015,7 @@ namespace MPF.Frontend.Tools
             }
             else if (system == PhysicalSystem.NECPC98Series)
             {
-                info.DiscIdentifiers.EXEDate = addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate = string.Empty;
                 info.RegionsAndLanguages.Regions ??= [RegionCode.Japan];
             }
             else if (system == PhysicalSystem.NECPCFXPCFXGA)
@@ -1035,27 +1026,27 @@ namespace MPF.Frontend.Tools
                 || system == PhysicalSystem.NintendoWii)
             {
                 if (!CommentFieldExists(info, SiteCode.CoverID, out _))
-                    info.DumpMetadata.CommentsSpecialFields[SiteCode.CoverID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.CoverID] = string.Empty;
             }
             else if (system == PhysicalSystem.SegaChihiro)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.SegaDreamcast)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.SegaNaomi)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.SegaNaomi2)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.SegaTitanVideo)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.SharpX68000)
             {
@@ -1063,7 +1054,7 @@ namespace MPF.Frontend.Tools
             }
             else if (system == PhysicalSystem.SNKNeoGeoCD)
             {
-                info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                info.DiscIdentifiers.EXEDate ??= string.Empty;
             }
             else if (system == PhysicalSystem.SonyPlayStation)
             {
@@ -1101,8 +1092,8 @@ namespace MPF.Frontend.Tools
             }
             else if (system == PhysicalSystem.SonyPlayStation3)
             {
-                info.DiscIdentifiers.DiscKey ??= addPlaceholders ? RequiredIfCFW : string.Empty;
-                info.DiscIdentifiers.DiscID ??= addPlaceholders ? RequiredIfCFW : string.Empty;
+                info.DiscIdentifiers.DiscKey ??= string.Empty;
+                info.DiscIdentifiers.DiscID ??= string.Empty;
 
                  if (string.IsNullOrEmpty(info.DiscIdentifiers.InternalSerial))
                     info.DiscIdentifiers.InternalSerial = PhysicalTool.GetPlayStation3Serial(drive);
@@ -1133,7 +1124,7 @@ namespace MPF.Frontend.Tools
             }
             else if (system == PhysicalSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem)
             {
-                info.DumpMetadata.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                info.DumpMetadata.Protection ??= string.Empty;
             }
 
             return true;

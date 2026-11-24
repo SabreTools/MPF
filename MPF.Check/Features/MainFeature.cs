@@ -72,9 +72,6 @@ namespace MPF.Check.Features
         private const string _noJsonName = "no-json";
         internal readonly FlagInput NoJsonInput = new(_noJsonName, ["--no-json"], "Disable submission JSON output");
 
-        private const string _noPlaceholdersName = "no-placeholders";
-        internal readonly FlagInput NoPlaceholdersInput = new(_noPlaceholdersName, "--no-placeholders", "Disable placeholder values in submission info");
-
         private const string _noPullAllName = "no-pull-all";
         internal readonly FlagInput NoPullAllInput = new(_noPullAllName, "--no-pull-all", "Do not pull all information from online sources");
 
@@ -92,9 +89,6 @@ namespace MPF.Check.Features
 
         private const string _pathName = "path";
         internal readonly StringInput PathInput = new(_pathName, ["-p", "--path"], "Mounted drive path for additional checks");
-
-        private const string _placeholdersName = "placeholders";
-        internal readonly FlagInput PlaceholdersInput = new(_placeholdersName, "--placeholders", "Enable placeholder values in submission info");
 
         private const string _pullAllName = "pull-all";
         internal readonly FlagInput PullAllInput = new(_pullAllName, "--pull-all", "Pull all information from online sources");
@@ -127,8 +121,6 @@ namespace MPF.Check.Features
         {
             Add(UseInput);
             Add(LoadSeedInput);
-            Add(PlaceholdersInput);
-            Add(NoPlaceholdersInput);
             Add(CreateIrdInput);
             Add(NoCreateIrdInput);
             Add(RetrieveInput);
@@ -193,9 +185,6 @@ namespace MPF.Check.Features
                 Options.Processing.Login.AttemptCount = 3;
                 Options.Processing.Login.TimeoutSeconds = 30;
 
-                // Media Information
-                Options.Processing.MediaInformation.AddPlaceholders = true;
-
                 // Post-Information Options
                 Options.Processing.AddFilenameSuffix = false;
                 Options.Processing.CreateIRDAfterDumping = false;
@@ -223,12 +212,6 @@ namespace MPF.Check.Features
                 // Include seed info file
                 else if (LoadSeedInput.ProcessInput(args, ref index))
                     Seed = Builder.CreateFromFile(LoadSeedInput.Value);
-
-                // Disable placeholder values in submission info
-                else if (PlaceholdersInput.ProcessInput(args, ref index))
-                    Options.Processing.MediaInformation.AddPlaceholders = true;
-                else if (NoPlaceholdersInput.ProcessInput(args, ref index))
-                    Options.Processing.MediaInformation.AddPlaceholders = false;
 
                 // Create IRD from output files (PS3 only)
                 else if (CreateIrdInput.ProcessInput(args, ref index))

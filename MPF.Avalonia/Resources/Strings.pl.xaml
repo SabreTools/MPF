@@ -84,7 +84,6 @@
     <x:String x:Key="EnableTabInputCheckBoxString">Włącz obsługę klawisza Tab</x:String>
     <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Włącz kompatybilność z Redump</x:String>
     <x:String x:Key="ShowEjectReminderCheckBoxString">Pokaż przypomnienie o wysunięciu</x:String>
-    <x:String x:Key="AddPlaceholdersCheckBoxString">Dodaj symbole zastępcze</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">Dodaj sufiks nazwy pliku</x:String>
     <x:String x:Key="OutputSubmissionJSONCheckBoxString">Wyjście JSON dla zgłoszeń</x:String>
     <x:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] Uwzględnij artefakty</x:String>

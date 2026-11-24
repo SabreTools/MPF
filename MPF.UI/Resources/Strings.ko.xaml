@@ -85,7 +85,6 @@
     <system:String x:Key="EnableTabInputCheckBoxString">탭 입력 활성화</system:String>
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Redump 호환성 활성화</system:String>
     <system:String x:Key="ShowEjectReminderCheckBoxString">배출 알림 표시</system:String>
-    <system:String x:Key="AddPlaceholdersCheckBoxString">자리표시자 추가</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">파일명 접미사 추가</system:String>
     <system:String x:Key="OutputSubmissionJSONCheckBoxString">제출 JSON 출력</system:String>
     <system:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] 아티팩트 포함</system:String>

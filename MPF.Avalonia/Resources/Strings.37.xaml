@@ -85,7 +85,6 @@
     <x:String x:Key="EnableTabInputCheckBoxString">3n4813 748 1npu7</x:String>
     <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">3n4813 R3dump C0mp47181117y</x:String>
     <x:String x:Key="ShowEjectReminderCheckBoxString">zh0w 3j3c7 R3m1nd3r</x:String>
-    <x:String x:Key="AddPlaceholdersCheckBoxString">4dd P14c3h01d3rz</x:String>
     <x:String x:Key="AddFilenameSuffixCheckBoxString">4dd F113n4m3 zuff1x</x:String>
     <x:String x:Key="OutputSubmissionJSONCheckBoxString">0u7pu7 zu8m1zz10n Jz0N</x:String>
     <x:String x:Key="IncludeArtifactsCheckBoxString">[D38U9] 1nc1ud3 4r71f4c7z</x:String>

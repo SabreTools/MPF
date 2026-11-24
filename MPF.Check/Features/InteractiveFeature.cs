@@ -55,9 +55,6 @@ namespace MPF.Check.Features
                 Options.Processing.Login.AttemptCount = 3;
                 Options.Processing.Login.TimeoutSeconds = 30;
 
-                // Media Information
-                Options.Processing.MediaInformation.AddPlaceholders = true;
-
                 // Post-Information Options
                 Options.Processing.AddFilenameSuffix = false;
                 Options.Processing.CreateIRDAfterDumping = false;
@@ -90,23 +87,22 @@ namespace MPF.Check.Features
             Console.WriteLine($"1) Set system (Currently '{System?.Name ?? string.Empty}')");
             Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram.LongName()}')");
             Console.WriteLine($"3) Set seed path (Currently '{Seed}')");
-            Console.WriteLine($"4) Add placeholders (Currently '{Options.Processing.MediaInformation.AddPlaceholders}')");
-            Console.WriteLine($"5) Create IRD (Currently '{Options.Processing.CreateIRDAfterDumping}')");
-            Console.WriteLine($"6) Attempt online matches (Currently '{Options.Processing.Login.RetrieveMatchInformation}')");
-            Console.WriteLine($"7) Web client attempt count (Currently '{Options.Processing.Login.AttemptCount}')");
-            Console.WriteLine($"8) Web client timeout in seconds (Currently '{Options.Processing.Login.TimeoutSeconds}')");
-            Console.WriteLine($"9) Pull all information (Currently '{Options.Processing.Login.PullAllInformation}')");
-            Console.WriteLine($"A) Set device path (Currently '{DevicePath}')");
-            Console.WriteLine($"B) Scan for protection (Currently '{scan}')");
-            Console.WriteLine($"C) Scan archives for protection (Currently '{enableArchives}')");
-            Console.WriteLine($"D) Debug protection scan output (Currently '{enableDebug}')");
-            Console.WriteLine($"E) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
-            Console.WriteLine($"F) Hide filename suffix (Currently '{Options.Processing.AddFilenameSuffix}')");
-            Console.WriteLine($"G) Output submission JSON (Currently '{Options.Processing.OutputSubmissionJSON}')");
-            Console.WriteLine($"H) Include JSON artifacts (Currently '{Options.Processing.IncludeArtifacts}')");
-            Console.WriteLine($"I) Compress logs (Currently '{Options.Processing.CompressLogFiles}')");
-            Console.WriteLine($"J) Log compression (Currently '{Options.Processing.LogCompression.LongName()}')");
-            Console.WriteLine($"K) Delete unnecessary files (Currently '{Options.Processing.DeleteUnnecessaryFiles}')");
+            Console.WriteLine($"4) Create IRD (Currently '{Options.Processing.CreateIRDAfterDumping}')");
+            Console.WriteLine($"5) Attempt online matches (Currently '{Options.Processing.Login.RetrieveMatchInformation}')");
+            Console.WriteLine($"6) Web client attempt count (Currently '{Options.Processing.Login.AttemptCount}')");
+            Console.WriteLine($"7) Web client timeout in seconds (Currently '{Options.Processing.Login.TimeoutSeconds}')");
+            Console.WriteLine($"8) Pull all information (Currently '{Options.Processing.Login.PullAllInformation}')");
+            Console.WriteLine($"9) Set device path (Currently '{DevicePath}')");
+            Console.WriteLine($"A) Scan for protection (Currently '{scan}')");
+            Console.WriteLine($"B) Scan archives for protection (Currently '{enableArchives}')");
+            Console.WriteLine($"C) Debug protection scan output (Currently '{enableDebug}')");
+            Console.WriteLine($"D) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
+            Console.WriteLine($"E) Hide filename suffix (Currently '{Options.Processing.AddFilenameSuffix}')");
+            Console.WriteLine($"F) Output submission JSON (Currently '{Options.Processing.OutputSubmissionJSON}')");
+            Console.WriteLine($"G) Include JSON artifacts (Currently '{Options.Processing.IncludeArtifacts}')");
+            Console.WriteLine($"H) Compress logs (Currently '{Options.Processing.CompressLogFiles}')");
+            Console.WriteLine($"I) Log compression (Currently '{Options.Processing.LogCompression.LongName()}')");
+            Console.WriteLine($"J) Delete unnecessary files (Currently '{Options.Processing.DeleteUnnecessaryFiles}')");
             Console.WriteLine();
             Console.WriteLine($"Q) Exit the program");
             Console.WriteLine($"X) Start checking");
@@ -122,61 +118,57 @@ namespace MPF.Check.Features
                 case "3":
                     goto seedPath;
                 case "4":
-                    Options.Processing.MediaInformation.AddPlaceholders = !Options.Processing.MediaInformation.AddPlaceholders;
-                    goto root;
-                case "5":
                     Options.Processing.CreateIRDAfterDumping = !Options.Processing.CreateIRDAfterDumping;
                     goto root;
-                case "6":
+                case "5":
                     Options.Processing.Login.RetrieveMatchInformation = !Options.Processing.Login.RetrieveMatchInformation;
                     goto root;
-                case "7":
+                case "6":
                     goto attemptCount;
-                case "8":
+                case "7":
                     goto timeoutSeconds;
-                case "9":
+                case "8":
                     Options.Processing.Login.PullAllInformation = !Options.Processing.Login.PullAllInformation;
                     goto root;
+                case "9":
+                    goto mountedPath;
                 case "a":
                 case "A":
-                    goto mountedPath;
+                    scan = !scan;
+                    goto root;
                 case "b":
                 case "B":
-                    scan = !scan;
+                    enableArchives = !enableArchives;
                     goto root;
                 case "c":
                 case "C":
-                    enableArchives = !enableArchives;
+                    enableDebug = !enableDebug;
                     goto root;
                 case "d":
                 case "D":
-                    enableDebug = !enableDebug;
+                    hideDriveLetters = !hideDriveLetters;
                     goto root;
                 case "e":
                 case "E":
-                    hideDriveLetters = !hideDriveLetters;
+                    Options.Processing.AddFilenameSuffix = !Options.Processing.AddFilenameSuffix;
                     goto root;
                 case "f":
                 case "F":
-                    Options.Processing.AddFilenameSuffix = !Options.Processing.AddFilenameSuffix;
+                    Options.Processing.OutputSubmissionJSON = !Options.Processing.OutputSubmissionJSON;
                     goto root;
                 case "g":
                 case "G":
-                    Options.Processing.OutputSubmissionJSON = !Options.Processing.OutputSubmissionJSON;
+                    Options.Processing.IncludeArtifacts = !Options.Processing.IncludeArtifacts;
                     goto root;
                 case "h":
                 case "H":
-                    Options.Processing.IncludeArtifacts = !Options.Processing.IncludeArtifacts;
+                    Options.Processing.CompressLogFiles = !Options.Processing.CompressLogFiles;
                     goto root;
                 case "i":
                 case "I":
-                    Options.Processing.CompressLogFiles = !Options.Processing.CompressLogFiles;
-                    goto root;
+                    goto logCompression;
                 case "j":
                 case "J":
-                    goto logCompression;
-                case "k":
-                case "K":
                     Options.Processing.DeleteUnnecessaryFiles = !Options.Processing.DeleteUnnecessaryFiles;
                     goto root;
 

@@ -85,7 +85,6 @@
     <system:String x:Key="EnableTabInputCheckBoxString">Разрешить ввод через вкладки</system:String>
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Совместимость с Redump</system:String>
     <system:String x:Key="ShowEjectReminderCheckBoxString">Показывать напоминание о извлечении</system:String>
-    <system:String x:Key="AddPlaceholdersCheckBoxString">Добавлять шаблоны</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">Добавлять суффикс к имени файла</system:String>
     <system:String x:Key="OutputSubmissionJSONCheckBoxString">Создавать JSON для отправки</system:String>
     <system:String x:Key="IncludeArtifactsCheckBoxString">[ОТЛАДКА] Включать артефакты</system:String>

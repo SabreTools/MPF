@@ -365,7 +365,7 @@
                                   VerticalAlignment="Stretch"
                                   Header="{DynamicResource DumpingGroupBoxString}">
                             <UniformGrid Columns="2"
-                                         Rows="8">
+                                         Rows="7">
                                 <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource UseRelativePathsCheckBoxString}"
                                           IsChecked="{Binding UseRelativePaths}"
@@ -403,12 +403,6 @@
                                           Margin="0,4"/>
 
                                 <CheckBox VerticalAlignment="Center"
-                                          Content="{DynamicResource AddPlaceholdersCheckBoxString}"
-                                          IsChecked="{Binding AddPlaceholders}"
-                                          ToolTip="Enable adding placeholder text in the output for required and optional fields"
-                                          Margin="0,4"/>
-
-                                <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource AddFilenameSuffixCheckBoxString}"
                                           IsChecked="{Binding AddFilenameSuffix}"
                                           ToolTip="Enable appending the output filename to the generated files"
@@ -433,8 +427,6 @@
                                           IsChecked="{Binding CompressLogFiles}"
                                           ToolTip="Compress output log files to reduce space"
                                           Margin="0,4"/>
-                                <Label/>
-                                <!-- Empty label for padding -->
 
                                 <Label VerticalAlignment="Center"
                                        Content="{DynamicResource LogCompressionLabelString}"

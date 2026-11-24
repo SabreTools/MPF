@@ -85,7 +85,6 @@
     <system:String x:Key="EnableTabInputCheckBoxString">Abilita Input Tab</system:String>
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Abilita Compatibilità Redump</system:String>
     <system:String x:Key="ShowEjectReminderCheckBoxString">Mostra Promemoria Espulsione</system:String>
-    <system:String x:Key="AddPlaceholdersCheckBoxString">Aggiungi Segnaposto</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">Aggiungi Suffisso Nome File</system:String>
     <system:String x:Key="OutputSubmissionJSONCheckBoxString">Genera JSON di Invio</system:String>
     <system:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] Includi Artifacts</system:String>

@@ -85,7 +85,6 @@
     <system:String x:Key="EnableTabInputCheckBoxString">Activer la saisie des tabulations</system:String>
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Activer la compatibilité Redump</system:String>
     <system:String x:Key="ShowEjectReminderCheckBoxString">Afficher le rappel d’éjection</system:String>
-    <system:String x:Key="AddPlaceholdersCheckBoxString">Ajouter des espaces réservés</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">Ajouter un suffixe au nom de fichier</system:String>
     <system:String x:Key="OutputSubmissionJSONCheckBoxString">Sortie JSON pour soumission</system:String>
     <system:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] Inclure les artefacts</system:String>

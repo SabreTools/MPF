@@ -385,7 +385,6 @@ namespace MPF.Frontend.Tools
             options.Processing.Login.AttemptCount = GetInt32Setting(source, "AttemptCount", 3);
             options.Processing.Login.TimeoutSeconds = GetInt32Setting(source, "TimeoutSeconds", 30);
 
-            options.Processing.MediaInformation.AddPlaceholders = GetBooleanSetting(source, "AddPlaceholders", true);
             options.Processing.MediaInformation.EnableRedumpCompatibility = GetBooleanSetting(source, "EnableRedumpCompatibility", true);
             options.Processing.MediaInformation.EnableTabsInInputFields = GetBooleanSetting(source, "EnableTabsInInputFields", true);
             options.Processing.MediaInformation.PromptForDiscInformation = GetBooleanSetting(source, "PromptForDiscInformation", true);
@@ -466,7 +465,6 @@ namespace MPF.Frontend.Tools
                 { RedumperConstants.RefineSectorMode, options.Dumping.Redumper.RefineSectorMode.ToString() },
 
                 { "ScanForProtection", options.Processing.ProtectionScanning.ScanForProtection.ToString() },
-                { "AddPlaceholders", options.Processing.MediaInformation.AddPlaceholders.ToString() },
                 { "PromptForDiscInformation", options.Processing.MediaInformation.PromptForDiscInformation.ToString() },
                 { "PullAllInformation", options.Processing.Login.PullAllInformation.ToString() },
                 { "EnableTabsInInputFields", options.Processing.MediaInformation.EnableTabsInInputFields.ToString() },
