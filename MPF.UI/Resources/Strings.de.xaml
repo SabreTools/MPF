@@ -125,8 +125,8 @@
     <system:String x:Key="RedumperDefaultSectorOrderLabelString">Standard-Sektorordnung:</system:String>
     <system:String x:Key="RedumperDefaultDriveTypeLabelString">Standard-Laufwerkstyp:</system:String>
     <system:String x:Key="RedumperDefaultDrivePregapStartLabelString">Standard-Laufwerk Pregap Start:</system:String>
-    <!-- Login Info Tab -->
-    <system:String x:Key="LoginInfoTabString">Login-Informationen</system:String>
+    <!-- Web Access Tab -->
+    <system:String x:Key="InternetAccessTabString">Internetzugang</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Abruf</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Übereinstimmung informationen abrufen</system:String>
     <system:String x:Key="PullAllInformationCheckBoxString">Alle Informationen abrufen</system:String>

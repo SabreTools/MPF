@@ -130,8 +130,8 @@
     <x:String x:Key="RedumperDefaultSectorOrderLabelString">Standard-Sektorordnung:</x:String>
     <x:String x:Key="RedumperDefaultDriveTypeLabelString">Standard-Laufwerkstyp:</x:String>
     <x:String x:Key="RedumperDefaultDrivePregapStartLabelString">Standard-Laufwerk Pregap Start:</x:String>
-    <!-- Login Info Tab -->
-    <x:String x:Key="LoginInfoTabString">Login-Informationen</x:String>
+    <!-- Web Access Tab -->
+    <x:String x:Key="InternetAccessTabString">Internetzugang</x:String>
     <x:String x:Key="RetrievalGroupBoxString">Abruf</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">Übereinstimmung informationen abrufen</x:String>
     <x:String x:Key="PullAllInformationCheckBoxString">Alle Informationen abrufen</x:String>

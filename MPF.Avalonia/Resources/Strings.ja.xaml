@@ -124,8 +124,8 @@
     <x:String x:Key="RedumperDefaultSectorOrderLabelString">既定のセクター順序:</x:String>
     <x:String x:Key="RedumperDefaultDriveTypeLabelString">既定のドライブ種別:</x:String>
     <x:String x:Key="RedumperDefaultDrivePregapStartLabelString">既定のドライブ プリギャップ スタート:</x:String>
-    <!-- Login Info Tab -->
-    <x:String x:Key="LoginInfoTabString">ログイン情報</x:String>
+    <!-- Web Access Tab -->
+    <x:String x:Key="InternetAccessTabString">インターネット接続</x:String>
     <x:String x:Key="RetrievalGroupBoxString">情報取得</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">一致情報を取得</x:String>
     <x:String x:Key="PullAllInformationCheckBoxString">すべての情報を取得</x:String>

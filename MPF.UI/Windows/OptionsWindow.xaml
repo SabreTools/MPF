@@ -835,7 +835,7 @@
                     </StackPanel>
                 </TabItem>
 
-                <TabItem Header="{DynamicResource LoginInfoTabString}"
+                <TabItem Header="{DynamicResource InternetAccessTabString}"
                          Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5"

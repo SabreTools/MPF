@@ -130,8 +130,8 @@
     <system:String x:Key="RedumperDefaultSectorOrderLabelString">Ordem padrão de setores:</system:String>
     <system:String x:Key="RedumperDefaultDriveTypeLabelString">Tipo de unidade padrão:</system:String>
     <system:String x:Key="RedumperDefaultDrivePregapStartLabelString">Pregap start da unidade padrão:</system:String>
-    <!-- Login Info Tab -->
-    <system:String x:Key="LoginInfoTabString">Info de login</system:String>
+    <!-- Web Access Tab -->
+    <system:String x:Key="InternetAccessTabString">Acesso à Internet</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Obtenção</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Obter info quando corresponde</system:String>
     <system:String x:Key="PullAllInformationCheckBoxString">Buscar toda a informação</system:String>

@@ -128,8 +128,8 @@
     <x:String x:Key="RedumperDefaultReadMethodLabelString">D3f4u17 R34d M37h0d:</x:String>
     <x:String x:Key="RedumperDefaultSectorOrderLabelString">D3f4u17 z3c70r 0rd3r:</x:String>
     <x:String x:Key="RedumperDefaultDriveTypeLabelString">D3f4u17 Dr1v3 7yp3:</x:String>
-    <!-- Login Info Tab -->
-    <x:String x:Key="LoginInfoTabString">1091n 1nf0</x:String>
+    <!-- Web Access Tab -->
+    <x:String x:Key="InternetAccessTabString">In73rn37 4cc3ss</x:String>
     <x:String x:Key="RetrievalGroupBoxString">R37r13v41</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">R37r13v3 M47ch 1nf0rm4710n</x:String>
     <x:String x:Key="PullAllInformationCheckBoxString">Pu11 411 1nf0rm4710n</x:String>

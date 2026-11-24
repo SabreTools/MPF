@@ -485,13 +485,13 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
-        /// <inheritdoc cref="WebAccessSettings.PullAllInformation"/>
+        /// <inheritdoc cref="InternetAccessSettings.PullAllInformation"/>
         public bool PullAllInformation
         {
-            get => Options.Processing.WebAccess.PullAllInformation;
+            get => Options.Processing.InternetAccess.PullAllInformation;
             set
             {
-                Options.Processing.WebAccess.PullAllInformation = value;
+                Options.Processing.InternetAccess.PullAllInformation = value;
                 TriggerPropertyChanged(nameof(PullAllInformation));
             }
         }
@@ -606,13 +606,13 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
-        /// <inheritdoc cref="WebAccessSettings.RetrieveMatchInformation"/>
+        /// <inheritdoc cref="InternetAccessSettings.RetrieveMatchInformation"/>
         public bool RetrieveMatchInformation
         {
-            get => Options.Processing.WebAccess.RetrieveMatchInformation;
+            get => Options.Processing.InternetAccess.RetrieveMatchInformation;
             set
             {
-                Options.Processing.WebAccess.RetrieveMatchInformation = value;
+                Options.Processing.InternetAccess.RetrieveMatchInformation = value;
                 TriggerPropertyChanged(nameof(RetrieveMatchInformation));
             }
         }

@@ -163,11 +163,11 @@ namespace MPF.Check.Features
                 Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = false;
                 Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
-                // Web Access Information
-                Options.Processing.WebAccess.PullAllInformation = false;
-                Options.Processing.WebAccess.RetrieveMatchInformation = true;
-                Options.Processing.WebAccess.AttemptCount = 3;
-                Options.Processing.WebAccess.TimeoutSeconds = 30;
+                // Internet Access Information
+                Options.Processing.InternetAccess.PullAllInformation = false;
+                Options.Processing.InternetAccess.RetrieveMatchInformation = true;
+                Options.Processing.InternetAccess.AttemptCount = 3;
+                Options.Processing.InternetAccess.TimeoutSeconds = 30;
 
                 // Post-Information Options
                 Options.Processing.AddFilenameSuffix = false;
@@ -207,23 +207,23 @@ namespace MPF.Check.Features
 
                 // Retrieve online match information
                 else if (RetrieveInput.ProcessInput(args, ref index))
-                    Options.Processing.WebAccess.RetrieveMatchInformation = true;
+                    Options.Processing.InternetAccess.RetrieveMatchInformation = true;
                 else if (NoRetrieveInput.ProcessInput(args, ref index))
-                    Options.Processing.WebAccess.RetrieveMatchInformation = false;
+                    Options.Processing.InternetAccess.RetrieveMatchInformation = false;
 
                 // Attempt count
                 else if (AttemptCountInput.ProcessInput(args, ref index) && AttemptCountInput.Value > 0)
-                    Options.Processing.WebAccess.AttemptCount = AttemptCountInput.Value ?? 3;
+                    Options.Processing.InternetAccess.AttemptCount = AttemptCountInput.Value ?? 3;
 
                 // Timeout seconds
                 else if (TimeoutSecondsInput.ProcessInput(args, ref index) && TimeoutSecondsInput.Value > 0)
-                    Options.Processing.WebAccess.TimeoutSeconds = TimeoutSecondsInput.Value ?? 30;
+                    Options.Processing.InternetAccess.TimeoutSeconds = TimeoutSecondsInput.Value ?? 30;
 
                 // Pull all information
                 else if (PullAllInput.ProcessInput(args, ref index))
-                    Options.Processing.WebAccess.PullAllInformation = true;
+                    Options.Processing.InternetAccess.PullAllInformation = true;
                 else if (NoPullAllInput.ProcessInput(args, ref index))
-                    Options.Processing.WebAccess.PullAllInformation = false;
+                    Options.Processing.InternetAccess.PullAllInformation = false;
 
                 // Use a device path for physical checks
                 else if (PathInput.ProcessInput(args, ref index))

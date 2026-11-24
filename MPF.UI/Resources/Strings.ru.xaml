@@ -125,8 +125,8 @@
     <system:String x:Key="RedumperDefaultSectorOrderLabelString">Порядок секторов:</system:String>
     <system:String x:Key="RedumperDefaultDriveTypeLabelString">Тип привода по умолчанию:</system:String>
     <system:String x:Key="RedumperDefaultDrivePregapStartLabelString">Pregap Start привода по умолчанию:</system:String>
-    <!-- Login Info Tab -->
-    <system:String x:Key="LoginInfoTabString">Данные входа</system:String>
+    <!-- Web Access Tab -->
+    <system:String x:Key="InternetAccessTabString">Доступ в Интернет</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Получение</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Получать совпадающую информацию</system:String>
     <system:String x:Key="PullAllInformationCheckBoxString">Извлечь всю информацию</system:String>

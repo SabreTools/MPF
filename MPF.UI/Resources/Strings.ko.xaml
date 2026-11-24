@@ -125,8 +125,8 @@
     <system:String x:Key="RedumperDefaultSectorOrderLabelString">기본 섹터 순서:</system:String>
     <system:String x:Key="RedumperDefaultDriveTypeLabelString">기본 드라이브 유형:</system:String>
     <system:String x:Key="RedumperDefaultDrivePregapStartLabelString">기본 드라이브 프리갭 스타트:</system:String>
-    <!-- Login Info Tab -->
-    <system:String x:Key="LoginInfoTabString">로그인 정보</system:String>
+    <!-- Web Access Tab -->
+    <system:String x:Key="InternetAccessTabString">인터넷 접속</system:String>
     <system:String x:Key="RetrievalGroupBoxString">검색</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">일치 정보 가져오기</system:String>
     <system:String x:Key="PullAllInformationCheckBoxString">모든 정보 가져오기</system:String>

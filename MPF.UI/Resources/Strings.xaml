@@ -135,8 +135,8 @@
     <system:String x:Key="RedumperDefaultSectorOrderLabelString">Default Sector Order:</system:String>
     <system:String x:Key="RedumperDefaultDriveTypeLabelString">Default Drive Type:</system:String>
     <system:String x:Key="RedumperDefaultDrivePregapStartLabelString">Default Drive Pregap Start:</system:String>
-    <!-- Login Info Tab -->
-    <system:String x:Key="LoginInfoTabString">Login Info</system:String>
+    <!-- Web Access Tab -->
+    <system:String x:Key="InternetAccessTabString">Login Info</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Retrieval</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Retrieve Match Information</system:String>
     <system:String x:Key="PullAllInformationCheckBoxString">Pull All Information</system:String>

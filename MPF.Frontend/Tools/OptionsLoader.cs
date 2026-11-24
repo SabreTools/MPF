@@ -380,10 +380,10 @@ namespace MPF.Frontend.Tools
             options.Processing.ProtectionScanning.HideDriveLetters = GetBooleanSetting(source, "HideDriveLetters", false);
             options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = GetBooleanSetting(source, "IncludeDebugProtectionInformation", false);
 
-            options.Processing.WebAccess.PullAllInformation = GetBooleanSetting(source, "PullAllInformation", false);
-            options.Processing.WebAccess.RetrieveMatchInformation = GetBooleanSetting(source, "RetrieveMatchInformation", true);
-            options.Processing.WebAccess.AttemptCount = GetInt32Setting(source, "AttemptCount", 3);
-            options.Processing.WebAccess.TimeoutSeconds = GetInt32Setting(source, "TimeoutSeconds", 30);
+            options.Processing.InternetAccess.PullAllInformation = GetBooleanSetting(source, "PullAllInformation", false);
+            options.Processing.InternetAccess.RetrieveMatchInformation = GetBooleanSetting(source, "RetrieveMatchInformation", true);
+            options.Processing.InternetAccess.AttemptCount = GetInt32Setting(source, "AttemptCount", 3);
+            options.Processing.InternetAccess.TimeoutSeconds = GetInt32Setting(source, "TimeoutSeconds", 30);
 
             options.Processing.MediaInformation.EnableRedumpCompatibility = GetBooleanSetting(source, "EnableRedumpCompatibility", true);
             options.Processing.MediaInformation.EnableTabsInInputFields = GetBooleanSetting(source, "EnableTabsInInputFields", true);
@@ -464,7 +464,7 @@ namespace MPF.Frontend.Tools
 
                 { "ScanForProtection", options.Processing.ProtectionScanning.ScanForProtection.ToString() },
                 { "PromptForDiscInformation", options.Processing.MediaInformation.PromptForDiscInformation.ToString() },
-                { "PullAllInformation", options.Processing.WebAccess.PullAllInformation.ToString() },
+                { "PullAllInformation", options.Processing.InternetAccess.PullAllInformation.ToString() },
                 { "EnableTabsInInputFields", options.Processing.MediaInformation.EnableTabsInInputFields.ToString() },
                 { "EnableRedumpCompatibility", options.Processing.MediaInformation.EnableRedumpCompatibility.ToString() },
                 { "ShowDiscEjectReminder", options.Processing.ShowDiscEjectReminder.ToString() },
@@ -485,9 +485,9 @@ namespace MPF.Frontend.Tools
                 { "OpenLogWindowAtStartup", options.GUI.OpenLogWindowAtStartup.ToString() },
                 { "ToolConsoleAutoClose", options.GUI.ToolConsoleAutoClose.ToString() },
 
-                { "RetrieveMatchInformation", options.Processing.WebAccess.RetrieveMatchInformation.ToString() },
-                { "AttemptCount", options.Processing.WebAccess.AttemptCount.ToString() },
-                { "TimeoutSeconds", options.Processing.WebAccess.TimeoutSeconds.ToString() },
+                { "RetrieveMatchInformation", options.Processing.InternetAccess.RetrieveMatchInformation.ToString() },
+                { "AttemptCount", options.Processing.InternetAccess.AttemptCount.ToString() },
+                { "TimeoutSeconds", options.Processing.InternetAccess.TimeoutSeconds.ToString() },
             };
         }
 

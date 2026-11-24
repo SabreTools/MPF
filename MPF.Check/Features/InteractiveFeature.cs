@@ -49,11 +49,11 @@ namespace MPF.Check.Features
                 Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = false;
                 Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
-                // Web Access Information
-                Options.Processing.WebAccess.PullAllInformation = false;
-                Options.Processing.WebAccess.RetrieveMatchInformation = true;
-                Options.Processing.WebAccess.AttemptCount = 3;
-                Options.Processing.WebAccess.TimeoutSeconds = 30;
+                // Internet Access Information
+                Options.Processing.InternetAccess.PullAllInformation = false;
+                Options.Processing.InternetAccess.RetrieveMatchInformation = true;
+                Options.Processing.InternetAccess.AttemptCount = 3;
+                Options.Processing.InternetAccess.TimeoutSeconds = 30;
 
                 // Post-Information Options
                 Options.Processing.AddFilenameSuffix = false;
@@ -86,10 +86,10 @@ namespace MPF.Check.Features
             Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram.LongName()}')");
             Console.WriteLine($"3) Set seed path (Currently '{Seed}')");
             Console.WriteLine($"4) Create IRD (Currently '{Options.Processing.CreateIRDAfterDumping}')");
-            Console.WriteLine($"5) Attempt online matches (Currently '{Options.Processing.WebAccess.RetrieveMatchInformation}')");
-            Console.WriteLine($"6) Web client attempt count (Currently '{Options.Processing.WebAccess.AttemptCount}')");
-            Console.WriteLine($"7) Web client timeout in seconds (Currently '{Options.Processing.WebAccess.TimeoutSeconds}')");
-            Console.WriteLine($"8) Pull all information (Currently '{Options.Processing.WebAccess.PullAllInformation}')");
+            Console.WriteLine($"5) Attempt online matches (Currently '{Options.Processing.InternetAccess.RetrieveMatchInformation}')");
+            Console.WriteLine($"6) Web client attempt count (Currently '{Options.Processing.InternetAccess.AttemptCount}')");
+            Console.WriteLine($"7) Web client timeout in seconds (Currently '{Options.Processing.InternetAccess.TimeoutSeconds}')");
+            Console.WriteLine($"8) Pull all information (Currently '{Options.Processing.InternetAccess.PullAllInformation}')");
             Console.WriteLine($"9) Set device path (Currently '{DevicePath}')");
             Console.WriteLine($"A) Scan for protection (Currently '{scan}')");
             Console.WriteLine($"B) Scan archives for protection (Currently '{enableArchives}')");
@@ -117,14 +117,14 @@ namespace MPF.Check.Features
                     Options.Processing.CreateIRDAfterDumping = !Options.Processing.CreateIRDAfterDumping;
                     goto root;
                 case "5":
-                    Options.Processing.WebAccess.RetrieveMatchInformation = !Options.Processing.WebAccess.RetrieveMatchInformation;
+                    Options.Processing.InternetAccess.RetrieveMatchInformation = !Options.Processing.InternetAccess.RetrieveMatchInformation;
                     goto root;
                 case "6":
                     goto attemptCount;
                 case "7":
                     goto timeoutSeconds;
                 case "8":
-                    Options.Processing.WebAccess.PullAllInformation = !Options.Processing.WebAccess.PullAllInformation;
+                    Options.Processing.InternetAccess.PullAllInformation = !Options.Processing.InternetAccess.PullAllInformation;
                     goto root;
                 case "9":
                     goto mountedPath;
@@ -223,7 +223,7 @@ namespace MPF.Check.Features
             Console.Write("> ");
             string? possibleAttemptCount = Console.ReadLine();
             if (int.TryParse(possibleAttemptCount, out int attemptCount) && attemptCount > 0)
-                Options.Processing.WebAccess.AttemptCount = attemptCount;
+                Options.Processing.InternetAccess.AttemptCount = attemptCount;
 
             goto root;
 
@@ -233,7 +233,7 @@ namespace MPF.Check.Features
             Console.Write("> ");
             string? possibleTimeout = Console.ReadLine();
             if (int.TryParse(possibleTimeout, out int timeoutSeconds) && timeoutSeconds > 0)
-                Options.Processing.WebAccess.TimeoutSeconds = timeoutSeconds;
+                Options.Processing.InternetAccess.TimeoutSeconds = timeoutSeconds;
 
             goto root;
 

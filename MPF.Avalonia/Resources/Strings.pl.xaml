@@ -124,8 +124,8 @@
     <x:String x:Key="RedumperDefaultSectorOrderLabelString">Domyślna kolejność sektorów:</x:String>
     <x:String x:Key="RedumperDefaultDriveTypeLabelString">Domyślny typ napędu:</x:String>
     <x:String x:Key="RedumperDefaultDrivePregapStartLabelString">Domyślny pregap start napęd:</x:String>
-    <!-- Login Info Tab -->
-    <x:String x:Key="LoginInfoTabString">Informacje logowania</x:String>
+    <!-- Web Access Tab -->
+    <x:String x:Key="InternetAccessTabString">Dostęp do Internetu</x:String>
     <x:String x:Key="RetrievalGroupBoxString">Pobieranie</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">Pobierz informacje o dopasowaniu</x:String>
     <x:String x:Key="PullAllInformationCheckBoxString">Pobierz wszystkie informacje</x:String>

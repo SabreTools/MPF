@@ -124,8 +124,8 @@
     <x:String x:Key="RedumperDefaultSectorOrderLabelString">Standard sektorordning:</x:String>
     <x:String x:Key="RedumperDefaultDriveTypeLabelString">Standard enhetstyp:</x:String>
     <x:String x:Key="RedumperDefaultDrivePregapStartLabelString">Standard pregap start:</x:String>
-    <!-- Login Info Tab -->
-    <x:String x:Key="LoginInfoTabString">Inloggningsinfo</x:String>
+    <!-- Web Access Tab -->
+    <x:String x:Key="InternetAccessTabString">Tillgång till internet</x:String>
     <x:String x:Key="RetrievalGroupBoxString">Hämtning</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">Hämta matchningsinformation från Redump.org</x:String>
     <x:String x:Key="PullAllInformationCheckBoxString">Hämta all information</x:String>

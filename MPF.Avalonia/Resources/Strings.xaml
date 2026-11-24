@@ -140,8 +140,8 @@
     <x:String x:Key="RedumperDefaultSectorOrderLabelString">Default Sector Order:</x:String>
     <x:String x:Key="RedumperDefaultDriveTypeLabelString">Default Drive Type:</x:String>
     <x:String x:Key="RedumperDefaultDrivePregapStartLabelString">Default Drive Pregap Start:</x:String>
-    <!-- Login Info Tab -->
-    <x:String x:Key="LoginInfoTabString">Login Info</x:String>
+    <!-- Web Access Tab -->
+    <x:String x:Key="InternetAccessTabString">Internet Access</x:String>
     <x:String x:Key="RetrievalGroupBoxString">Retrieval</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">Retrieve Match Information</x:String>
     <x:String x:Key="PullAllInformationCheckBoxString">Pull All Information</x:String>

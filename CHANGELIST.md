@@ -9,6 +9,7 @@
 - Remove ability to disable JSON output
 - Transition away from some "Login" naming
 - Move "pull all information" setting, cleanup resources
+- Rename login info and web access to "Internet Access"
 
 ### 3.12.0 (2026-11-23)
 

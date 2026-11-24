@@ -129,8 +129,8 @@
     <x:String x:Key="RedumperDefaultSectorOrderLabelString">Структура сектору за замовчуванням:</x:String>
     <x:String x:Key="RedumperDefaultDriveTypeLabelString">Тип приводу за замовчуванням:</x:String>
     <x:String x:Key="RedumperDefaultDrivePregapStartLabelString">Pregap start приводу за замовчуванням:</x:String>
-    <!-- Login Info Tab -->
-    <x:String x:Key="LoginInfoTabString">Інформація для входу</x:String>
+    <!-- Web Access Tab -->
+    <x:String x:Key="InternetAccessTabString">Доступ до Інтернету</x:String>
     <x:String x:Key="RetrievalGroupBoxString">Завантаження</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">Завантажити онлайн інформацію</x:String>
     <x:String x:Key="PullAllInformationCheckBoxString">Завантажити всю інформацію</x:String>

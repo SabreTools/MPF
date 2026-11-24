@@ -860,7 +860,7 @@
 
                 <TabItem>
                     <TabItem.Header>
-                        <TextBlock Text="{DynamicResource LoginInfoTabString}"
+                        <TextBlock Text="{DynamicResource InternetAccessTabString}"
                                    FontSize="13.75"
                                    FontWeight="Bold"
                                    Margin="0,0,0,2" />

@@ -151,10 +151,10 @@ namespace MPF.Frontend
             Processing.ProtectionScanning.HideDriveLetters = source.Processing.ProtectionScanning.HideDriveLetters;
             Processing.ProtectionScanning.IncludeDebugProtectionInformation = source.Processing.ProtectionScanning.IncludeDebugProtectionInformation;
 
-            Processing.WebAccess.PullAllInformation = source.Processing.WebAccess.PullAllInformation;
-            Processing.WebAccess.RetrieveMatchInformation = source.Processing.WebAccess.RetrieveMatchInformation;
-            Processing.WebAccess.AttemptCount = source.Processing.WebAccess.AttemptCount;
-            Processing.WebAccess.TimeoutSeconds = source.Processing.WebAccess.TimeoutSeconds;
+            Processing.InternetAccess.PullAllInformation = source.Processing.InternetAccess.PullAllInformation;
+            Processing.InternetAccess.RetrieveMatchInformation = source.Processing.InternetAccess.RetrieveMatchInformation;
+            Processing.InternetAccess.AttemptCount = source.Processing.InternetAccess.AttemptCount;
+            Processing.InternetAccess.TimeoutSeconds = source.Processing.InternetAccess.TimeoutSeconds;
 
             Processing.MediaInformation.EnableRedumpCompatibility = source.Processing.MediaInformation.EnableRedumpCompatibility;
             Processing.MediaInformation.EnableTabsInInputFields = source.Processing.MediaInformation.EnableTabsInInputFields;
@@ -534,7 +534,7 @@ namespace MPF.Frontend
         /// Web access settings
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public WebAccessSettings WebAccess { get; set; } = new WebAccessSettings();
+        public InternetAccessSettings InternetAccess { get; set; } = new InternetAccessSettings();
 
         #endregion
 
@@ -622,7 +622,7 @@ namespace MPF.Frontend
     /// <summary>
     /// Settings related to site logins
     /// </summary>
-    public class WebAccessSettings
+    public class InternetAccessSettings
     {
         /// <summary>
         /// Pull all information from online sources if signed in

@@ -129,8 +129,8 @@
     <system:String x:Key="RedumperDefaultReadMethodLabelString">D3f4u17 R34d M37h0d:</system:String>
     <system:String x:Key="RedumperDefaultSectorOrderLabelString">D3f4u17 z3c70r 0rd3r:</system:String>
     <system:String x:Key="RedumperDefaultDriveTypeLabelString">D3f4u17 Dr1v3 7yp3:</system:String>
-    <!-- Login Info Tab -->
-    <system:String x:Key="LoginInfoTabString">1091n 1nf0</system:String>
+    <!-- Web Access Tab -->
+    <system:String x:Key="InternetAccessTabString">In73rn37 4cc3ss</system:String>
     <system:String x:Key="RetrievalGroupBoxString">R37r13v41</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">R37r13v3 M47ch 1nf0rm4710n</system:String>
     <system:String x:Key="PullAllInformationCheckBoxString">Pu11 411 1nf0rm4710n</system:String>

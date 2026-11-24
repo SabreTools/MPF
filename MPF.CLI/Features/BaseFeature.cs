@@ -87,9 +87,9 @@ namespace MPF.CLI.Features
             Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = false;
             Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
-            // Web Access Information
-            Options.Processing.WebAccess.PullAllInformation = false;
-            Options.Processing.WebAccess.RetrieveMatchInformation = true;
+            // Internet Access Information
+            Options.Processing.InternetAccess.PullAllInformation = false;
+            Options.Processing.InternetAccess.RetrieveMatchInformation = true;
 
             // Post-Information Options
             Options.Processing.AddFilenameSuffix = false;

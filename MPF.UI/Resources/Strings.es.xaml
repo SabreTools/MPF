@@ -125,8 +125,8 @@
     <system:String x:Key="RedumperDefaultSectorOrderLabelString">Orden de sectores predeterminado:</system:String>
     <system:String x:Key="RedumperDefaultDriveTypeLabelString">Tipo de unidad predeterminado:</system:String>
     <system:String x:Key="RedumperDefaultDrivePregapStartLabelString">Pregap Start de unidad predeterminada:</system:String>
-    <!-- Login Info Tab -->
-    <system:String x:Key="LoginInfoTabString">Información de acceso</system:String>
+    <!-- Web Access Tab -->
+    <system:String x:Key="InternetAccessTabString">Acceso a Internet</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Recuperación</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Recuperar información de coincidencias</system:String>
     <system:String x:Key="PullAllInformationCheckBoxString">Obtener toda la información</system:String>
