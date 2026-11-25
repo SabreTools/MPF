@@ -538,7 +538,7 @@ namespace MPF.Avalonia.Windows
                 ThemeType.Dark => new DarkModeTheme(),
 
                 // Custom themes
-                ThemeType.Purple => new CustomTheme("111111", "9A5EC0"),
+                ThemeType.Purple => new PurpleTheme(),
                 ThemeType.Custom => new CustomTheme(options.GUI.Theming.CustomBackgroundColor, options.GUI.Theming.CustomTextColor),
 
                 // Default acts like automatic

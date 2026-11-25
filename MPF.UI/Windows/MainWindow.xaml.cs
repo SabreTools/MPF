@@ -358,7 +358,7 @@ namespace MPF.UI.Windows
                 ThemeType.Dark => new DarkModeTheme(),
 
                 // Custom themes
-                ThemeType.Purple => new CustomTheme("111111", "9A5EC0"),
+                ThemeType.Purple => new PurpleTheme(),
                 ThemeType.Custom => new CustomTheme(MainViewModel.Options.GUI.Theming.CustomBackgroundColor, MainViewModel.Options.GUI.Theming.CustomTextColor),
 
                 // Default acts like automatic

@@ -806,9 +806,9 @@ namespace MPF.Frontend.ViewModels
             ThemeType.Automatic,
             ThemeType.Light,
             ThemeType.Dark,
+            ThemeType.Purple,
 
-            // TODO: Determine if these should be enabled in the UI
-            // ThemeType.Purple,
+            // TODO: Determine if this should be enabled in the UI
             // ThemeType.Custom,
         ];
 
