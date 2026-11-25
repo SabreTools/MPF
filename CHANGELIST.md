@@ -25,6 +25,7 @@
 - Convert to dropdown-based theme selection, add automatic
 - Replace placeholder label values
 - Purple
+- Keep main window state after closing a tool window in Avalonia (gmipf)
 
 ### 3.12.0 (2026-11-23)
 
