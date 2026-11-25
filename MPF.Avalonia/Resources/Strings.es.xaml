@@ -62,7 +62,6 @@
     <x:String x:Key="UserInterfaceGroupBoxString">Interfaz de Usuario</x:String>
     <x:String x:Key="ThemeTypeLabelString">Tipo de tema</x:String>
     <x:String x:Key="CheckForUpdatesCheckBoxString">Buscar actualizaciones al iniciar</x:String>
-    <x:String x:Key="CopyURLToClipboardCheckBoxString">Copiar URL de actualización</x:String>
     <x:String x:Key="FastUpdateLabelCheckBoxString">Etiqueta de actualización rápida</x:String>
     <x:String x:Key="DefaultUILanguageLabelString">Idioma predeterminado de la interfaz:</x:String>
     <x:String x:Key="DetectionGroupBoxString">Detección</x:String>
