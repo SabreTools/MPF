@@ -38,6 +38,10 @@
     <system:String x:Key="DriveSpeedLabelString">드라이브 속도</system:String>
     <system:String x:Key="DumpingProgramLabelString">덤프 프로그램</system:String>
     <system:String x:Key="ParametersLabelString">매개변수</system:String>
+    <system:String x:Key="MountedPathLabelString">마운트된 경로</system:String>
+    <!-- Processing Group Box -->
+    <system:String x:Key="ProcessingGroupBoxString">처리</system:String>
+    <system:String x:Key="ScanForProtectionCheckBoxString">덤프 후 보호 검색</system:String>
     <!-- Controls Group Box-->
     <system:String x:Key="ControlsGroupBoxString">컨트롤</system:String>
     <system:String x:Key="StartDumpingButtonString">덤프 시작</system:String>

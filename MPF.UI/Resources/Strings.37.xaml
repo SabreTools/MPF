@@ -39,6 +39,10 @@
     <system:String x:Key="DriveSpeedLabelString">Dr1v3 zp33d</system:String>
     <system:String x:Key="DumpingProgramLabelString">Dump1n9 Pr09r4m</system:String>
     <system:String x:Key="ParametersLabelString">P4r4m373rz</system:String>
+    <system:String x:Key="MountedPathLabelString">M0un73d P47h</system:String>
+    <!-- Processing Group Box -->
+    <system:String x:Key="ProcessingGroupBoxString">Pr0c3ssing</system:String>
+    <system:String x:Key="ScanForProtectionCheckBoxString">Sc4n f0r pr073c7i0n 4f73r dump</system:String>
     <!-- Controls Group Box-->
     <system:String x:Key="ControlsGroupBoxString">C0n7r01z</system:String>
     <system:String x:Key="StartDumpingButtonString">z74r7 Dump1n9</system:String>

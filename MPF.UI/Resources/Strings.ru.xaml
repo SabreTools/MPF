@@ -38,6 +38,10 @@
     <system:String x:Key="DriveSpeedLabelString">Скорость привода</system:String>
     <system:String x:Key="DumpingProgramLabelString">Программа дампа</system:String>
     <system:String x:Key="ParametersLabelString">Параметры</system:String>
+    <system:String x:Key="MountedPathLabelString">Установленный путь</system:String>
+    <!-- Processing Group Box -->
+    <system:String x:Key="ProcessingGroupBoxString">Обработка</system:String>
+    <system:String x:Key="ScanForProtectionCheckBoxString">Сканирование на предмет защиты после дампа</system:String>
     <!-- Controls Group Box -->
     <system:String x:Key="ControlsGroupBoxString">Управление</system:String>
     <system:String x:Key="StartDumpingButtonString">Начать дамп</system:String>

@@ -38,6 +38,10 @@
     <system:String x:Key="DriveSpeedLabelString">Velocità Unità</system:String>
     <system:String x:Key="DumpingProgramLabelString">Programma di Dump</system:String>
     <system:String x:Key="ParametersLabelString">Parametri</system:String>
+    <system:String x:Key="MountedPathLabelString">Sentiero Montato</system:String>
+    <!-- Processing Group Box -->
+    <system:String x:Key="ProcessingGroupBoxString">Elaborazione</system:String>
+    <system:String x:Key="ScanForProtectionCheckBoxString">Scansione per protezione dopo il dump</system:String>
     <!-- Controls Group Box-->
     <system:String x:Key="ControlsGroupBoxString">Controlli</system:String>
     <system:String x:Key="StartDumpingButtonString">Avvia Dump</system:String>

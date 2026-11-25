@@ -38,6 +38,10 @@
     <system:String x:Key="DriveSpeedLabelString">ドライブ速度</system:String>
     <system:String x:Key="DumpingProgramLabelString">ダンプログラム</system:String>
     <system:String x:Key="ParametersLabelString">パラメーター</system:String>
+    <system:String x:Key="MountedPathLabelString">マウントされたパス</system:String>
+    <!-- Processing Group Box -->
+    <system:String x:Key="ProcessingGroupBoxString">処理</system:String>
+    <system:String x:Key="ScanForProtectionCheckBoxString">ダンプ後に保護をスキャンする</system:String>
     <!-- Controls Group Box -->
     <system:String x:Key="ControlsGroupBoxString">操作</system:String>
     <system:String x:Key="StartDumpingButtonString">ダンプ開始</system:String>

@@ -38,6 +38,10 @@
     <system:String x:Key="DriveSpeedLabelString">Prędkość napędu</system:String>
     <system:String x:Key="DumpingProgramLabelString">Program do dumpingu</system:String>
     <system:String x:Key="ParametersLabelString">Parametry</system:String>
+    <system:String x:Key="MountedPathLabelString">Zamontowana ścieżka</system:String>
+    <!-- Processing Group Box -->
+    <system:String x:Key="ProcessingGroupBoxString">Przetwarzanie</system:String>
+    <system:String x:Key="ScanForProtectionCheckBoxString">Skanuj w poszukiwaniu ochrony po zrzucie</system:String>
     <!-- Controls Group Box -->
     <system:String x:Key="ControlsGroupBoxString">Sterowanie</system:String>
     <system:String x:Key="StartDumpingButtonString">Rozpocznij dumping</system:String>

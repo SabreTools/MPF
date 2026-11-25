@@ -38,6 +38,10 @@
     <x:String x:Key="DriveSpeedLabelString">Velocidade da unidade</x:String>
     <x:String x:Key="DumpingProgramLabelString">Programa para dump</x:String>
     <x:String x:Key="ParametersLabelString">Parâmetros</x:String>
+    <x:String x:Key="MountedPathLabelString">Caminho montado</x:String>
+    <!-- Processing Group Box -->
+    <x:String x:Key="ProcessingGroupBoxString">Processamento</x:String>
+    <x:String x:Key="ScanForProtectionCheckBoxString">Procure proteção após despejo</x:String>
     <!-- Controls Group Box-->
     <x:String x:Key="ControlsGroupBoxString">Controlos</x:String>
     <x:String x:Key="StartDumpingButtonString">Começar dump</x:String>

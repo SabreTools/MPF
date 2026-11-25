@@ -38,6 +38,10 @@
     <x:String x:Key="DriveSpeedLabelString">Швидкість приводу</x:String>
     <x:String x:Key="DumpingProgramLabelString">Програма для дампу</x:String>
     <x:String x:Key="ParametersLabelString">Параметри</x:String>
+    <x:String x:Key="MountedPathLabelString">Монтований шлях</x:String>
+    <!-- Processing Group Box -->
+    <x:String x:Key="ProcessingGroupBoxString">Обробка</x:String>
+    <x:String x:Key="ScanForProtectionCheckBoxString">Сканувати захист після дампа</x:String>
     <!-- Controls Group Box-->
     <x:String x:Key="ControlsGroupBoxString">Команди</x:String>
     <x:String x:Key="StartDumpingButtonString">Почати дамп</x:String>

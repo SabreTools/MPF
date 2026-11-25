@@ -38,6 +38,10 @@
     <system:String x:Key="DriveSpeedLabelString">Enhetshastighet</system:String>
     <system:String x:Key="DumpingProgramLabelString">Dumpningsprogram</system:String>
     <system:String x:Key="ParametersLabelString">Parametrar</system:String>
+    <system:String x:Key="MountedPathLabelString">Monterad väg</system:String>
+    <!-- Processing Group Box -->
+    <system:String x:Key="ProcessingGroupBoxString">Bearbetning</system:String>
+    <system:String x:Key="ScanForProtectionCheckBoxString">Sök efter skydd efter dumpning</system:String>
     <!-- Controls Group Box -->
     <system:String x:Key="ControlsGroupBoxString">Kontroller</system:String>
     <system:String x:Key="StartDumpingButtonString">Starta Dumpning</system:String>

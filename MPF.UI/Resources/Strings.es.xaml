@@ -38,6 +38,10 @@
     <system:String x:Key="DriveSpeedLabelString">Velocidad de unidad</system:String>
     <system:String x:Key="DumpingProgramLabelString">Programa de volcado</system:String>
     <system:String x:Key="ParametersLabelString">Parámetros</system:String>
+    <system:String x:Key="MountedPathLabelString">Camino montado</system:String>
+    <!-- Processing Group Box -->
+    <system:String x:Key="ProcessingGroupBoxString">Tratamiento</system:String>
+    <system:String x:Key="ScanForProtectionCheckBoxString">Escanear en busca de protección después del volcado</system:String>
     <!-- Controls Group Box-->
     <system:String x:Key="ControlsGroupBoxString">Controles</system:String>
     <system:String x:Key="StartDumpingButtonString">Iniciar volcado</system:String>

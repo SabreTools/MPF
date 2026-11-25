@@ -39,6 +39,10 @@
     <x:String x:Key="DriveSpeedLabelString">Laufwerksgeschwindigkeit</x:String>
     <x:String x:Key="DumpingProgramLabelString">Dump Programm</x:String>
     <x:String x:Key="ParametersLabelString">Parameter</x:String>
+    <x:String x:Key="MountedPathLabelString">Berittener Pfad</x:String>
+    <!-- Processing Group Box -->
+    <x:String x:Key="ProcessingGroupBoxString">Verarbeitung</x:String>
+    <x:String x:Key="ScanForProtectionCheckBoxString">Nach dem Dump nach Schutz suchen</x:String>
     <!-- Controls Group Box -->
     <x:String x:Key="ControlsGroupBoxString">Steuerung</x:String>
     <x:String x:Key="StartDumpingButtonString">Dump starten</x:String>

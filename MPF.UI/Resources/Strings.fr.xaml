@@ -38,6 +38,10 @@
     <system:String x:Key="DriveSpeedLabelString">Vitesse du lecteur</system:String>
     <system:String x:Key="DumpingProgramLabelString">Programme de dump</system:String>
     <system:String x:Key="ParametersLabelString">Paramètres</system:String>
+    <system:String x:Key="MountedPathLabelString">Chemin monté</system:String>
+    <!-- Processing Group Box -->
+    <system:String x:Key="ProcessingGroupBoxString">Traitement</system:String>
+    <system:String x:Key="ScanForProtectionCheckBoxString">Rechercher une protection après le vidage</system:String>
     <!-- Controls Group Box -->
     <system:String x:Key="ControlsGroupBoxString">Contrôles</system:String>
     <system:String x:Key="StartDumpingButtonString">Démarrer le dump</system:String>
