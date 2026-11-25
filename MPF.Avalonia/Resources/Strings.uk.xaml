@@ -61,7 +61,7 @@
     <!-- General Tab -->
     <x:String x:Key="GeneralTabString">Загальні</x:String>
     <x:String x:Key="UserInterfaceGroupBoxString">Графічний інтерфейс</x:String>
-    <x:String x:Key="ThemeTypeLabelString">SET_THEME_TYPE</x:String>
+    <x:String x:Key="ThemeTypeLabelString">Тип теми</x:String>
     <x:String x:Key="CheckForUpdatesCheckBoxString">Перевіряти оновлення при запуску</x:String>
     <x:String x:Key="CopyURLToClipboardCheckBoxString">Скопіювати URL оновлення</x:String>
     <x:String x:Key="FastUpdateLabelCheckBoxString">Швидке оновлення міток</x:String>

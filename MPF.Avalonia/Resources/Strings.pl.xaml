@@ -60,7 +60,7 @@
     <!-- General Tab -->
     <x:String x:Key="GeneralTabString">Ogólne</x:String>
     <x:String x:Key="UserInterfaceGroupBoxString">Interfejs użytkownika</x:String>
-    <x:String x:Key="ThemeTypeLabelString">SET_THEME_TYPE</x:String>
+    <x:String x:Key="ThemeTypeLabelString">Typ motywu</x:String>
     <x:String x:Key="CheckForUpdatesCheckBoxString">Sprawdzaj aktualizacje przy starcie</x:String>
     <x:String x:Key="CopyURLToClipboardCheckBoxString">Kopiuj URL aktualizacji do schowka</x:String>
     <x:String x:Key="FastUpdateLabelCheckBoxString">Szybka aktualizacja etykiety</x:String>

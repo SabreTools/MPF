@@ -61,7 +61,7 @@
     <!-- General Tab -->
     <system:String x:Key="GeneralTabString">Allmänt</system:String>
     <system:String x:Key="UserInterfaceGroupBoxString">Användargränssnitt</system:String>
-    <system:String x:Key="ThemeTypeLabelString">SET_THEME_TYPE</system:String>
+    <system:String x:Key="ThemeTypeLabelString">Typ av tema</system:String>
     <system:String x:Key="CheckForUpdatesCheckBoxString">Sök efter uppdateringar vid start</system:String>
     <system:String x:Key="CopyURLToClipboardCheckBoxString">Kopiera uppdaterings-URL till Urklipp</system:String>
     <system:String x:Key="FastUpdateLabelCheckBoxString">Snabb uppdatering av etikett</system:String>

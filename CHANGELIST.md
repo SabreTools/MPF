@@ -23,6 +23,7 @@
 - Minor changes to french and portuguese translations (BigTreezZ)
 - Make combo box items more consistent
 - Convert to dropdown-based theme selection, add automatic
+- Replace placeholder label values
 
 ### 3.12.0 (2026-11-23)
 

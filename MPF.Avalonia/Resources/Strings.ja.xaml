@@ -60,7 +60,7 @@
     <!-- General Tab -->
     <x:String x:Key="GeneralTabString">全般</x:String>
     <x:String x:Key="UserInterfaceGroupBoxString">ユーザーインターフェース</x:String>
-    <x:String x:Key="ThemeTypeLabelString">SET_THEME_TYPE</x:String>
+    <x:String x:Key="ThemeTypeLabelString">テーマの種類</x:String>
     <x:String x:Key="CheckForUpdatesCheckBoxString">起動時に更新を確認する</x:String>
     <x:String x:Key="CopyURLToClipboardCheckBoxString">更新URLをクリップボードにコピー</x:String>
     <x:String x:Key="FastUpdateLabelCheckBoxString">高速ラベル更新</x:String>
