@@ -63,7 +63,6 @@
     <system:String x:Key="UserInterfaceGroupBoxString">Interfejs użytkownika</system:String>
     <system:String x:Key="ThemeTypeLabelString">Typ motywu</system:String>
     <system:String x:Key="CheckForUpdatesCheckBoxString">Sprawdzaj aktualizacje przy starcie</system:String>
-    <system:String x:Key="CopyURLToClipboardCheckBoxString">Kopiuj URL aktualizacji do schowka</system:String>
     <system:String x:Key="FastUpdateLabelCheckBoxString">Szybka aktualizacja etykiety</system:String>
     <system:String x:Key="DefaultUILanguageLabelString">Domyślny język UI:</system:String>
     <system:String x:Key="DetectionGroupBoxString">Wykrywanie</system:String>

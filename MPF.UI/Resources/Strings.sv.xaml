@@ -63,7 +63,6 @@
     <system:String x:Key="UserInterfaceGroupBoxString">Användargränssnitt</system:String>
     <system:String x:Key="ThemeTypeLabelString">Typ av tema</system:String>
     <system:String x:Key="CheckForUpdatesCheckBoxString">Sök efter uppdateringar vid start</system:String>
-    <system:String x:Key="CopyURLToClipboardCheckBoxString">Kopiera uppdaterings-URL till Urklipp</system:String>
     <system:String x:Key="FastUpdateLabelCheckBoxString">Snabb uppdatering av etikett</system:String>
     <system:String x:Key="DefaultUILanguageLabelString">Standard språk för gränssnitt:</system:String>
     <system:String x:Key="DetectionGroupBoxString">Upptäcka</system:String>

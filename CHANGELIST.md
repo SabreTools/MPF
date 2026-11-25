@@ -25,6 +25,7 @@
 - Convert to dropdown-based theme selection, add automatic
 - Replace placeholder label values
 - Purple
+- Remove string resources for removed setting
 - Check free space where the output is written (gmipf)
 
 ### 3.12.0 (2026-11-23)

@@ -63,7 +63,6 @@
     <system:String x:Key="UserInterfaceGroupBoxString">사용자 인터페이스</system:String>
     <system:String x:Key="ThemeTypeLabelString">테마 유형</system:String>
     <system:String x:Key="CheckForUpdatesCheckBoxString">시작 시 업데이트 확인</system:String>
-    <system:String x:Key="CopyURLToClipboardCheckBoxString">업데이트 URL을 클립보드에 복사</system:String>
     <system:String x:Key="FastUpdateLabelCheckBoxString">빠른 업데이트 레이블</system:String>
     <system:String x:Key="DefaultUILanguageLabelString">기본 UI 언어:</system:String>
     <system:String x:Key="DetectionGroupBoxString">감지</system:String>

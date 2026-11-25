@@ -64,7 +64,6 @@
     <system:String x:Key="UserInterfaceGroupBoxString">Графічний інтерфейс</system:String>
     <system:String x:Key="ThemeTypeLabelString">Тип теми</system:String>
     <system:String x:Key="CheckForUpdatesCheckBoxString">Перевіряти оновлення при запуску</system:String>
-    <system:String x:Key="CopyURLToClipboardCheckBoxString">Скопіювати URL оновлення</system:String>
     <system:String x:Key="FastUpdateLabelCheckBoxString">Швидке оновлення міток</system:String>
     <system:String x:Key="DefaultUILanguageLabelString">Мова інтерфейсу за замовчуванням:</system:String>
     <system:String x:Key="DetectionGroupBoxString">Пошук</system:String>

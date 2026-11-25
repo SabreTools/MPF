@@ -62,7 +62,6 @@
     <x:String x:Key="UserInterfaceGroupBoxString">Interface utilisateur</x:String>
     <x:String x:Key="ThemeTypeLabelString">Type de thème</x:String>
     <x:String x:Key="CheckForUpdatesCheckBoxString">Vérifier les mises à jour au démarrage</x:String>
-    <x:String x:Key="CopyURLToClipboardCheckBoxString">Copier l’URL de mise à jour</x:String>
     <x:String x:Key="FastUpdateLabelCheckBoxString">Mise à jour rapide du titre du disque</x:String>
     <x:String x:Key="DefaultUILanguageLabelString">Langue par défaut de l’interface :</x:String>
     <x:String x:Key="DetectionGroupBoxString">Détection</x:String>

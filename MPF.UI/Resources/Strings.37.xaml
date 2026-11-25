@@ -64,7 +64,6 @@
     <system:String x:Key="UserInterfaceGroupBoxString">Uz3r 1n73rf4c3</system:String>
     <system:String x:Key="ThemeTypeLabelString">7h3m3 7yp3</system:String>
     <system:String x:Key="CheckForUpdatesCheckBoxString">Ch3ck f0r Upd473z 0n z74r7up</system:String>
-    <system:String x:Key="CopyURLToClipboardCheckBoxString">C0py Upd473 UR1 70 C11p804rd</system:String>
     <system:String x:Key="FastUpdateLabelCheckBoxString">F4z7 Upd473 14831</system:String>
     <system:String x:Key="DefaultUILanguageLabelString">D3f4u17 U1 14n9u493:</system:String>
     <system:String x:Key="DetectionGroupBoxString">D373c710n</system:String>
