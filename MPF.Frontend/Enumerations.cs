@@ -72,4 +72,35 @@ namespace MPF.Frontend
         ERROR,
         SECRET,
     }
+
+    /// <summary>
+    /// Theme type to use
+    /// </summary>
+    public enum ThemeType
+    {
+        /// <summary>
+        /// Sync with system theme or use a reasonable default
+        /// </summary>
+        Automatic,
+
+        /// <summary>
+        /// Light mode default theme
+        /// </summary>
+        Light,
+
+        /// <summary>
+        /// Dark mode default theme
+        /// </summary>
+        Dark,
+
+        /// <summary>
+        /// Purple mode hidden theme
+        /// </summary>
+        Purple,
+
+        /// <summary>
+        /// Enables using custom foreground and background colors
+        /// </summary>
+        Custom,
+    }
 }

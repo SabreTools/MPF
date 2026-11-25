@@ -91,7 +91,8 @@ namespace MPF.Avalonia.Windows
 
             DataContext = new MainViewModel();
             MainViewModel.PropertyChanged += OnMainViewModelPropertyChanged;
-            SyncWithSystemTheme(MainViewModel.Options);
+            var syncedTheme = SyncWithSystemTheme(MainViewModel.Options);
+            ApplyTheme(syncedTheme, Application.Current!.Resources, MainViewModel.Options);
 
             // Set all resources before window loads (Must set English here)
             SetInterfaceLanguage(InterfaceLanguage.English, rebuildNativeMenus: false);
@@ -134,7 +135,8 @@ namespace MPF.Avalonia.Windows
             ConfigurePlatformMenus();
 
             // Set the UI color scheme according to the options
-            ApplyTheme(Application.Current!.Resources, MainViewModel.Options);
+            var syncedTheme = SyncWithSystemTheme(MainViewModel.Options);
+            ApplyTheme(syncedTheme, Application.Current!.Resources, MainViewModel.Options);
 
             // Hide or show the media type box based on program
             SetPhysicalMediaTypeVisibility();
@@ -499,11 +501,11 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Update the options' dark mode flag to match the detected system theme
         /// </summary>
-        private static void SyncWithSystemTheme(Options options)
+        private static ThemeType SyncWithSystemTheme(Options options)
         {
-            // Ignore if dark mode is already set
-            if (options.GUI.Theming.EnableDarkMode)
-                return;
+            // Only sync if set to automatic
+            if (options.GUI.Theming.ThemeType != ThemeType.Automatic)
+                return options.GUI.Theming.ThemeType;
 
             // If the Avalonia theme variant is Dark
             PlatformThemeVariant? themeVariant = Application.Current?
@@ -511,28 +513,58 @@ namespace MPF.Avalonia.Windows
                 .GetColorValues()
                 .ThemeVariant;
             if (themeVariant == PlatformThemeVariant.Dark)
-                options.GUI.Theming.EnableDarkMode = true;
+                return ThemeType.Dark;
 
             // Check Linux dark mode variants
             else if (SystemEnvironment.IsLinux())
-                options.GUI.Theming.EnableDarkMode = Avalonia.Theme.IsLinuxDarkMode();
+                return Avalonia.Theme.IsLinuxDarkMode() ? ThemeType.Dark : ThemeType.Light;
+
+            // Otherwise, default to light theme
+            return ThemeType.Light;
         }
 
         /// <summary>
         /// Set the UI color scheme according to the options
         /// </summary>
-        private static void ApplyTheme(IResourceDictionary resources, Options options)
+        private static void ApplyTheme(ThemeType themeType, IResourceDictionary resources, Options options)
         {
-            bool darkMode = options.GUI.Theming.EnableDarkMode;
+            Theme theme = themeType switch
+            {
+                // Automatic defaults to light mode
+                ThemeType.Automatic => new LightModeTheme(),
 
-            Theme theme = darkMode ? new DarkModeTheme() : new LightModeTheme();
-            theme.ApplyCustomColors(options.GUI.Theming.CustomBackgroundColor, options.GUI.Theming.CustomTextColor);
+                // Default themes
+                ThemeType.Light => new LightModeTheme(),
+                ThemeType.Dark => new DarkModeTheme(),
+
+                // Custom themes
+                ThemeType.Purple => new CustomTheme("111111", "9A5EC0"),
+                ThemeType.Custom => new CustomTheme(options.GUI.Theming.CustomBackgroundColor, options.GUI.Theming.CustomTextColor),
+
+                // Default acts like automatic
+                _ => new LightModeTheme(),
+            };
             theme.Apply(resources);
 
             if (Application.Current is Application application)
             {
-                application.RequestedThemeVariant = darkMode ? ThemeVariant.Dark : ThemeVariant.Light;
-                Avalonia.Theme.ApplyWindowsTitleBarTheme(darkMode);
+                application.RequestedThemeVariant = themeType switch
+                {
+                    // Automatic syncs with the system
+                    ThemeType.Automatic => ThemeVariant.Default,
+
+                    // Default themes
+                    ThemeType.Light => ThemeVariant.Light,
+                    ThemeType.Dark => ThemeVariant.Dark,
+
+                    // Custom themes are treated like automatic
+                    ThemeType.Purple => ThemeVariant.Default,
+                    ThemeType.Custom => ThemeVariant.Default,
+
+                    // Default acts like automatic
+                    _ => ThemeVariant.Default,
+                };
+                Avalonia.Theme.ApplyWindowsTitleBarTheme(themeType == ThemeType.Dark);
             }
         }
 
@@ -704,7 +736,8 @@ namespace MPF.Avalonia.Windows
             MainViewModel.UpdateOptions(savedSettings, options);
 
             // Set the UI color scheme according to the options
-            ApplyTheme(Resources, options);
+            var syncedTheme = SyncWithSystemTheme(MainViewModel.Options);
+            ApplyTheme(syncedTheme, Application.Current!.Resources, options);
 
             // Hide or show the media type box based on program
             SetPhysicalMediaTypeVisibility();

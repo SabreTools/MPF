@@ -27,6 +27,7 @@ namespace MPF.Frontend
                 RedumperReadMethod readMethod => new Element<RedumperReadMethod>(readMethod),
                 RedumperSectorOrder sectorOrder => new Element<RedumperSectorOrder>(sectorOrder),
                 RedumperDriveType driveType => new Element<RedumperDriveType>(driveType),
+                ThemeType themeType => new Element<ThemeType>(themeType),
 
                 // Special handling elements
                 LanguageCode languageCode => new LanguageCodeComboBoxItem(languageCode),
@@ -60,6 +61,7 @@ namespace MPF.Frontend
                 Element<RedumperReadMethod> rmElement => rmElement.Value,
                 Element<RedumperSectorOrder> soElement => soElement.Value,
                 Element<RedumperDriveType> dtElement => dtElement.Value,
+                Element<ThemeType> ttElement => ttElement.Value,
 
                 // Special handling elements
                 LanguageCodeComboBoxItem lcElement => lcElement.Value,

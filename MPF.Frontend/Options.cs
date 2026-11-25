@@ -92,8 +92,7 @@ namespace MPF.Frontend
 
             GUI.DefaultInterfaceLanguage = source.GUI.DefaultInterfaceLanguage;
             GUI.ShowDebugViewMenuItem = source.GUI.ShowDebugViewMenuItem;
-            GUI.Theming.EnableDarkMode = source.GUI.Theming.EnableDarkMode;
-            GUI.Theming.EnablePurpMode = source.GUI.Theming.EnablePurpMode;
+            GUI.Theming.ThemeType = source.GUI.Theming.ThemeType;
             GUI.Theming.CustomBackgroundColor = source.GUI.Theming.CustomBackgroundColor;
             GUI.Theming.CustomTextColor = source.GUI.Theming.CustomTextColor;
 
@@ -640,16 +639,10 @@ namespace MPF.Frontend
     public class ThemeSettings
     {
         /// <summary>
-        /// Enable dark mode for UI elements
+        /// Set the theme type for UI elements
         /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool EnableDarkMode { get; set; } = false;
-
-        /// <summary>
-        /// Enable purple mode for UI elements
-        /// </summary>
-        /// <remarks>Version 1 and greater; This is a hidden setting</remarks>
-        public bool EnablePurpMode { get; set; } = false;
+        /// <remarks>Version 3 and greater</remarks>
+        public ThemeType ThemeType { get; set; } = ThemeType.Automatic;
 
         /// <summary>
         /// Custom color setting

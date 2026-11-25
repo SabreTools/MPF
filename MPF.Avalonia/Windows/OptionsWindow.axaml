@@ -68,14 +68,21 @@
                                           ColumnSpacing="16"
                                           RowSpacing="4"
                                           RowDefinitions="Auto,Auto,Auto">
-                                        <CheckBox Grid.Row="0"
-                                                  Grid.Column="0"
-                                                  Content="{DynamicResource EnableDarkModeCheckBoxString}"
-                                                  IsChecked="{Binding EnableDarkMode}"
-                                                  ToolTip.Tip="(Experimental) Enable dark mode across the entire application" />
 
-                                        <CheckBox Grid.Row="0"
+                                        <TextBlock Grid.Row="0"
+                                                   Grid.Column="0"
+                                                   Text="{DynamicResource ThemeTypeLabelString}"
+                                                   HorizontalAlignment="Right"
+                                                   VerticalAlignment="Center" />
+                                        <ComboBox x:Name="ThemeTypeComboBox"
+                                                  Grid.Row="0"
                                                   Grid.Column="1"
+                                                  ItemsSource="{Binding AvailableThemeTypes}"
+                                                  SelectedItem="{Binding ThemeType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                                  VerticalAlignment="Center" />
+
+                                        <CheckBox Grid.Row="1"
+                                                  Grid.Column="0"
                                                   Content="{DynamicResource CheckForUpdatesCheckBoxString}"
                                                   IsChecked="{Binding CheckForUpdatesOnStartup}"
                                                   ToolTip.Tip="Check for updates when the application starts" />

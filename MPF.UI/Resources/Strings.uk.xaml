@@ -62,7 +62,7 @@
     <!-- General Tab -->
     <system:String x:Key="GeneralTabString">Загальні</system:String>
     <system:String x:Key="UserInterfaceGroupBoxString">Графічний інтерфейс</system:String>
-    <system:String x:Key="EnableDarkModeCheckBoxString">Увімкнути темний режим</system:String>
+    <system:String x:Key="ThemeTypeLabelString">SET_THEME_TYPE</system:String>
     <system:String x:Key="CheckForUpdatesCheckBoxString">Перевіряти оновлення при запуску</system:String>
     <system:String x:Key="CopyURLToClipboardCheckBoxString">Скопіювати URL оновлення</system:String>
     <system:String x:Key="FastUpdateLabelCheckBoxString">Швидке оновлення міток</system:String>

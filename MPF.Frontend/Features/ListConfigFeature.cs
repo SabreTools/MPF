@@ -48,8 +48,7 @@ namespace MPF.Frontend.Features
             Console.WriteLine($"  Default Interface Language = {options.GUI.DefaultInterfaceLanguage.LongName()}");
             Console.WriteLine($"  Show Debug Menu Item = {options.GUI.ShowDebugViewMenuItem}");
             Console.WriteLine("  Theming:");
-            Console.WriteLine($"    Dark Mode = {options.GUI.Theming.EnableDarkMode}");
-            Console.WriteLine($"    Purp Mode = {options.GUI.Theming.EnablePurpMode}");
+            Console.WriteLine($"    Theme Type = {options.GUI.Theming.ThemeType.LongName()}");
             Console.WriteLine($"    Custom Background Color = {options.GUI.Theming.CustomBackgroundColor}");
             Console.WriteLine($"    Custom Text Color = {options.GUI.Theming.CustomTextColor}");
             Console.WriteLine($"  Fast Label Update = {options.GUI.FastUpdateLabel}");

@@ -348,15 +348,22 @@ namespace MPF.UI.Windows
         /// </summary>
         private void ApplyTheme()
         {
-            Theme theme;
-            if (MainViewModel.Options.GUI.Theming.EnableDarkMode)
-                theme = new DarkModeTheme();
-            else if (MainViewModel.Options.GUI.Theming.EnablePurpMode)
-                theme = new CustomTheme("111111", "9A5EC0");
-            else if (IsHexColor(MainViewModel.Options.GUI.Theming.CustomBackgroundColor) && IsHexColor(MainViewModel.Options.GUI.Theming.CustomTextColor))
-                theme = new CustomTheme(MainViewModel.Options.GUI.Theming.CustomBackgroundColor, MainViewModel.Options.GUI.Theming.CustomTextColor);
-            else
-                theme = new LightModeTheme();
+            Theme theme = MainViewModel.Options.GUI.Theming.ThemeType switch
+            {
+                // Automatic defaults to light mode
+                ThemeType.Automatic => new LightModeTheme(),
+
+                // Default themes
+                ThemeType.Light => new LightModeTheme(),
+                ThemeType.Dark => new DarkModeTheme(),
+
+                // Custom themes
+                ThemeType.Purple => new CustomTheme("111111", "9A5EC0"),
+                ThemeType.Custom => new CustomTheme(MainViewModel.Options.GUI.Theming.CustomBackgroundColor, MainViewModel.Options.GUI.Theming.CustomTextColor),
+
+                // Default acts like automatic
+                _ => new LightModeTheme(),
+            };
 
             theme.Apply();
         }

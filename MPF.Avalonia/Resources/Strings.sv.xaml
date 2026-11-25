@@ -60,7 +60,7 @@
     <!-- General Tab -->
     <x:String x:Key="GeneralTabString">Allmänt</x:String>
     <x:String x:Key="UserInterfaceGroupBoxString">Användargränssnitt</x:String>
-    <x:String x:Key="EnableDarkModeCheckBoxString">Aktivera mörkt läge</x:String>
+    <x:String x:Key="ThemeTypeLabelString">SET_THEME_TYPE</x:String>
     <x:String x:Key="CheckForUpdatesCheckBoxString">Sök efter uppdateringar vid start</x:String>
     <x:String x:Key="CopyURLToClipboardCheckBoxString">Kopiera uppdaterings-URL till Urklipp</x:String>
     <x:String x:Key="FastUpdateLabelCheckBoxString">Snabb uppdatering av etikett</x:String>

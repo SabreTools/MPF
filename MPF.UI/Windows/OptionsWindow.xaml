@@ -118,19 +118,24 @@
                                   Header="{DynamicResource UserInterfaceGroupBoxString}">
                             <UniformGrid Columns="2"
                                          Rows="3">
-                                <CheckBox VerticalAlignment="Center"
-                                          Content="{DynamicResource EnableDarkModeCheckBoxString}"
-                                          IsChecked="{Binding EnableDarkMode}"
-                                          ToolTip="(Experimental) Enable dark mode across the entire application"
-                                          Margin="0,4"/>
+
+                                <Label VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"
+                                       Content="{DynamicResource ThemeTypeLabelString}"/>
+                                <ComboBox x:Name="ThemeTypeComboBox"
+                                          Grid.Row="4"
+                                          Grid.Column="1"
+                                          Height="22"
+                                          HorizontalAlignment="Stretch"
+                                          ItemsSource="{Binding AvailableThemeTypes}"
+                                          SelectedItem="{Binding ThemeType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          Style="{DynamicResource CustomComboBoxStyle}"/>
 
                                 <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource CheckForUpdatesCheckBoxString}"
                                           IsChecked="{Binding CheckForUpdatesOnStartup}"
                                           ToolTip="Check for updates when the application starts"
                                           Margin="0,4"/>
-
-                                <Label/>
 
                                 <CheckBox VerticalAlignment="Center"
                                           Content="{DynamicResource FastUpdateLabelCheckBoxString}"

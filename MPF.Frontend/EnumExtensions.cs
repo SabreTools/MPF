@@ -251,6 +251,33 @@ namespace MPF.Frontend
             };
         }
 
+        /// <summary>
+        /// Get the string representation of the ThemeType enum values
+        /// </summary>
+        /// <param name="theme">ThemeType value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this ThemeType theme)
+            => ((ThemeType?)theme).LongName();
+
+        /// <summary>
+        /// Get the string representation of the ThemeType enum values
+        /// </summary>
+        /// <param name="theme">ThemeType value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this ThemeType? theme)
+        {
+            return theme switch
+            {
+                ThemeType.Automatic => "Automatic",
+                ThemeType.Light => "Light Mode",
+                ThemeType.Dark => "Dark Mode",
+                ThemeType.Purple => "Purple Mode",
+                ThemeType.Custom => "Custom Colors",
+
+                _ => "Unknown",
+            };
+        }
+
         #endregion
 
         #region Convert to Short Name
@@ -321,6 +348,33 @@ namespace MPF.Frontend
                 #endregion
 
                 InternalProgram.NONE => "Unknown",
+                _ => "Unknown",
+            };
+        }
+
+        /// <summary>
+        /// Get the short string representation of the ThemeType enum values
+        /// </summary>
+        /// <param name="theme">ThemeType value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string ShortName(this ThemeType theme)
+            => ((ThemeType?)theme).ShortName();
+
+        /// <summary>
+        /// Get the short string representation of the ThemeType enum values
+        /// </summary>
+        /// <param name="theme">ThemeType value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string ShortName(this ThemeType? theme)
+        {
+            return theme switch
+            {
+                ThemeType.Automatic => "auto",
+                ThemeType.Light => "light",
+                ThemeType.Dark => "dark",
+                ThemeType.Purple => "purp",
+                ThemeType.Custom => "custom",
+
                 _ => "Unknown",
             };
         }
@@ -483,7 +537,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Get the RedumperDriveType enum value for a given string
         /// </summary>
-        /// <param name="order">String value to convert</param>
+        /// <param name="type">String value to convert</param>
         /// <returns>RedumperDriveType represented by the string, if possible</returns>
         public static RedumperDriveType ToRedumperDriveType(this string? type)
         {
@@ -565,6 +619,26 @@ namespace MPF.Frontend
                     or "lg-asu-2b" => RedumperDriveType.MTK2B,
 
                 _ => RedumperDriveType.NONE,
+            };
+        }
+
+        /// <summary>
+        /// Get the ThemeType enum value for a given string
+        /// </summary>
+        /// <param name="type">String value to convert</param>
+        /// <returns>RedumperDriveType represented by the string, if possible</returns>
+        public static ThemeType ToThemeType(this string? type)
+        {
+            return (type?.ToLowerInvariant()) switch
+            {
+                "auto" => ThemeType.Automatic,
+                "light" => ThemeType.Light,
+                "dark" => ThemeType.Dark,
+                "purp"
+                    or "purple" => ThemeType.Purple,
+                "custom" => ThemeType.Custom,
+
+                _ => ThemeType.Automatic,
             };
         }
 

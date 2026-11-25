@@ -60,7 +60,7 @@
     <!-- General Tab -->
     <x:String x:Key="GeneralTabString">일반</x:String>
     <x:String x:Key="UserInterfaceGroupBoxString">사용자 인터페이스</x:String>
-    <x:String x:Key="EnableDarkModeCheckBoxString">다크 모드 활성화</x:String>
+    <x:String x:Key="ThemeTypeLabelString">SET_THEME_TYPE</x:String>
     <x:String x:Key="CheckForUpdatesCheckBoxString">시작 시 업데이트 확인</x:String>
     <x:String x:Key="CopyURLToClipboardCheckBoxString">업데이트 URL을 클립보드에 복사</x:String>
     <x:String x:Key="FastUpdateLabelCheckBoxString">빠른 업데이트 레이블</x:String>

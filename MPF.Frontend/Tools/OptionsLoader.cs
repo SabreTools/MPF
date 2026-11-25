@@ -316,8 +316,8 @@ namespace MPF.Frontend.Tools
             valueString = GetStringSetting(source, "DefaultInterfaceLanguage", InterfaceLanguage.AutoDetect.ShortName());
             options.GUI.DefaultInterfaceLanguage = valueString.ToInterfaceLanguage();
             options.GUI.ShowDebugViewMenuItem = GetBooleanSetting(source, "ShowDebugViewMenuItem", false);
-            options.GUI.Theming.EnableDarkMode = GetBooleanSetting(source, "EnableDarkMode", false);
-            options.GUI.Theming.EnablePurpMode = GetBooleanSetting(source, "EnablePurpMode", false);
+            valueString = GetStringSetting(source, "ThemeType", ThemeType.Automatic.ShortName());
+            options.GUI.Theming.ThemeType = valueString.ToThemeType();
             options.GUI.Theming.CustomBackgroundColor = GetStringSetting(source, "CustomBackgroundColor", null);
             options.GUI.Theming.CustomTextColor = GetStringSetting(source, "CustomTextColor", null);
 
@@ -411,8 +411,7 @@ namespace MPF.Frontend.Tools
                 { "RedumperPath", options.Dumping.RedumperPath },
                 { "InternalProgram", options.InternalProgram.ToString() },
 
-                { "EnableDarkMode", options.GUI.Theming.EnableDarkMode.ToString() },
-                { "EnablePurpMode", options.GUI.Theming.EnablePurpMode.ToString() },
+                { "ThemeType", options.GUI.Theming.ThemeType.ShortName() },
                 { "CustomBackgroundColor", options.GUI.Theming.CustomBackgroundColor },
                 { "CustomTextColor", options.GUI.Theming.CustomTextColor },
                 { "CheckForUpdatesOnStartup", options.CheckForUpdatesOnStartup.ToString() },

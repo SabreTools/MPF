@@ -66,7 +66,7 @@
     <!-- General Tab -->
     <x:String x:Key="GeneralTabString">General</x:String>
     <x:String x:Key="UserInterfaceGroupBoxString">User Interface</x:String>
-    <x:String x:Key="EnableDarkModeCheckBoxString">Enable Dark Mode</x:String>
+    <x:String x:Key="ThemeTypeLabelString">SET_THEME_TYPE</x:String>
     <x:String x:Key="CheckForUpdatesCheckBoxString">Check for Updates on Startup</x:String>
     <x:String x:Key="CopyURLToClipboardCheckBoxString">Copy Update URL to Clipboard</x:String>
     <x:String x:Key="FastUpdateLabelCheckBoxString">Fast Update Label</x:String>

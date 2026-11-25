@@ -60,7 +60,7 @@
     <!-- General Tab -->
     <x:String x:Key="GeneralTabString">Général</x:String>
     <x:String x:Key="UserInterfaceGroupBoxString">Interface utilisateur</x:String>
-    <x:String x:Key="EnableDarkModeCheckBoxString">Activer le mode sombre</x:String>
+    <x:String x:Key="ThemeTypeLabelString">SET_THEME_TYPE</x:String>
     <x:String x:Key="CheckForUpdatesCheckBoxString">Vérifier les mises à jour au démarrage</x:String>
     <x:String x:Key="CopyURLToClipboardCheckBoxString">Copier l’URL de mise à jour</x:String>
     <x:String x:Key="FastUpdateLabelCheckBoxString">Mise à jour rapide du titre du disque</x:String>

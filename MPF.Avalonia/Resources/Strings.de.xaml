@@ -65,7 +65,7 @@
     <!-- General Tab -->
     <x:String x:Key="GeneralTabString">Allgemein</x:String>
     <x:String x:Key="UserInterfaceGroupBoxString">Benutzeroberfläche</x:String>
-    <x:String x:Key="EnableDarkModeCheckBoxString">Dunkelmodus aktivieren</x:String>
+    <x:String x:Key="ThemeTypeLabelString">SET_THEME_TYPE</x:String>
     <x:String x:Key="CheckForUpdatesCheckBoxString">Beim Start nach Updates suchen</x:String>
     <x:String x:Key="CopyURLToClipboardCheckBoxString">Update-URL in Zwischenablage kopieren</x:String>
     <x:String x:Key="FastUpdateLabelCheckBoxString">Schnelles Update-Label</x:String>

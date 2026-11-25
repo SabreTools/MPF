@@ -396,28 +396,6 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
-        /// <inheritdoc cref="ThemeSettings.EnableDarkMode"/>
-        public bool EnableDarkMode
-        {
-            get => Options.GUI.Theming.EnableDarkMode;
-            set
-            {
-                Options.GUI.Theming.EnableDarkMode = value;
-                TriggerPropertyChanged(nameof(EnableDarkMode));
-            }
-        }
-
-        /// <inheritdoc cref="ThemeSettings.EnablePurpMode"/>
-        public bool EnablePurpMode
-        {
-            get => Options.GUI.Theming.EnablePurpMode;
-            set
-            {
-                Options.GUI.Theming.EnablePurpMode = value;
-                TriggerPropertyChanged(nameof(EnablePurpMode));
-            }
-        }
-
         /// <inheritdoc cref="MediaInformationSettings.EnableRedumpCompatibility"/>
         public bool EnableRedumpCompatibility
         {
@@ -704,6 +682,17 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        /// <inheritdoc cref="ThemeSettings.ThemeType"/>
+        public ThemeType ThemeType
+        {
+            get => Options.GUI.Theming.ThemeType;
+            set
+            {
+                Options.GUI.Theming.ThemeType = value;
+                TriggerPropertyChanged(nameof(ThemeType));
+            }
+        }
+
         /// <inheritdoc cref="InternetAccessSettings.TimeoutSeconds"/>
         public int TimeoutSeconds
         {
@@ -760,6 +749,11 @@ namespace MPF.Frontend.ViewModels
         public static List<Element<InternalProgram>> AvailableInternalPrograms => PopulateInternalPrograms();
 
         /// <summary>
+        /// List of available theme types
+        /// </summary>
+        public static List<Element<ThemeType>> AvailableThemeTypes => PopulateThemeTypes();
+
+        /// <summary>
         /// Current list of supported Dreamdump sector orders
         /// </summary>
         public static List<Element<DreamdumpSectorOrder>> DreamdumpSectorOrders => Element<DreamdumpSectorOrder>.GenerateElements();
@@ -804,6 +798,20 @@ namespace MPF.Frontend.ViewModels
             InternalProgram.Dreamdump,
         ];
 
+        /// <summary>
+        /// Ordered set of UI-supported theme types
+        /// </summary>
+        private static readonly List<ThemeType> ThemeTypes =
+        [
+            ThemeType.Automatic,
+            ThemeType.Light,
+            ThemeType.Dark,
+
+            // TODO: Determine if these should be enabled in the UI
+            // ThemeType.Purple,
+            // ThemeType.Custom,
+        ];
+
         #endregion
 
         /// <summary>
@@ -829,6 +837,12 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private static List<Element<InternalProgram>> PopulateInternalPrograms()
             => DumpingPrograms.ConvertAll(ip => new Element<InternalProgram>(ip));
+
+        /// <summary>
+        /// Get a complete list of supported theme types
+        /// </summary>
+        private static List<Element<ThemeType>> PopulateThemeTypes()
+            => ThemeTypes.ConvertAll(tt => new Element<ThemeType>(tt));
 
         #endregion
 

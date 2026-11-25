@@ -167,19 +167,6 @@ namespace MPF.Avalonia
         #endregion
 
         /// <summary>
-        /// Override the application background and text brushes with custom colors, ignoring
-        /// any value that is missing or fails to parse
-        /// </summary>
-        public void ApplyCustomColors(string? backgroundColor, string? textColor)
-        {
-            if (!string.IsNullOrWhiteSpace(backgroundColor) && Color.TryParse(backgroundColor, out Color customBackground))
-                AppBackgroundBrush = new SolidColorBrush(customBackground);
-
-            if (!string.IsNullOrWhiteSpace(textColor) && Color.TryParse(textColor, out Color customForeground))
-                AppForegroundBrush = new SolidColorBrush(customForeground);
-        }
-
-        /// <summary>
         /// Apply the theme to the given resource dictionary
         /// </summary>
         public void Apply(IResourceDictionary resources)

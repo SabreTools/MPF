@@ -62,7 +62,7 @@
     <!-- General Tab -->
     <system:String x:Key="GeneralTabString">93n3r41</system:String>
     <system:String x:Key="UserInterfaceGroupBoxString">Uz3r 1n73rf4c3</system:String>
-    <system:String x:Key="EnableDarkModeCheckBoxString">3n4813 D4rk M0d3</system:String>
+    <system:String x:Key="ThemeTypeLabelString">SET_THEME_TYPE</system:String>
     <system:String x:Key="CheckForUpdatesCheckBoxString">Ch3ck f0r Upd473z 0n z74r7up</system:String>
     <system:String x:Key="CopyURLToClipboardCheckBoxString">C0py Upd473 UR1 70 C11p804rd</system:String>
     <system:String x:Key="FastUpdateLabelCheckBoxString">F4z7 Upd473 14831</system:String>
