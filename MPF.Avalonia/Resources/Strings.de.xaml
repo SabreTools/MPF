@@ -96,7 +96,6 @@
     <x:String x:Key="CompressLogFilesCheckBoxString">Protokolldateien komprimieren</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Unnötige Dateien löschen</x:String>
     <x:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">PS3 IRD nach Dumping erstellen</x:String>
-    <x:String x:Key="ToolConsoleAutoCloseCheckBoxString">Toolfenster automatisch schließen</x:String>
     <x:String x:Key="ProtectionGroupBoxString">Schutz</x:String>
     <x:String x:Key="EnableProtectionScanCheckBoxString">Schutzscan aktivieren</x:String>
     <x:String x:Key="ScanArchiveContentsCheckBoxString">Archivinhalt scannen</x:String>

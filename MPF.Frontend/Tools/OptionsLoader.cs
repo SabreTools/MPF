@@ -312,7 +312,6 @@ namespace MPF.Frontend.Tools
             options.InternalProgram = tempInternalProgram == InternalProgram.NONE ? InternalProgram.Redumper : tempInternalProgram;
 
             options.GUI.OpenLogWindowAtStartup = GetBooleanSetting(source, "OpenLogWindowAtStartup", true);
-            options.GUI.ToolConsoleAutoClose = GetBooleanSetting(source, "ToolConsoleAutoClose", true);
 
             valueString = GetStringSetting(source, "DefaultInterfaceLanguage", InterfaceLanguage.AutoDetect.ShortName());
             options.GUI.DefaultInterfaceLanguage = valueString.ToInterfaceLanguage();
@@ -478,7 +477,6 @@ namespace MPF.Frontend.Tools
 
                 { "VerboseLogging", options.VerboseLogging.ToString() },
                 { "OpenLogWindowAtStartup", options.GUI.OpenLogWindowAtStartup.ToString() },
-                { "ToolConsoleAutoClose", options.GUI.ToolConsoleAutoClose.ToString() },
 
                 { "RetrieveMatchInformation", options.Processing.InternetAccess.RetrieveMatchInformation.ToString() },
                 { "PullAllInformation", options.Processing.InternetAccess.PullAllInformation.ToString() },

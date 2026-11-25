@@ -728,17 +728,6 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
-        /// <inheritdoc cref="GuiSettings.ToolConsoleAutoClose"/>
-        public bool ToolConsoleAutoClose
-        {
-            get => Options.GUI.ToolConsoleAutoClose;
-            set
-            {
-                Options.GUI.ToolConsoleAutoClose = value;
-                TriggerPropertyChanged(nameof(ToolConsoleAutoClose));
-            }
-        }
-
         /// <inheritdoc cref="DumpSettings.UseRelativePaths"/>
         public bool UseRelativePaths
         {

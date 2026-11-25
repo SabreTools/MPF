@@ -113,7 +113,7 @@ namespace MPF.Avalonia.Windows
             MainViewModel.CopyProtectScanButtonEnabled = false;
 
             // Create a tool console window for output
-            var toolConsole = new ToolOutputConsole(this, MainViewModel.Options);
+            var toolConsole = new ToolOutputConsole(this);
 
             MainViewModel.Init(
                 LogOutput!.EnqueueLog,

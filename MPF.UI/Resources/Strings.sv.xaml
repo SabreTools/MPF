@@ -92,7 +92,6 @@
     <system:String x:Key="CompressLogFilesCheckBoxString">Komprimera loggfiler</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Ta bort onödiga filer</system:String>
     <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Skapa PS3 IRD efter dumpning</system:String>
-    <system:String x:Key="ToolConsoleAutoCloseCheckBoxString">Auto-stäng verktygsfönster</system:String>
     <system:String x:Key="ProtectionGroupBoxString">Kopieringsskydd</system:String>
     <system:String x:Key="EnableProtectionScanCheckBoxString">Aktivera skyddsskanning</system:String>
     <system:String x:Key="ScanArchiveContentsCheckBoxString">Skanna arkivinnehåll</system:String>

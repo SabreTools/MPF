@@ -19,6 +19,7 @@
 - Add remaining settings to options view model
 - Add tool auto-close to Avalonia options
 - Translate newer UI strings for Avalonia
+- Auto-close tool window was a no-op
 
 ### 3.12.0 (2026-11-23)
 

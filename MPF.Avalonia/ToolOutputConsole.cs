@@ -30,21 +30,15 @@ namespace MPF.Avalonia
         private readonly Window _owner;
 
         /// <summary>
-        /// Frontend options for output
-        /// </summary>
-        private readonly Options _options;
-
-        /// <summary>
         /// Generated tool window, if available
         /// </summary>
         private ToolOutputWindow? _window;
 
         #endregion
 
-        public ToolOutputConsole(Window owner, Options options)
+        public ToolOutputConsole(Window owner)
         {
             _owner = owner;
-            _options = options;
         }
 
         /// <inheritdoc/>
@@ -55,7 +49,7 @@ namespace MPF.Avalonia
             _window?.Close();
             _window = null;
 
-            var window = new ToolOutputWindow { AutoClose = _options.GUI.ToolConsoleAutoClose };
+            var window = new ToolOutputWindow();
             window.Closed += (_, _) =>
             {
                 onClosed?.Invoke();

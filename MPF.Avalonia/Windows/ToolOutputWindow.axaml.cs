@@ -37,15 +37,6 @@ namespace MPF.Avalonia.Windows
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Whether the window should close itself when the tool exits
-        /// </summary>
-        public bool AutoClose { get; set; }
-
-        #endregion
-
         #region Private Fields
 
         /// <summary>
@@ -138,8 +129,7 @@ namespace MPF.Avalonia.Windows
                 // shutdown races are fine
             }
 
-            if (AutoClose)
-                Close();
+            Close();
         }
 
         #region Event Handlers
