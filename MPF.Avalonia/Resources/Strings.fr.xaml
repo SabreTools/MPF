@@ -39,8 +39,8 @@
     <x:String x:Key="ParametersLabelString">Paramètres</x:String>
     <x:String x:Key="MountedPathLabelString">Chemin monté</x:String>
     <!-- Processing Group Box -->
-    <x:String x:Key="ProcessingGroupBoxString">Traitement</x:String>
-    <x:String x:Key="ScanForProtectionCheckBoxString">Rechercher une protection après le vidage</x:String>
+    <x:String x:Key="ProcessingGroupBoxString">En traitement</x:String>
+    <x:String x:Key="ScanForProtectionCheckBoxString">Détecter protections après extraction</x:String>
     <!-- Controls Group Box -->
     <x:String x:Key="ControlsGroupBoxString">Contrôles</x:String>
     <x:String x:Key="StartDumpingButtonString">Démarrer le dump</x:String>
@@ -128,7 +128,7 @@
     <x:String x:Key="RedumperDefaultDriveTypeLabelString">Type de lecteur par défaut :</x:String>
     <x:String x:Key="RedumperDefaultDrivePregapStartLabelString">Pregap Start de lecteur par défaut:</x:String>
     <!-- Web Access Tab -->
-    <x:String x:Key="InternetAccessTabString">Accès Internet</x:String>
+    <x:String x:Key="InternetAccessTabString">Accès à l'Internet</x:String>
     <x:String x:Key="RetrievalGroupBoxString">Récupération</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">Récupérer les informations de correspondance</x:String>
     <x:String x:Key="PullAllInformationCheckBoxString">Récupérer toutes les informations</x:String>

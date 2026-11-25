@@ -40,8 +40,8 @@
     <x:String x:Key="ParametersLabelString">Parâmetros</x:String>
     <x:String x:Key="MountedPathLabelString">Caminho montado</x:String>
     <!-- Processing Group Box -->
-    <x:String x:Key="ProcessingGroupBoxString">Processamento</x:String>
-    <x:String x:Key="ScanForProtectionCheckBoxString">Procure proteção após despejo</x:String>
+    <x:String x:Key="ProcessingGroupBoxString">A processar</x:String>
+    <x:String x:Key="ScanForProtectionCheckBoxString">Detetar proteções após extração</x:String>
     <!-- Controls Group Box-->
     <x:String x:Key="ControlsGroupBoxString">Controlos</x:String>
     <x:String x:Key="StartDumpingButtonString">Começar dump</x:String>
