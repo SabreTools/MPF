@@ -25,6 +25,7 @@
 - Convert to dropdown-based theme selection, add automatic
 - Replace placeholder label values
 - Purple
+- Remove string resources for removed setting
 
 ### 3.12.0 (2026-11-23)
 

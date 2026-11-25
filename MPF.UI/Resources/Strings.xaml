@@ -64,7 +64,6 @@
     <system:String x:Key="UserInterfaceGroupBoxString">User Interface</system:String>
     <system:String x:Key="ThemeTypeLabelString">Theme Type</system:String>
     <system:String x:Key="CheckForUpdatesCheckBoxString">Check for Updates on Startup</system:String>
-    <system:String x:Key="CopyURLToClipboardCheckBoxString">Copy Update URL to Clipboard</system:String>
     <system:String x:Key="FastUpdateLabelCheckBoxString">Fast Update Label</system:String>
     <system:String x:Key="DefaultUILanguageLabelString">Default UI Language:</system:String>
     <system:String x:Key="DetectionGroupBoxString">Detection</system:String>

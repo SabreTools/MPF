@@ -63,7 +63,6 @@
     <system:String x:Key="UserInterfaceGroupBoxString">Интерфейс</system:String>
     <system:String x:Key="ThemeTypeLabelString">Тип темы</system:String>
     <system:String x:Key="CheckForUpdatesCheckBoxString">Проверять обновления при запуске</system:String>
-    <system:String x:Key="CopyURLToClipboardCheckBoxString">Копировать ссылку обновления в буфер</system:String>
     <system:String x:Key="FastUpdateLabelCheckBoxString">Быстрое обновление метки</system:String>
     <system:String x:Key="DefaultUILanguageLabelString">Язык интерфейса по умолчанию:</system:String>
     <system:String x:Key="DetectionGroupBoxString">Обнаружение</system:String>
