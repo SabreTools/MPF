@@ -1,9 +1,10 @@
-using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using MPF.Frontend.ComboBoxItems;
 
 namespace MPF.Avalonia.UserControls
 {
@@ -17,8 +18,8 @@ namespace MPF.Avalonia.UserControls
         public static readonly StyledProperty<string?> LabelProperty =
             AvaloniaProperty.Register<MultiSelectDropDown, string?>(nameof(Label));
 
-        public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =
-            AvaloniaProperty.Register<MultiSelectDropDown, IEnumerable?>(nameof(ItemsSource));
+        public static readonly StyledProperty<IEnumerable<IElement>?> ItemsSourceProperty =
+            AvaloniaProperty.Register<MultiSelectDropDown, IEnumerable<IElement>?>(nameof(ItemsSource));
 
         public static readonly StyledProperty<bool> IsDropDownOpenProperty =
             AvaloniaProperty.Register<MultiSelectDropDown, bool>(nameof(IsDropDownOpen));
@@ -30,24 +31,36 @@ namespace MPF.Avalonia.UserControls
 
         #region Properties
 
+        /// <summary>
+        /// Label that is displayed to the left of the dropdown
+        /// </summary>
         public string? Label
         {
             get => GetValue(LabelProperty);
             set => SetValue(LabelProperty, value);
         }
 
-        public IEnumerable? ItemsSource
+        /// <summary>
+        /// Gets or sets a collection used to generate the content of the ItemsControl
+        /// </summary>
+        public IEnumerable<IElement>? ItemsSource
         {
             get => GetValue(ItemsSourceProperty);
             set => SetValue(ItemsSourceProperty, value);
         }
 
+        /// <summary>
+        /// Indicates if the dropdown panel is open
+        /// </summary>
         public bool IsDropDownOpen
         {
             get => GetValue(IsDropDownOpenProperty);
             set => SetValue(IsDropDownOpenProperty, value);
         }
 
+        /// <summary>
+        /// Text displayed when the dropdown panel is closed
+        /// </summary>
         public string SummaryText
         {
             get => GetValue(SummaryTextProperty);
@@ -117,7 +130,6 @@ namespace MPF.Avalonia.UserControls
             }
 
             string[] selectedItems = ItemsSource
-                .Cast<object?>()
                 .Where(IsChecked)
                 .Select(item => item?.ToString() ?? string.Empty)
                 .Where(text => !string.IsNullOrWhiteSpace(text))
@@ -129,7 +141,7 @@ namespace MPF.Avalonia.UserControls
         /// <summary>
         /// Reflectively determine whether an item exposes an IsChecked property set to true
         /// </summary>
-        private static bool IsChecked(object? item)
-            => item?.GetType().GetProperty("IsChecked")?.GetValue(item) is true;
+        private static bool IsChecked(IElement? item)
+            => item is not null && item.IsChecked;
     }
 }

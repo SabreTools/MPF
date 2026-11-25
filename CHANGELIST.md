@@ -21,6 +21,7 @@
 - Translate newer UI strings for Avalonia
 - Auto-close tool window was a no-op
 - Minor changes to french and portuguese translations (BigTreezZ)
+- Make combo box items more consistent
 
 ### 3.12.0 (2026-11-23)
 

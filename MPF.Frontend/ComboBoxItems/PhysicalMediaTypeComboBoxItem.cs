@@ -9,29 +9,12 @@ namespace MPF.Frontend.ComboBoxItems
     /// </summary>
     public class PhysicalMediaTypeComboBoxItem : IEquatable<PhysicalMediaTypeComboBoxItem>, IElement
     {
-        private readonly PhysicalMediaType Data;
-
-        public PhysicalMediaTypeComboBoxItem(PhysicalMediaType data) => Data = data;
-
-        /// <summary>
-        /// Allow elements to be used as their internal enum type
-        /// </summary>
-        public static implicit operator PhysicalMediaType?(PhysicalMediaTypeComboBoxItem item) => item.Data;
+        #region IElement Implementation
 
         /// <inheritdoc/>
         public string Name => Data.Name;
 
-        public override string ToString() => Name;
-
-        /// <summary>
-        /// Internal enum value
-        /// </summary>
-        public PhysicalMediaType Value => Data;
-
-        /// <summary>
-        /// Determine if the item is selected or not
-        /// </summary>
-        /// <remarks>Only applies to CheckBox type</remarks>
+        /// <inheritdoc/>
         public bool IsChecked
         {
             get;
@@ -42,12 +25,61 @@ namespace MPF.Frontend.ComboBoxItems
             }
         }
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
-        /// Generate all elements associated with the data enum type
+        /// Internal enum value
+        /// </summary>
+        public PhysicalMediaType Value => Data;
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Occurs when the checked state is changed
+        /// </summary>
+        public event SelectionChanged Checked = (_) => { return; };
+
+        #endregion
+
+        #region Private Fields
+
+        /// <summary>
+        /// Backing data for the item
+        /// </summary>
+        private readonly PhysicalMediaType Data;
+
+        #endregion
+
+        public PhysicalMediaTypeComboBoxItem(PhysicalMediaType data) => Data = data;
+
+        /// <inheritdoc/>
+        public override string ToString() => Name;
+
+        #region Operators
+
+        /// <summary>
+        /// Allow elements to be used as their internal type
+        /// </summary>
+        public static implicit operator PhysicalMediaType?(PhysicalMediaTypeComboBoxItem item) => item.Data;
+
+        #endregion
+
+        #region Generation
+
+        /// <summary>
+        /// Generate all elements associated with the data type
         /// </summary>
         /// <returns></returns>
         public static List<PhysicalMediaTypeComboBoxItem> GenerateElements()
             => [.. Array.ConvertAll(PhysicalMediaType.AllMediaTypes, e => new PhysicalMediaTypeComboBoxItem(e))];
+
+        #endregion
+
+        #region IEquatable Implementation
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
@@ -67,9 +99,6 @@ namespace MPF.Frontend.ComboBoxItems
         /// <inheritdoc/>
         public override int GetHashCode() => base.GetHashCode();
 
-        /// <summary>
-        /// Occurs when the checked state is changed
-        /// </summary>
-        public event SelectionChanged Checked = (_) => { return; };
+        #endregion
     }
 }

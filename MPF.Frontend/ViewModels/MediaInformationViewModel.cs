@@ -1525,151 +1525,12 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of available regions
         /// </summary>
-        public List<RegionCodeComboBoxItem> Regions { get; private set; }
-             = RegionCodeComboBoxItem.GenerateElements();
+        public List<RegionCodeComboBoxItem> Regions { get; private set; } = [];
 
         /// <summary>
         /// List of available languages
         /// </summary>
-        public List<LanguageCodeComboBoxItem> Languages { get; private set; }
-            = LanguageCodeComboBoxItem.GenerateElements();
-
-        /// <summary>
-        /// List of Redump-supported Regions
-        /// </summary>
-        private static readonly List<RegionCode> RedumpRegions =
-        [
-            RegionCode.Argentina,
-            RegionCode.Asia,
-            RegionCode.Australia,
-            RegionCode.Austria,
-            RegionCode.Azerbaijan,
-            RegionCode.Belarus,
-            RegionCode.Belgium,
-            RegionCode.Brazil,
-            RegionCode.Bulgaria,
-            RegionCode.Canada,
-            RegionCode.Chile,
-            RegionCode.China,
-            RegionCode.Croatia,
-            RegionCode.Cyprus,
-            RegionCode.Czechia,
-            RegionCode.Denmark,
-            RegionCode.Estonia,
-            RegionCode.Europe,
-            RegionCode.Export,
-            RegionCode.Finland,
-            RegionCode.France,
-            RegionCode.Germany,
-            RegionCode.Greece,
-            RegionCode.Greenland,
-            RegionCode.HongKong,
-            RegionCode.Hungary,
-            RegionCode.Iceland,
-            RegionCode.India,
-            RegionCode.Indonesia,
-            RegionCode.Iran,
-            RegionCode.Ireland,
-            RegionCode.Israel,
-            RegionCode.Italy,
-            RegionCode.Japan,
-            RegionCode.Jordan,
-            RegionCode.SouthKorea,
-            RegionCode.LatinAmerica,
-            RegionCode.Lithuania,
-            RegionCode.Malaysia,
-            RegionCode.Mexico,
-            RegionCode.Netherlands,
-            RegionCode.NewZealand,
-            RegionCode.Norway,
-            RegionCode.Philippines,
-            RegionCode.Poland,
-            RegionCode.Portugal,
-            RegionCode.Romania,
-            RegionCode.RussianFederation,
-            RegionCode.SaudiArabia,
-            RegionCode.Scandinavia,
-            RegionCode.Serbia,
-            RegionCode.Singapore,
-            RegionCode.Slovakia,
-            RegionCode.SouthAfrica,
-            RegionCode.Spain,
-            RegionCode.Sweden,
-            RegionCode.Switzerland,
-            RegionCode.Taiwan,
-            RegionCode.Thailand,
-            RegionCode.Turkey,
-            RegionCode.UnitedKingdom,
-            RegionCode.Ukraine,
-            RegionCode.UnitedArabEmirates,
-            RegionCode.Ukraine,
-            RegionCode.UnitedStatesOfAmerica,
-            RegionCode.VietNam,
-            RegionCode.World,
-        ];
-
-        /// <summary>
-        /// List of Redump-supported Languages
-        /// </summary>
-        private static readonly List<LanguageCode> RedumpLanguages =
-        [
-            LanguageCode.Afrikaans,
-            LanguageCode.Albanian,
-            LanguageCode.Arabic,
-            LanguageCode.Armenian,
-            LanguageCode.Azerbaijani,
-            LanguageCode.Basque,
-            LanguageCode.Belarusian,
-            LanguageCode.Bulgarian,
-            LanguageCode.Catalan,
-            LanguageCode.Chinese,
-            LanguageCode.Croatian,
-            LanguageCode.Czech,
-            LanguageCode.Danish,
-            LanguageCode.Dutch,
-            LanguageCode.English,
-            LanguageCode.Estonian,
-            LanguageCode.Finnish,
-            LanguageCode.French,
-            LanguageCode.Gaelic,
-            LanguageCode.Galician,
-            LanguageCode.German,
-            LanguageCode.Greek,
-            LanguageCode.Hebrew,
-            LanguageCode.Hindi,
-            LanguageCode.Hungarian,
-            LanguageCode.Icelandic,
-            LanguageCode.Indonesian,
-            LanguageCode.Irish,
-            LanguageCode.Italian,
-            LanguageCode.Japanese,
-            LanguageCode.Kalaallisut,
-            LanguageCode.Korean,
-            LanguageCode.Latin,
-            LanguageCode.Latvian,
-            LanguageCode.Lithuanian,
-            LanguageCode.Macedonian,
-            LanguageCode.Malay,
-            LanguageCode.Maori,
-            LanguageCode.Norwegian,
-            LanguageCode.Persian,
-            LanguageCode.Polish,
-            LanguageCode.Portuguese,
-            LanguageCode.Panjabi,
-            LanguageCode.Romanian,
-            LanguageCode.Russian,
-            LanguageCode.Serbian,
-            LanguageCode.Slovak,
-            LanguageCode.Slovenian,
-            LanguageCode.Spanish,
-            LanguageCode.Swedish,
-            LanguageCode.Tamil,
-            LanguageCode.Thai,
-            LanguageCode.Turkish,
-            LanguageCode.Ukrainian,
-            LanguageCode.Vietnamese,
-            LanguageCode.Welsh,
-        ];
+        public List<LanguageCodeComboBoxItem> Languages { get; private set; } = [];
 
         #endregion
 
@@ -1696,23 +1557,14 @@ namespace MPF.Frontend.ViewModels
             SubmissionInfo = submissionInfo?.Clone() as SubmissionInfo ?? new SubmissionInfo();
 
             // Handle Redump compatibility mode
-            if (_options.Processing.MediaInformation.EnableRedumpCompatibility)
-                LimitRegionsAndLanguages();
+            Regions = RegionCodeComboBoxItem.GenerateElements(_options.Processing.MediaInformation.EnableRedumpCompatibility);
+            Languages = LanguageCodeComboBoxItem.GenerateElements(_options.Processing.MediaInformation.EnableRedumpCompatibility);
 
             // Load regions and languages
             LoadRegionsAndLanguages();
         }
 
         #region Helpers
-
-        /// <summary>
-        /// Limit regions and languages to Redump-included values only
-        /// </summary>
-        private void LimitRegionsAndLanguages()
-        {
-            Regions = RedumpRegions.ConvertAll(r => new RegionCodeComboBoxItem(r));
-            Languages = RedumpLanguages.ConvertAll(l => new LanguageCodeComboBoxItem(l));
-        }
 
         /// <summary>
         /// Load the current contents of the base SubmissionInfo to the UI

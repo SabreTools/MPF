@@ -12,12 +12,7 @@ namespace MPF.Frontend.ComboBoxItems
     /// </summary>
     public class PhysicalSystemComboBoxItem : IEquatable<PhysicalSystemComboBoxItem>, IElement
     {
-        private readonly object? Data;
-
-        public PhysicalSystemComboBoxItem(PhysicalSystem? system) => Data = system;
-        public PhysicalSystemComboBoxItem(SystemCategory? category) => Data = category;
-
-        public static implicit operator PhysicalSystem?(PhysicalSystemComboBoxItem item) => item.Data as PhysicalSystem;
+        #region IElement Implementation
 
         /// <inheritdoc/>
         public string Name
@@ -31,7 +26,20 @@ namespace MPF.Frontend.ComboBoxItems
             }
         }
 
-        public override string ToString() => Name;
+        /// <inheritdoc/>
+        public bool IsChecked
+        {
+            get;
+            set
+            {
+                field = value;
+                Checked(this);
+            }
+        }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Internal enum value
@@ -48,8 +56,50 @@ namespace MPF.Frontend.ComboBoxItems
         /// </summary>
         public bool IsSystem => Data is PhysicalSystem;
 
+        #endregion
+
+        #region Events
+
         /// <summary>
-        /// Generate all elements for the known system combo box
+        /// Occurs when the checked state is changed
+        /// </summary>
+        public event SelectionChanged Checked = (_) => { return; };
+
+        #endregion
+
+        #region Private Fields
+
+        /// <summary>
+        /// Backing data for the item
+        /// </summary>
+        private readonly object? Data;
+
+        #endregion
+
+        public PhysicalSystemComboBoxItem(PhysicalSystem? system) => Data = system;
+        public PhysicalSystemComboBoxItem(SystemCategory? category) => Data = category;
+
+        /// <inheritdoc/>
+        public override string ToString() => Name;
+
+        #region Operators
+
+        /// <summary>
+        /// Allow elements to be used as their internal type
+        /// </summary>
+        public static implicit operator PhysicalSystem?(PhysicalSystemComboBoxItem item) => item.Data as PhysicalSystem;
+
+        /// <summary>
+        /// Allow elements to be used as their internal type
+        /// </summary>
+        public static implicit operator SystemCategory?(PhysicalSystemComboBoxItem item) => item.Data is SystemCategory sc ? sc : SystemCategory.NONE;
+
+        #endregion
+
+        #region Generation
+
+        /// <summary>
+        /// Generate all elements associated with the data type
         /// </summary>
         /// <returns></returns>
         public static List<PhysicalSystemComboBoxItem> GenerateElements()
@@ -93,6 +143,10 @@ namespace MPF.Frontend.ComboBoxItems
             return systemsValues;
         }
 
+        #endregion
+
+        #region IEquatable Implementation
+
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
@@ -110,5 +164,7 @@ namespace MPF.Frontend.ComboBoxItems
 
         /// <inheritdoc/>
         public override int GetHashCode() => base.GetHashCode();
+
+        #endregion
     }
 }
