@@ -1,4 +1,7 @@
+using System;
+using System.IO;
 using MPF.Frontend.Tools;
+using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
@@ -40,6 +43,47 @@ namespace MPF.Frontend.Test.Tools
                 { PhysicalMediaType.BluRay, 16 },
                 { PhysicalMediaType.NintendoWiiUOpticalDisc, 16 },
             };
+        }
+
+        #endregion
+
+        #region GetFreeSpaceCheckPath
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void GetFreeSpaceCheckPath_Empty_ReturnsNull(string? path)
+        {
+            string? actual = FrontendTool.GetFreeSpaceCheckPath(path);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetFreeSpaceCheckPath_ExistingDirectory_ReturnsDirectory()
+        {
+            string directory = Path.Combine(Environment.CurrentDirectory, "TestData");
+            string? expected = SystemEnvironment.IsWindows() ? Path.GetPathRoot(directory) : directory;
+            string? actual = FrontendTool.GetFreeSpaceCheckPath(directory);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void GetFreeSpaceCheckPath_MissingDirectory_ReturnsClosestExisting()
+        {
+            string directory = Path.Combine(Environment.CurrentDirectory, "TestData");
+            string path = Path.Combine(directory, "missing", "track");
+            string? expected = SystemEnvironment.IsWindows() ? Path.GetPathRoot(path) : directory;
+            string? actual = FrontendTool.GetFreeSpaceCheckPath(path);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void GetFreeSpaceCheckPath_MissingRelativePath_ReturnsNull()
+        {
+            string path = Path.Combine($"mpf-test-missing-{Guid.NewGuid():N}", "track");
+            string? expected = SystemEnvironment.IsWindows() ? Path.GetPathRoot(path) : null;
+            string? actual = FrontendTool.GetFreeSpaceCheckPath(path);
+            Assert.Equal(expected, actual);
         }
 
         #endregion
