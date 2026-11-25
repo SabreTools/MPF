@@ -4,7 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Platform;
 using MPF.Avalonia.Windows;
 using MPF.Frontend;
-using MPF.Frontend.Tools;
 
 namespace MPF.Avalonia
 {
@@ -57,7 +56,6 @@ namespace MPF.Avalonia
             _window = null;
 
             var window = new ToolOutputWindow { AutoClose = _options.GUI.ToolConsoleAutoClose };
-            window.AutoCloseChanged += OnAutoCloseChanged;
             window.Closed += (_, _) =>
             {
                 onClosed?.Invoke();
@@ -75,19 +73,6 @@ namespace MPF.Avalonia
 
         /// <inheritdoc/>
         public void NotifyToolExited() => _window?.NotifyToolExited();
-
-        #region Event Handlers
-
-        /// <summary>
-        /// Persist the user's auto-close preference whenever the checkbox is toggled
-        /// </summary>
-        private void OnAutoCloseChanged(bool autoClose)
-        {
-            _options.GUI.ToolConsoleAutoClose = autoClose;
-            OptionsLoader.SaveToConfig(_options);
-        }
-
-        #endregion
 
         #region Helpers
 

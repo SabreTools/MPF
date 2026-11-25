@@ -16,7 +16,7 @@
     KDE Konsole's default 80x24 grid at a typical monospace cell is ~1.73:1, so
     1040 wide -> ~600 tall. The values are hard-coded literals; the ratio is just
     the rationale, not computed at runtime. -->
-    <Grid RowDefinitions="*,Auto,Auto" Margin="8" RowSpacing="6">
+    <Grid RowDefinitions="*,Auto" Margin="8" RowSpacing="6">
 
         <!-- Committed output. Virtualized, fixed-height rows; '\r' progress redraws
         collapse onto the single live line below and never enter this list. -->
@@ -88,19 +88,5 @@
                        Foreground="#A3BE8C"
                        Text="" />
         </Border>
-
-        <!-- Auto-close toggle. Checked (default) = close this window when the tool exits;
-        unchecked = keep it open to read the final output. The main MPF window keeps
-        working regardless. The state is persisted to the options. -->
-        <StackPanel Grid.Row="2"
-                    Orientation="Horizontal"
-                    Spacing="12"
-                    Margin="2,2,2,0"
-                    VerticalAlignment="Center">
-            <CheckBox x:Name="AutoCloseCheck"
-                      Content="{DynamicResource ToolOutputCloseOnExitCheckBoxString}"
-                      IsChecked="{Binding AutoClose}"
-                      VerticalAlignment="Center" />
-        </StackPanel>
     </Grid>
 </Window>

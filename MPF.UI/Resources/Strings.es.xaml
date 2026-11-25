@@ -88,6 +88,7 @@
     <system:String x:Key="CompressLogFilesCheckBoxString">Comprimir archivos de registro</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Eliminar archivos innecesarios</system:String>
     <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Crear PS3 IRD tras volcado</system:String>
+    <system:String x:Key="ToolConsoleAutoCloseCheckBoxString">Ventana de cierre automático</system:String>
     <system:String x:Key="ProtectionGroupBoxString">Protección</system:String>
     <system:String x:Key="EnableProtectionScanCheckBoxString">Habilitar escaneo de protección</system:String>
     <system:String x:Key="ScanArchiveContentsCheckBoxString">Escanear contenido de archivos</system:String>

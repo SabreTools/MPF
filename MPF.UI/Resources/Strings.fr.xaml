@@ -88,6 +88,7 @@
     <system:String x:Key="CompressLogFilesCheckBoxString">Compresser les fichiers journaux</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Supprimer les fichiers inutiles</system:String>
     <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Créer PS3 IRD après le dump</system:String>
+    <system:String x:Key="ToolConsoleAutoCloseCheckBoxString">Fenêtre de l'outil de fermeture automatique</system:String>
     <system:String x:Key="ProtectionGroupBoxString">Protection</system:String>
     <system:String x:Key="EnableProtectionScanCheckBoxString">Activer le scan de protection</system:String>
     <system:String x:Key="ScanArchiveContentsCheckBoxString">Scanner le contenu des archives</system:String>

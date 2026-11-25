@@ -379,6 +379,13 @@
                                                   Content="{DynamicResource CreatePS3IRDAfterDumpingCheckBoxString}"
                                                   IsChecked="{Binding CreateIRDAfterDumping}"
                                                   ToolTip.Tip="Automatically creates an IRD file after dumping a PS3 disc" />
+
+                                        <!-- Avalonia-specifc option -->
+                                        <CheckBox Grid.Row="4"
+                                                  Grid.Column="1"
+                                                  Content="{DynamicResource ToolConsoleAutoCloseCheckBoxString}"
+                                                  IsChecked="{Binding ToolConsoleAutoClose}"
+                                                  ToolTip.Tip="Automatically close the separate tool-output window when the dumping program exits" />
                                     </Grid>
                                 </StackPanel>
                             </Border>

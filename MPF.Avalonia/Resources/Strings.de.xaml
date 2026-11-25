@@ -53,7 +53,6 @@
 
     <!-- Tool Output Window -->
     <x:String x:Key="ToolOutputTitleString">Programmausgabe</x:String>
-    <x:String x:Key="ToolOutputCloseOnExitCheckBoxString">Dieses Fenster schließen, wenn das Programm beendet ist</x:String>
 
     <!-- Options Window -->
     <x:String x:Key="OptionsTitleString">Optionen</x:String>
@@ -93,6 +92,7 @@
     <x:String x:Key="CompressLogFilesCheckBoxString">Protokolldateien komprimieren</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Unnötige Dateien löschen</x:String>
     <x:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">PS3 IRD nach Dumping erstellen</x:String>
+    <x:String x:Key="ToolConsoleAutoCloseCheckBoxString">Toolfenster automatisch schließen</x:String>
     <x:String x:Key="ProtectionGroupBoxString">Schutz</x:String>
     <x:String x:Key="EnableProtectionScanCheckBoxString">Schutzscan aktivieren</x:String>
     <x:String x:Key="ScanArchiveContentsCheckBoxString">Archivinhalt scannen</x:String>

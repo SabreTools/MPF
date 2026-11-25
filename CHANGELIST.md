@@ -16,7 +16,8 @@
 - Remove compression level choice, use DEFLATE level 9
 - Empty spot no longer needed in Options window
 - Add "Dumping Info" data to media information view model
-- Add reamining settings to options view model
+- Add remaining settings to options view model
+- Add tool auto-close to Avalonia options
 
 ### 3.12.0 (2026-11-23)
 

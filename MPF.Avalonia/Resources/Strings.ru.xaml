@@ -87,6 +87,7 @@
     <x:String x:Key="CompressLogFilesCheckBoxString">Сжимать файлы логов</x:String>
     <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Удалять лишние файлы</x:String>
     <x:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Создать PS3 IRD после дампа</x:String>
+    <x:String x:Key="ToolConsoleAutoCloseCheckBoxString">Автоматическое закрытие окна инструмента</x:String>
     <x:String x:Key="ProtectionGroupBoxString">Защита</x:String>
     <x:String x:Key="EnableProtectionScanCheckBoxString">Включить проверку защиты</x:String>
     <x:String x:Key="ScanArchiveContentsCheckBoxString">Проверять содержимое архива</x:String>

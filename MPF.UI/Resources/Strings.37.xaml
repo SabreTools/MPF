@@ -89,6 +89,7 @@
     <system:String x:Key="CompressLogFilesCheckBoxString">C0mpr3zz 109 F113z</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">D31373 Unn3c3zz4ry F113z</system:String>
     <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Cr3473 Pz3 1RD 4f73r Dump1n9</system:String>
+    <system:String x:Key="ToolConsoleAutoCloseCheckBoxString">4u70-Cl0s3 700l Wind0w</system:String>
     <system:String x:Key="ProtectionGroupBoxString">Pr073c710n</system:String>
     <system:String x:Key="EnableProtectionScanCheckBoxString">3n4813 Pr073c710n zc4n</system:String>
     <system:String x:Key="ScanArchiveContentsCheckBoxString">zc4n 4rch1v3 C0n73n7z</system:String>

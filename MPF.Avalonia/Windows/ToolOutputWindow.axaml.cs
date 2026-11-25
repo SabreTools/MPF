@@ -42,24 +42,7 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Whether the window should close itself when the tool exits
         /// </summary>
-        public bool AutoClose
-        {
-            get;
-            set
-            {
-                field = value;
-                AutoCloseChanged?.Invoke(field);
-            }
-        }
-
-        #endregion
-
-        #region Events
-
-        /// <summary>
-        /// Raised when the user toggles the auto-close checkbox, so the host can persist it
-        /// </summary>
-        public event Action<bool>? AutoCloseChanged;
+        public bool AutoClose { get; set; }
 
         #endregion
 

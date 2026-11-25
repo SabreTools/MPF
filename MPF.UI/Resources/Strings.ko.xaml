@@ -88,6 +88,7 @@
     <system:String x:Key="CompressLogFilesCheckBoxString">로그 파일 압축</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">불필요한 파일 삭제</system:String>
     <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">덤핑 후 PS3 IRD 생성</system:String>
+    <system:String x:Key="ToolConsoleAutoCloseCheckBoxString">자동 닫기 도구 창</system:String>
     <system:String x:Key="ProtectionGroupBoxString">보호</system:String>
     <system:String x:Key="EnableProtectionScanCheckBoxString">보호 스캔 활성화</system:String>
     <system:String x:Key="ScanArchiveContentsCheckBoxString">아카이브 내용 스캔</system:String>

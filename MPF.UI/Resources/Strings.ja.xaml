@@ -88,6 +88,7 @@
     <system:String x:Key="CompressLogFilesCheckBoxString">ログファイルを圧縮</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">不要ファイルを削除</system:String>
     <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">ダンプ後に PS3 IRD を作成</system:String>
+    <system:String x:Key="ToolConsoleAutoCloseCheckBoxString">ツールウィンドウを自動で閉じる</system:String>
     <system:String x:Key="ProtectionGroupBoxString">プロテクト</system:String>
     <system:String x:Key="EnableProtectionScanCheckBoxString">プロテクトスキャンを有効にする</system:String>
     <system:String x:Key="ScanArchiveContentsCheckBoxString">アーカイブ内容をスキャン</system:String>
