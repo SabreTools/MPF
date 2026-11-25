@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using MPF.Frontend.Tools;
-using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
@@ -9,6 +8,28 @@ namespace MPF.Frontend.Test.Tools
 {
     public class FrontendToolTests
     {
+        #region GetAvailableFreeSpace
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void GetAvailableFreeSpace_Empty_ReturnsNull(string? path)
+        {
+            long? actual = FrontendTool.GetAvailableFreeSpace(path);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetAvailableFreeSpace_MissingDirectory_ReturnsFreeSpace()
+        {
+            string path = Path.Combine(Environment.CurrentDirectory, "TestData", "missing", "track");
+            long? actual = FrontendTool.GetAvailableFreeSpace(path);
+            Assert.NotNull(actual);
+            Assert.True(actual > 0);
+        }
+
+        #endregion
+
         #region GetDefaultSpeedForPhysicalMediaType
 
         [Theory]
@@ -62,9 +83,8 @@ namespace MPF.Frontend.Test.Tools
         public void GetFreeSpaceCheckPath_ExistingDirectory_ReturnsDirectory()
         {
             string directory = Path.Combine(Environment.CurrentDirectory, "TestData");
-            string? expected = SystemEnvironment.IsWindows() ? Path.GetPathRoot(directory) : directory;
             string? actual = FrontendTool.GetFreeSpaceCheckPath(directory);
-            Assert.Equal(expected, actual);
+            Assert.Equal(directory, actual);
         }
 
         [Fact]
@@ -72,18 +92,16 @@ namespace MPF.Frontend.Test.Tools
         {
             string directory = Path.Combine(Environment.CurrentDirectory, "TestData");
             string path = Path.Combine(directory, "missing", "track");
-            string? expected = SystemEnvironment.IsWindows() ? Path.GetPathRoot(path) : directory;
             string? actual = FrontendTool.GetFreeSpaceCheckPath(path);
-            Assert.Equal(expected, actual);
+            Assert.Equal(directory, actual);
         }
 
         [Fact]
         public void GetFreeSpaceCheckPath_MissingRelativePath_ReturnsNull()
         {
             string path = Path.Combine($"mpf-test-missing-{Guid.NewGuid():N}", "track");
-            string? expected = SystemEnvironment.IsWindows() ? Path.GetPathRoot(path) : null;
             string? actual = FrontendTool.GetFreeSpaceCheckPath(path);
-            Assert.Equal(expected, actual);
+            Assert.Null(actual);
         }
 
         #endregion
