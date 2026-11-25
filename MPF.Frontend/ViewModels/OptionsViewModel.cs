@@ -110,6 +110,17 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        /// <inheritdoc cref="InternetAccessSettings.AttemptCount"/>
+        public int AttemptCount
+        {
+            get => Options.Processing.InternetAccess.AttemptCount;
+            set
+            {
+                Options.Processing.InternetAccess.AttemptCount = value;
+                TriggerPropertyChanged(nameof(AttemptCount));
+            }
+        }
+
         /// <inheritdoc cref="Options.CheckForUpdatesOnStartup"/>
         public bool CheckForUpdatesOnStartup
         {
@@ -151,6 +162,28 @@ namespace MPF.Frontend.ViewModels
             {
                 Options.GUI.DefaultInterfaceLanguage = value;
                 TriggerPropertyChanged(nameof(DefaultInterfaceLanguage));
+            }
+        }
+
+        /// <inheritdoc cref="ThemeSettings.CustomBackgroundColor"/>
+        public string? CustomBackgroundColor
+        {
+            get => Options.GUI.Theming.CustomBackgroundColor;
+            set
+            {
+                Options.GUI.Theming.CustomBackgroundColor = value;
+                TriggerPropertyChanged(nameof(CustomBackgroundColor));
+            }
+        }
+
+        /// <inheritdoc cref="ThemeSettings.CustomTextColor"/>
+        public string? CustomTextColor
+        {
+            get => Options.GUI.Theming.CustomTextColor;
+            set
+            {
+                Options.GUI.Theming.CustomTextColor = value;
+                TriggerPropertyChanged(nameof(CustomTextColor));
             }
         }
 
@@ -371,6 +404,17 @@ namespace MPF.Frontend.ViewModels
             {
                 Options.GUI.Theming.EnableDarkMode = value;
                 TriggerPropertyChanged(nameof(EnableDarkMode));
+            }
+        }
+
+        /// <inheritdoc cref="ThemeSettings.EnablePurpMode"/>
+        public bool EnablePurpMode
+        {
+            get => Options.GUI.Theming.EnablePurpMode;
+            set
+            {
+                Options.GUI.Theming.EnablePurpMode = value;
+                TriggerPropertyChanged(nameof(EnablePurpMode));
             }
         }
 
@@ -627,6 +671,17 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        /// <inheritdoc cref="GuiSettings.ShowDebugViewMenuItem"/>
+        public bool ShowDebugViewMenuItem
+        {
+            get => Options.GUI.ShowDebugViewMenuItem;
+            set
+            {
+                Options.GUI.ShowDebugViewMenuItem = value;
+                TriggerPropertyChanged(nameof(ShowDebugViewMenuItem));
+            }
+        }
+
         /// <inheritdoc cref="ProcessingSettings.ShowDiscEjectReminder"/>
         public bool ShowDiscEjectReminder
         {
@@ -649,6 +704,17 @@ namespace MPF.Frontend.ViewModels
             }
         }
 
+        /// <inheritdoc cref="InternetAccessSettings.TimeoutSeconds"/>
+        public int TimeoutSeconds
+        {
+            get => Options.Processing.InternetAccess.TimeoutSeconds;
+            set
+            {
+                Options.Processing.InternetAccess.TimeoutSeconds = value;
+                TriggerPropertyChanged(nameof(TimeoutSeconds));
+            }
+        }
+
         /// <summary>
         /// Title for the window
         /// </summary>
@@ -659,6 +725,17 @@ namespace MPF.Frontend.ViewModels
             {
                 field = value;
                 TriggerPropertyChanged(nameof(Title));
+            }
+        }
+
+        /// <inheritdoc cref="GuiSettings.ToolConsoleAutoClose"/>
+        public bool ToolConsoleAutoClose
+        {
+            get => Options.GUI.ToolConsoleAutoClose;
+            set
+            {
+                Options.GUI.ToolConsoleAutoClose = value;
+                TriggerPropertyChanged(nameof(ToolConsoleAutoClose));
             }
         }
 
