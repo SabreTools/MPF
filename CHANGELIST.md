@@ -20,6 +20,7 @@
 - Add tool auto-close to Avalonia options
 - Translate newer UI strings for Avalonia
 - Auto-close tool window was a no-op
+- Minor changes to french and portuguese translations (BigTreezZ)
 
 ### 3.12.0 (2026-11-23)
 
