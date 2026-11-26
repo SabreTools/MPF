@@ -26,6 +26,8 @@
 - Replace placeholder label values
 - Purple
 - Remove string resources for removed setting
+- Remove log compression setting from help text
+- Keep main window state after closing a tool window in Avalonia (gmipf)
 - Check free space where the output is written (gmipf)
 - Check free space on Windows network paths and mounted folders (gmipf)
 
