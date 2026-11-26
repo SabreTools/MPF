@@ -25,7 +25,7 @@ namespace MPF.Frontend.Tools
         public static long? GetAvailableFreeSpace(string path)
         {
             // Find the closest existing directory
-            string current = path;
+            string? current = path;
             while (!string.IsNullOrEmpty(current))
             {
                 if (!Directory.Exists(current))
