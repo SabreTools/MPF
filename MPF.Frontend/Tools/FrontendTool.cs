@@ -48,27 +48,27 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
-        /// Get the path to check for free space when writing to a path
+        /// Get the drive to check for free space when writing to a path
         /// </summary>
         /// <param name="path">Full path to write to</param>
-        /// <returns>The drive root on Windows, the closest existing directory otherwise, null if none found</returns>
+        /// <returns>The drive of the path root on Windows, the drive of the closest existing directory otherwise, null if none found</returns>
         /// <remarks>
         /// Outside of Windows, every full path starts at the same root, which can be on a
         /// different file system than the path itself. The output directory may not exist
         /// yet, so the closest existing parent directory is used instead.
         /// </remarks>
-        public static string? GetFreeSpaceCheckPath(string? path)
+        public static DriveInfo? GetFreeSpaceDriveInfo(string path)
         {
             // Windows checks the drive the path is on
             if (SystemEnvironment.IsWindows())
-                return Path.GetPathRoot(path);
+                return new DriveInfo(Path.GetPathRoot(path) ?? string.Empty);
 
             // Find the closest existing directory
             string? current = path;
             while (!string.IsNullOrEmpty(current))
             {
                 if (Directory.Exists(current))
-                    return current;
+                    return new DriveInfo(current);
 
                 current = Path.GetDirectoryName(current);
             }
