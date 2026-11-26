@@ -29,6 +29,7 @@
 - Remove log compression setting from help text
 - Keep main window state after closing a tool window in Avalonia (gmipf)
 - Check free space where the output is written (gmipf)
+- Check free space on Windows network paths and mounted folders (gmipf)
 - Keep main window size and position in Avalonia (gmipf)
 
 ### 3.12.0 (2026-11-23)

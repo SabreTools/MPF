@@ -8,9 +8,40 @@ using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.Tools
 {
-    public static class FrontendTool
+    public static partial class FrontendTool
     {
         #region Information Extraction
+
+        /// <summary>
+        /// Get the free space available to the current user when writing to a path
+        /// </summary>
+        /// <param name="path">Full path to write to</param>
+        /// <returns>Free space in bytes, null if it could not be found</returns>
+        /// <remarks>
+        /// The root of a full path can be on a different volume than the path itself, such
+        /// as a file system mounted on a folder. The output directory may not exist yet, so
+        /// the closest existing parent directory is used instead.
+        /// </remarks>
+        public static long? GetAvailableFreeSpace(string path)
+        {
+            // Find the closest existing directory
+            string? current = path;
+            while (!string.IsNullOrEmpty(current))
+            {
+                if (Directory.Exists(current))
+                {
+                    // DriveInfo only accepts drive letters on Windows
+                    if (SystemEnvironment.IsWindows())
+                        return GetWindowsAvailableFreeSpace(current);
+
+                    return new DriveInfo(current).AvailableFreeSpace;
+                }
+
+                current = Path.GetDirectoryName(current);
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// Get the default speed for a given media type from the supplied options
@@ -45,35 +76,6 @@ namespace MPF.Frontend.Tools
 
             // Default
             return options.Dumping.DumpSpeeds.CD;
-        }
-
-        /// <summary>
-        /// Get the drive to check for free space when writing to a path
-        /// </summary>
-        /// <param name="path">Full path to write to</param>
-        /// <returns>The drive of the path root on Windows, the drive of the closest existing directory otherwise, null if none found</returns>
-        /// <remarks>
-        /// Outside of Windows, every full path starts at the same root, which can be on a
-        /// different file system than the path itself. The output directory may not exist
-        /// yet, so the closest existing parent directory is used instead.
-        /// </remarks>
-        public static DriveInfo? GetFreeSpaceDriveInfo(string path)
-        {
-            // Windows checks the drive the path is on
-            if (SystemEnvironment.IsWindows())
-                return new DriveInfo(Path.GetPathRoot(path) ?? string.Empty);
-
-            // Find the closest existing directory
-            string? current = path;
-            while (!string.IsNullOrEmpty(current))
-            {
-                if (Directory.Exists(current))
-                    return new DriveInfo(current);
-
-                current = Path.GetDirectoryName(current);
-            }
-
-            return null;
         }
 
         /// <summary>
