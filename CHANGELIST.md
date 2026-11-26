@@ -26,6 +26,7 @@
 - Replace placeholder label values
 - Purple
 - Remove string resources for removed setting
+- Remove log compression setting from help text
 - Keep main window state after closing a tool window in Avalonia (gmipf)
 
 ### 3.12.0 (2026-11-23)
