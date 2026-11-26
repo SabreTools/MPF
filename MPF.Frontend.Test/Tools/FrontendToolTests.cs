@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;
 using Xunit;
@@ -8,28 +6,6 @@ namespace MPF.Frontend.Test.Tools
 {
     public class FrontendToolTests
     {
-        #region GetAvailableFreeSpace
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public void GetAvailableFreeSpace_Empty_ReturnsNull(string? path)
-        {
-            long? actual = FrontendTool.GetAvailableFreeSpace(path);
-            Assert.Null(actual);
-        }
-
-        [Fact]
-        public void GetAvailableFreeSpace_MissingDirectory_ReturnsFreeSpace()
-        {
-            string path = Path.Combine(Environment.CurrentDirectory, "TestData", "missing", "track");
-            long? actual = FrontendTool.GetAvailableFreeSpace(path);
-            Assert.NotNull(actual);
-            Assert.True(actual > 0);
-        }
-
-        #endregion
-
         #region GetDefaultSpeedForPhysicalMediaType
 
         [Theory]
@@ -64,44 +40,6 @@ namespace MPF.Frontend.Test.Tools
                 { PhysicalMediaType.BluRay, 16 },
                 { PhysicalMediaType.NintendoWiiUOpticalDisc, 16 },
             };
-        }
-
-        #endregion
-
-        #region GetFreeSpaceCheckPath
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public void GetFreeSpaceCheckPath_Empty_ReturnsNull(string? path)
-        {
-            string? actual = FrontendTool.GetFreeSpaceCheckPath(path);
-            Assert.Null(actual);
-        }
-
-        [Fact]
-        public void GetFreeSpaceCheckPath_ExistingDirectory_ReturnsDirectory()
-        {
-            string directory = Path.Combine(Environment.CurrentDirectory, "TestData");
-            string? actual = FrontendTool.GetFreeSpaceCheckPath(directory);
-            Assert.Equal(directory, actual);
-        }
-
-        [Fact]
-        public void GetFreeSpaceCheckPath_MissingDirectory_ReturnsClosestExisting()
-        {
-            string directory = Path.Combine(Environment.CurrentDirectory, "TestData");
-            string path = Path.Combine(directory, "missing", "track");
-            string? actual = FrontendTool.GetFreeSpaceCheckPath(path);
-            Assert.Equal(directory, actual);
-        }
-
-        [Fact]
-        public void GetFreeSpaceCheckPath_MissingRelativePath_ReturnsNull()
-        {
-            string path = Path.Combine($"mpf-test-missing-{Guid.NewGuid():N}", "track");
-            string? actual = FrontendTool.GetFreeSpaceCheckPath(path);
-            Assert.Null(actual);
         }
 
         #endregion

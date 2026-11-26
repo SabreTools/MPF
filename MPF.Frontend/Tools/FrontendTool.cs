@@ -17,17 +17,30 @@ namespace MPF.Frontend.Tools
         /// </summary>
         /// <param name="path">Full path to write to</param>
         /// <returns>Free space in bytes, null if it could not be found</returns>
-        public static long? GetAvailableFreeSpace(string? path)
+        /// <remarks>
+        /// The root of a full path can be on a different volume than the path itself, such
+        /// as a file system mounted on a folder. The output directory may not exist yet, so
+        /// the closest existing parent directory is used instead.
+        /// </remarks>
+        public static long? GetAvailableFreeSpace(string path)
         {
-            string? directory = GetFreeSpaceCheckPath(path);
-            if (directory is null)
-                return null;
+            // Find the closest existing directory
+            string? current = path;
+            while (!string.IsNullOrEmpty(current))
+            {
+                if (Directory.Exists(current))
+                {
+                    // DriveInfo only accepts drive letters on Windows
+                    if (SystemEnvironment.IsWindows())
+                        return GetWindowsAvailableFreeSpace(current);
 
-            // DriveInfo only accepts drive letters on Windows
-            if (SystemEnvironment.IsWindows())
-                return GetWindowsAvailableFreeSpace(directory);
+                    return new DriveInfo(current).AvailableFreeSpace;
+                }
 
-            return new DriveInfo(directory).AvailableFreeSpace;
+                current = Path.GetDirectoryName(current);
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -63,31 +76,6 @@ namespace MPF.Frontend.Tools
 
             // Default
             return options.Dumping.DumpSpeeds.CD;
-        }
-
-        /// <summary>
-        /// Get the path to check for free space when writing to a path
-        /// </summary>
-        /// <param name="path">Full path to write to</param>
-        /// <returns>The closest existing directory, null if none found</returns>
-        /// <remarks>
-        /// The root of a full path can be on a different volume than the path itself, such
-        /// as a file system mounted on a folder. The output directory may not exist yet, so
-        /// the closest existing parent directory is used instead.
-        /// </remarks>
-        public static string? GetFreeSpaceCheckPath(string? path)
-        {
-            // Find the closest existing directory
-            string? current = path;
-            while (!string.IsNullOrEmpty(current))
-            {
-                if (Directory.Exists(current))
-                    return current;
-
-                current = Path.GetDirectoryName(current);
-            }
-
-            return null;
         }
 
         /// <summary>
