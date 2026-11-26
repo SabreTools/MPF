@@ -1,7 +1,9 @@
 using System;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Text;
+using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.Tools
@@ -43,6 +45,35 @@ namespace MPF.Frontend.Tools
 
             // Default
             return options.Dumping.DumpSpeeds.CD;
+        }
+
+        /// <summary>
+        /// Get the drive to check for free space when writing to a path
+        /// </summary>
+        /// <param name="path">Full path to write to</param>
+        /// <returns>The drive of the path root on Windows, the drive of the closest existing directory otherwise, null if none found</returns>
+        /// <remarks>
+        /// Outside of Windows, every full path starts at the same root, which can be on a
+        /// different file system than the path itself. The output directory may not exist
+        /// yet, so the closest existing parent directory is used instead.
+        /// </remarks>
+        public static DriveInfo? GetFreeSpaceDriveInfo(string path)
+        {
+            // Windows checks the drive the path is on
+            if (SystemEnvironment.IsWindows())
+                return new DriveInfo(Path.GetPathRoot(path) ?? string.Empty);
+
+            // Find the closest existing directory
+            string? current = path;
+            while (!string.IsNullOrEmpty(current))
+            {
+                if (Directory.Exists(current))
+                    return new DriveInfo(current);
+
+                current = Path.GetDirectoryName(current);
+            }
+
+            return null;
         }
 
         /// <summary>
