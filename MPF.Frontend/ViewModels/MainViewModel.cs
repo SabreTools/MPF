@@ -2604,8 +2604,8 @@ namespace MPF.Frontend.ViewModels
             else
                 fullPath = Path.GetFullPath(outputDirectory);
 
-            var driveInfo = new DriveInfo(Path.GetPathRoot(fullPath) ?? string.Empty);
-            if (driveInfo.AvailableFreeSpace < Math.Pow(2, 30) && _displayUserMessage is not null)
+            var driveInfo = FrontendTool.GetFreeSpaceDriveInfo(fullPath);
+            if (driveInfo?.AvailableFreeSpace < Math.Pow(2, 30) && _displayUserMessage is not null)
             {
                 bool? mbresult = _displayUserMessage("Low Space", "There is less than 1gb of space left on the target drive. Are you sure you want to continue?", 2, true);
                 if (mbresult != true)
