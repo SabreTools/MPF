@@ -30,6 +30,7 @@
 - Keep main window state after closing a tool window in Avalonia (gmipf)
 - Check free space where the output is written (gmipf)
 - Check free space on Windows network paths and mounted folders (gmipf)
+- Try to tie free space checking to disc size
 
 ### 3.12.0 (2026-11-23)
 

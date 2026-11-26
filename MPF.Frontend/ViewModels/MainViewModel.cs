@@ -2596,18 +2596,20 @@ namespace MPF.Frontend.ViewModels
                 }
             }
 
-            // Validate that at least some space exists
-            // TODO: Tie this to the size of the disc, type of disc, etc.
+            // Get the full output path for space checking
             string fullPath;
             if (string.IsNullOrEmpty(outputDirectory))
                 fullPath = Path.GetFullPath(_environment.OutputPath);
             else
                 fullPath = Path.GetFullPath(outputDirectory);
 
-            long? freeSpace = FrontendTool.GetAvailableFreeSpace(fullPath);
-            if (freeSpace < Math.Pow(2, 30) && _displayUserMessage is not null)
+            // Get both free space and expected disc size, defaulting to 1GiB otherwise
+            long freeSpace = FrontendTool.GetAvailableFreeSpace(fullPath) ?? 0;
+            long driveSize = CurrentDrive is not null ? CurrentDrive.TotalSize : (long)Math.Pow(2, 30);
+
+            if (freeSpace < driveSize && _displayUserMessage is not null)
             {
-                bool? mbresult = _displayUserMessage("Low Space", "There is less than 1gb of space left on the target drive. Are you sure you want to continue?", 2, true);
+                bool? mbresult = _displayUserMessage("Low Space", "There may not be enough space left on the target drive. Are you sure you want to continue?", 2, true);
                 if (mbresult != true)
                 {
                     LogLn("Dumping aborted!");
