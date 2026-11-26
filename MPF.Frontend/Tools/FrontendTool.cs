@@ -25,19 +25,20 @@ namespace MPF.Frontend.Tools
         public static long? GetAvailableFreeSpace(string path)
         {
             // Find the closest existing directory
-            string? current = path;
+            string current = path;
             while (!string.IsNullOrEmpty(current))
             {
-                if (Directory.Exists(current))
+                if (!Directory.Exists(current))
                 {
-                    // DriveInfo only accepts drive letters on Windows
-                    if (SystemEnvironment.IsWindows())
-                        return GetWindowsAvailableFreeSpace(current);
-
-                    return new DriveInfo(current).AvailableFreeSpace;
+                    current = Path.GetDirectoryName(current);
+                    continue;
                 }
 
-                current = Path.GetDirectoryName(current);
+                // DriveInfo only accepts drive letters on Windows
+                if (SystemEnvironment.IsWindows())
+                    return GetWindowsAvailableFreeSpace(current);
+
+                return new DriveInfo(current).AvailableFreeSpace;
             }
 
             return null;
