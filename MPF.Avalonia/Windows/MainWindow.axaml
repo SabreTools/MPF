@@ -8,6 +8,7 @@
                   x:Class="MPF.Avalonia.Windows.MainWindow"
                   MinWidth="612"
                   Width="612"
+                  WindowStartupLocation="CenterScreen"
                   SizeToContent="Height"
                   CanResize="True"
                   SystemDecorations="None"
@@ -178,9 +179,9 @@
                             Margin="0"
                             CornerRadius="0"
                             Click="MinimizeButtonClick">
-                        <TextBlock FontFamily="Segoe MDL2 Assets"
-                                   FontSize="10"
-                                   Text="&#xE921;" />
+                        <Rectangle Width="10"
+                                   Height="1"
+                                   Fill="{Binding $parent[Button].Foreground}" />
                     </Button>
                     <Button x:Name="CloseButton"
                             Classes="titlebar-button"
