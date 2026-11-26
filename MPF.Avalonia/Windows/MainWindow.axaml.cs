@@ -87,6 +87,9 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void OnOpened(object? sender, EventArgs e)
         {
+            // Only run once, the window opens again when shown after a tool window closes
+            Opened -= OnOpened;
+
             // Disable buttons until we load fully
             MainViewModel.StartStopButtonEnabled = false;
             MainViewModel.MediaScanButtonEnabled = false;

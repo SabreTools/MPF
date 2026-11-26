@@ -171,7 +171,6 @@ namespace MPF.Check.Features
             Console.WriteLine("    --no-suffix                Disable adding filename suffix");
             Console.WriteLine("-z, --zip                      Enable log file compression");
             Console.WriteLine("    --no-zip                   Disable log file compression");
-            Console.WriteLine("    --log-compression          Set the log compression type (requires compression enabled)");
             Console.WriteLine("-d, --delete                   Enable unnecessary file deletion");
             Console.WriteLine("    --no-delete                Disable unnecessary file deletion");
             Console.WriteLine();
