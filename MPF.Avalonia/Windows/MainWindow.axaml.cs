@@ -31,11 +31,6 @@ namespace MPF.Avalonia.Windows
         #region Fields
 
         /// <summary>
-        /// Extra window height added when the log panel is expanded
-        /// </summary>
-        private const double ExpandedLogPanelExtraHeight = 40;
-
-        /// <summary>
         /// File picker types for browsing output files
         /// </summary>
         private static readonly List<FilePickerFileType> OutputFileTypes =
@@ -52,21 +47,6 @@ namespace MPF.Avalonia.Windows
         /// Whether a close confirmation dialog is currently pending
         /// </summary>
         private bool _closeConfirmationPending;
-
-        /// <summary>
-        /// Last recorded height of the log panel, used to compute window resizing
-        /// </summary>
-        private double _lastLogPanelHeight;
-
-        /// <summary>
-        /// Window height while the log panel is expanded
-        /// </summary>
-        private double _expandedWindowHeight;
-
-        /// <summary>
-        /// Window height while the log panel is collapsed
-        /// </summary>
-        private double _collapsedWindowHeight;
 
         /// <summary>
         /// Whether the log panel resize logic has been initialized
@@ -595,11 +575,6 @@ namespace MPF.Avalonia.Windows
 
             Dispatcher.UIThread.Post(() =>
             {
-                _expandedWindowHeight = Height;
-                if (LogPanel!.IsExpanded)
-                    Height = _expandedWindowHeight + ExpandedLogPanelExtraHeight;
-
-                _lastLogPanelHeight = LogPanel.Bounds.Height;
                 _logPanelResizeInitialized = true;
                 UpdateLogConsoleHeight();
             }, DispatcherPriority.Background);
@@ -612,34 +587,30 @@ namespace MPF.Avalonia.Windows
                 if (!_logPanelResizeInitialized)
                     return;
 
-                double previousLogPanelHeight = _lastLogPanelHeight;
-                Dispatcher.UIThread.Post(() =>
-                {
-                    double currentLogPanelHeight = LogPanel.Bounds.Height;
-                    if (previousLogPanelHeight <= 0 || currentLogPanelHeight <= 0)
-                    {
-                        _lastLogPanelHeight = currentLogPanelHeight;
-                        return;
-                    }
+                // Fit the window to the new content height, a resize of the window can turn this off
+                // and turning it back on does not measure the window again
+                SizeToContent = SizeToContent.Height;
+                InvalidateMeasure();
+                UpdateLogConsoleHeight();
 
-                    if (LogPanel.IsExpanded)
-                    {
-                        if (_expandedWindowHeight <= 0)
-                            _expandedWindowHeight = Height;
-
-                        Height = _expandedWindowHeight + ExpandedLogPanelExtraHeight;
-                    }
-                    else
-                    {
-                        double collapsedDelta = Math.Max(0, previousLogPanelHeight - currentLogPanelHeight);
-                        _collapsedWindowHeight = Math.Max(300, _expandedWindowHeight - collapsedDelta + 40);
-                        Height = _collapsedWindowHeight;
-                    }
-
-                    _lastLogPanelHeight = currentLogPanelHeight;
-                    UpdateLogConsoleHeight();
-                }, DispatcherPriority.Background);
+                // The window grows downward from where it was placed, keep it above the taskbar
+                Dispatcher.UIThread.Post(MoveIntoWorkArea, DispatcherPriority.Background);
             };
+        }
+
+        /// <summary>
+        /// Move the window up when its bottom is below the work area of its screen
+        /// </summary>
+        private void MoveIntoWorkArea()
+        {
+            Screen? screen = Screens.ScreenFromWindow(this);
+            if (screen is null)
+                return;
+
+            PixelRect area = screen.WorkingArea;
+            int height = (int)Math.Round((FrameSize ?? Bounds.Size).Height * screen.Scaling);
+            int y = Math.Max(area.Y, Math.Min(Position.Y, area.Bottom - height));
+            Position = new PixelPoint(Position.X, y);
         }
 
         /// <summary>

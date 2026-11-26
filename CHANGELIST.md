@@ -26,6 +26,7 @@
 - Replace placeholder label values
 - Purple
 - Remove string resources for removed setting
+- Keep main window size and position in Avalonia (gmipf)
 
 ### 3.12.0 (2026-11-23)
 
