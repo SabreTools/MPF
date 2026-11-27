@@ -35,6 +35,7 @@
 - Fix nullability issue
 - Remove leftover placeholder value
 - Relocate the fully-matched ID in information windows
+- Tweaks to information window presentation and uniformity
 
 ### 3.12.0 (2026-11-23)
 

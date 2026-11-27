@@ -11,6 +11,19 @@ namespace MPF.Frontend.ViewModels
 
         #region Common Media Information
 
+        public string? FullyMatchedIDs
+        {
+            get
+            {
+                if (SubmissionInfo.FullyMatchedIDs is null)
+                    return null;
+
+                return string.Join(", ", [.. SubmissionInfo.FullyMatchedIDs.ConvertAll(i => i.ToString())]);
+            }
+        }
+
+        public bool FullyMatchedIDsVisible => FullyMatchedIDs is not null && FullyMatchedIDs.Length > 0;
+
         public string? Title
         {
             get => SubmissionInfo.DiscIdentity.Title;
@@ -1197,19 +1210,6 @@ namespace MPF.Frontend.ViewModels
         #endregion
 
         #region Read-Only Info
-
-        public string? FullyMatchedIDs
-        {
-            get
-            {
-                if (SubmissionInfo.FullyMatchedIDs is null)
-                    return null;
-
-                return string.Join(", ", [.. SubmissionInfo.FullyMatchedIDs.ConvertAll(i => i.ToString())]);
-            }
-        }
-
-        public bool FullyMatchedIDsVisible => FullyMatchedIDs is not null && FullyMatchedIDs.Length > 0;
 
         public string? PartiallyMatchedIDs
         {
