@@ -122,6 +122,10 @@
                                       HorizontalAlignment="Stretch"
                                       VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
+                                    <controls:UserInput Label="Fully Matched IDs"
+                                                        IsReadOnly="True"
+                                                        Text="{Binding FullyMatchedIDs, Mode=OneWay}"
+                                                        Visibility="{Binding Path=FullyMatchedIDsVisible, Converter={StaticResource BoolToVis}}"/>
                                     <controls:UserInput Label="{DynamicResource TitleInputString}"
                                                         Text="{Binding Title, Mode=TwoWay}"/>
                                     <controls:UserInput Label="{DynamicResource AlternativeTitleInputString}"
@@ -664,10 +668,6 @@
                             </GroupBox.Template>
 
                             <StackPanel Orientation="Vertical">
-                                <controls:UserInput Label="Fully Matched IDs"
-                                                    IsReadOnly="True"
-                                                    Text="{Binding FullyMatchedIDs, Mode=OneWay}"
-                                                    Visibility="{Binding Path=FullyMatchedIDsVisible, Converter={StaticResource BoolToVis}}"/>
                                 <controls:UserInput Label="Partially Matched ID(s)"
                                                     IsReadOnly="True"
                                                     Text="{Binding PartiallyMatchedIDs, Mode=OneWay}"

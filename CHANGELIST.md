@@ -34,6 +34,7 @@
 - Keep main window size and position in Avalonia (gmipf)
 - Fix nullability issue
 - Remove leftover placeholder value
+- Relocate the fully-matched ID in information windows
 
 ### 3.12.0 (2026-11-23)
 

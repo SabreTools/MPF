@@ -36,6 +36,10 @@
                                 <StackPanel Spacing="4">
                                     <TextBlock Text="{DynamicResource CommonMediaInfoGroupBoxString}"
                                                FontWeight="Bold" />
+                                    <controls:UserInput Label="Fully Matched ID"
+                                                        IsReadOnly="True"
+                                                        Text="{Binding FullyMatchedIDs, Mode=OneWay}"
+                                                        IsVisible="{Binding FullyMatchedIDsVisible}" />
                                     <controls:UserInput Label="{DynamicResource TitleInputString}"
                                                         Text="{Binding Title, Mode=TwoWay}" />
                                     <controls:UserInput Label="{DynamicResource AlternativeTitleInputString}"
@@ -487,10 +491,6 @@
                                 Background="{DynamicResource PanelBackgroundBrush}"
                                 Margin="0,0,4,0">
                             <StackPanel Spacing="4">
-                                <controls:UserInput Label="Fully Matched ID"
-                                                    IsReadOnly="True"
-                                                    Text="{Binding FullyMatchedIDs, Mode=OneWay}"
-                                                    IsVisible="{Binding FullyMatchedIDsVisible}" />
                                 <controls:UserInput Label="Partially Matched ID(s)"
                                                     IsReadOnly="True"
                                                     Text="{Binding PartiallyMatchedIDs, Mode=OneWay}"
