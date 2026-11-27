@@ -149,7 +149,7 @@ namespace MPF.Frontend.Tools
             // Set fields that may have automatic filling otherwise
             info.DiscIdentity.Category ??= DiscCategory.Games;
             info.DiscIdentifiers.DiscSerials ??= string.Empty;
-            info.DiscIdentifiers.Editions ??= "(VERIFY THIS) Original";
+            info.DiscIdentifiers.Editions ??= string.Empty;
             info.DiscIdentifiers.Barcodes ??= string.Empty;
             info.DiscIdentifiers.Version ??= string.Empty;
             info.DumpMetadata.Comments ??= string.Empty;

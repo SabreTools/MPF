@@ -33,6 +33,7 @@
 - Try to tie free space checking to disc size
 - Keep main window size and position in Avalonia (gmipf)
 - Fix nullability issue
+- Remove leftover placeholder value
 
 ### 3.12.0 (2026-11-23)
 
