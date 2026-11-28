@@ -247,7 +247,7 @@ namespace MPF.Frontend.Tools
                     continue;
                 }
 
-                var foundIds = await wc.ValidateSingleTrackApi(info, sha1);
+                var foundIds = await wc.ValidateSingleTrack(info, sha1);
                 if (foundIds is null)
                 {
                     resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.info"));
@@ -298,7 +298,7 @@ namespace MPF.Frontend.Tools
             if (info.PartiallyMatchedIDs.Count == 0 && info.DiscIdentifiers?.UniversalHash is not null)
             {
                 string sha1 = info.DiscIdentifiers.UniversalHash;
-                var foundIds = await wc.ValidateUniversalHashApi(info);
+                var foundIds = await wc.ValidateUniversalHash(info);
                 if (foundIds is null)
                     resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.info"));
                 else if (foundIds.Count == 0)
@@ -351,7 +351,7 @@ namespace MPF.Frontend.Tools
             // Use the fully-matched ID to grab a bunch of info from it
             // Fill in the fields from the existing ID
             resultProgress?.Report(ResultEventArgs.Neutral($"Filling fields from existing ID {fullyMatchedIdsList[0]}..."));
-            _ = await Builder.FillFromIdApi(wc, info, fullyMatchedIdsList[0], options.Processing.InternetAccess.PullAllInformation);
+            _ = await Builder.FillFromId(wc, info, fullyMatchedIdsList[0], options.Processing.InternetAccess.PullAllInformation);
             resultProgress?.Report(ResultEventArgs.Success("Information filling complete!"));
 
             // Set the fully matched ID to the current
@@ -956,7 +956,11 @@ namespace MPF.Frontend.Tools
                 info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, kp2Exe, fixTwoDigitYear: true);
 
                 if (string.IsNullOrEmpty(info.DiscIdentifiers.InternalSerial))
-                    info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(info.DiscIdentifiers.InternalSerial)];
+                {
+                    var psRegion = ProcessingTool.GetPlayStationRegion(info.DiscIdentifiers.InternalSerial);
+                    if (psRegion is not null)
+                        info.RegionsAndLanguages.Regions = [psRegion];
+                }
 
                 SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
             }
@@ -1068,7 +1072,11 @@ namespace MPF.Frontend.Tools
                 info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, ps1Exe, fixTwoDigitYear: true);
 
                 if (!string.IsNullOrEmpty(info.DiscIdentifiers.InternalSerial))
-                    info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(info.DiscIdentifiers.InternalSerial)];
+                {
+                    var psRegion = ProcessingTool.GetPlayStationRegion(info.DiscIdentifiers.InternalSerial);
+                    if (psRegion is not null)
+                        info.RegionsAndLanguages.Regions = [psRegion];
+                }
             }
             else if (system == PhysicalSystem.SonyPlayStation2)
             {
@@ -1084,7 +1092,11 @@ namespace MPF.Frontend.Tools
                 info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, ps2Exe, fixTwoDigitYear: true);
 
                 if (!string.IsNullOrEmpty(info.DiscIdentifiers.InternalSerial))
-                    info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(info.DiscIdentifiers.InternalSerial)];
+                {
+                    var psRegion = ProcessingTool.GetPlayStationRegion(info.DiscIdentifiers.InternalSerial);
+                    if (psRegion is not null)
+                        info.RegionsAndLanguages.Regions = [psRegion];
+                }
 
                 SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
             }

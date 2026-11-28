@@ -172,6 +172,7 @@
     <x:String x:Key="DiscTitleInputString">Titolo Disco</x:String>
     <x:String x:Key="DiscTitleNonLatinInputString">Titolo Disco (Non Latino)</x:String>
     <x:String x:Key="CategoryLabelString">Categoria</x:String>
+    <x:String x:Key="DiscTagsLabelString">DISC_TAGS_LABEL</x:String>
     <x:String x:Key="RegionsLabelString">Regione</x:String>
     <x:String x:Key="LanguagesLabelString">Lingue</x:String>
     <x:String x:Key="SerialInputString">Seriale</x:String>

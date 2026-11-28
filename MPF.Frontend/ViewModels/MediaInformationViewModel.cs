@@ -128,21 +128,6 @@ namespace MPF.Frontend.ViewModels
 
         #region Extras
 
-        public bool PCMacHybrid
-        {
-            get => SubmissionInfo.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.PCMacHybrid);
-            set
-            {
-                if (value)
-                    SubmissionInfo.DumpMetadata.CommentsSpecialFields[SiteCode.PCMacHybrid] = true.ToString();
-                else
-                    SubmissionInfo.DumpMetadata.CommentsSpecialFields.Remove(SiteCode.PCMacHybrid);
-            }
-        }
-
-        public bool PCMacHybridVisible => SubmissionInfo.DiscIdentity.System == PhysicalSystem.AppleMacintosh
-            || SubmissionInfo.DiscIdentity.System == PhysicalSystem.IBMPCcompatible;
-
         public string? Comments
         {
             get => SubmissionInfo.DumpMetadata.Comments;
@@ -1523,6 +1508,12 @@ namespace MPF.Frontend.ViewModels
             = Element<DiscCategory>.GenerateElements();
 
         /// <summary>
+        /// List of available disc tags
+        /// </summary>
+        public List<Element<DiscTag>> DiscTags { get; }
+            = Element<DiscTag>.GenerateElements();
+
+        /// <summary>
         /// List of available regions
         /// </summary>
         public List<RegionCodeComboBoxItem> Regions { get; private set; } = [];
@@ -1560,8 +1551,8 @@ namespace MPF.Frontend.ViewModels
             Regions = RegionCodeComboBoxItem.GenerateElements(_options.Processing.MediaInformation.EnableRedumpCompatibility);
             Languages = LanguageCodeComboBoxItem.GenerateElements(_options.Processing.MediaInformation.EnableRedumpCompatibility);
 
-            // Load regions and languages
-            LoadRegionsAndLanguages();
+            // Load multi-selection elements
+            LoadMultiSelectElements();
         }
 
         #region Helpers
@@ -1569,17 +1560,28 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Load the current contents of the base SubmissionInfo to the UI
         /// </summary>
-        private void LoadRegionsAndLanguages()
+        private void LoadMultiSelectElements()
         {
             // Ensure that all existing values are checked
+            if (SubmissionInfo.DiscIdentity.Tags is not null)
+                DiscTags.ForEach(cbi => cbi.IsChecked = Array.Exists(SubmissionInfo.DiscIdentity.Tags, t => cbi.Value == t));
             if (SubmissionInfo.RegionsAndLanguages.Regions is not null)
                 Regions.ForEach(cbi => cbi.IsChecked = Array.Exists(SubmissionInfo.RegionsAndLanguages.Regions, r => cbi.Value == r));
             if (SubmissionInfo.RegionsAndLanguages.Languages is not null)
                 Languages.ForEach(cbi => cbi.IsChecked = Array.Exists(SubmissionInfo.RegionsAndLanguages.Languages, l => cbi.Value == l));
 
             // Add handlers for all of the checkboxes
+            DiscTags.ForEach(r => r.Checked += OnDiscTagChecked);
             Regions.ForEach(r => r.Checked += OnRegionChecked);
             Languages.ForEach(r => r.Checked += OnLanguageChecked);
+        }
+
+        /// <summary>
+        /// Handle the Checked event for disc tag changes
+        /// </summary>
+        private void OnDiscTagChecked(object sender)
+        {
+            SubmissionInfo.DiscIdentity.Tags = [.. DiscTags.FindAll(t => t.IsChecked).ConvertAll(t => t.Value)];
         }
 
         /// <summary>
@@ -1587,9 +1589,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private void OnRegionChecked(object sender)
         {
-            SubmissionInfo.RegionsAndLanguages.Regions = [.. Regions.FindAll(l => l.IsChecked).ConvertAll(l => l.Value)];
-            if (SubmissionInfo.RegionsAndLanguages.Regions.Length == 0)
-                SubmissionInfo.RegionsAndLanguages.Regions = [null];
+            SubmissionInfo.RegionsAndLanguages.Regions = [.. Regions.FindAll(r => r.IsChecked).ConvertAll(r => r.Value)];
         }
 
         /// <summary>
@@ -1598,8 +1598,6 @@ namespace MPF.Frontend.ViewModels
         private void OnLanguageChecked(object sender)
         {
             SubmissionInfo.RegionsAndLanguages.Languages = [.. Languages.FindAll(l => l.IsChecked).ConvertAll(l => l.Value)];
-            if (SubmissionInfo.RegionsAndLanguages.Languages.Length == 0)
-                SubmissionInfo.RegionsAndLanguages.Languages = [null];
         }
 
         #endregion

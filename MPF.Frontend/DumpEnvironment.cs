@@ -1,18 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.ExecutionContexts;
 using MPF.Frontend.Tools;
 using MPF.Processors;
-using Newtonsoft.Json;
 using SabreTools.IO.Extensions;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Tools;
-using Formatting = Newtonsoft.Json.Formatting;
 
 namespace MPF.Frontend
 {
@@ -646,20 +642,12 @@ namespace MPF.Frontend
             Formatter.ProcessSpecialFields(submissionInfo!);
             resultProgress.Report(ResultEventArgs.Success("Processing complete!"));
 
-            // Format the information for the text output
-            resultProgress.Report(ResultEventArgs.Neutral("Formatting information..."));
-            var formattedValues = Formatter.FormatOutputData(submissionInfo, out string? formatResult);
-            if (formattedValues is null)
-                resultProgress.Report(ResultEventArgs.Failure(formatResult));
-            else
-                resultProgress.Report(ResultEventArgs.Success(formatResult));
-
             // Get the filename suffix for auto-generated files
             var filenameSuffix = _options.Processing.AddFilenameSuffix ? Path.GetFileNameWithoutExtension(outputFilename) : null;
 
             // Write the text output
             resultProgress.Report(ResultEventArgs.Neutral("Writing submission information file..."));
-            bool txtSuccess = WriteOutputData(outputDirectory, filenameSuffix, formattedValues, out string txtResult);
+            bool txtSuccess = submissionInfo.WriteToText(outputDirectory, filenameSuffix, out string txtResult);
             if (txtSuccess)
                 resultProgress.Report(ResultEventArgs.Success(txtResult));
             else
@@ -671,7 +659,7 @@ namespace MPF.Frontend
                 if (_options.Processing.ProtectionScanning.ScanForProtection)
                 {
                     resultProgress.Report(ResultEventArgs.Neutral("Writing protection information file..."));
-                    bool scanSuccess = WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo, _options.Processing.ProtectionScanning.HideDriveLetters);
+                    bool scanSuccess = submissionInfo.WriteProtectionData(outputDirectory, filenameSuffix, _options.Processing.ProtectionScanning.HideDriveLetters);
                     if (scanSuccess)
                         resultProgress.Report(ResultEventArgs.Success("Writing complete!"));
                     else
@@ -681,7 +669,7 @@ namespace MPF.Frontend
 
             // Write the JSON output
             resultProgress.Report(ResultEventArgs.Neutral($"Writing submission information JSON file..."));
-            bool jsonSuccess = WriteOutputData(outputDirectory, filenameSuffix, submissionInfo);
+            bool jsonSuccess = submissionInfo.WriteOutputData(outputDirectory, filenameSuffix);
             if (jsonSuccess)
                 resultProgress.Report(ResultEventArgs.Success("Writing complete!"));
             else
@@ -797,167 +785,6 @@ namespace MPF.Frontend
 
             // Validate that the current configuration is supported
             return GetSupportStatus(mediaType);
-        }
-
-        #endregion
-
-        #region Information Output
-
-        /// <summary>
-        /// Write the data to the output folder
-        /// </summary>
-        /// <param name="outputDirectory">Output folder to use as the base path</param>
-        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
-        /// <param name="lines">Preformatted string of lines to write out to the file</param>
-        /// <returns>True on success, false on error</returns>
-        private static bool WriteOutputData(string? outputDirectory, string? filenameSuffix, string? lines, out string status)
-        {
-            // Check to see if the inputs are valid
-            if (lines is null)
-            {
-                status = "No formatted data found to write!";
-                return false;
-            }
-
-            // Now write out to a generic file
-            try
-            {
-                // Get the file path
-                var path = string.Empty;
-                if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
-                    path = "!submissionInfo.txt";
-                else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
-                    path = $"!submissionInfo_{filenameSuffix}.txt";
-                else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
-                    path = Path.Combine(outputDirectory, "!submissionInfo.txt");
-                else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
-                    path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt");
-
-                // Ensure the output directory has been created
-                string? parentDirectory = Path.GetDirectoryName(path);
-                if (parentDirectory is not null)
-                    Directory.CreateDirectory(parentDirectory);
-
-                using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.UTF8);
-                sw.Write(lines);
-            }
-            catch (Exception ex)
-            {
-                status = $"Writing could not complete: {ex}";
-                return false;
-            }
-
-            status = "Writing complete!";
-            return true;
-        }
-
-        // MOVE TO REDUMPLIB
-        /// <summary>
-        /// Write the data to the output folder
-        /// </summary>
-        /// <param name="outputDirectory">Output folder to use as the base path</param>
-        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
-        /// <param name="info">SubmissionInfo object representing the JSON to write out to the file</param>
-        /// <returns>True on success, false on error</returns>
-        private static bool WriteOutputData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info)
-        {
-            // Check to see if the input is valid
-            if (info is null)
-                return false;
-
-            try
-            {
-                // Get the output path
-                var path = string.Empty;
-                if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
-                    path = "!submissionInfo.json";
-                else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
-                    path = $"!submissionInfo_{filenameSuffix}.json";
-                else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
-                    path = Path.Combine(outputDirectory, "!submissionInfo.json");
-                else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
-                    path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json");
-
-                // Create and open the output file
-                using var fs = File.Create(path);
-
-                // Create the JSON serializer
-                var serializer = new JsonSerializer { Formatting = Formatting.Indented };
-                using var sw = new StreamWriter(fs, Encoding.UTF8);
-                serializer.Serialize(sw, info);
-            }
-            catch
-            {
-                // Absorb the exception
-                return false;
-            }
-
-            return true;
-        }
-
-        // MOVE TO REDUMPLIB
-        /// <summary>
-        /// Write the protection data to the output folder
-        /// </summary>
-        /// <param name="outputDirectory">Output folder to use as the base path</param>
-        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
-        /// <param name="info">SubmissionInfo object containing the protection information</param>
-        /// <param name="hideDriveLetters">True if drive letters are to be removed from output, false otherwise</param>
-        /// <returns>True on success, false on error</returns>
-        private static bool WriteProtectionData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info, bool hideDriveLetters)
-        {
-            // Check to see if the inputs are valid
-            if (info?.DumpMetadata?.FullProtections is null || info.DumpMetadata.FullProtections.Count == 0)
-                return true;
-
-            // Now write out to a generic file
-            try
-            {
-                var path = string.Empty;
-                if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
-                    path = "!protectionInfo.txt";
-                else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
-                    path = $"!protectionInfo{filenameSuffix}.txt";
-                else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
-                    path = Path.Combine(outputDirectory, "!protectionInfo.txt");
-                else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
-                    path = Path.Combine(outputDirectory, $"!protectionInfo{filenameSuffix}.txt");
-
-                // Ensure the output directory has been created
-                string? parentDirectory = Path.GetDirectoryName(path);
-                if (parentDirectory is not null)
-                    Directory.CreateDirectory(parentDirectory);
-
-                using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.UTF8);
-
-                List<string> sortedKeys = [.. info.DumpMetadata.FullProtections.Keys];
-                sortedKeys.Sort();
-
-                foreach (string key in sortedKeys)
-                {
-                    string scanPath = key;
-                    if (hideDriveLetters)
-#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
-                        scanPath = Path.DirectorySeparatorChar + key[(Path.GetPathRoot(key) ?? string.Empty).Length..];
-#else
-                        scanPath = Path.DirectorySeparatorChar + key.Substring((Path.GetPathRoot(key) ?? string.Empty).Length);
-#endif
-
-                    List<string>? scanResult = info.DumpMetadata.FullProtections[key];
-
-                    if (scanResult is null)
-                        sw.WriteLine($"{scanPath}: None");
-                    else
-                        sw.WriteLine($"{scanPath}: {string.Join(", ", [.. scanResult])}");
-                }
-            }
-            catch
-            {
-                // Absorb the exception
-                return false;
-            }
-
-            return true;
         }
 
         #endregion

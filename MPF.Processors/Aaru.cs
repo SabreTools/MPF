@@ -189,7 +189,7 @@ namespace MPF.Processors
                 {
                     info.DiscIdentifiers.DiscSerials = serial ?? string.Empty;
                     info.DiscIdentifiers.Version = version ?? string.Empty;
-                    info.RegionsAndLanguages.Regions = [region];
+                    info.RegionsAndLanguages.Regions = region is null ? [] : [region];
                 }
             }
             else if (System == PhysicalSystem.MicrosoftXbox360)
@@ -205,7 +205,7 @@ namespace MPF.Processors
                 {
                     info.DiscIdentifiers.DiscSerials = serial360 ?? string.Empty;
                     info.DiscIdentifiers.Version = version360 ?? string.Empty;
-                    info.RegionsAndLanguages.Regions = [region360];
+                    info.RegionsAndLanguages.Regions = region360 is null ? [] : [region360];
                 }
             }
         }

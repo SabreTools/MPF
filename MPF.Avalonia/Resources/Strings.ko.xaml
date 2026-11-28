@@ -171,6 +171,7 @@
     <x:String x:Key="DiscTitleInputString">디스크 제목</x:String>
     <x:String x:Key="DiscTitleNonLatinInputString">디스크 제목 (비라틴 문자)</x:String>
     <x:String x:Key="CategoryLabelString">카테고리</x:String>
+    <x:String x:Key="DiscTagsLabelString">DISC_TAGS_LABEL</x:String>
     <x:String x:Key="RegionsLabelString">지역</x:String>
     <x:String x:Key="LanguagesLabelString">언어 (문자)</x:String>
     <x:String x:Key="SerialInputString">시리얼</x:String>

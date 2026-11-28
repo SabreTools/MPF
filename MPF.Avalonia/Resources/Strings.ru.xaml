@@ -171,6 +171,7 @@
     <x:String x:Key="DiscTitleInputString">Название диска</x:String>
     <x:String x:Key="DiscTitleNonLatinInputString">Название диска (нелатиницей)</x:String>
     <x:String x:Key="CategoryLabelString">Категория</x:String>
+    <x:String x:Key="DiscTagsLabelString">DISC_TAGS_LABEL</x:String>
     <x:String x:Key="RegionsLabelString">Регион</x:String>
     <x:String x:Key="LanguagesLabelString">Языки</x:String>
     <x:String x:Key="SerialInputString">Серийный номер</x:String>

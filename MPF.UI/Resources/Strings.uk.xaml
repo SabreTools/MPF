@@ -177,6 +177,7 @@
     <system:String x:Key="DiscTitleInputString">Назва диску</system:String>
     <system:String x:Key="DiscTitleNonLatinInputString">Назва диску (не латиниця)</system:String>
     <system:String x:Key="CategoryLabelString">Категорія</system:String>
+    <system:String x:Key="DiscTagsLabelString">DISC_TAGS_LABEL</system:String>
     <system:String x:Key="RegionsLabelString">Регіон</system:String>
     <system:String x:Key="LanguagesLabelString">Мови</system:String>
     <system:String x:Key="SerialInputString">Серійний код</system:String>

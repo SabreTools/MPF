@@ -173,6 +173,34 @@
                                                Grid.Column="0"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Right"
+                                               Content="{DynamicResource DiscTagsLabelString}"/>
+                                        <ComboBox x:Name="DiscTagsDropDown"
+                                                  Grid.Row="0"
+                                                  Grid.Column="1"
+                                                  Height="24"
+                                                  HorizontalAlignment="Stretch"
+                                                  ItemsSource="{Binding DiscTags}"
+                                                  SelectedIndex="0"
+                                                  Style="{DynamicResource CustomComboBoxStyle}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox Content="{Binding Name}"
+                                                              IsChecked="{Binding IsChecked}"/>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </Grid>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0.75*"/>
+                                            <ColumnDefinition Width="1.75*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label Grid.Row="0"
+                                               Grid.Column="0"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Right"
                                                Content="{DynamicResource RegionsLabelString}"/>
                                         <ComboBox x:Name="RegionsDropDown"
                                                   Grid.Row="0"
@@ -262,18 +290,6 @@
                                       HorizontalAlignment="Stretch"
                                       VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <Grid Visibility="{Binding Path=PCMacHybridVisible, Converter={StaticResource BoolToVis}}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="0.75*"/>
-                                            <ColumnDefinition Width="1.75*"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <Label/>
-                                        <CheckBox Grid.Column="1"
-                                                  Content="PC/Mac Hybrid"
-                                                  Margin="0,4"
-                                                  IsChecked="{Binding PCMacHybrid, Mode=TwoWay}"/>
-                                    </Grid>
                                     <controls:UserInput Label="{DynamicResource CommentsInputString}"
                                                         Text="{Binding Comments, Mode=TwoWay}"
                                                         TextHeight="50"

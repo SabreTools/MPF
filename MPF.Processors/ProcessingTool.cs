@@ -433,7 +433,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="region">Character denoting the region</param>
         /// <returns>Region, if possible</returns>
-        public static RegionCode?[]? GetXGDRegions(char? region)
+        public static RegionCode[]? GetXGDRegions(char? region)
         {
             return region switch
             {

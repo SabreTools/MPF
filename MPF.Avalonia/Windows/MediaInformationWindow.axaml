@@ -68,6 +68,10 @@
                                                   SelectedItem="{Binding Category, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
                                     </Grid>
 
+                                    <controls:MultiSelectDropDown x:Name="DiscTagsDropDown"
+                                                                  Label="{DynamicResource DiscTagsLabelString}"
+                                                                  ItemsSource="{Binding DiscTags}" />
+
                                     <controls:MultiSelectDropDown x:Name="RegionDropDown"
                                                                   Label="{DynamicResource RegionsLabelString}"
                                                                   ItemsSource="{Binding Regions}" />
@@ -121,14 +125,6 @@
                                 <StackPanel Spacing="4">
                                     <TextBlock Text="{DynamicResource ExtrasGroupBoxString}"
                                                FontWeight="Bold" />
-                                    <Grid x:Name="PCMacHybridGrid"
-                                          ColumnDefinitions="3*,7*"
-                                          IsVisible="{Binding PCMacHybridVisible}">
-                                        <CheckBox IsChecked="{Binding PCMacHybrid, Mode=TwoWay}"
-                                                  Grid.Column="1"
-                                                  Content="PC/Mac Hybrid"
-                                                  Margin="0,2" />
-                                    </Grid>
                                     <controls:UserInput Label="{DynamicResource CommentsInputString}"
                                                         Text="{Binding Comments, Mode=TwoWay}"
                                                         TextHeight="90"

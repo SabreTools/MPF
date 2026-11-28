@@ -21,6 +21,7 @@ namespace MPF.Frontend
             {
                 // Enum-based elements
                 DiscCategory discCategory => new Element<DiscCategory>(discCategory),
+                DiscTag discTag => new Element<DiscTag>(discTag),
                 DreamdumpSectorOrder sectorOrder => new Element<DreamdumpSectorOrder>(sectorOrder),
                 InterfaceLanguage interfaceLanguage => new Element<InterfaceLanguage>(interfaceLanguage),
                 InternalProgram internalProgram => new Element<InternalProgram>(internalProgram),
@@ -55,6 +56,7 @@ namespace MPF.Frontend
             {
                 // Enum-based elements
                 Element<DiscCategory> dcElement => dcElement.Value,
+                Element<DiscTag> dtElement => dtElement.Value,
                 Element<DreamdumpSectorOrder> soElement => soElement.Value,
                 Element<InterfaceLanguage> ilElement => ilElement.Value,
                 Element<InternalProgram> ipElement => ipElement.Value,

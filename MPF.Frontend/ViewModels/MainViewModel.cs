@@ -884,6 +884,7 @@ namespace MPF.Frontend.ViewModels
                     System = PhysicalSystem.IBMPCcompatible,
                     Media = MediaType.BD128,
                     Category = DiscCategory.Games,
+                    Tags = [DiscTag.PCMacHybrid],
                     Title = "Game Title",
                     ForeignTitle = "Foreign Game Title",
                     DiscNumber = "1",
