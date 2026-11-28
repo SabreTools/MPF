@@ -178,7 +178,7 @@
     <system:String x:Key="DiscTitleInputString">Disc Title</system:String>
     <system:String x:Key="DiscTitleNonLatinInputString">Disc Title (non-Latin)</system:String>
     <system:String x:Key="CategoryLabelString">Category</system:String>
-    <system:String x:Key="DiscTagsLabelString">DISC_TAGS_LABEL</system:String>
+    <system:String x:Key="DiscTagsLabelString">Tags</system:String>
     <system:String x:Key="RegionsLabelString">Region</system:String>
     <system:String x:Key="LanguagesLabelString">Languages</system:String>
     <system:String x:Key="SerialInputString">Serial</system:String>

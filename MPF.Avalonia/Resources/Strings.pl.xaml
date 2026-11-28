@@ -171,7 +171,7 @@
     <x:String x:Key="DiscTitleInputString">Tytuł płyty</x:String>
     <x:String x:Key="DiscTitleNonLatinInputString">Tytuł płyty (niełaciński)</x:String>
     <x:String x:Key="CategoryLabelString">Kategoria</x:String>
-    <x:String x:Key="DiscTagsLabelString">DISC_TAGS_LABEL</x:String>
+    <x:String x:Key="DiscTagsLabelString">Tagi</x:String>
     <x:String x:Key="RegionsLabelString">Region</x:String>
     <x:String x:Key="LanguagesLabelString">Języki</x:String>
     <x:String x:Key="SerialInputString">Numer seryjny</x:String>
